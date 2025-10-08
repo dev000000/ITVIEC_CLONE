@@ -1,6 +1,34 @@
 ## 💼 6. ITviec Clone – Job Recruitment Web App
 
+> 🧠 This project was built mainly for **practice** — to improve UI slicing skills and simulate API calls.  
+> It still has many limitations such as missing **cleanup in `useEffect`**, no **Error Boundary**,  
+> **mixed UI and logic**, no **token refresh / access token flow**, **no environment variables**,  
+> and **no code splitting or advanced security handling**.  
+> All of these will be addressed and improved in the **next version**.
+> 
 [🔗 Live Demo](https://itviec-clone-eta.vercel.app/)
+
+> ⚠️ **Note:** This project uses **JSON Server** as a mock backend and database.  
+> The API is deployed on **Render (free plan)**, which goes into **sleep mode** after inactivity.  
+> As a result, the **first load may take 20–60 seconds** while the server wakes up.  
+> If the data doesn’t appear immediately, please refresh the page after a short delay.
+
+**🧪 Test Accounts**
+
+**Job Seeker**
+```json
+{
+  "email": "seeker1@example.com",
+  "passwordHash": "hashed_password1"
+}
+```
+**Employer**
+```json
+{
+  "email": "mcredit@example.com",
+  "passwordHash": "hashed_password5"
+}
+```
 
 ### 🔧 Tech Stack
 
