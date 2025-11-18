@@ -1,0 +1,70 @@
+############################
+# Environment files
+############################
+
+*.env
+!.env.example  #push file example
+
+############################
+# Java / Spring Boot it-viec-backend
+############################
+/project-itviec/it-viec-backend/target/
+/project-itviec/it-viec-backend/.mvn/wrapper/maven-wrapper.jar
+!/project-itviec/it-viec-backend/**/src/main/**/target/
+/project-itviec/it-viec-backend/**/src/test/**/target/
+
+### STS ###
+/project-itviec/it-viec-backend/.apt_generated
+/project-itviec/it-viec-backend/.classpath
+/project-itviec/it-viec-backend/.factorypath
+/project-itviec/it-viec-backend/.project
+/project-itviec/it-viec-backend/.settings
+/project-itviec/it-viec-backend/.springBeans
+/project-itviec/it-viec-backend/.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/project-itviec/it-viec-backend/nbproject/private/
+/project-itviec/it-viec-backend/nbbuild/
+/project-itviec/it-viec-backend/dist/
+/project-itviec/it-viec-backend/nbdist/
+/project-itviec/it-viec-backend/.nb-gradle/
+/project-itviec/it-viec-backend/build/
+!/project-itviec/it-viec-backend/**/src/main/**/build/
+/project-itviec/it-viec-backend/**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+############################
+# Node.js / it-viec-frontend (Vite)
+############################
+node_modules/
+dist/
+dist-ssr/
+
+# Logs
+/project-itviec/it-viec-frontend/logs
+/project-itviec/it-viec-frontend/*.log
+/project-itviec/it-viec-frontend/npm-debug.log*
+/project-itviec/it-viec-frontend/yarn-debug.log*
+/project-itviec/it-viec-frontend/yarn-error.log*
+/project-itviec/it-viec-frontend/pnpm-debug.log*
+/project-itviec/it-viec-frontend/lerna-debug.log*
+
+
+# Editor directories and files (it-viec-frontend)
+#/project-itviec/it-viec-frontend/.vscode/*
+!/project-itviec/it-viec-frontend/.vscode/extensions.json
+/project-itviec/it-viec-frontend/.idea
+/project-itviec/it-viec-frontend/.DS_Store
+/project-itviec/it-viec-frontend/*.suo
+/project-itviec/it-viec-frontend/*.ntvs*
+/project-itviec/it-viec-frontend/*.njsproj
+/project-itviec/it-viec-frontend/*.sln
+/project-itviec/it-viec-frontend/*.sw?

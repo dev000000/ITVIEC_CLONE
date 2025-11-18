@@ -1,0 +1,18 @@
+#profile prod
+server:
+  port: ${SERVER_PORT}
+spring:
+  datasource:
+    url: ${DBMS_CONNECTION}
+    username: ${DBMS_USERNAME}
+    password: ${DBMS_PASSWORD}
+application:
+  security:
+    jwt:
+      secret-key: ${SECRET_KEY}
+      expiration: ${JWT_ACCESS_EXP_MS}
+      refresh-token:
+        expiration: ${JWT_REFRESH_EXP_MS}
+    cookie:
+      secure: true
+      same-site: Lax
