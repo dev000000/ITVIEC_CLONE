@@ -16,4 +16,12 @@ application:
     cookie:
       secure: true
       same-site: Lax
-
+cloud:
+  aws:
+    bucket:
+      name: ${AWS_BUCKET_NAME}
+    region:
+      static: ${AWS_REGION_STATIC}
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}

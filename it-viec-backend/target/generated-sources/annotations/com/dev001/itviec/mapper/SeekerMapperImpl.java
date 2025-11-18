@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.44.0.v20251023-0518, environment: Java 21.0.8 (Eclipse Adoptium)"
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
 public class SeekerMapperImpl implements SeekerMapper {
@@ -38,27 +38,27 @@ public class SeekerMapperImpl implements SeekerMapper {
 
         SeekerResponse.SeekerResponseBuilder seekerResponse = SeekerResponse.builder();
 
-        seekerResponse.address( seeker.getAddress() );
+        seekerResponse.id( seeker.getId() );
+        seekerResponse.user( seeker.getUser() );
+        seekerResponse.fullName( seeker.getFullName() );
+        seekerResponse.jobTitle( seeker.getJobTitle() );
+        seekerResponse.phoneNumber( seeker.getPhoneNumber() );
+        seekerResponse.dob( seeker.getDob() );
+        seekerResponse.gender( seeker.getGender() );
         seekerResponse.city( seeker.getCity() );
+        seekerResponse.address( seeker.getAddress() );
+        seekerResponse.personalLink( seeker.getPersonalLink() );
         seekerResponse.coverLetter( seeker.getCoverLetter() );
         seekerResponse.createdAt( seeker.getCreatedAt() );
-        List<City> list = seeker.getDesiredLocations();
-        if ( list != null ) {
-            seekerResponse.desiredLocations( new LinkedHashSet<City>( list ) );
-        }
-        seekerResponse.dob( seeker.getDob() );
-        seekerResponse.fullName( seeker.getFullName() );
-        seekerResponse.gender( seeker.getGender() );
-        seekerResponse.id( seeker.getId() );
-        seekerResponse.jobTitle( seeker.getJobTitle() );
-        seekerResponse.personalLink( seeker.getPersonalLink() );
-        seekerResponse.phoneNumber( seeker.getPhoneNumber() );
-        List<Skill> list1 = seeker.getSkills();
-        if ( list1 != null ) {
-            seekerResponse.skills( new LinkedHashSet<Skill>( list1 ) );
-        }
         seekerResponse.updatedAt( seeker.getUpdatedAt() );
-        seekerResponse.user( seeker.getUser() );
+        List<Skill> list = seeker.getSkills();
+        if ( list != null ) {
+            seekerResponse.skills( new LinkedHashSet<Skill>( list ) );
+        }
+        List<City> list1 = seeker.getDesiredLocations();
+        if ( list1 != null ) {
+            seekerResponse.desiredLocations( new LinkedHashSet<City>( list1 ) );
+        }
 
         return seekerResponse.build();
     }

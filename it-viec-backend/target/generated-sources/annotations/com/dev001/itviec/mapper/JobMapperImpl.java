@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    comments = "version: 1.5.5.Final, compiler: Eclipse JDT (IDE) 3.44.0.v20251023-0518, environment: Java 21.0.8 (Eclipse Adoptium)"
+    comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.3 (Oracle Corporation)"
 )
 @Component
 public class JobMapperImpl implements JobMapper {
@@ -37,28 +37,28 @@ public class JobMapperImpl implements JobMapper {
 
         JobResponse.JobResponseBuilder jobResponse = JobResponse.builder();
 
-        jobResponse.city( job.getCity() );
-        jobResponse.company( job.getCompany() );
-        jobResponse.createdAt( job.getCreatedAt() );
-        jobResponse.experienceLevel( job.getExperienceLevel() );
-        jobResponse.expiresAt( job.getExpiresAt() );
         jobResponse.id( job.getId() );
-        jobResponse.jobDescription( job.getJobDescription() );
+        jobResponse.company( job.getCompany() );
+        jobResponse.title( job.getTitle() );
+        jobResponse.slug( job.getSlug() );
         jobResponse.jobReason( job.getJobReason() );
+        jobResponse.jobDescription( job.getJobDescription() );
         jobResponse.jobRequirements( job.getJobRequirements() );
-        jobResponse.jobStatus( job.getJobStatus() );
-        jobResponse.jobType( job.getJobType() );
+        jobResponse.whyJoinUs( job.getWhyJoinUs() );
         jobResponse.location( job.getLocation() );
-        jobResponse.postedAt( job.getPostedAt() );
+        jobResponse.city( job.getCity() );
         jobResponse.salary( job.getSalary() );
+        jobResponse.jobType( job.getJobType() );
+        jobResponse.experienceLevel( job.getExperienceLevel() );
+        jobResponse.postedAt( job.getPostedAt() );
+        jobResponse.expiresAt( job.getExpiresAt() );
+        jobResponse.jobStatus( job.getJobStatus() );
+        jobResponse.createdAt( job.getCreatedAt() );
+        jobResponse.updatedAt( job.getUpdatedAt() );
         List<Skill> list = job.getSkills();
         if ( list != null ) {
             jobResponse.skills( new LinkedHashSet<Skill>( list ) );
         }
-        jobResponse.slug( job.getSlug() );
-        jobResponse.title( job.getTitle() );
-        jobResponse.updatedAt( job.getUpdatedAt() );
-        jobResponse.whyJoinUs( job.getWhyJoinUs() );
 
         return jobResponse.build();
     }
