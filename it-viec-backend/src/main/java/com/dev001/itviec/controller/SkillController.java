@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/skill")
+@RequestMapping("/api/v1/skills")
 public class SkillController {
 
     private final SkillService skillService;

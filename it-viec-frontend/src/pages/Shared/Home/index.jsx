@@ -13,9 +13,10 @@ function Home() {
         try {
           const companies = await getCompanyDetails();
           const jobs = await getJobDetails();
+          console.log("job", jobs);
           
           setCompanyList(companies || []);
-          setJobList(jobs || []);
+          setJobList(jobs.data?.result || []);
         } catch (error) {
           console.log("Loi khi load company hoac job...." , error);
         }

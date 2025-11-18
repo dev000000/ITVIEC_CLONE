@@ -1,13 +1,18 @@
-import { CgIfDesign } from "react-icons/cg";
 import { get } from "../utils/request";
+
+import ConstaintList from "../configurations/appConfig";
+import axios from "axios";
+const API_PATH = ConstaintList.API_ENDPOINT + "/api/v1/jobs";
+const API_PATH_2 = ConstaintList.API_ENDPOINT + "/api/v1/users";
+
 export const getCompanyDetails = async () => {
     const result = await get(`companies?_embed=jobs`);
     return result;
 }
-export const getJobDetails = async () => {
-    const result = await get(`jobs?status=Active&_expand=company`);
-    return result;
-}
+// export const getJobDetails = async () => {
+//     const result = await get(`jobs?status=Active&_expand=company`);
+//     return result;
+// }
 export const getJobDetailByID = async (data) => {
     const result = await get(`jobs/${data}?_expand=company`);
     return result;
@@ -35,4 +40,13 @@ export const getJobsSearch = async (data) => {
 export const checkApplication = async (data) => {
     const result = await get(`applications?seekerId=${data.seekerId}&jobId=${data.jobId}`);
     return result;
+}
+
+
+// api backend
+
+
+export const getJobDetails = () => {
+  var url = API_PATH;
+  return axios.get(url);
 }

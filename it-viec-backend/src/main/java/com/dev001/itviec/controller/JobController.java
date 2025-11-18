@@ -1,10 +1,10 @@
 package com.dev001.itviec.controller;
 
 import com.dev001.itviec.dto.response.ApiResponse;
-import com.dev001.itviec.dto.response.CityResponse;
-import com.dev001.itviec.dto.response.UserResponse;
-import com.dev001.itviec.service.CityService;
-import com.dev001.itviec.service.impl.CityServiceImpl;
+import com.dev001.itviec.dto.response.JobResponse;
+import com.dev001.itviec.dto.response.SeekerResponse;
+import com.dev001.itviec.service.JobService;
+import com.dev001.itviec.service.SeekerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,16 +16,16 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/cities")
-public class CityController {
+@RequestMapping("/api/v1/jobs")
+public class JobController {
 
-    private final CityService cityService;
+    private final JobService jobService;
 
     @GetMapping
-    public ApiResponse<List<CityResponse>> getCities() {
-        return ApiResponse.<List<CityResponse>>builder()
+    public ApiResponse<List<JobResponse>> getJobs() {
+        return ApiResponse.<List<JobResponse>>builder()
                 .code(1000)
-                .result(cityService.getAllCities())
+                .result(jobService.getAllJobs())
                 .build();
     }
 }

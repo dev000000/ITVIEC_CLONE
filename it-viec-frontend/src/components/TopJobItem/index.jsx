@@ -57,8 +57,9 @@ function TopJobItem({ job, type, companyInfoAdd }) {
   };
 
   const tagListRef = useRef(null);
-  const sortedSkills = [...job.requiredSkills].sort(
-    (a, b) => a.length - b.length
+  const rawSkills = job.skills || [];
+  const sortedSkills = [...rawSkills].sort(
+    (a, b) => a.skillName.length - b.skillName.length
   );
   const [visibleTagsCount, setVisibleTagsCount] = useState(sortedSkills.length);
   useEffect(() => {
@@ -91,7 +92,7 @@ function TopJobItem({ job, type, companyInfoAdd }) {
           <span>HOT</span>
         </div>
         <div className="job__time">{getRelativeTime(job.postedAt)}</div>
-        <TagStatus status={job.status} />
+        <TagStatus status={job.jobStatus} />
         <div className="job__name">{job.title}</div>
         <div
           className={
@@ -111,15 +112,15 @@ function TopJobItem({ job, type, companyInfoAdd }) {
         </div>
         <div className="job__city">
           <CiLocationOn className="job__city-icon" />
-          <span>{job.city}</span>
+          <span>{job.city.cityName}</span>
         </div>
         <div className="job__list-tag job__list-tag--employer" ref={tagListRef}>
           {sortedSkills.slice(0, visibleTagsCount).map((skill, index) => (
-            <TagSkill key={`${skill}-${index}`} text={skill} />
+            <TagSkill key={skill.id} text={skill.skillName} />
           ))}
           {sortedSkills.length > visibleTagsCount && (
             <Tooltip
-              title={sortedSkills.slice(visibleTagsCount).join(", ")}
+              title={sortedSkills.slice(visibleTagsCount).map(skill => skill.skillName).join(", ")}
               placement="top"
             >
               <span className="job__more-tags">
@@ -171,15 +172,15 @@ function TopJobItem({ job, type, companyInfoAdd }) {
       </div>
       <div className="job__city">
         <CiLocationOn className="job__city-icon" />
-        <span>{job.city}</span>
+        <span>{job.city.cityName}</span>
       </div>
       <div className="job__list-tag" ref={tagListRef}>
         {sortedSkills.slice(0, visibleTagsCount).map((skill, index) => (
-          <TagSkill key={`${skill}-${index}`} text={skill} />
+          <TagSkill key={skill.id} text={skill.skillName} />
         ))}
         {sortedSkills.length > visibleTagsCount && (
           <Tooltip
-            title={sortedSkills.slice(visibleTagsCount).join(", ")}
+            title={sortedSkills.slice(visibleTagsCount).map(skill => skill.skillName).join(", ")}
             placement="top"
           >
             <span className="job__more-tags">

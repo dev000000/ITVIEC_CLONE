@@ -16,7 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/seeker")
+@RequestMapping("/api/v1/seekers")
 public class SeekerController {
 
     private final SeekerService seekerService;

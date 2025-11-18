@@ -26,6 +26,7 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Company {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
@@ -63,7 +64,7 @@ public class Company {
     @Column(name = "company_size")
     CompanySize companySize;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "country_id")
     Country country;
 
@@ -100,7 +101,7 @@ public class Company {
     )
     LocalDateTime updatedAt;
 
-    @ManyToMany()
+    @ManyToMany
     @JoinTable(name = "company_skill", joinColumns = @JoinColumn(name = "company_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     List<Skill> skillsCompany;
 /*
