@@ -20,8 +20,6 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Data
 @Table(name = "users")
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {

@@ -2,6 +2,7 @@ package com.dev001.itviec.entity.company;
 
 import com.dev001.itviec.entity.country.Country;
 import com.dev001.itviec.entity.employer.Employer;
+import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
@@ -12,6 +13,9 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,7 +31,7 @@ public class Company {
     String id;
 
     @OneToOne
-    @JoinColumn(name = "employer_id")
+    @JoinColumn(name = "employer_id", unique = true)
     Employer employer;
 
     @Column(name = "company_name", nullable = false, columnDefinition = "NVARCHAR(255)")
@@ -49,26 +53,26 @@ public class Company {
     String address;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "company_model", columnDefinition = "ENUM('Product','Outsourcing','Consulting / Solution','Startup','Cloud / Platform','Research Lab')")
+    @Column(name = "company_model")
     CompanyModel companyModel;
 
     @Column(columnDefinition = "NVARCHAR(100)")
     String industry;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "company_size", columnDefinition = "ENUM('1-10 employees','11-50 employees','51-150 employees','151-300 employees','301-500 employees','501-1000 employees','1000+ employees')")
+    @Column(name = "company_size")
     CompanySize companySize;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
     Country country;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "working_hours", columnDefinition = "ENUM('Monday – Friday','Monday – Saturday (half-day)','Monday – Saturday','Flexible (Flexible time)','Hybrid (Remote + Office)','Full Remote')")
+    @Column(name = "working_hours")
     WorkingHours workingHours;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "overtime_policy", columnDefinition = "ENUM('No overtime (No OT)','Optional (voluntary)','Occasional OT when necessary','Paid OT / Compensatory leave','Frequent OT')")
+    @Column(name = "overtime_policy")
     OvertimePolicy overtimePolicy;
 
     @Column(name = "company_introduction", columnDefinition = "MEDIUMTEXT")
@@ -96,10 +100,12 @@ public class Company {
     )
     LocalDateTime updatedAt;
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(name = "company_skill", joinColumns = @JoinColumn(name = "company_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    Set<Skill> skills;
+    List<Skill> skillsCompany;
+/*
+    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Job> jobs = new ArrayList<>();*/
 }
-
 
 

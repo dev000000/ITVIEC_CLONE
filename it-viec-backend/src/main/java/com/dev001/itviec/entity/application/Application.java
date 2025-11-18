@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,7 +46,7 @@ public class Application {
     String coverLetter;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status",nullable = false, columnDefinition = "ENUM('Pending','Accepted','Rejected') DEFAULT 'Pending'")
+    @Column(name = "status",nullable = false)
     ApplicationStatus status;
 
     @Column(name = "employer_message", columnDefinition = "MEDIUMTEXT")
@@ -70,5 +71,5 @@ public class Application {
 //    Noi lam viec mong muon trong don ung tuyen
     @ManyToMany
     @JoinTable(name = "application_city", joinColumns = @JoinColumn(name = "application_id"), inverseJoinColumns = @JoinColumn(name = "city_id"))
-    Set<City> desiredLocations;
+    List<City> desiredLocations;
 }

@@ -12,6 +12,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     Company company;
 
@@ -59,11 +60,11 @@ public class Job {
     String salary;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "job_type", columnDefinition = "ENUM('Onsite','Hybrid','Remote','Flexible') DEFAULT 'Onsite'")
+    @Column(name = "job_type")
     JobType jobType;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "experience_level", columnDefinition = "ENUM('Intern','Fresher','Junior','Mid','Senior','Lead','Manager') DEFAULT 'Junior'")
+    @Column(name = "experience_level")
     ExperienceLevel experienceLevel;
 
     @Column(name = "posted_at", columnDefinition = "DATETIME")
@@ -73,7 +74,7 @@ public class Job {
     LocalDateTime expiresAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status" ,nullable = false, columnDefinition = "ENUM('Active','Closed','Draft','Expired') DEFAULT 'Active'")
+    @Column(name = "status" ,nullable = false)
     JobStatus jobStatus;
 
     @Column(
@@ -94,6 +95,6 @@ public class Job {
 
     @ManyToMany
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    Set<Skill> skills;
+    List<Skill> skills;
 
 }

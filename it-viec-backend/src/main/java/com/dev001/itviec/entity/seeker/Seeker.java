@@ -10,6 +10,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,8 +43,9 @@ public class Seeker {
     LocalDate dob;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender", columnDefinition = "ENUM('Nam', 'Nữ', 'Khác')")
+    @Column(name = "gender")
     Gender gender;
+
     @ManyToOne
     @JoinColumn(name = "city_id")
     City city;
@@ -75,10 +77,10 @@ public class Seeker {
 
     @ManyToMany
     @JoinTable(name = "seeker_skill", joinColumns = @JoinColumn(name = "seeker_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    Set<Skill> skills;
+    List<Skill> skills;
 
     @ManyToMany
     @JoinTable(name = "seeker_city", joinColumns = @JoinColumn(name = "seeker_id"), inverseJoinColumns = @JoinColumn(name = "city_id"))
-    Set<City> desiredLocations;
+    List<City> desiredLocations;
 
 }

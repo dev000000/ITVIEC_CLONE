@@ -22,6 +22,7 @@ src\main\java\com\dev001\itviec\dto\response\PermissionResponse.java 2025-11-03T
 src\main\java\com\dev001\itviec\dto\response\RefreshTokenResponse.java 2025-11-03T13:54:02.879595700Z
 src\main\java\com\dev001\itviec\dto\response\RegisterResponse.java 2025-11-03T13:54:02.855572500Z
 src\main\java\com\dev001\itviec\dto\response\RoleResponse.java 2025-11-03T13:54:02.822154200Z
+src\main\java\com\dev001\itviec\dto\response\SkillResponse.java 2025-11-18T05:45:29.281171Z
 src\main\java\com\dev001\itviec\dto\response\UserResponse.java 2025-11-03T13:54:02.718371200Z
 src\main\java\com\dev001\itviec\entity\token\Token.java 2025-11-03T13:54:02.767034500Z
 src\main\java\com\dev001\itviec\enums\ApplicationStatus.java 2025-11-05T14:53:03.626627200Z

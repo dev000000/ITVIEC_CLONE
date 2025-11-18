@@ -69,12 +69,12 @@ public class UserMapperImpl implements UserMapper {
             return null;
         }
 
-        User.UserBuilder user = User.builder();
+        User user = new User();
 
-        user.password( request.getPassword() );
-        user.role( request.getRole() );
+        user.setPassword( request.getPassword() );
+        user.setRole( request.getRole() );
 
-        return user.build();
+        return user;
     }
 
     @Override
