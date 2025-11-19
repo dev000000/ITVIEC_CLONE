@@ -11,4 +11,5 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface JobMapper {
     List<JobResponse> toJobResponse(List<Job> jobs);
+    JobResponse toJobResponse(Job job);
 }

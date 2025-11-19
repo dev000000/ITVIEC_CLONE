@@ -15,6 +15,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+import static com.dev001.itviec.enums.JobStatus.ACTIVE;
+
 @Entity
 @Data
 @Table(name = "jobs")
@@ -75,7 +77,7 @@ public class Job {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status" ,nullable = false)
-    JobStatus jobStatus;
+    JobStatus jobStatus = ACTIVE;
 
     @Column(
             name = "created_at",
@@ -93,7 +95,7 @@ public class Job {
     )
     LocalDateTime updatedAt;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     List<Skill> skills;
 
