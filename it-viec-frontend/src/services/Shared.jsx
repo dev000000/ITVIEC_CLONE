@@ -17,10 +17,12 @@ export const getJobDetailByID = async (data) => {
     const result = await get(`jobs/${data}?_expand=company`);
     return result;
 }
+//
 export const getCompanyWithJobsBySlug = async (data) => {
     const result = await get(`companies?slug=${data}&_embed=jobs`);
     return result;
 }
+//  done 
 export const getJobBySlug = async (data) => {
     const result = await get(`jobs?slug=${data}&status=Active&_expand=company`);
     return result;
