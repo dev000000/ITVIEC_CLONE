@@ -42,7 +42,7 @@ public class JobController {
     public ApiResponse<JobResponse> createJob(@RequestBody JobCreateRequest request) {
         return ApiResponse.<JobResponse>builder()
                 .code(1000)
-                .result(jobService.getJobBySlug(slug))
+                .result(jobService.createJob(request))
                 .build();
     }
 }
