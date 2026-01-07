@@ -1,5 +1,8 @@
 package com.dev001.itviec.dto.response;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
 import com.dev001.itviec.entity.country.Country;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.skill.Skill;
@@ -7,13 +10,11 @@ import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
 import com.dev001.itviec.enums.OvertimePolicy;
 import com.dev001.itviec.enums.WorkingHours;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Builder

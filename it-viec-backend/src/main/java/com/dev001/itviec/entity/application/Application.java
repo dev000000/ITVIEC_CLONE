@@ -1,20 +1,21 @@
 package com.dev001.itviec.entity.application;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.enums.ApplicationStatus;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
 @Entity
-@Data
-@Table(name = "applications")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -46,7 +47,7 @@ public class Application {
     String coverLetter;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status",nullable = false)
+    @Column(name = "status", nullable = false)
     ApplicationStatus status;
 
     @Column(name = "employer_message", columnDefinition = "MEDIUMTEXT")
@@ -56,20 +57,21 @@ public class Application {
             name = "created_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
 
     @Column(
             name = "updated_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
 
-//    Noi lam viec mong muon trong don ung tuyen
+    //    Noi lam viec mong muon trong don ung tuyen
     @ManyToMany
-    @JoinTable(name = "application_city", joinColumns = @JoinColumn(name = "application_id"), inverseJoinColumns = @JoinColumn(name = "city_id"))
+    @JoinTable(
+            name = "application_city",
+            joinColumns = @JoinColumn(name = "application_id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id"))
     List<City> desiredLocations;
 }

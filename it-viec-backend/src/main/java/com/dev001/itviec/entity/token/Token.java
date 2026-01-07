@@ -11,8 +11,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
-@Table(name = "token")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

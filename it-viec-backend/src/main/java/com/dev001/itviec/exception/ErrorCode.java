@@ -27,7 +27,6 @@ public enum ErrorCode {
     JOB_NOT_FOUND(1013, "Job not found!", HttpStatus.NOT_FOUND),
     COMPANY_NOT_FOUND(1014, "Company not found!", HttpStatus.NOT_FOUND);
 
-
     private int code;
     private String message;
     private HttpStatusCode statusCode;

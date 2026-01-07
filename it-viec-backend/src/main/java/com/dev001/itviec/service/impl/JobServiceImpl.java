@@ -1,5 +1,15 @@
 package com.dev001.itviec.service.impl;
 
+import static com.dev001.itviec.enums.JobStatus.ACTIVE;
+import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
+import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.response.JobResponse;
 import com.dev001.itviec.entity.company.Company;
@@ -9,18 +19,9 @@ import com.dev001.itviec.mapper.JobMapper;
 import com.dev001.itviec.repository.CompanyRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.service.JobService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static com.dev001.itviec.enums.JobStatus.ACTIVE;
-import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -31,11 +32,15 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
 
-    @Override
-    public List<JobResponse> getAllJobs() {
-
-        return jobMapper.toJobResponse(jobRepository.findAll());
+//    @Override
+//    public List<JobResponse> getAllJobs() {
+//
+//        return jobMapper.toJobResponse(jobRepository.findAll());
+//    }
+    public List<Job> getAllJobs() {
+        return jobRepository.findAll();
     }
+
 
     @Override
     public JobResponse getJobBySlug(String slug) {
@@ -87,16 +92,18 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public void deleteJob(String slug) {
-
+    public List<Job> getJobsByCompanyId(String companyId) {
+        return jobRepository.findByCompanyId(companyId);
     }
 
+    @Override
+    public void deleteJob(String slug) {}
+
     private String slugify(String text) {
-        return text
-                .trim()
+        return text.trim()
                 .toLowerCase()
                 .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // xu li dau tieng viet
                 .replaceAll("[^a-z0-9\\s-]", "") // loai bo ki tu dac biet
-                .replaceAll("\\s+", "-");        // space -> -
+                .replaceAll("\\s+", "-"); // space -> -
     }
 }

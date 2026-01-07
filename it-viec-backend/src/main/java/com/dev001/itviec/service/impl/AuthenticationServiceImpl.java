@@ -45,16 +45,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
     private final CookieFactory cookieFactory;
 
-
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         // 1. Authenticate user
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         // 2. Check user exist
-        User user = userRepository
-                .findByEmail(request.getEmail())
-                .orElseThrow(() -> new AppException(USER_NOT_FOUND));
+        User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(USER_NOT_FOUND));
 
         // 3. revoke all tokens of user in database
         revokeAllUserTokens(user, true);
@@ -155,8 +152,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AppException(REFRESH_TOKEN_EXPIRED);
         }
         // 4. check if user not exist in db throw ex
-        var userDetails =
-                userRepository.findByEmail(email).orElseThrow(() -> new AppException(REFRESH_TOKEN_EXPIRED));
+        var userDetails = userRepository.findByEmail(email).orElseThrow(() -> new AppException(REFRESH_TOKEN_EXPIRED));
         // 5. check if token is expired or not valid throw ex
         if (!jwtService.isTokenValid(refreshToken, userDetails)) {
             throw new AppException(REFRESH_TOKEN_EXPIRED);
@@ -177,5 +173,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         response.addHeader(
                 HttpHeaders.SET_COOKIE, cookieFactory.accessCookie(accessToken).toString());
     }
-
 }

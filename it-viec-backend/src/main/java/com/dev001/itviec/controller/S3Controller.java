@@ -1,13 +1,15 @@
 package com.dev001.itviec.controller;
 
-import com.dev001.itviec.service.impl.S3Service;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import com.dev001.itviec.service.impl.S3Service;
+
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,5 +30,4 @@ public class S3Controller {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(data);
     }
-
 }

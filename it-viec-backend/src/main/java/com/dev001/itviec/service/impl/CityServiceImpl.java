@@ -1,14 +1,16 @@
 package com.dev001.itviec.service.impl;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.dev001.itviec.dto.response.CityResponse;
 import com.dev001.itviec.mapper.CityMapper;
 import com.dev001.itviec.repository.CityRepository;
 import com.dev001.itviec.service.CityService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service

@@ -1,5 +1,12 @@
 package com.dev001.itviec.entity.job;
 
+import static com.dev001.itviec.enums.JobStatus.ACTIVE;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.company.Company;
@@ -7,19 +14,13 @@ import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
-import static com.dev001.itviec.enums.JobStatus.ACTIVE;
-
 @Entity
-@Data
-@Table(name = "jobs")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,8 +30,9 @@ public class Job {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    @JsonIgnore
     Company company;
 
     @Column(name = "title", nullable = false, columnDefinition = "NVARCHAR(255)")
@@ -76,27 +78,27 @@ public class Job {
     LocalDateTime expiresAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status" ,nullable = false)
+    @Column(name = "status", nullable = false)
     JobStatus jobStatus = ACTIVE;
 
     @Column(
             name = "created_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
 
     @Column(
             name = "updated_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @JoinTable(
+            name = "job_skill",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
     List<Skill> skills;
-
 }

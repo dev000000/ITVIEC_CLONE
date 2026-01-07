@@ -53,13 +53,13 @@ public class UserController {
                 .build();
     }
 
-//    @GetMapping("/my-profile")
-//    public ApiResponse<UserResponse> getMyProfile() {
-//        return ApiResponse.<UserResponse>builder()
-//                .code(1000)
-//                .result(userService.getMyProfile())
-//                .build();
-//    }
+    //    @GetMapping("/my-profile")
+    //    public ApiResponse<UserResponse> getMyProfile() {
+    //        return ApiResponse.<UserResponse>builder()
+    //                .code(1000)
+    //                .result(userService.getMyProfile())
+    //                .build();
+    //    }
 
     @PutMapping("/{id}")
     public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {

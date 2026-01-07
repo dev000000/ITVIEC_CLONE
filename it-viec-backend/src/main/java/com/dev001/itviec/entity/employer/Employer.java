@@ -1,17 +1,17 @@
 package com.dev001.itviec.entity.employer;
 
-import com.dev001.itviec.entity.skill.Skill;
-import com.dev001.itviec.entity.user.User;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
+
+import com.dev001.itviec.entity.user.User;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
 @Entity
-@Data
-@Table(name = "employers")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,16 +39,13 @@ public class Employer {
             name = "created_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
 
     @Column(
             name = "updated_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
-
 }

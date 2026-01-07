@@ -1,0 +1,29 @@
+services:
+  # 1️⃣ Database Service (MySQL)
+  mysql:
+    image: mysql:8.0.43-debian               # Dùng image chính thức của MySQL
+    container_name: mysql-itviec                   # Tên container (tùy chọn)
+    restart: always                          # Tự khởi động lại nếu bị tắt
+    environment:                             # Các biến môi trường của MySQL
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: itviecDBtest
+    ports:
+      - "3306:3306"                          # public port → host:container
+    volumes:
+      - ./mysql/conf/my.cnf:/etc/mysql/conf.d/my.cnf
+      - dbdata:/var/lib/mysql                # volume để giữ dữ liệu khi restart
+    networks:
+      - dev001-itviec-network                     # mạng nội bộ riêng cho project
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-proot" ]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 10s
+volumes:
+  dbdata:
+networks:
+  dev001-itviec-network:
+    driver: bridge
+  
+

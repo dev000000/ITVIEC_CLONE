@@ -1,21 +1,22 @@
 package com.dev001.itviec.entity.seeker;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import jakarta.persistence.*;
+
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.Gender;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
 @Entity
-@Data
-@Table(name = "seekers")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -63,24 +64,27 @@ public class Seeker {
             name = "created_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     LocalDateTime createdAt;
 
     @Column(
             name = "updated_at",
             insertable = false,
             updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     LocalDateTime updatedAt;
 
     @ManyToMany
-    @JoinTable(name = "seeker_skill", joinColumns = @JoinColumn(name = "seeker_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @JoinTable(
+            name = "seeker_skill",
+            joinColumns = @JoinColumn(name = "seeker_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
     List<Skill> skills;
 
     @ManyToMany
-    @JoinTable(name = "seeker_city", joinColumns = @JoinColumn(name = "seeker_id"), inverseJoinColumns = @JoinColumn(name = "city_id"))
+    @JoinTable(
+            name = "seeker_city",
+            joinColumns = @JoinColumn(name = "seeker_id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id"))
     List<City> desiredLocations;
-
 }

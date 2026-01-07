@@ -15,5 +15,4 @@ public interface AuthenticationService {
     RegisterResponse register(RegisterRequest request, HttpServletResponse response);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response);
-
 }

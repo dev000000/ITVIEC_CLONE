@@ -4,8 +4,6 @@ import static com.dev001.itviec.exception.ErrorCode.USER_NOT_FOUND;
 
 import java.util.List;
 
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -63,18 +61,18 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(user);
     }
 
-//    @Override
+    //    @Override
     //    @PostAuthorize("returnObject.userName == authentication.name")
-//    public UserResponse getMyProfile() {
-//        SecurityContext context = SecurityContextHolder.getContext();
-//        String name = context.getAuthentication().getName();
-//        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(USER_NOT_FOUND));
-//        return userMapper.toUserResponse(user);
-//    }
+    //    public UserResponse getMyProfile() {
+    //        SecurityContext context = SecurityContextHolder.getContext();
+    //        String name = context.getAuthentication().getName();
+    //        User user = userRepository.findByUsername(name).orElseThrow(() -> new AppException(USER_NOT_FOUND));
+    //        return userMapper.toUserResponse(user);
+    //    }
 
     @Override
     public UserResponse updateUser(String id, UserUpdateRequest request) {
-//        var roles = roleRepository.findAllById(request.getRoles());
+        //        var roles = roleRepository.findAllById(request.getRoles());
         User user = userRepository.findById(id).orElseThrow(() -> new AppException(USER_NOT_FOUND));
         //        user.setRoles(new HashSet<>(roles));
         userMapper.updateUser(user, request);
