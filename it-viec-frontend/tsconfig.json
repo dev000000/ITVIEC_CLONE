@@ -1,0 +1,8 @@
+// tsconfig.json — File gốc, chỉ tham chiếu đến 2 config con
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

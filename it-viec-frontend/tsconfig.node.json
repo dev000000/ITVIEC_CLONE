@@ -1,0 +1,30 @@
+// tsconfig.node.json — Config cho file cấu hình chạy trên Node.js
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    // CHỈ có ES — KHÔNG có DOM (vì Node.js không có window, document)
+
+    "module": "ESNext",
+    "types": ["node"],
+    // Types cho Node.js: __dirname, process, Buffer...
+
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+
+    /* Linting */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+  // CHỈ apply cho file vite.config.ts
+}
