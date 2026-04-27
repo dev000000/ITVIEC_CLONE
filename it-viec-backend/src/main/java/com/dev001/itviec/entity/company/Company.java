@@ -1,8 +1,12 @@
 package com.dev001.itviec.entity.company;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.job.Job;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -19,21 +23,22 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
+@Table(name = "company")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Company {
+public class Company extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-//    @OneToOne
-//    @JoinColumn(name = "employer_id", unique = true)
-//    Employer employer;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "employer_id", nullable = false, unique = true)
+    Employer employer;
 
     @Column(name = "company_name", nullable = false, columnDefinition = "NVARCHAR(255)")
     String companyName;
@@ -64,9 +69,9 @@ public class Company {
     @Column(name = "company_size")
     CompanySize companySize;
 
-//    @ManyToOne
-//    @JoinColumn(name = "country_id")
-//    Country country;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "country_id")
+    Country country;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "working_hours")
@@ -85,28 +90,15 @@ public class Company {
     @Column(name = "why_work_here", columnDefinition = "MEDIUMTEXT")
     String whyWorkHere;
 
-    @Column(
-            name = "created_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    LocalDateTime createdAt;
-
-    @Column(
-            name = "updated_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    LocalDateTime updatedAt;
-
-//    @ManyToMany
-//    @JoinTable(
-//            name = "company_skill",
-//            joinColumns = @JoinColumn(name = "company_id"),
-//            inverseJoinColumns = @JoinColumn(name = "skill_id"))
-//    List<Skill> skillsCompany;
+    @ManyToMany
+    @JoinTable(
+            name = "company_skill",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @Builder.Default
+    Set<Skill> skillsCompany = new HashSet<>();
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY)
-    List<Job> jobs;
-
+    @Builder.Default
+    List<Job> jobs = new ArrayList<>();
 }

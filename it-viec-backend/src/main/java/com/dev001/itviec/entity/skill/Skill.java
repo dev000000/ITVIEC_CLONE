@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
+@Table(name = "skill")
 @Getter
 @Setter
 @Builder
@@ -20,9 +21,4 @@ public class Skill {
     @Column(name = "skill_name", nullable = false, columnDefinition = "VARCHAR(100)")
     String skillName;
 
-    //    @ManyToMany(mappedBy = "skills")
-    //    List<Seeker> seekers;
-    //
-    //    @ManyToMany(mappedBy = "skillsCompany")
-    //    List<Company> companies;
 }

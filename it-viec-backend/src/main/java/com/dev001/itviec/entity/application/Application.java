@@ -1,8 +1,6 @@
 package com.dev001.itviec.entity.application;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
 
 import com.dev001.itviec.entity.city.City;
@@ -13,25 +11,29 @@ import com.dev001.itviec.enums.ApplicationStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
+@Table(name = "application")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Application {
+public class Application extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @ManyToOne
-    @JoinColumn(name = "seeker_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seeker_id", nullable = false)
     Seeker seeker;
 
-    @ManyToOne
-    @JoinColumn(name = "job_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_id", nullable = false)
     Job job;
 
     @Column(name = "full_name", nullable = false, columnDefinition = "NVARCHAR(255)")
@@ -53,25 +55,12 @@ public class Application {
     @Column(name = "employer_message", columnDefinition = "MEDIUMTEXT")
     String employerMessage;
 
-    @Column(
-            name = "created_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
-    LocalDateTime createdAt;
-
-    @Column(
-            name = "updated_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
-    LocalDateTime updatedAt;
-
     //    Noi lam viec mong muon trong don ung tuyen
     @ManyToMany
     @JoinTable(
             name = "application_city",
             joinColumns = @JoinColumn(name = "application_id"),
             inverseJoinColumns = @JoinColumn(name = "city_id"))
-    List<City> desiredLocations;
+    @Builder.Default
+    Set<City> desiredLocations = new HashSet<>();
 }

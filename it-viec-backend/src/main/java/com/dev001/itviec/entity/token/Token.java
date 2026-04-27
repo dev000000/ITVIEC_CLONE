@@ -1,5 +1,6 @@
 package com.dev001.itviec.entity.token;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
+@Table(name = "token")
 @Getter
 @Setter
 @Builder
@@ -23,17 +25,22 @@ public class Token {
     @Id
     String id;
 
+    @Column(nullable = false)
     String token;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "token_type")
     TokenType tokenType;
 
+    @Column(name = "expiry_time")
     Date expiryTime;
+
     boolean revoked;
 
-    boolean isAccessToken;
+    @Column(name = "is_access_token")
+    boolean accessToken;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     User user;
 }
