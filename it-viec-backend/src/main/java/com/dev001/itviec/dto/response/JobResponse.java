@@ -3,11 +3,6 @@ package com.dev001.itviec.dto.response;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import jakarta.persistence.*;
-
-import com.dev001.itviec.entity.city.City;
-import com.dev001.itviec.entity.company.Company;
-import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.*;
 
 import lombok.AccessLevel;
@@ -20,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JobResponse {
     Long id;
-    Company company;
+    CompanySummaryResponse company;
     String title;
     String slug;
     String jobReason;
@@ -28,7 +23,7 @@ public class JobResponse {
     String jobRequirements;
     String whyJoinUs;
     String location;
-    City city;
+    CityResponse city;
     String salary;
     JobType jobType;
     ExperienceLevel experienceLevel;
@@ -37,5 +32,5 @@ public class JobResponse {
     JobStatus jobStatus;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    Set<Skill> skills;
+    Set<SkillResponse> skills;
 }

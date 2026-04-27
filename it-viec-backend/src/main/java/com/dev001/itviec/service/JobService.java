@@ -4,12 +4,10 @@ import java.util.List;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.response.JobResponse;
-import com.dev001.itviec.entity.job.Job;
 
 public interface JobService {
 
-//    List<JobResponse> getAllJobs();
-    List<Job> getAllJobs();
+    List<JobResponse> getAllJobs();
 
     JobResponse getJobBySlug(String slug);
 
@@ -17,7 +15,7 @@ public interface JobService {
 
     JobResponse updateJob(String slug, JobResponse job);
 
-    List<Job> getJobsByCompanyId(String companyId);
+    List<JobResponse> getJobsByCompanyId(String companyId);
 
     void deleteJob(String slug);
 }

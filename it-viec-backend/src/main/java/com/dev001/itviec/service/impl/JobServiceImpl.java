@@ -5,6 +5,7 @@ import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
 import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,13 +33,9 @@ public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
 
-//    @Override
-//    public List<JobResponse> getAllJobs() {
-//
-//        return jobMapper.toJobResponse(jobRepository.findAll());
-//    }
-    public List<Job> getAllJobs() {
-        return jobRepository.findAll();
+    @Override
+    public List<JobResponse> getAllJobs() {
+        return jobMapper.toJobResponse(jobRepository.findAllWithDetails());
     }
 
 
@@ -68,8 +65,8 @@ public class JobServiceImpl implements JobService {
                 .experienceLevel(request.getExperienceLevel())
                 .postedAt(LocalDateTime.now())
                 .expiresAt(request.getExpiresAt())
-                .jobStatus(ACTIVE)
-                .skills(request.getSkills())
+                .status(ACTIVE)
+                .skills(request.getSkills() == null ? new HashSet<>() : new HashSet<>(request.getSkills()))
                 .build();
 
         // 2. save lan 1
@@ -92,8 +89,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getJobsByCompanyId(String companyId) {
-        return jobRepository.findByCompanyId(companyId);
+    public List<JobResponse> getJobsByCompanyId(String companyId) {
+        return jobMapper.toJobResponse(jobRepository.findByCompanyId(companyId));
     }
 
     @Override

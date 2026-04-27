@@ -2,7 +2,6 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
-import com.dev001.itviec.entity.job.Job;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,23 +22,24 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping
-    public ApiResponse<List<Job>> getJobs() {
-        return ApiResponse.<List<Job>>builder()
+    public ApiResponse<List<JobResponse>> getJobs() {
+        return ApiResponse.<List<JobResponse>>builder()
                 .code(1000)
                 .result(jobService.getAllJobs())
                 .build();
     }
 
-//    @GetMapping("/{slug}")
-//    public ApiResponse<JobResponse> getJobDetail(@PathVariable String slug) {
-//        return ApiResponse.<JobResponse>builder()
-//                .code(1000)
-//                .result(jobService.getJobBySlug(slug))
-//                .build();
-//    }
-    @GetMapping("/{companyId}")
-    public ApiResponse<List<Job>> getJobsByCompanyId(@PathVariable String companyId) {
-        return ApiResponse.<List<Job>>builder()
+    @GetMapping("/{slug}")
+    public ApiResponse<JobResponse> getJobDetail(@PathVariable String slug) {
+        return ApiResponse.<JobResponse>builder()
+                .code(1000)
+                .result(jobService.getJobBySlug(slug))
+                .build();
+    }
+
+    @GetMapping("/company/{companyId}")
+    public ApiResponse<List<JobResponse>> getJobsByCompanyId(@PathVariable String companyId) {
+        return ApiResponse.<List<JobResponse>>builder()
                 .code(1000)
                 .result(jobService.getJobsByCompanyId(companyId))
                 .build();
