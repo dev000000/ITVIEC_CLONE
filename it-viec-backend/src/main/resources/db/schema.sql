@@ -35,11 +35,21 @@ CREATE TABLE user (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE token (
+    id VARCHAR(255) PRIMARY KEY,
+      token VARCHAR(255) NOT NULL,
+      token_type ENUM('BEARER') DEFAULT 'BEARER',
+      expiry_time DATETIME,
+      revoked BOOLEAN DEFAULT FALSE,
+      is_access_token BOOLEAN DEFAULT FALSE,
+      user_id VARCHAR(255) NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES user(id)
+);
 
 -- Bảng ứng viên
 CREATE TABLE seeker (
   id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL UNIQUE,
   full_name NVARCHAR(255) NOT NULL,
   job_title NVARCHAR(255),
   phone_number VARCHAR(10),
@@ -59,7 +69,7 @@ CREATE TABLE seeker (
 -- Bảng nhà tuyển dụng
 CREATE TABLE employer (
   id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL UNIQUE,
   full_name NVARCHAR(255) NOT NULL,
   job_title NVARCHAR(255),
   phone_number VARCHAR(10),
@@ -72,7 +82,7 @@ CREATE TABLE employer (
 -- Bảng công ty
 CREATE TABLE company (
   id VARCHAR(255) PRIMARY KEY ,
-  employer_id VARCHAR(255) NOT NULL,                           -- nhân viên quản lý tài khoản công ty
+  employer_id VARCHAR(255) NOT NULL UNIQUE,                           -- nhân viên quản lý tài khoản công ty
   company_name NVARCHAR(255) NOT NULL,
   slug VARCHAR(255) UNIQUE,
   description NVARCHAR(255),
