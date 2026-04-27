@@ -28,6 +28,8 @@
 *.iml
 *.ipr
 
+# Tam thoi ignore backend de tap trung vao frontend
+/project-itviec/it-viec-backend
 ### NetBeans ###
 /project-itviec/it-viec-backend/nbproject/private/
 /project-itviec/it-viec-backend/nbbuild/

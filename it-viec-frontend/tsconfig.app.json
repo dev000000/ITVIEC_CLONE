@@ -62,6 +62,7 @@
 
     // === Path Alias (Tuỳ chọn) ===
     "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "paths": {
       "@/*": ["src/*"]
     },
@@ -90,6 +91,7 @@
     "forceConsistentCasingInFileNames": true
     // Bắt buộc import đúng hoa/thường tên file
     // (Windows không phân biệt, nhưng Linux/Mac có → tránh lỗi deploy)
+
   },
   "include": ["src"]
   // Chỉ compile file trong thư mục src/
