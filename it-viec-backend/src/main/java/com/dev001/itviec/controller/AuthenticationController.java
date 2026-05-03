@@ -30,11 +30,6 @@ public class AuthenticationController {
                 .result(authResponse)
                 .build();
     }
-    //    @PostMapping("/login")
-    //    public String login(
-    //            @RequestBody AuthenticationRequest request, HttpServletResponse response) {
-    //        return request.getEmail();
-    //    }
 
     @PostMapping("/register")
     public ApiResponse<RegisterResponse> register(
@@ -48,7 +43,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh-token")
-    public ApiResponse<?> refreshTokenH(HttpServletRequest request, HttpServletResponse response) {
+    public ApiResponse<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         authenticationService.refreshToken(request, response);
         return ApiResponse.<Void>builder().code(1000).build();
     }

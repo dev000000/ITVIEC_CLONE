@@ -11,12 +11,16 @@ import com.dev001.itviec.entity.token.Token;
 
 public interface TokenRepository extends JpaRepository<Token, String> {
 
-    @Query("select t from Token t inner join User u on t.user.id = u.id where u.id = :userId and (t.revoked = false)")
+    @Query(value = """
+            SELECT * FROM token t
+            WHERE t.user_id =:userId AND t.revoked = false
+            """, nativeQuery = true)
     List<Token> findAllValidTokensByUser(@Param("userId") String userId);
 
-    @Query(
-            "select t from Token t inner join User u on t.user.id = u.id "
-                    + "where u.id = :userId and t.revoked = false and t.accessToken = true")
+    @Query(value = """
+        SELECT * FROM token t
+        WHERE t.user_id = :userId AND t.revoked = false AND t.is_access_token = true
+        """,nativeQuery = true)
     List<Token> findAllValidAccessTokensByUser(@Param("userId") String userId);
 
     Optional<Token> findByToken(String token);

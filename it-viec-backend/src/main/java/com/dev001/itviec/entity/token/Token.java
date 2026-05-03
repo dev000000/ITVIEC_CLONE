@@ -38,7 +38,7 @@ public class Token {
     boolean revoked;
 
     @Column(name = "is_access_token")
-    boolean accessToken;
+    boolean isAccessToken;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

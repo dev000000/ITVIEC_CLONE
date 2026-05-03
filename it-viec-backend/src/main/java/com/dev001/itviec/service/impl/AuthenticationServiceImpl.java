@@ -89,7 +89,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .user(user)
                 .token(token)
                 .tokenType(BEARER)
-                .accessToken(isAccessToken)
+                .isAccessToken(isAccessToken)
                 .expiryTime(jwtService.extractExpiration(token))
                 .revoked(false)
                 .build();
