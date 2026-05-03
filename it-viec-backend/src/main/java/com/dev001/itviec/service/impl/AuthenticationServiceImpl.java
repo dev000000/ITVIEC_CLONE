@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -70,7 +71,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 cookieFactory.refreshCookie(refreshToken).toString());
 
         // 7. return response
-        return AuthenticationResponse.builder().authenticated(true).id(user.getId()).email(user.getEmail()).role(user.getRole()).build();
+        return AuthenticationResponse.builder().authenticated(true).id(user.getId()).email(user.getEmail())
+                .role(user.getRole()).build();
+    }
+
+    @Override
+    public AuthenticationResponse getCurrentUser() {
+        // 1. lấy email từ SecurityContext (do JwtAuthenticationFilter set)
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(UNAUTHENTICATED);
+        }
+        String email = authentication.getName();
+
+        // 2. tìm user trong DB theo email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(USER_NOT_FOUND));
+
+        // 3. trả về AuthenticationResponse
+        return AuthenticationResponse.builder()
+                .authenticated(true)
+                .id(user.getId())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
     }
 
     private void revokeAllUserTokens(User user, boolean isRevokeRefreshToken) {
@@ -101,9 +125,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         // 1. check username existed
         // Don't need this
-        //        if (userRepository.existsByUsername(request.getUsername())) {
-        //            throw new AppException(USER_EXISTED);
-        //        }
+        // if (userRepository.existsByUsername(request.getUsername())) {
+        // throw new AppException(USER_EXISTED);
+        // }
         // 2. convert RegisterRequest to User
         User user = userMapper.toUser(request);
         // 3. hash password and set it to user
@@ -128,8 +152,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         RegisterResponse RegisResponse = userMapper.toRegisterResponse(user);
         // 9. set cookie for response
-        //        response.addHeader(HttpHeaders.SET_COOKIE, cookieFactory.accessCookie(accessToken).toString());
-        //        response.addHeader(HttpHeaders.SET_COOKIE, cookieFactory.refreshCookie(refreshToken).toString());
+        // response.addHeader(HttpHeaders.SET_COOKIE,
+        // cookieFactory.accessCookie(accessToken).toString());
+        // response.addHeader(HttpHeaders.SET_COOKIE,
+        // cookieFactory.refreshCookie(refreshToken).toString());
         return RegisResponse;
     }
 
@@ -165,7 +191,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (!isTokenRevoked) {
             throw new AppException(REFRESH_TOKEN_EXPIRED);
         }
-        // 6. revoke all token available of user, then generate new access token for user and save it to DB,
+        // 6. revoke all token available of user, then generate new access token for
+        // user and save it to DB,
         revokeAllUserTokens(userDetails, false);
         var accessToken = jwtService.generateToken(userDetails, false);
         saveUserToken(userDetails, accessToken, true);
@@ -173,4 +200,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         response.addHeader(
                 HttpHeaders.SET_COOKIE, cookieFactory.accessCookie(accessToken).toString());
     }
+
 }

@@ -12,6 +12,8 @@ public interface AuthenticationService {
 
     AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response);
 
+    AuthenticationResponse getCurrentUser();
+
     RegisterResponse register(RegisterRequest request, HttpServletResponse response);
 
     void refreshToken(HttpServletRequest request, HttpServletResponse response);
