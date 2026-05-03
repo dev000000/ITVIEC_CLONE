@@ -70,7 +70,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 cookieFactory.refreshCookie(refreshToken).toString());
 
         // 7. return response
-        return AuthenticationResponse.builder().authenticated(true).build();
+        return AuthenticationResponse.builder().authenticated(true).id(user.getId()).email(user.getEmail()).role(user.getRole()).build();
     }
 
     private void revokeAllUserTokens(User user, boolean isRevokeRefreshToken) {
