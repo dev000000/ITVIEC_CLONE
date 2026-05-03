@@ -14,7 +14,8 @@ function TopJob({ jobList }) {
   const navigate = useNavigate();
   return (
     <>
-      <div className="top-job">
+    {jobList.length > 8 && (
+            <div className="top-job">
         <div className="container">
           <h1 className="top-job__title">
             {jobList.length} Việc làm IT cho Developer "Chất"
@@ -34,10 +35,10 @@ function TopJob({ jobList }) {
                   <TopJobItem
                     job={job}
                     type="home"
-                    companyInfoAdd={{
-                      companyName: job.company.companyName,
-                      slug: job.company.slug,
-                    }}
+                    // companyInfoAdd={{
+                    //   companyName: job.company.companyName,
+                    //   slug: job.company.slug,
+                    // }}
                   />
                 </Col>
               ))}
@@ -45,12 +46,14 @@ function TopJob({ jobList }) {
           </div>
           <div className="top-job__button-more">
             <Link to="/viec-lam-it">
-              <span>Xem thêm {jobList.length - 8 } công việc khác</span>
+              <span>Xem thêm {jobList.length - 8} công việc khác</span>
               <MdKeyboardArrowRight />
             </Link>
           </div>
         </div>
       </div>
+    )}
+
     </>
   );
 }

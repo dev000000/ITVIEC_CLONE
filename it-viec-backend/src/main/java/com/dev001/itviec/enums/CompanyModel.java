@@ -12,6 +12,7 @@ public enum CompanyModel {
     CompanyModel(String displayName) {
         this.displayName = displayName;
     }
+
     public String getDisplayName() {
         return displayName;
     }

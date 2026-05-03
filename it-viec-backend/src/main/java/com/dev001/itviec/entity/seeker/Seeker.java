@@ -1,33 +1,38 @@
 package com.dev001.itviec.entity.seeker;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.dev001.itviec.entity.base.BaseEntity;
+import jakarta.persistence.*;
+
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.Gender;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
 @Entity
-@Data
-@Table(name = "seekers")
+@Table(name = "seeker")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Seeker {
+public class Seeker extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     User user;
 
     @Column(name = "full_name", nullable = false, columnDefinition = "NVARCHAR(255)")
@@ -46,7 +51,7 @@ public class Seeker {
     @Column(name = "gender")
     Gender gender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     City city;
 
@@ -59,28 +64,19 @@ public class Seeker {
     @Column(name = "cover_letter", columnDefinition = "NVARCHAR(500)")
     String coverLetter;
 
-    @Column(
-            name = "created_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
-    LocalDateTime createdAt;
-
-    @Column(
-            name = "updated_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
-    LocalDateTime updatedAt;
+    @ManyToMany
+    @JoinTable(
+            name = "seeker_skill",
+            joinColumns = @JoinColumn(name = "seeker_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @Builder.Default
+    Set<Skill> skills = new HashSet<>();
 
     @ManyToMany
-    @JoinTable(name = "seeker_skill", joinColumns = @JoinColumn(name = "seeker_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    List<Skill> skills;
-
-    @ManyToMany
-    @JoinTable(name = "seeker_city", joinColumns = @JoinColumn(name = "seeker_id"), inverseJoinColumns = @JoinColumn(name = "city_id"))
-    List<City> desiredLocations;
-
+    @JoinTable(
+            name = "seeker_city",
+            joinColumns = @JoinColumn(name = "seeker_id"),
+            inverseJoinColumns = @JoinColumn(name = "city_id"))
+    @Builder.Default
+    Set<City> desiredLocations = new HashSet<>();
 }

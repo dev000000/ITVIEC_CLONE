@@ -1,10 +1,9 @@
 package com.dev001.itviec.service;
 
+import java.util.List;
+
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.response.JobResponse;
-import com.dev001.itviec.dto.response.SeekerResponse;
-
-import java.util.List;
 
 public interface JobService {
 
@@ -15,6 +14,8 @@ public interface JobService {
     JobResponse createJob(JobCreateRequest jobCreateRequest);
 
     JobResponse updateJob(String slug, JobResponse job);
+
+    List<JobResponse> getJobsByCompanyId(String companyId);
 
     void deleteJob(String slug);
 }

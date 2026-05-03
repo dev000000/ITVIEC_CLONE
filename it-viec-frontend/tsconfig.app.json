@@ -1,0 +1,98 @@
+// tsconfig.app.json — Config cho code React chạy trên Browser
+{
+  "compilerOptions": {
+    // === Build Info Cache ===
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    // Cache kết quả compile → lần sau compile nhanh hơn
+
+    // === Target & Environment ===
+    "target": "ES2020",
+    // Output JavaScript sẽ dùng syntax ES2020 (optional chaining, nullish coalescing...)
+    // Giữ ES2020 vì cần tương thích browser rộng hơn ES2023
+
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    // Khai báo API nào có sẵn:
+    //   ES2020: Promise, Map, Set, BigInt...
+    //   DOM: window, document, fetch, localStorage...
+    //   DOM.Iterable: NodeList.forEach, HTMLCollection iteration...
+
+    "module": "ESNext",
+    // Dùng ES Module (import/export) — Vite yêu cầu format này
+
+    "types": ["vite/client"],
+    // Cung cấp types cho:
+    //   import.meta.env.VITE_*  (env variables)
+    //   import logo from './logo.svg' (asset imports)
+    //   import styles from './App.module.css' (CSS modules)
+
+    "skipLibCheck": true,
+    // Bỏ qua kiểm tra type trong node_modules → compile nhanh hơn nhiều
+
+    // === Bundler Mode ===
+    "moduleResolution": "bundler",
+    // Dùng cách resolve module của bundler (Vite) thay vì Node.js
+    // Cho phép import không cần extension: import App from './App'
+
+    "allowImportingTsExtensions": true,
+    // Cho phép import file .ts/.tsx trực tiếp: import { X } from './utils.ts'
+
+    "verbatimModuleSyntax": true,
+    // Bắt buộc dùng 'import type' cho type-only imports
+    // import type { FC } from 'react'  ← bắt buộc có 'type'
+    // import { useState } from 'react' ← OK vì dùng runtime value
+
+    "moduleDetection": "force",
+    // Coi MỌI file là module (có import/export) — tránh lỗi scope conflict
+
+    "noEmit": true,
+    // TypeScript KHÔNG output file .js — Vite dùng esbuild/Babel để compile
+    // tsc chỉ dùng để TYPE-CHECK, không dùng để build
+
+    "jsx": "react-jsx",
+    // Dùng React 17+ JSX Transform — không cần 'import React from "react"'
+
+    // === Cho phép JS cùng tồn tại ===
+    "allowJs": true,
+    // Cho phép import file .js/.jsx trong project TypeScript
+    // QUAN TRỌNG: Giúp migrate dần dần, không cần đổi tất cả file cùng lúc
+
+    "checkJs": false,
+    // KHÔNG type-check file .js — chỉ check file .ts/.tsx
+    // Khi nào migrate xong file nào thì file đó mới bị check
+
+    // === Path Alias (Tuỳ chọn) ===
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    // Cho phép import ngắn gọn:
+    //   import Header from '@/components/Header'
+    //   thay vì '../../../components/Header'
+
+    // === Strict Rules (Linting) ===
+    "strict": false,
+    // Bật TẤT CẢ strict checks. Bao gồm:
+    //   strictNullChecks: null/undefined phải handle
+    //   strictFunctionTypes: kiểm tra type tham số function
+    //   strictBindCallApply: kiểm tra bind/call/apply
+    //   noImplicitAny: bắt buộc khai báo type, không để 'any' ngầm
+    //   noImplicitThis: 'this' phải có type rõ ràng
+
+    "noUnusedLocals": true,
+    // Báo lỗi nếu khai báo biến nhưng không dùng
+
+    "noUnusedParameters": true,
+    // Báo lỗi nếu tham số function không được dùng
+
+    "noFallthroughCasesInSwitch": true,
+    // Báo lỗi nếu case trong switch thiếu break/return
+
+    "forceConsistentCasingInFileNames": true
+    // Bắt buộc import đúng hoa/thường tên file
+    // (Windows không phân biệt, nhưng Linux/Mac có → tránh lỗi deploy)
+
+  },
+  "include": ["src"]
+  // Chỉ compile file trong thư mục src/
+}

@@ -1,6 +1,5 @@
 package com.dev001.itviec.enums;
 
-
 import java.util.ArrayList;
 import java.util.List;
 

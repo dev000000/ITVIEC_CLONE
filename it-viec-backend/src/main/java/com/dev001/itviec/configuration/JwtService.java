@@ -60,7 +60,7 @@ public class JwtService {
         if (email == null) {
             return false;
         }
-//        userDetails.getUsername() => email of userDetail
+        //        userDetails.getUsername() => email of userDetail
         return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 

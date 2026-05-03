@@ -1,29 +1,31 @@
 package com.dev001.itviec.entity.employer;
 
-import com.dev001.itviec.entity.skill.Skill;
-import com.dev001.itviec.entity.user.User;
+import java.time.LocalDateTime;
+
+import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
+
+import com.dev001.itviec.entity.user.User;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.util.Set;
-
 @Entity
-@Data
-@Table(name = "employers")
+@Table(name = "employer")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Employer {
+public class Employer extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
     User user;
 
     @Column(name = "full_name", nullable = false, columnDefinition = "NVARCHAR(255)")
@@ -34,21 +36,5 @@ public class Employer {
 
     @Column(name = "phone_number", columnDefinition = "VARCHAR(10)")
     String phoneNumber;
-
-    @Column(
-            name = "created_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
-    LocalDateTime createdAt;
-
-    @Column(
-            name = "updated_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
-    LocalDateTime updatedAt;
 
 }

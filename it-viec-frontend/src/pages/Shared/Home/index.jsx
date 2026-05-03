@@ -6,16 +6,16 @@ import { getCompanyDetails, getJobDetails } from "../../../services/Shared";
 import SearchFormHome from "../../../components/SearchFormHome";
 
 function Home() {
-  const [companyList , setCompanyList] = useState([]);
+  // const [companyList , setCompanyList] = useState([]);
   const [jobList , setJobList] = useState([]);
   useEffect( () => {
       const getData = async () => {
         try {
-          const companies = await getCompanyDetails();
+          // const companies = await getCompanyDetails();
           const jobs = await getJobDetails();
           console.log("job", jobs);
           
-          setCompanyList(companies || []);
+          // setCompanyList(companies || []);
           setJobList(jobs.data?.result || []);
         } catch (error) {
           console.log("Loi khi load company hoac job...." , error);
@@ -27,7 +27,7 @@ function Home() {
     <>
       <SearchFormHome jobList={jobList} />
       <CampaignHighLight />
-      <TopCompanies companyList={companyList}/>
+      {/* <TopCompanies companyList={companyList}/> */}
       <TopJob jobList={jobList}/>
     </>
   );

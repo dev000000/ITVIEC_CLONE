@@ -1,10 +1,11 @@
 package com.dev001.itviec.mapper;
 
-import com.dev001.itviec.dto.response.CompanyResponse;
-import com.dev001.itviec.entity.company.Company;
+import java.util.List;
+
 import org.mapstruct.Mapper;
 
-import java.util.List;
+import com.dev001.itviec.dto.response.CompanyResponse;
+import com.dev001.itviec.entity.company.Company;
 
 @Mapper(componentModel = "spring")
 public interface CompanyMapper {

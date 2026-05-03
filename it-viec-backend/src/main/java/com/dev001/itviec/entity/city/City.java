@@ -1,12 +1,14 @@
 package com.dev001.itviec.entity.city;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
-@Table(name = "cities")
+@Table(name = "city")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

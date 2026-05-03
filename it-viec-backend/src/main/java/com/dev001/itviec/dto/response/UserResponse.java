@@ -14,14 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 public class UserResponse {
     String id;
-    String username;
-    String password;
-    String firstName;
-    String lastName;
-    LocalDate dob;
-
-    //    Set<Role> roles;
+    String email;
     Role role;
-    //    this for test
-    String token;
 }

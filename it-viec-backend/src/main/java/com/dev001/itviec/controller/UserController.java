@@ -25,16 +25,10 @@ public class UserController {
     public ApiResponse<List<UserResponse>> getUsers() {
 
         // SecurityContextHolder chua thong tin ve user dang nhap hien tai
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Username: {}", authentication.getName());
-        authentication.getAuthorities().forEach(authority -> log.info("Authority: {}", authority.getAuthority()));
-
-        //      spotless:off
                 return ApiResponse.<List<UserResponse>>builder()
                             .code(1000)
                             .result(userService.getAllUsers())
                         .build();
-        //      spotless:on
     }
 
     //    @PostMapping
@@ -53,13 +47,13 @@ public class UserController {
                 .build();
     }
 
-//    @GetMapping("/my-profile")
-//    public ApiResponse<UserResponse> getMyProfile() {
-//        return ApiResponse.<UserResponse>builder()
-//                .code(1000)
-//                .result(userService.getMyProfile())
-//                .build();
-//    }
+    //    @GetMapping("/my-profile")
+    //    public ApiResponse<UserResponse> getMyProfile() {
+    //        return ApiResponse.<UserResponse>builder()
+    //                .code(1000)
+    //                .result(userService.getMyProfile())
+    //                .build();
+    //    }
 
     @PutMapping("/{id}")
     public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {

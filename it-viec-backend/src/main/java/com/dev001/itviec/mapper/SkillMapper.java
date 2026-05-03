@@ -1,12 +1,11 @@
 package com.dev001.itviec.mapper;
 
-import com.dev001.itviec.dto.response.CityResponse;
-import com.dev001.itviec.dto.response.SkillResponse;
-import com.dev001.itviec.entity.city.City;
-import com.dev001.itviec.entity.skill.Skill;
+import java.util.List;
+
 import org.mapstruct.Mapper;
 
-import java.util.List;
+import com.dev001.itviec.dto.response.SkillResponse;
+import com.dev001.itviec.entity.skill.Skill;
 
 @Mapper(componentModel = "spring")
 public interface SkillMapper {

@@ -5,28 +5,28 @@ CREATE SCHEMA IF NOT EXISTS itviecDB;
 USE itviecDB;
 
 -- Bảng kỹ năng
-CREATE TABLE skills (
+CREATE TABLE skill (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     skill_name VARCHAR(100) NOT NULL
 );
 
 
 -- Bảng thành phố
-CREATE TABLE cities (
+CREATE TABLE city (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   city_name NVARCHAR(100) NOT NULL
 );
 
 
 -- Bảng đất nước
-CREATE TABLE countries (
+CREATE TABLE country (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   country_name VARCHAR(100) NOT NULL
 );
 
 
 -- Bảng tài khoản
-CREATE TABLE users (
+CREATE TABLE user (
   id VARCHAR(255) PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
@@ -35,11 +35,21 @@ CREATE TABLE users (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE token (
+    id VARCHAR(255) PRIMARY KEY,
+      token VARCHAR(255) NOT NULL,
+      token_type ENUM('BEARER') DEFAULT 'BEARER',
+      expiry_time DATETIME,
+      revoked BOOLEAN DEFAULT FALSE,
+      is_access_token BOOLEAN DEFAULT FALSE,
+      user_id VARCHAR(255) NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES user(id)
+);
 
 -- Bảng ứng viên
-CREATE TABLE seekers (
+CREATE TABLE seeker (
   id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL UNIQUE,
   full_name NVARCHAR(255) NOT NULL,
   job_title NVARCHAR(255),
   phone_number VARCHAR(10),
@@ -51,28 +61,28 @@ CREATE TABLE seekers (
   cover_letter NVARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (city_id) REFERENCES cities(id)
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 
 -- Bảng nhà tuyển dụng
-CREATE TABLE employers (
+CREATE TABLE employer (
   id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL UNIQUE,
   full_name NVARCHAR(255) NOT NULL,
   job_title NVARCHAR(255),
   phone_number VARCHAR(10),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
 
 -- Bảng công ty
-CREATE TABLE companies (
+CREATE TABLE company (
   id VARCHAR(255) PRIMARY KEY ,
-  employer_id VARCHAR(255) NOT NULL,                           -- nhân viên quản lý tài khoản công ty
+  employer_id VARCHAR(255) NOT NULL UNIQUE,                           -- nhân viên quản lý tài khoản công ty
   company_name NVARCHAR(255) NOT NULL,
   slug VARCHAR(255) UNIQUE,
   description NVARCHAR(255),
@@ -115,13 +125,13 @@ CREATE TABLE companies (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (employer_id) REFERENCES employers(id),
-  FOREIGN KEY (country_id) REFERENCES countries(id)
+  FOREIGN KEY (employer_id) REFERENCES employer(id),
+  FOREIGN KEY (country_id) REFERENCES country(id)
 );
 
 
 -- Bảng job
-CREATE TABLE jobs (
+CREATE TABLE job (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   company_id VARCHAR(255) NOT NULL,
   title NVARCHAR(255) NOT NULL,
@@ -141,13 +151,13 @@ CREATE TABLE jobs (
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (company_id) REFERENCES companies(id),
-  FOREIGN KEY (city_id)    REFERENCES cities(id)
+  FOREIGN KEY (company_id) REFERENCES company(id),
+  FOREIGN KEY (city_id)    REFERENCES city(id)
 );
 
 
 -- Bảng đơn ứng tuyển
-CREATE TABLE applications (
+CREATE TABLE application (
   id VARCHAR(255) PRIMARY KEY,
   seeker_id VARCHAR(255) NOT NULL,
   job_id BIGINT NOT NULL,
@@ -161,8 +171,8 @@ CREATE TABLE applications (
   employer_message MEDIUMTEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-  FOREIGN KEY (job_id) REFERENCES jobs(id)
+  FOREIGN KEY (seeker_id) REFERENCES seeker(id),
+  FOREIGN KEY (job_id) REFERENCES job(id)
 );
 
 
@@ -171,8 +181,8 @@ CREATE TABLE application_city (
 	application_id VARCHAR(255) NOT NULL,
     city_id BIGINT NOT NULL,
     PRIMARY KEY(application_id, city_id),
-    FOREIGN KEY (application_id) REFERENCES applications(id),
-    FOREIGN KEY (city_id) REFERENCES cities(id)
+    FOREIGN KEY (application_id) REFERENCES application(id),
+    FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 
@@ -181,8 +191,8 @@ CREATE TABLE seeker_city (
 	seeker_id VARCHAR(255) NOT NULL,
     city_id BIGINT NOT NULL,
     PRIMARY KEY(seeker_id, city_id),
-    FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-    FOREIGN KEY (city_id) REFERENCES cities(id)
+    FOREIGN KEY (seeker_id) REFERENCES seeker(id),
+    FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 -- Bảng seeker vs skill ( skill của ứng viên )
@@ -190,8 +200,8 @@ CREATE TABLE seeker_skill (
 	seeker_id VARCHAR(255) NOT NULL,
     skill_id BIGINT NOT NULL,
     PRIMARY KEY(seeker_id, skill_id),
-    FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
+    FOREIGN KEY (seeker_id) REFERENCES seeker(id),
+    FOREIGN KEY (skill_id) REFERENCES skill(id)
 );
 
 
@@ -200,8 +210,8 @@ CREATE TABLE company_skill (
 	company_id VARCHAR(255) NOT NULL,
     skill_id BIGINT NOT NULL,
     PRIMARY KEY(company_id, skill_id),
-    FOREIGN KEY (company_id) REFERENCES companies(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
+    FOREIGN KEY (company_id) REFERENCES company(id),
+    FOREIGN KEY (skill_id) REFERENCES skill(id)
 );
 
 
@@ -210,6 +220,6 @@ CREATE TABLE job_skill (
   job_id BIGINT NOT NULL,
   skill_id BIGINT NOT NULL,
   PRIMARY KEY (job_id, skill_id),
-  FOREIGN KEY (job_id)   REFERENCES jobs(id),
-  FOREIGN KEY (skill_id) REFERENCES skills(id)
+  FOREIGN KEY (job_id)   REFERENCES job(id),
+  FOREIGN KEY (skill_id) REFERENCES skill(id)
 );

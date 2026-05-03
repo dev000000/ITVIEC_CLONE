@@ -1,5 +1,6 @@
 package com.dev001.itviec.dto.response;
 
+import com.dev001.itviec.enums.Role;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.AccessLevel;
@@ -13,6 +14,7 @@ import lombok.experimental.FieldDefaults;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthenticationResponse {
     boolean authenticated;
-    String accessToken;
-    String refreshToken;
+    String id;
+    String email;
+    Role role;
 }

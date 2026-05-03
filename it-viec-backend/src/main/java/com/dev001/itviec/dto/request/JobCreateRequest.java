@@ -1,18 +1,17 @@
 package com.dev001.itviec.dto.request;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.dev001.itviec.entity.city.City;
-import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
-import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Builder
@@ -31,5 +30,5 @@ public class JobCreateRequest {
     ExperienceLevel experienceLevel;
     LocalDateTime postedAt;
     LocalDateTime expiresAt;
-    Set<Skill> skills;
+    List<Skill> skills;
 }

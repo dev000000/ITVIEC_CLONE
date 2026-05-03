@@ -1,17 +1,17 @@
 package com.dev001.itviec.controller;
 
-import com.dev001.itviec.dto.response.ApiResponse;
-import com.dev001.itviec.dto.response.SeekerResponse;
-import com.dev001.itviec.dto.response.SkillResponse;
-import com.dev001.itviec.service.SeekerService;
-import com.dev001.itviec.service.SkillService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.SeekerResponse;
+import com.dev001.itviec.service.SeekerService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController

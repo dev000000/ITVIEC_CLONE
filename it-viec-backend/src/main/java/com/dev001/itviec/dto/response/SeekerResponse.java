@@ -1,17 +1,18 @@
 package com.dev001.itviec.dto.response;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
+
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.Gender;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Data
 @Builder

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.request.*;
@@ -30,11 +31,15 @@ public class AuthenticationController {
                 .result(authResponse)
                 .build();
     }
-//    @PostMapping("/login")
-//    public String login(
-//            @RequestBody AuthenticationRequest request, HttpServletResponse response) {
-//        return request.getEmail();
-//    }
+
+    @GetMapping("/me")
+    public ApiResponse<AuthenticationResponse> me() {
+        AuthenticationResponse authResponse = authenticationService.getCurrentUser();
+        return ApiResponse.<AuthenticationResponse>builder()
+                .code(1000)
+                .result(authResponse)
+                .build();
+    }
 
     @PostMapping("/register")
     public ApiResponse<RegisterResponse> register(
@@ -47,11 +52,9 @@ public class AuthenticationController {
                 .build();
     }
 
-
     @PostMapping("/refresh-token")
-    public ApiResponse<?> refreshTokenH(HttpServletRequest request, HttpServletResponse response) {
+    public ApiResponse<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         authenticationService.refreshToken(request, response);
         return ApiResponse.<Void>builder().code(1000).build();
     }
-
 }

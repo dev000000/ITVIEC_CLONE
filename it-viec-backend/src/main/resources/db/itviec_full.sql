@@ -5,28 +5,28 @@ CREATE SCHEMA IF NOT EXISTS itviecDB;
 USE itviecDB;
 
 -- Bảng kỹ năng
-CREATE TABLE skills (
+CREATE TABLE skill (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     skill_name VARCHAR(100) NOT NULL
 );
 
 
 -- Bảng thành phố
-CREATE TABLE cities (
+CREATE TABLE city (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   city_name NVARCHAR(100) NOT NULL
 );
 
 
 -- Bảng đất nước
-CREATE TABLE countries (
+CREATE TABLE country (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   country_name VARCHAR(100) NOT NULL
 );
 
 
 -- Bảng tài khoản
-CREATE TABLE users (
+CREATE TABLE user (
   id VARCHAR(255) PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
@@ -35,11 +35,21 @@ CREATE TABLE users (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+CREATE TABLE token (
+    id VARCHAR(255) PRIMARY KEY,
+      token VARCHAR(255) NOT NULL,
+      token_type ENUM('BEARER') DEFAULT 'BEARER',
+      expiry_time DATETIME,
+      revoked BOOLEAN DEFAULT FALSE,
+      is_access_token BOOLEAN DEFAULT FALSE,
+      user_id VARCHAR(255) NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES user(id)
+);
 
 -- Bảng ứng viên
-CREATE TABLE seekers (
+CREATE TABLE seeker (
   id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL UNIQUE,
   full_name NVARCHAR(255) NOT NULL,
   job_title NVARCHAR(255),
   phone_number VARCHAR(10),
@@ -51,28 +61,28 @@ CREATE TABLE seekers (
   cover_letter NVARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id),
-  FOREIGN KEY (city_id) REFERENCES cities(id)
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 
 -- Bảng nhà tuyển dụng
-CREATE TABLE employers (
+CREATE TABLE employer (
   id VARCHAR(255) PRIMARY KEY,
-  user_id VARCHAR(255) NOT NULL,
+  user_id VARCHAR(255) NOT NULL UNIQUE,
   full_name NVARCHAR(255) NOT NULL,
   job_title NVARCHAR(255),
   phone_number VARCHAR(10),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );
 
 
 -- Bảng công ty
-CREATE TABLE companies (
+CREATE TABLE company (
   id VARCHAR(255) PRIMARY KEY ,
-  employer_id VARCHAR(255) NOT NULL,                           -- nhân viên quản lý tài khoản công ty
+  employer_id VARCHAR(255) NOT NULL UNIQUE,                           -- nhân viên quản lý tài khoản công ty
   company_name NVARCHAR(255) NOT NULL,
   slug VARCHAR(255) UNIQUE,
   description NVARCHAR(255),
@@ -115,13 +125,13 @@ CREATE TABLE companies (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-  FOREIGN KEY (employer_id) REFERENCES employers(id),
-  FOREIGN KEY (country_id) REFERENCES countries(id)
+  FOREIGN KEY (employer_id) REFERENCES employer(id),
+  FOREIGN KEY (country_id) REFERENCES country(id)
 );
 
 
 -- Bảng job
-CREATE TABLE jobs (
+CREATE TABLE job (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   company_id VARCHAR(255) NOT NULL,
   title NVARCHAR(255) NOT NULL,
@@ -141,13 +151,13 @@ CREATE TABLE jobs (
 
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (company_id) REFERENCES companies(id),
-  FOREIGN KEY (city_id)    REFERENCES cities(id)
+  FOREIGN KEY (company_id) REFERENCES company(id),
+  FOREIGN KEY (city_id)    REFERENCES city(id)
 );
 
 
 -- Bảng đơn ứng tuyển
-CREATE TABLE applications (
+CREATE TABLE application (
   id VARCHAR(255) PRIMARY KEY,
   seeker_id VARCHAR(255) NOT NULL,
   job_id BIGINT NOT NULL,
@@ -161,8 +171,8 @@ CREATE TABLE applications (
   employer_message MEDIUMTEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-  FOREIGN KEY (job_id) REFERENCES jobs(id)
+  FOREIGN KEY (seeker_id) REFERENCES seeker(id),
+  FOREIGN KEY (job_id) REFERENCES job(id)
 );
 
 
@@ -171,8 +181,8 @@ CREATE TABLE application_city (
 	application_id VARCHAR(255) NOT NULL,
     city_id BIGINT NOT NULL,
     PRIMARY KEY(application_id, city_id),
-    FOREIGN KEY (application_id) REFERENCES applications(id),
-    FOREIGN KEY (city_id) REFERENCES cities(id)
+    FOREIGN KEY (application_id) REFERENCES application(id),
+    FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 
@@ -181,8 +191,8 @@ CREATE TABLE seeker_city (
 	seeker_id VARCHAR(255) NOT NULL,
     city_id BIGINT NOT NULL,
     PRIMARY KEY(seeker_id, city_id),
-    FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-    FOREIGN KEY (city_id) REFERENCES cities(id)
+    FOREIGN KEY (seeker_id) REFERENCES seeker(id),
+    FOREIGN KEY (city_id) REFERENCES city(id)
 );
 
 -- Bảng seeker vs skill ( skill của ứng viên )
@@ -190,8 +200,8 @@ CREATE TABLE seeker_skill (
 	seeker_id VARCHAR(255) NOT NULL,
     skill_id BIGINT NOT NULL,
     PRIMARY KEY(seeker_id, skill_id),
-    FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
+    FOREIGN KEY (seeker_id) REFERENCES seeker(id),
+    FOREIGN KEY (skill_id) REFERENCES skill(id)
 );
 
 
@@ -200,8 +210,8 @@ CREATE TABLE company_skill (
 	company_id VARCHAR(255) NOT NULL,
     skill_id BIGINT NOT NULL,
     PRIMARY KEY(company_id, skill_id),
-    FOREIGN KEY (company_id) REFERENCES companies(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
+    FOREIGN KEY (company_id) REFERENCES company(id),
+    FOREIGN KEY (skill_id) REFERENCES skill(id)
 );
 
 
@@ -210,14 +220,14 @@ CREATE TABLE job_skill (
   job_id BIGINT NOT NULL,
   skill_id BIGINT NOT NULL,
   PRIMARY KEY (job_id, skill_id),
-  FOREIGN KEY (job_id)   REFERENCES jobs(id),
-  FOREIGN KEY (skill_id) REFERENCES skills(id)
+  FOREIGN KEY (job_id)   REFERENCES job(id),
+  FOREIGN KEY (skill_id) REFERENCES skill(id)
 );
 
 -- Insert dữ liệu
 
 
-INSERT INTO skills (skill_name) VALUES
+INSERT INTO skill (skill_name) VALUES
 ('ABAP'),
 ('Agile'),
 ('AI'),
@@ -332,7 +342,7 @@ INSERT INTO skills (skill_name) VALUES
 ('Wordpress');
 
 
-INSERT INTO cities (city_name) VALUES
+INSERT INTO city (city_name) VALUES
 (N'Tuyên Quang'),
 (N'Lào Cai'),
 (N'Thái Nguyên'),
@@ -369,7 +379,7 @@ INSERT INTO cities (city_name) VALUES
 (N'Cao Bằng'),
 ('Others');
 
-INSERT INTO countries (country_name) VALUES
+INSERT INTO country (country_name) VALUES
 ('Vietnam'),
 ('Japan'),
 ('South Korea'),
@@ -407,7 +417,7 @@ INSERT INTO countries (country_name) VALUES
 ('Kuwait'),
 ('Others');
 
-INSERT INTO users (id, email, password, role, created_at)
+INSERT INTO user (id, email, password, role, created_at)
 VALUES
 ('a1b2c3d4-e5f6-11ee-b1a2-0242ac120002', 'mb@example.com', '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani', 'EMPLOYER', '2025-05-03 19:17:00'), -- mk : Temp@2025!
 ('a1b2c3d4-e5f6-11ee-b1a3-0242ac120003', 'scandinavian@example.com', '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani', 'EMPLOYER', '2025-05-03 19:17:00'),
@@ -434,7 +444,7 @@ VALUES
 ('a1b2c3d4-e5f6-11ee-b1c3-0242ac120023', 'seeker14@example.com', '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani', 'USER', '2025-06-22 10:10:41'),
 ('00000000-0000-0000-0000-000000000001', 'admin@example.com', '$2b$10$jV0YhD2FctnfQcuuaCQWf.DjHIaIzmJUUK3QtXbFg3gRB/dg5SbPK', 'ADMIN', '2025-05-01 00:00:00'); -- mk : admin@123
 
-INSERT INTO seekers (
+INSERT INTO seeker (
   id, user_id, full_name, job_title, phone_number,
   date_of_birth, gender, city_id, address, personal_link, cover_letter
 )
@@ -677,7 +687,7 @@ INSERT INTO seeker_city (seeker_id, city_id) VALUES
 ('a1b2c3d4-e5f6-11ee-s1ek-0111ac130014',16);
 
 
-INSERT INTO employers (id, user_id, full_name, job_title, phone_number)
+INSERT INTO employer (id, user_id, full_name, job_title, phone_number)
 VALUES
 ('a1b2c3d4-e5f6-11ee-e1p1-0242ac120002','a1b2c3d4-e5f6-11ee-b1a2-0242ac120002', N'MB HR Manager',            N'HR Manager', '0909876543'),
 ('a1b2c3d4-e5f6-11ee-e1p1-0242ac120003','a1b2c3d4-e5f6-11ee-b1a3-0242ac120003', N'Scandinavian HR Manager',  N'HR Manager', '0909876544'),
@@ -689,7 +699,7 @@ VALUES
 ('a1b2c3d4-e5f6-11ee-e1p1-0242ac120009','a1b2c3d4-e5f6-11ee-b1a9-0242ac120009', N'Bosch HR Manager',         N'HR Manager', '0909876550'),
 ('a1b2c3d4-e5f6-11ee-e1p1-0242ac120010','a1b2c3d4-e5f6-11ee-b1b0-0242ac120010', N'SSI HR Manager',           N'HR Manager', '0909876551');
 
-INSERT INTO companies (
+INSERT INTO company (
   id, employer_id, company_name, slug, description, website, logo_url, address,
   company_model, industry, company_size, country_id, working_hours, overtime_policy,
   company_introduction, our_expertise, why_work_here, created_at
@@ -837,7 +847,7 @@ INSERT INTO company_skill (company_id, skill_id) VALUES
 ('a1b2c3d4-e5f6-11ee-c0mp-000000000009', 79);
 
 
-INSERT INTO jobs ( company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
+INSERT INTO job ( company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 )
 VALUES
@@ -850,7 +860,7 @@ VALUES
  '<ul><li>Tốt nghiệp đại học chính quy ...</li><li><strong>7 năm kinh nghiệm sản xuất phần mềm</strong></li><li>5 năm xây dựng/vận hành Framework Auto-Test; 3 năm quản lý</li><li>Kinh nghiệm Automation & Performance Test tài chính</li><li>Ưu tiên ISTQB Expert, kinh nghiệm ngân hàng/lập trình</li></ul>',
  '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>',
  'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội',
- (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+ (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
  '20-30m','ONSITE','SENIOR',
  '2025-05-04 07:00:00','2025-06-03 07:00:00','ACTIVE'),
 
@@ -863,7 +873,7 @@ VALUES
  '<ul><li>Tối thiểu 2 năm Backend (ưu tiên Java)</li><li>1-2 năm Microservice</li><li>Thành thạo Spring (core/security/boot)</li><li>DB: Oracle/SQLServer/PostgreSQL/MongoDB</li><li>Kafka, Redis...</li></ul>',
  '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>',
  'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội',
- (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+ (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
  '1000 - 2000 USD','ONSITE','SENIOR',
  '2025-04-23 07:00:00','2025-05-23 07:00:00','ACTIVE'),
 
@@ -876,7 +886,7 @@ VALUES
  '<ul><li>≥ 2 năm Python Backend</li><li>Thành thạo Django & REST</li><li>DB: PostgreSQL/MySQL/MongoDB</li><li>Microservice & Cloud</li><li>Ưu tiên DevOps</li></ul>',
  '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>',
  'Tòa nhà MB, số 23 Trần Duy Hưng, Quận Cầu Giấy, Hà Nội',
- (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+ (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
  'Cạnh tranh dựa trên năng lực','ONSITE','SENIOR',
  '2025-04-22 07:00:00','2025-05-22 07:00:00','ACTIVE'),
 
@@ -889,7 +899,7 @@ VALUES
  '<ul><li>≥ 2 năm vị trí tương đương</li><li>BE: Java(Spring Boot), Python(FastAPI/Flask)</li><li>FE: HTML/CSS/JS – Angular</li><li>DB: Oracle/PostgreSQL/MongoDB/Redis</li><li>Kafka/RabbitMQ/K8s/WebSocket/gRPC/ELK/OAuth2/OIDC/SSO</li></ul>',
  '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>',
  'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội',
- (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+ (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
  '2,000 - 3,000 USD','ONSITE','MID',
  '2025-05-05 07:00:00','2025-06-04 07:00:00','ACTIVE'),
 
@@ -902,7 +912,7 @@ VALUES
  '<ul><li>ĐH Thống kê/DS/Kinh tế/Tài chính/Ngân hàng</li><li>≥ 1 năm phân tích dữ liệu tài chính</li><li>SQL, Tableau/Power BI, Oracle, DataViz</li><li>TOEIC ≥ 500</li></ul>',
  '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>',
  'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội',
- (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+ (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
  '10m-20m','ONSITE','JUNIOR',
  '2025-05-05 07:00:00','2025-06-04 07:00:00','ACTIVE'),
 
@@ -915,11 +925,11 @@ VALUES
  '<ul><li>Expert C#, ASP.NET Core, kiến trúc, Azure/AWS CI/CD, Docker/K8s</li><li>SQL Server, EF, tuning</li><li>FE: HTML/CSS/JS/React</li><li>Testing (xUnit/NUnit), Git, Agile/Scrum</li></ul>',
  '<p>Bạn sẽ tham gia phát triển SaaS EDC – Clinical Trial Platform... Scandinavian culture...</p>',
  'Tầng 19, Peakview Tower, 36 Hoàng Cầu, Đống Đa, Hà Nội',
- (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+ (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
  'You''ll love it','ONSITE','SENIOR',
  '2025-04-29 07:00:00','2025-05-29 07:00:00','ACTIVE');
  -- (7) Trapets – Fullstack .NET Developer
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -931,13 +941,13 @@ INSERT INTO jobs (
   '<ul><li>At a minimum, you should have a bachelor’s degree in Software Development or equivalent.</li><li>Have solid understanding of the full software development life cycle.</li><li>Have at least 5 years’ experiences with Microsoft’s development stack: <strong>C#, .Net Framework, .Net Core,</strong> SQL Server.</li><li>Have experience with Rest-API, microservices and cloud-based solutions.</li><li>Have knowledge of TypeScript, HTML5, CSS3, JavaScript, and Query.</li><li>Will be advance if you have experience with <strong>Angular and or React.</strong></li><li>Used to working in teams but also independently and have no problems moving freely in the stack and probably have an area you are stronger in.</li><li>Will be advance if you have experience of the financial market or have worked with Regtech / Fintech.</li><li>Have excellent and analytical problem-solving skills.</li><li>Have the ability to learn quickly and manage yourself independently.</li><li><strong>Have strong verbal and written communication skills in English.</strong></li></ul>',
   '<p><strong>You will be:</strong></p><ul><li>Stepping on developing software as services for Regulatory Finance business in a leading company.</li><li>Working agile and being part of one of our development teams across countries and also working in close collaboration with our business experts.</li><li>Long-term developing your career path on the edge of Microsoft as well as modern UI technologies.</li><li>Living on our Scandinavian culture and office while working in Agile environment that has strong team spirit, openness, unceasing creativity and innovation.</li></ul><p><strong>What will you get?</strong></p><ul><li><strong>You’ll get to work with experienced software engineers worldwide at market leading, innovative Scandinavian SaaS company looking to accelerate growth.</strong></li><li><strong>Scandinavian Work Culture: creativity, innovation and work-life balance.</strong></li><li>Competitive salary and 100% official salary during the probation period.</li><li>Annual review and 13th month salary.</li><li>Premium healthcare and accident insurance.</li><li>Wellness package supports employees stay healthy and wealthy.</li><li>Exciting company outing/events and team building activities.</li><li>On-site and training opportunities in Nordic.</li><li>Modern working environment.</li></ul>',
   'Tầng 19, tòa nhà Peakview Tower, 36 Hoàng Cầu, Đống Đa, Hà Nội, Quận Đống Đa, Hà Nội',
-  (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
   'You''ll love it','ONSITE','MID',
   '2025-04-29 07:00:00','2025-05-29 07:00:00','ACTIVE'
 );
 
 -- (8) Milient – QA Automation Engineer
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -949,13 +959,13 @@ INSERT INTO jobs (
   '<ul><li>Bachelor’s degree in computer science, engineering, or a related field.</li><li>Proven experience as a QA Engineer or similar role.</li><li>Strong knowledge of software QA methodologies, tools, and processes.</li><li>Experience with automated testing tools such as Cypress, JUnit, or TestNG.</li><li>Proficiency in scripting languages such as Python, JavaScript, or Bash.</li><li>Familiarity with SQL and databases.</li><li>Excellent problem-solving skills and attention to detail.</li><li>Strong communication and teamwork skills.</li><li>Ability to work in a fast-paced environment and deliver at the agreed time.</li></ul><p><strong>Preferred Qualifications:</strong></p><ul><li>Experience with continuous integration/continuous deployment (CI/CD) pipelines.</li><li>Knowledge of Agile methodologies and tools (e.g., Jira, Confluence).</li><li>Familiarity with cloud platforms (e.g., AWS, Azure, Google Cloud).</li><li>Experience with performance and security testing tools.</li></ul>',
   '<p><strong>What we offer:</strong></p><p>Challenging responsibilities, an entrepreneurial environment, and a supportive team. If you’re not a perfect fit but have what it takes, reach out. We value diversity.</p><p><strong>What will you get?</strong></p><ul><li><strong>You’ll get to work with experienced software engineers worldwide at market leading, innovative Scandinavian SaaS company looking to accelerate growth.</strong></li><li><strong>Scandinavian Work Culture: creativity, innovation and work-life balance.</strong></li><li>Competitive salary and 100% official salary during the probation period.</li><li>Annual review and 13th month salary.</li><li>Premium healthcare and accident insurance.</li><li>Wellness package supports employees to stay healthy and wealthy.</li><li>Exciting company outing/events and team building activities.</li><li>On-site and training opportunities in Nordic.</li><li>Modern working environment.</li></ul>',
   'Tầng 19, tòa nhà Peakview Tower, 36 Hoàng Cầu, Đống Đa, Hà Nội, Quận Đống Đa, Hà Nội',
-  (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
   '1,500 - 2,500 USD','ONSITE','MID',
   '2025-04-28 07:00:00','2025-05-28 07:00:00','ACTIVE'
 );
 
 -- (9) OTSV – Technical Architect
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -967,13 +977,13 @@ INSERT INTO jobs (
   '<p><strong>POSITION QUALIFICATIONS AND REQUIREMENT</strong></p><ul><li><strong>Full-stack Development Expertise</strong>: Extensive experience in both backend (Node.js/NestJS) and frontend (React/Next.js) development.</li><li><strong>Communication</strong>: Fluency in English is required.</li><li><strong>Experience</strong>: 3-5 years of experience in a similar Technical Architect role.</li><li><strong>Cloud Infrastructure</strong>: Advanced knowledge of cloud platforms (preferably Google Cloud), with expertise in Kubernetes, Service Mesh, and optimizing infrastructure for large-scale, secure, and resilient systems.</li><li><strong>Application Architecture</strong>: Expertise in designing, evaluating, and validating modern software architectures such as Microservices, Domain-Driven Design (DDD), Clean Architecture.</li><li><strong>Data Architecture</strong>: Expertise in designing and managing data models, with a strong focus on PostgreSQL, as well as other SQL/NoSQL databases, ensuring optimal performance and scalability.</li><li><strong>Non-Functional Requirements</strong>: Proven expertise in managing and optimizing system non-functional requirements, including performance, security, and scalability.</li><li><strong>Technical Troubleshooting</strong>: Strong problem-solving skills for diagnosing and resolving technical and production incidents effectively.</li><li><strong>Technical Communication</strong>: Excellent communication skills to convey complex technical concepts clearly to both technical and non-technical stakeholders.</li></ul><p><strong>PERSONAL ATTRIBUTES:</strong></p><ul><li>Experience in mentoring people</li><li>Calm in finding resolutions for issues/problems</li></ul>',
   '<p><strong>More on OTSV – what is it like to work in OTSV?</strong></p><p>At OTSV, work is a form of self-fulfillment, we encourage staff to leave their comfort zone, think out of the box, and share their ideas without hesitation. As a team, we analyze and evaluate issues objectively to learn quickly from mistakes. We believe in ‘fail quick, success quick’ and strive to keep pace with the forefront of technology to digitize ONE’s business.</p><p>In line with the Agile methodology, we have an open office concept with lots of meeting areas for spontaneous team meetings.</p><p>We aim to make our staff feel as comfortable in the office as they would feel at home.</p><p>You will love working here!</p><ul><li>13th-month salary</li><li>Performance Bonus</li><li>Social Security co-contribution based on full gross salary</li><li>Premium health care (Bao Viet Insurance) for employees & dependents (parents or spouse + children).</li><li>Lunch allowance</li><li>Free drinks and snacks</li><li>17 days of Annual Leave</li><li>Annual health screening reimbursement: VND4,700,000/year</li><li>Well-being allowance: VND13,800,000 VND/year</li><li>Training and education sponsorship: 38,000,000/year</li></ul>',
   '1 Bis Đường Phạm Ngọc Thạch, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh, Việt Nam',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   '2,000 - 4,000 USD','FLEXIBLE','SENIOR',
   '2025-05-06 09:00:00','2025-06-05 09:00:00','ACTIVE'
 );
 
 -- (10) OTSV – Product Owner
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -985,13 +995,13 @@ INSERT INTO jobs (
   '<ul><li><strong>Advantageous to have 3-5 years of experience in product/service planning/UX</strong></li><li>Have a bachelor’s degree in business administration / Marketing / Economics / SCM or practical experience in project management/planning</li><li>Have at least 2-year experiences related to software development</li><li>Fluency in English is a MUST</li><li>Communication & negotiation skill</li><li>Organizational & analytical skill</li><li>Continuous improvement mindset</li><li>Data-driven focus</li><li>Be a savvy application user or have experience in website design</li><li>Familiarity with Agile Software Development</li><li><strong>Having experience in the shipping industry is a plus</strong></li></ul>',
   '<p>At OTSV, work is a self-fulfillment, we encourage staff to leave their comfort zone, think out of the box, and share their ideas without hesitation. As a team, we analyze and evaluate issues objectively to learn quickly from mistakes.</p><p>We believe in ‘fail quick, success quick’ and strive to keep pace with the forefront of technology to digitize ONE’s business.</p><p>The designs of our offices embrace our culture of being flexible and open. Unlike a conventional office, we have an open concept with different work areas which encourages collaboration, open-mindedness, and spontaneity.</p><p>Each work area has its charm and aims to make our staff feel as comfortable in the office as they would feel at home. Have a meet-up at the Café amidst the aroma of coffee!</p><p><strong>You will love working here!</strong></p><ul><li>Annual Salary Review & Increment</li><li>13th-month salary</li><li>Performance Bonus</li><li>Social Security co-contribution based on full gross salary</li><li>Premium health care (Bao Viet Insurance) for employees & dependents (parents or spouse and children).</li><li>Lunch allowance</li><li>Free drinks and snacks</li><li>17 days of Annual Leave</li><li>Annual health screening reimbursement: 4,700,000 VND/ year</li><li>Training and education sponsorship: 38,000,000VND/year</li><li>Well-being allowance: 13,800,000VND/year</li></ul>',
   '1 Bis Đường Phạm Ngọc Thạch, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh, Việt Nam, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','MID',
   '2025-05-06 09:00:00','2025-06-05 09:00:00','ACTIVE'
 );
 
 -- (11) OTSV – UI/UX Designer
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1003,13 +1013,13 @@ INSERT INTO jobs (
   '<ul><li>Proven track record of user research and user testing;</li><li><strong>Minimum of 2 years</strong> of relevant experience in <strong>design-thinking/UX </strong>including working on projects with cross-functional teams.</li><li><strong>Service, Product, and UX Design skills</strong></li><li>Proficiency with Sketch and Invision (or other prototyping tools), as well as other UX design programs</li><li>Proficient level of English in speech and writing in order to conduct and facilitate the design process</li><li>Good knowledge of Agile working principles</li><li>Good public speaking and strong facilitation skills</li><li>Prior work leading digital UX definition.</li><li>Trained and experienced in Design Thinking and Lean Start-Up principles.</li></ul>',
   '<p>At OTSV, work is a self-fulfillment, we encourage staff to leave their comfort zone, think out of the box, and share their ideas without hesitation. As a team, we analyze and evaluate issues objectively to learn quickly from mistakes.</p><p>We believe in ‘fail quick, success quick’ and strive to keep pace with the forefront of technology to digitize ONE’s business.</p><p>The designs of our offices embrace our culture of being flexible and open. Unlike a conventional office, we have an open concept with different work areas which encourages collaboration, open-mindedness, and spontaneity.</p><p>Each work area has its charm and aims to make our staff feel as comfortable in the office as they would feel at home. Have a meet-up at the Café amidst the aroma of coffee!</p><p><strong>You will love working here!</strong></p><ul><li>Annual Salary Review & Increment</li><li>13th-month salary</li><li>Performance Bonus</li><li>Social Security co-contribution based on full gross salary</li><li>Premium health care (Bao Viet Insurance) for employees & dependents (parents or spouse and children).</li><li>Lunch allowance</li><li>Free drinks and snacks</li><li>17 days of Annual Leave</li><li>Annual health screening reimbursement: 4,700,000 VND/ year</li><li>Training and education sponsorship: 38,000,000VND/year</li><li>Well-being allowance: 13,800,000VND/year</li></ul>',
   'Tầng 3-4 tòa nhà Phi Long, 52 Nguyễn Văn Linh, Quận Hải Châu, Đà Nẵng; 1 Bis Đường Phạm Ngọc Thạch, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh, Việt Nam, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','MID',
   '2025-05-06 09:00:00','2025-06-05 09:00:00','ACTIVE'
 );
 
 -- (12) OTSV – Full-Stack (React/Node)
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1021,13 +1031,13 @@ INSERT INTO jobs (
   '<p><strong>We are looking for the one who:</strong></p><ul><li>Having experience in Web Front-end (HTML/CSS/JS), <strong>NextJS or ReactJS</strong></li><li>Having experience in backend technology of <strong>Nodejs and TypeScript</strong> and frameworks available for Nest.js</li><li>Database programming or design skills, including relational database skills (SQL, etc.) and non-relational database skills (MongoDB, Redis, Cassandra, etc.).</li><li>CODING: The code should be well documented and compliant with good practices, as well as the testing skill (Unit Test, Integration Test, User Acceptance Test, Automation Regression Test.</li><li>RESTful API</li><li>Knowledge of Programming Principles, Design Patterns, etc;</li><li>Willing to learn new technology and have a product mindset.</li></ul><p><strong>Nice to have:</strong></p><ul><li>Experience in cloud architecture/infrastructure, especially on GCP</li><li>Experience with Docker;</li><li>Knowledge about Continuous Integration, Continuous Delivery (CI/CD);</li><li>Familiar with working in an Agile environment;</li></ul>',
   '<p><strong>More on OTSV – what is it like to work in OTSV?</strong></p><p>At OTSV, work is a form of self-fulfillment, we encourage staff to leave their comfort zone, think out of the box, and share their ideas without hesitation. As a team, we analyze and evaluate issues objectively to learn quickly from mistakes. We believe in ‘fail quick, success quick’ and strive to keep pace with the forefront of technology to digitize ONE’s business.</p><p>In line with the Agile methodology, we have an open office concept with lots of meeting areas for spontaneous team meetings.</p><p>We aim to make our staff feel as comfortable in the office as they would feel at home.</p><p>You will love working here!</p><ul><li>Competitive salary</li><li>Annual Increment</li><li>13th-month salary</li><li>Performance Bonus</li><li>Social Security co-contribution based on full gross salary</li><li>Premium health care (Bao Viet Insurance) for employees & dependents (parents or spouse + children).</li><li>Lunch allowance</li><li>Free drinks and snacks</li><li>17 days of Annual Leave</li><li>Annual health screening reimbursement: VND4,700,000/year</li><li>Well-being allowance: VND13,800,000 VND/year</li><li>Training and education sponsorship: 38,000,000/year</li></ul><p><strong>We value Teamwork and organization</strong><br>Team meals, gatherings, and other recreational and team bonding activities regularly.</p>',
   '1 Bis Đường Phạm Ngọc Thạch, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh, Việt Nam, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','MID',
   '2025-05-06 09:00:00','2025-06-05 09:00:00','ACTIVE'
 );
 
 -- (13) MCredit – Tester (Manual/Automation)
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1039,13 +1049,13 @@ INSERT INTO jobs (
   '<ul><li>Hiểu biết về cơ sở dữ liệu SQL, mySQL, Oracle</li><li>Kinh nghiệm làm việc trong các dự án triển khai cho ngân hàng, công ty tài chính là một lợi thế</li><li>Sử dụng các công cụ kiểm thử chức năng (automation test tool), kiểm thử hiệu năng (performance test tool) mã nguồn mở phổ biết trên thị trường như Jmeter, Selenium, SOAPUI.</li><li>Có kinh nghiệm viết test script là một lợi thế.</li></ul>',
   '<p><strong>Phúc lợi, đãi ngộ:</strong></p><ul><li>Thời gian làm việc: Thứ 2 – Thứ 6, nghỉ thứ 7 và Chủ nhật</li><li>Thu nhập xây dựng theo 3P cạnh tranh kèm các chế độ hấp dẫn (Bảo hiểm MIC, Ngày nghỉ sinh nhật, Chế độ dành riêng cho các mẹ đang nuôi con nhỏ: Happy mom’s room, Happy mom’s, hour...)</li><li>Cơ hội làm việc chuyên nghiệp tại môi trường tài chính và giải pháp số hàng đầu Việt Nam (Top 100 nơi làm việc tốt nhất Việt Nam 2024, Top 5 Công ty uy tín nhất ngành tài chính năm 2024)</li><li>Ứng dụng nền tảng công nghệ hiện đại, cập nhật xu hướng công nghệ mới (Data Lake & AI, Cloud AWS, Open API,...)</li><li>Được hướng dẫn từ các cấp quản lý và chuyên gia có kinh nghiệm nhiều năm trong ngành Tài chính & Ngân hàng.</li></ul>',
   'Tầng 9,10,11,12 Tòa nhà MB Bank, số 21 Cát Linh - Phường Cát Linh, Quận Đống Đa, Hà Nội',
-  (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
   '500 - 2,000 USD','ONSITE','JUNIOR',
   '2025-04-23 09:00:00','2025-05-23 09:00:00','ACTIVE'
 );
 
 -- (14) MCredit – Senior Java Developer
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1057,13 +1067,13 @@ INSERT INTO jobs (
   '<ul><li>Tốt nghiệp Đại học/cao đẳng các chuyên ngành IT, Khoa học máy tính</li><li>Có từ 5 năm kinh nghiệm tham gia các dự án trên nền tảng Java</li><li>Thành thạo về J2EE và ít nhất 1 trong các framework của Java (Struts, Spring, …);</li><li>Có kinh nghiệm làm việc với các hệ quản trị cơ sở dữ liệu phổ biến, đặc biệt là Oracle.</li><li>Có kinh nghiệm làm việc với Web service, hiểu về SOAP.</li><li>Nắm vững quy trình phát triển các dự án phần mềm.</li><li>Tiếng Anh đọc hiểu tài liệu và giao tiếp ở mức cơ bản.</li><li>Khả năng chịu áp lực cao và tuân thủ kỷ luật tốt.</li><li>Khả năng team work tốt và làm việc độc lập.</li></ul>',
   '<p><strong>Phúc lợi, đãi ngộ:</strong></p><ul><li>Thời gian làm việc: Thứ 2 – Thứ 6, nghỉ thứ 7 và Chủ nhật</li><li>Thu nhập xây dựng theo 3P cạnh tranh kèm các chế độ hấp dẫn (Bảo hiểm MIC, Ngày nghỉ sinh nhật, Chế độ dành riêng cho các mẹ đang nuôi con nhỏ: Happy mom’s room, Happy mom’s, hour...)</li><li>Cơ hội làm việc chuyên nghiệp tại môi trường tài chính và giải pháp số hàng đầu Việt Nam (Top 100 nơi làm việc tốt nhất Việt Nam 2024, Top 5 Công ty uy tín nhất ngành tài chính năm 2024)</li><li>Ứng dụng nền tảng công nghệ hiện đại, cập nhật xu hướng công nghệ mới (Data Lake & AI, Cloud AWS, Open API,...)</li><li>Được hướng dẫn từ các cấp quản lý và chuyên gia có kinh nghiệm nhiều năm trong ngành Tài chính & Ngân hàng.</li></ul>',
   'Tầng 9,10,11,12 Tòa nhà MB Bank, số 21 Cát Linh - Phường Cát Linh, Quận Đống Đa, Hà Nội; Tòa Nhà Scetpa Building - 19A Cộng Hòa, Quận Tân Bình, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   '1,000 - 3,000 USD','ONSITE','SENIOR',
   '2025-04-23 09:00:00','2025-05-23 09:00:00','ACTIVE'
 );
 
 -- (15) TYME(X) – Java API Engineer
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1075,14 +1085,14 @@ INSERT INTO jobs (
   '<p>You will be a perfect match if your profile ticks some below items:</p><p><strong>Must-have:</strong></p><ul><li>A pragmatic mindset.</li><li>Outstanding problem-solving ability, eagerness to learn, and curiosity.</li><li>A few years of software development experience with one or more general-purpose programming languages.</li><li>Strong database and schema design for large-scale applications.</li><li>Adaptable attitude and personality that is ready for continuous change.</li><li>Collaboration and culture fit in the Agile experience will be an advantage.</li><li>Good English skills.</li></ul><p><strong>Nice to have:</strong></p><ul><li>Experience in developing distributed systems on top of micro-services architecture, event-driven architecture <strong>using Java, Spring and Spring boot, Kafka, Redis,</strong> etc. is a big plus</li><li><strong>Experience in AWS, Ansible, Packer, Docker, Rancher, and K8s</strong> is a big plus</li><li>Experienced in automated testing frameworks is a plus</li><li>Good English listening and speaking is a big plus</li><li>Experience working in the banking and the financial domain is a plus</li></ul>',
   '<p><strong>You’ll love working with us if you are:</strong></p><ul><li>Passionate about technology.</li><li>Independent but also a good team player.</li><li>Comfortable with a high degree of ambiguity.</li><li>Focused on usability and speed.</li><li>Keen on presenting your ideas to your peers and management.</li></ul><p>At <strong>TYME,</strong> opportunities are here for the taking. If you want to be part of our purpose and live and lead through our values, we can offer exciting development opportunities through expanded lateral roles, stretch assignments, or people leadership.</p><p><strong>Some of our benefits:</strong></p><ul><li><strong>Meal and parking allowances</strong> are covered by the company.</li><li><strong>Full benefits and salary rank during probation</strong>.</li><li><strong>Insurances</strong> such as Vietnamese labor law and <strong>premium health care</strong> for you and your family.</li><li><strong>SMART goals and clear career opportunities</strong> (technical seminar, conference, and career talk) - we focus on your development.</li><li><strong>Values-driven, international working environment, and agile culture.</strong></li><li><strong>Overseas travel opportunities</strong> for training and work-related.</li><li><strong>Internal Hackathons and company events</strong> (team building, coffee run, etc.).</li><li><strong>Pro-Rate</strong> and <strong>performance bonus</strong>.</li><li><strong>15-day annual + 3-day sick leave</strong> per year from the company.</li><li>Work-life balance <strong>40-hr per week</strong> from <strong>Mon to Fri</strong>.</li></ul>',
   'Level 5 - 6, East Tower, Lumiere Riverside, 277 Vo Nguyen Giap, An Phu Ward, Thu Duc City, HCMC., Thành phố Thủ Đức, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','MID',
   '2025-05-05 09:00:00','2025-06-04 09:00:00','ACTIVE'
 );
  -- =========================================
 -- JOB #16
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1094,7 +1104,7 @@ INSERT INTO jobs (
   '<h3><strong>Must-have</strong> <strong>skills</strong></h3><ol><li><strong>Product-obsessed</strong>: You live and breathe <strong>product thinking</strong>—you’re not just here to generate code, but to <strong>own the product</strong> and drive its success. You focus on solving customer problems and delivering experiences that make a difference.</li><li><strong>Customer focussed</strong>: You can talk to directly customers or subject matter experts and ask questions to deeply understand their needs so that you can deliver products that resonate.</li><li><strong>Creative problem-solver</strong>: You tackle complex challenges with creativity and an analytical mindset, always balancing technical decisions with business outcomes.</li><li><strong>Proven development experience</strong>: You’ve got a solid background in <strong>software development</strong>, with expertise in one or more programming languages (e.g., <strong>Python, Java</strong>).</li><li><strong>Adaptability & hustle</strong>: You thrive in an <strong>ever-evolving environment</strong>, where you can wear many hats, pivot quickly, and move fast without losing focus on the big picture.</li><li><strong>Team player with an edge</strong>: You bring a strong <strong>collaborative spirit</strong> to an <strong>AI-first</strong> <strong>team</strong>, but you’re also ready to <strong>lead initiatives</strong> and be the go-to person for the features you own.</li><li><strong>Fluent in English</strong>: You’re a smooth communicator, capable of turning technical jargon into easy-to-understand ideas for both teammates and stakeholders.</li><li><strong>Automation lover</strong>: You believe in the power of <strong>automated testing frameworks</strong> to build robust and reliable systems.</li><li><strong>Love for Learning</strong>: You love learning new domains of knowledge and technologies so that you can build better products faster. You know there is always more to learn and are always open to being wrong.</li><li><strong>Early Adopter</strong>: You have already built a few simple apps with AI tools, experimented with mcp servers and are familiar with prompt engineering.</li></ol><h3><strong>Nice to Have:</strong></h3><ul><li>Experience developing products for fintech or financial product environments.</li><li>Front-end development experience (eg, reactjs)</li></ul>',
   '<p><strong>You’ll love working with us if you are:</strong></p><ul><li>Passionate about technology.</li><li>Independent but also a good team player.</li><li>Comfortable with a high degree of ambiguity.</li><li>Focused on usability and speed.</li><li>Keen on presenting your ideas to your peers and management.</li></ul><p>At <strong>TYME,</strong> opportunities are here for the taking. If you want to be part of our purpose and live and lead through our values, we can offer exciting development opportunities through expanded lateral roles, stretch assignments, or people leadership.</p><p><strong>Some of our benefits:</strong></p><ul><li><strong>Meal and parking allowances</strong> are covered by the company.</li><li><strong>Full benefits and salary rank during probation</strong>.</li><li><strong>Insurances</strong> such as Vietnamese labor law and <strong>premium health care</strong> for you and your family.</li><li><strong>SMART goals and clear career opportunities</strong> (technical seminar, conference, and career talk) - we focus on your development.</li><li><strong>Values-driven, international working environment, and agile culture.</strong></li><li><strong>Overseas travel opportunities</strong> for training and work-related.</li><li><strong>Internal Hackathons and company events</strong> (team building, coffee run, etc.).</li><li><strong>Pro-Rate</strong> and <strong>performance bonus</strong>.</li><li><strong>15-day annual + 3-day sick leave</strong> per year from the company.</li><li>Work-life balance <strong>40-hr per week</strong> from <strong>Mon to Fri</strong>.</li></ul>',
   'Level 5 - 6, East Tower, Lumiere Riverside, 277 Vo Nguyen Giap, An Phu Ward, Thu Duc City, HCMC., Thành phố Thủ Đức, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-04-22 09:00:00','2025-05-22 09:00:00','ACTIVE'
 );
@@ -1102,7 +1112,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #17
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1114,7 +1124,7 @@ INSERT INTO jobs (
   '<p><strong>Technical Skills:</strong></p><ul><li>6+ years of experience in Mobile Development.</li><li>2+ years of experience as a Mobile Development Team Leader.</li><li>Proven expertise in either iOS (SwiftUI and UIKit) or Android (Kotlin) development. While proficiency in both platforms is not mandatory, it will be a plus.</li><li>Experience working on various mobile apps, preferably large-scale applications with multi-country targets.</li><li>Experience with modern mobile architecture.</li><li>Having experience in KMP(Kotlin Multiplatform) development is a big plus.</li><li>Familiarity with backend development technologies (E.g. APIs and databases)</li><li>Experience with continuous integration and continuous delivery/continuous deployment.</li><li>Experience with Modularization and code artifact management</li></ul><p><strong>Soft skills:</strong></p><ul><li>Excellent communication and teamwork abilities.</li><li>Excellent problem-solving and analytical skills.</li><li>Strong willingness to learn new practices and technologies.</li><li>Exceptional interpersonal skills, including facilitation and negotiation.</li><li>Understanding and experience of Agile methodology.</li><li>Experience in working across several technical domains with the ability to ‘deep dive’ where required and ensure correct solutions are implemented.</li><li>Ability to translate technical talk to the business.</li><li>Ability to deliver convincing presentations that provide significant insight and generate consensus and buy-in.</li><li>Experience managing and leading a development team.</li></ul>',
   '<p><strong>You’ll love working with us if you are:</strong></p><ul><li>Passionate about technology.</li><li>Independent but also a good team player.</li><li>Comfortable with a high degree of ambiguity.</li><li>Focused on usability and speed.</li><li>Keen on presenting your ideas to your peers and management.</li></ul><p>At <strong>TYME,</strong> opportunities are here for the taking. If you want to be part of our purpose and live and lead through our values, we can offer exciting development opportunities through expanded lateral roles, stretch assignments, or people leadership.</p><p><strong>Some of our benefits:</strong></p><ul><li><strong>Meal and parking allowances</strong> are covered by the company.</li><li><strong>Full benefits and salary rank during probation</strong>.</li><li><strong>Insurances</strong> such as Vietnamese labor law and <strong>premium health care</strong> for you and your family.</li><li><strong>SMART goals and clear career opportunities</strong> (technical seminar, conference, and career talk) - we focus on your development.</li><li><strong>Values-driven, international working environment, and agile culture.</strong></li><li><strong>Overseas travel opportunities</strong> for training and work-related.</li><li><strong>Internal Hackathons and company events</strong> (team building, coffee run, etc.).</li><li><strong>Pro-Rate</strong> and <strong>performance bonus</strong>.</li><li><strong>15-day annual + 3-day sick leave</strong> per year from the company.</li><li>Work-life balance <strong>40-hr per week</strong> from <strong>Mon to Fri</strong>.</li></ul>',
   'Level 5 - 6, East Tower, Lumiere Riverside, 277 Vo Nguyen Giap, An Phu Ward, Thu Duc City, HCMC., Thành phố Thủ Đức, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','ONSITE','LEAD',
   '2025-04-04 09:00:00','2025-05-04 09:00:00','ACTIVE'
 );
@@ -1122,7 +1132,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #18
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1134,7 +1144,7 @@ INSERT INTO jobs (
   '<p><strong>Essential:</strong></p><ul><li>5+ years of experience in QA / Testing, preferably in Finance / Banking.</li><li>Experiences in software testing for Mobile Applications (iOS and Android).</li><li>Experiences in API testing (Restful API, SOAP API... with Postman, SOAPUI...).</li><li>Friendly with Database queries, experience with SQL, and NoSQL.</li><li>Familiar with Issue/ Test management tools: Jira, Confluence, Xray, Test Rails…</li><li>Understand fundamental concepts of software <i>testing</i> – Testing Foundation (Functional and Non-functional testing, hoc testing, Exploratory testing…).</li><li>Good communication and well collaboration with members of the Agile team to drive up the Quality of the product.</li><li>Competence in requirements analysis and testing.</li><li>Experience in technical problem solving; root cause analysis; and data gathering, analysis, and reporting within a system.</li><li>Able to communicate English well (write, read, speak, and listen).</li><li>Flexibility and the ability to work effectively with internal and external clients.</li><li>Strong motivation, and intellect. Resourcefulness, independence, and energy.</li><li>Experiences in Behavior-Driven-Development methodology.</li><li>Knowledge/familiarity with object-oriented and programming languages (Java, Python).</li><li>Knowledges / Experiences in Selenium WebDriver, Appium or Rest Assured.</li><li>Experience with Version Control (GIT) and CI/CD (Teamcity / Jenkin).</li></ul><p><strong>Desirable:</strong></p><ul><li>Tertiary qualifications in IT or a related field.</li><li>Have experience in Domains about Finance / Banking is a plus.</li><li>Software development experiences.</li><li>Performance testing experience.</li></ul>',
   '<p><strong>You’ll love working with us if you are:</strong></p><ul><li>Passionate about technology.</li><li>Independent but also a good team player.</li><li>Comfortable with a high degree of ambiguity.</li><li>Focused on usability and speed.</li><li>Keen on presenting your ideas to your peers and management.</li></ul><p>At <strong>TYME,</strong> opportunities are here for the taking. If you want to be part of our purpose and live and lead through our values, we can offer exciting development opportunities through expanded lateral roles, stretch assignments, or people leadership.</p><p><strong>Some of our benefits:</strong></p><ul><li><strong>Meal and parking allowances</strong> are covered by the company.</li><li><strong>Full benefits and salary rank during probation</strong>.</li><li><strong>Insurances</strong> such as Vietnamese labor law and <strong>premium health care</strong> for you and your family.</li><li><strong>SMART goals and clear career opportunities</strong> (technical seminar, conference, and career talk) - we focus on your development.</li><li><strong>Values-driven, international working environment, and agile culture.</strong></li><li><strong>Internal Hackathons and company events</strong> (team building, coffee run, etc.).</li><li><strong>13th-month salary</strong> and <strong>performance bonus (pro-rated)</strong>.</li><li><strong>15-day annual leave + 3-day sick leave</strong> per year from the company.</li><li>Work-life balance <strong>40-hr per week</strong> from <strong>Monday to Friday.</strong></li></ul>',
   'Capital Place, 29 Lieu Giai, Ngoc Khanh Ward, Quận Ba Đình, Hà Nội',
-  (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-04-03 09:00:00','2025-05-03 09:00:00','ACTIVE'
 );
@@ -1142,7 +1152,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #19
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1154,7 +1164,7 @@ INSERT INTO jobs (
   '<p><strong>Must-have:</strong></p><ul><li><span>Empathy for Andpad''s mission and values</span></li><li><span><strong>5+ years of experience in developing and operating Web services using Ruby on Rails </strong></span></li><li><span><strong>Experience as a technical lead throughout the full project development lifecycle</strong></span></li><li><span>Knowledge and development experience with database systems</span></li><li><span>Experience using cloud platforms (AWS, GCP, Azure, etc.)</span></li><li><span>Experience in API design, development, and documentation</span></li><li><span>Understanding of the software development lifecycle</span></li><li><span>Programming, debugging, and testing skills</span></li><li><span>Good at English communication</span></li></ul><p><strong>Nice to have:</strong></p><ul><li>Experience of discovering problems from logs and solving problems.</li><li>Experience in developing systems using container technologies such as Docker and Kubernetes.</li><li>Experience in designing architecture based on application requirements and selecting middleware.</li><li>Experience of publishing and contributing OSS.</li><li>External technical output experience (writing, technical blog, stage, etc.).</li></ul>',
   '<ul><li><span>Great salary package. Annual performance review: </span><span>twice/ year</span><span>.</span></li><li><span>13th-salary Bonus for all staff.</span></li><li><span>Patents and Inventions bonus.</span></li><li><span>Bao Viet Premium Healthcare Insurance Package </span><span>even during probation period</span><span> </span></li><li><span>Annual Health Check-up for all staff.</span></li><li><span>Good career advancement opportunities.</span></li><li><span>Opportunity to acquire technical knowledge and experience in the latest technologies.</span></li><li><span>12 days annual leaves, + 6 days New Year every year.</span></li><li><span>Company trip, Year-End Party.</span></li><li><span>Insurance in full gross salary.</span></li><li><span>Gift for Tet/ Autumn Festival</span></li><li><span>Hot bonus when introduce members ( Referral )</span></li><li><span>Free Coffee & Tea</span></li><li><span>Flexible working </span></li><li><span>Laptops Macbook Pro, monitors, etc</span></li></ul>',
   '3rd Floor, Dong Nhan Building, 90 Nguyen Dinh Chieu, Da Kao Ward, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-04-18 09:00:00','2025-05-18 09:00:00','ACTIVE'
 );
@@ -1162,7 +1172,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #20
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1174,7 +1184,7 @@ INSERT INTO jobs (
   '<p><strong>Must have: </strong></p><ul><li><span>Empathy for Andpad''s mission and values</span></li><li><span><strong>5+ years of experience in developing and operating Web services using Golang, AWS, gRPC</strong></span></li><li><span><strong>Experience as a technical lead throughout the full project development lifecycle</strong></span></li><li><span>Experience in developing and operating Web applications using frameworks</span></li><li><span>Experience in schema design such as RDBMS and KVS and design of optimal query</span></li><li><span>Have knowledge of Web application security</span></li><li><span>Experience Test code implementation ( Unit Test )</span></li><li><span><strong>Good at English communication</strong></span></li></ul><p><strong>Nice to have: </strong></p><ul><li><span>Experience of discovering problems from logs and solving problems</span></li><li><span>Experience in developing systems using container technologies such as Docker and Kubernetes</span></li><li><span>Experience in designing architecture based on application requirements and selecting middleware</span></li><li><span>Experience of publishing and contributing OSS</span></li><li><span>External technical output experience (writing, technical blog, stage, etc.)</span></li></ul>',
   '<ul><li>Competitive salary package, including full insurance coverage</li><li>Annual performance review: twice/ year</li><li>13th-month salary Bonus</li><li>Hybrid working</li><li>18 days of leave: 12 days of annual leave, 6 days of New Year''s Leave</li><li>Premium Healthcare Insurance Package starting from day one</li><li>Annual Health Check-up</li><li>Excellent career development opportunities, with exposure to and experience in the latest technologies</li><li>Patents and Inventions bonus</li><li>Company trip, Year-End Party, Gifts for Tet/ Holidays</li><li>MacBook Pro/ Laptop is provided</li></ul>',
   '3rd Floor, Dong Nhan Building, 90 Nguyen Dinh Chieu, Da Kao Ward, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-04-11 09:00:00','2025-05-11 09:00:00','ACTIVE'
 );
@@ -1182,7 +1192,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #21
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
 company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1194,7 +1204,7 @@ company_id, title, slug, job_reason, job_description, job_requirements, why_join
   '<p><strong>Must have: </strong></p><ul><li>Empathy for Andpad''s mission and values</li><li>7+ years of experience in a software development role: Frontend Developer</li><li>Experience with TypeScript language</li><li>Experience with frontend frameworks (VueJS, ReactJS etc.)</li><li>Knowledge and ability to explain principles of web operation and differences of browsers</li><li>Experience as a technical lead throughout the full project development lifecycle</li><li>Basic knowledge of Web application security</li><li>Skills of development and operation using various frameworks</li><li>Experience Test code implementation (Unit Test)</li><li>Good at English communication</li></ul><p><strong>Nice to have: </strong></p><ul><li>Knowledge of backend development (Golang/ Ruby on rails/ Others)</li><li>Experienced developing Front-end microservices.</li><li>Experience of discovering problems from logs and solving problems </li><li>Experience of deciding and progressing the technical policy of the team as a tech lead.</li><li>Experience of using and understanding of  Library and Framework.</li><li>Experience of publishing and contributing to OSS. </li></ul>',
   '<ul><li><span>Competitive salary package, including full insurance coverage. </span></li><li><span>Annual performance review: twice/ year.</span></li><li><span>13th-month salary Bonus.</span></li><li><span>Remote/ Hybrid working model.</span></li><li><span>18 days of leave: 12 days of annual leave, 6 days of New Year Leave.</span></li><li><span>Premium Healthcare Insurance Package starting from day one.</span></li><li><span>Annual Health Check-up.</span></li><li><span>Excellent career development opportunities, with exposure to and experience in the latest technologies.</span></li><li><span>Patents and Inventions bonus.</span></li><li><span>Company trip, Year-End Party, Gifts for Tet/ Holidays.</span></li><li><span>MacBook Pro/laptop is provided.</span></li></ul>',
   '3rd Floor, Dong Nhan Building, 90 Nguyen Dinh Chieu, Da Kao Ward, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-04-18 09:00:00','2025-05-18 09:00:00','ACTIVE'
 );
@@ -1202,7 +1212,7 @@ company_id, title, slug, job_reason, job_description, job_requirements, why_join
 -- =========================================
 -- JOB #22
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1214,7 +1224,7 @@ INSERT INTO jobs (
   '<p><span>Must-haves:</span></p><ul><li><span>Empathy for Andpad''s mission and values</span></li><li><span><strong>6+ years</strong></span><span><strong> of experience</strong></span><span><strong> in developing native applications for iOS Native using Swift</strong></span></li><li><span><strong>Experience of architecture design, frameworks and technologies selection based on application requirements</strong></span></li><li><span>Experience as a technical lead throughout the full project development lifecycle</span></li><li><span>Creating high quality code for security, performance, scalability, etc.</span></li><li><span>Excellent algorithms, analytical, problem-solving skills and improving application performance</span></li><li><span>Continuously discover, evaluate, and implement new technologies to maximize development efficiency</span></li><li><span>Experience in dealing with scalability in line with service growth</span></li><li><span>Experience in </span><span>UIKit and SwiftUI</span></li><li><span>Experience in Asynchronous programming, Reactive programing skills</span></li><li><span>Familiar with Restful / GraphQL API</span></li><li><span>Excellent developing functions with writing test code</span></li><li><span>Have knowledge of Mobile application security</span></li><li><span>Conduct regular code reviews and provide feedback to team members adhering to best practices</span></li><li><span>Participate in the planning process for software development projects, and ensure meeting quality and deadlines on delivery.</span></li><li><span>Skills in communicating smoothly with team members and other stakeholders</span></li><li><span>Good at English communication</span></li></ul><p><span>Nice to haves:</span></p><ul><li><span>Experience to build project from scratch</span></li><li><span>Ensure high-quality work by monitoring individual and team performance and addressing any issues through appropriate guidance and mentoring</span></li><li><span>Responsible for supervising, managing and motivating the mobile development team</span></li><li><span>Ability to write project documentation</span></li><li><span>E</span><span>xperience</span><span> in</span><span> developing </span><span>hybrid</span><span> applications for Flutter using Dart</span></li><li><span>Experience in </span><span>Android Native (Kotlin)</span></li><li><span>Experience in automation test</span></li><li><span>Project management skills</span></li></ul>',
   '<ul><li>Competitive salary package, including full insurance coverage. </li><li>Annual performance review: twice/ year.</li><li>13th-month salary Bonus.</li><li>Hybrid working model.</li><li>18 days of leave: 12 days of annual leave, 6 days of New Year Leave.</li><li>Premium Healthcare Insurance Package starting from day one.</li><li>Annual Health Check-up.</li><li>Excellent career development opportunities, with exposure to and experience in the latest technologies.</li><li>Patents and Inventions bonus.</li><li>Company trip, Year-End Party, Gifts for Tet/ Holidays.</li><li>MacBook Pro/laptop is provided.</li></ul>',
   '3rd Floor, Dong Nhan Building, 90 Nguyen Dinh Chieu, Da Kao Ward, Quận 1, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-05-06 09:00:00','2025-06-06 09:00:00','ACTIVE'
 );
@@ -1222,7 +1232,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #23
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1234,7 +1244,7 @@ INSERT INTO jobs (
   '<p><strong>You’re the hero we’re looking for if:</strong></p><ul><li><strong>Experience in Frontend software development experience, CI/CD, web application performance tuning, ReactJS/Redux applications. In deep in fundamental understanding of Javascript/Typescript, ReactJS/Redux, Building tool such as Webpack, Rollup, ViteJS.</strong></li><li><strong>Strong English communication skills (both verbal & written)</strong></li><li><strong>Over 4 years of experience in Frontend Software Development</strong></li><li>Demonstrated experience implementing, maintaining and deploying full-stack web technologies</li><li>Strong understanding of standard Software Engineering processes, Testing, and Agile methodology</li><li>A team player that always puts colleagues ahead of yourself and has a highly adaptable and versatile approach to work</li><li>You are passionate about learning and sharing your knowledge, and not afraid to challenge your peers, but also welcome being challenged</li><li>We have a number of positions open which would suit many skills and experiences, including being open to candidates who are willing to learn our technical stack</li><li>Experience in translating design wireframes into functioning UI components</li></ul><p><strong>It’ll be great, but not essential, if you also have experience with:</strong></p><ul><li>Bachelor''s degree in Computer Science of Software Engineering or an equivalent</li><li>Experience in developing highly modular mobile applications and mobile application performance tuning</li><li>Experience writing unit tests</li><li>Experience in functional programming</li></ul><p>Experience is important, but for us, the biggest measure of success is people who can live and breathe our values. Show us what you can bring to the table, and we’ll empower you to let your talents shine.</p>',
   '<p><strong>The EH Way</strong></p><p>The EH Way is how we describe our culture at Employment Hero and how we all operate. It is our DNA. You can read all about it on our careers page: </p><p>In short, you’ll love working with us if:</p><ul><li>Revolutionising employment gets your heart racing.</li><li>You thrive on the flexibility (and responsibility) of a remote-first business.</li><li>Our values align, and shape how you show up every day.</li><li>You love the dynamic pace of a startup, are driven by innovation, and enjoy working with other smart people.</li></ul><p>But don’t just take it from us, hear from your local heroes: Thao Ta, Head of People and Culture & Hung Pham, Group Engineer Manager:</p><p>Plus, you’ll get to enjoy a number of great perks, including: </p><ul><li>A generous budget for your home office.</li><li>Cutting-edge tools and technology.</li><li>20 days Annual Leave, plus VN Public Holidays.</li><li>$500 USD for your professional development plan.</li><li>$500 USD for English learning courses.</li><li>Premium Healthcare Insurance Program for you and your loved ones, plus full gross salary paid social insurance.</li><li>Sports club funded by Employment Hero.</li><li>Monthly get-together event in the office for team bonding and VND 80,000 budget for lunch for day-in-office.</li><li>Reward and recognition programs - because great work should be recognised and rewarded.</li><li>Employee Share Option Program: be an owner of Employment Hero.</li><li>Annual Global Gathering - so far we’ve been to Thailand, Vietnam, Bali and are excited to meet in Dubai in 2025</li></ul>',
   'Cach Mang Thang 8, Quận 10, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','REMOTE','MID',
   '2025-05-06 09:00:00','2025-06-06 09:00:00','ACTIVE'
 );
@@ -1242,7 +1252,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #24
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1254,7 +1264,7 @@ INSERT INTO jobs (
   '<p><strong>You’re the hero we’re looking for if:</strong></p><ul><li>Over 3 years of experience in Software Development, with a focus on Server-side and RESTful API Development and integration.</li><li><strong>Proficiency in OOP languages such as NodeJS, Java, Go, PHP, etc., is highly desirable, with the expectation that you are willing to learn Ruby upon joining our team.</strong></li><li>Demonstrated experience implementing, maintaining and deploying full-stack web technologies</li><li>Strong skills in Object-Oriented Programming (OOP).</li><li>Strong understanding of standard Software Engineering processes, Testing, and Agile methodology</li><li>A team player that always puts colleagues ahead of yourself and has a highly adaptable and versatile approach to work</li><li>You are passionate about learning and sharing your knowledge, and not afraid to challenge your peers, but also welcome being challenged</li><li>You have experience in mentoring team mates, or even leading an Engineering squad</li><li><strong>English language abilities, both written and verbal </strong>- you’ll be working with people across the world, including from Australia</li></ul><p> </p><p><strong>It’ll be great, but not essential, if you also have experience with:</strong></p><ul><li>Bachelor''s degree in Computer Science of Software Engineering or an equivalent</li><li>Experience in developing highly modular mobile applications and mobile application performance tuning</li><li>Experience in translating design wireframes into functioning UI components</li><li>Experience in functional programming</li><li>Familiarity with AWS tooling and environments, including EC2, Kubernetes, etc.</li></ul><p> </p><p>Experience is important, but for us the biggest measure of success is people who can live and breathe our EH Way of working. Show us what you can bring to the table, and we’ll empower you to let your talents shine.</p>',
   '<p><span><strong>Why you love working here</strong></span><strong>?</strong></p><ul><li>We are remote-first, where you can work from the comfort of your home, and enjoy flexible working time</li><li>Work your local hours! 40-hour work week, Monday to Friday</li><li>100% Salary During Probation</li><li>A generous budget to spend on setting up your home office</li><li>We set you up for success with the latest and greatest hardware, tools and tech</li><li>Budgets towards continuing your learning</li><li>Annual Global Gathering in 1 week - Road to Dubai in 2025!!!</li><li>Refer friends to open jobs and receive a cash bonus for every successful referral you make</li><li>Participate in our Employee Share Options Program - you’ll be a part owner of Employment Hero<i>.</i></li></ul>',
   'Cach Mang Thang 8, Quận 10, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','REMOTE','MID',
   '2025-05-06 09:00:00','2025-06-06 09:00:00','ACTIVE'
 );
@@ -1262,7 +1272,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #25
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1274,7 +1284,7 @@ INSERT INTO jobs (
   '<p><i><strong>Who is this for?</strong></i></p><ul><li>Ambitious Women in Tech and aspiring to move into leadership positions.</li><li>Established female leaders looking to expand their influence and mentor others.</li><li>Allies and organizations committed to fostering diversity and inclusion in leadership.</li></ul><p><i><strong>Why join?</strong></i></p><ul><li>Access to exclusive leadership development resources</li><li>Opportunities for mentorship and coaching from seasoned women leaders.</li><li>Networking with a community of dynamic, forward-thinking professionals</li><li>Insights on overcoming challenges unique to female leaders in today’s workplace</li><li>Invitations to webinars, workshops, and networking events focused on leadership growth.</li></ul><p><span><i><strong>Join us now</strong></i></span> to break barriers, share knowledge, and elevate the voices of women in leadership. Together, we’ll build a diverse, inclusive, and transformative future.</p>',
   '<p><strong>WHY</strong> <strong>BOSCH</strong>?</p><p>Because we don''t just follow trends, we <strong>create </strong>them.<br>Because together we turn ideas into reality, working every day to make the world of tomorrow a better place. Do you have high standards when it comes to your job? So do we. At Bosch, you will discover more than just work.</p><p><i><strong>Benefits and Career Opportunities</strong></i></p><ul><li>Working in one of the <strong>Best Places to Work i</strong>n Vietnam and Top 30 of the <strong>Most Innovative Companies</strong> all over the world</li><li>Join a dynamic and fast-growing global company (<strong>English-speaking</strong> environment)</li><li><strong>13th-month </strong>salary bonus + attractive <strong>performance bonus </strong>(you''ll love it!) + annual performance appraisal</li><li><strong>100% monthly salary</strong> and <strong>mandatory social insurance</strong> in 2-month probation</li><li><strong>Onsite opportunities</strong>: short-term and long-term assignments</li><li><strong>15++ days of annual leave </strong>+ 1 day of birthday leave</li><li>Premium health insurance for employee and <strong>02 family members</strong></li><li><strong>Flexible working time</strong></li><li>Lunch and parking allowance</li><li>Various training on hot-trend technologies/ foreign language (English/Chinese/Japanese) and soft skills</li><li><strong>Fitness & sports activities</strong>: football, badminton, yoga, Aerobic</li><li>Free in-house entertainment facilities and snack</li><li>Join in various team building, company trips, year-end party, tech talks, and lots of charity events.</li></ul>',
   'Capital Place, 29 Lieu Giai Street, Quận Ba Đình, Hà Nội',
-  (SELECT id FROM cities WHERE city_name=N'Hà Nội' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'Hà Nội' LIMIT 1),
   'You''ll love it','ONSITE','SENIOR',
   '2025-04-30 09:00:00','2025-05-31 09:00:00','ACTIVE'
 );
@@ -1282,7 +1292,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #26
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1294,7 +1304,7 @@ INSERT INTO jobs (
   '<ul><li><strong>Extensive Experience in Android Automotive Development:</strong> At least 8 years of hands-on experience in developing Android Automotive solutions, including deep customization of AOSP for IVI systems and infotainment platforms.<br> </li><li><strong>Real-Time Systems Expertise: </strong>Proven experience in optimizing Android for real-time applications, including the integration of safety-critical systems and the implementation of multi-layered solutions with low-latency performance.<br> </li><li><strong>Hands-On Embedded Systems Development:</strong> Expertise in writing low-level code, device drivers, and firmware for automotive platforms running Android, with experience in BSP development and hardware integration.</li><li><strong>Client-Facing & Proposal Skills:</strong> Experience in client-facing roles, delivering technical presentations, and managing proposals and project bids related to Android Automotive solutions.</li></ul>',
   '<p>Why <strong>BOSCH</strong>?</p><ul><li>Because we don''t just follow trends, we <strong>create </strong>them.</li><li>Because we do not just follow trends, we <strong>create </strong>them. Together we turn ideas into reality, working every day to make the world of tomorrow a better place. </li></ul><p>Do you have high standards when it comes to your job? So do we. At Bosch, you will discover more than just work.</p><p><strong>Benefits and Career Opportunities</strong></p><ul><li>Working in one of the <strong>Best Places to Work</strong> in Vietnam and Top 30 of the <strong>Most Innovative Companies </strong>all over the world</li><li><strong>English-speaking</strong> environment, with opportunity to be part of innovation team and work in global projects</li><li><strong>Onsite opportunities</strong></li><li>Engage in our <strong>diverse training</strong> programs which surely help strengthen both your personal and professionalism</li><li><strong>Flexible </strong>working time and working model</li><li><strong>13th-month</strong> salary bonus + attractive <strong>performance bonus</strong> (you''ll love it!) + annual performance appraisal</li><li><strong>100% offered salary</strong> and mandatory <strong>social insurances</strong> in 2-month probation</li><li><strong>15++ days</strong> of annual leave + 1-day of birthday leave</li><li>Premium health insurance for employee and <strong>02 family members</strong></li><li>Lunch and parking allowance</li><li>Good benefits of company activities such as: football, badminton, yoga, Aerobic, team building…</li></ul>',
   '364 Cong Hoa street, ward 13, Quận Tân Bình, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','ONSITE','MANAGER',
   '2025-05-06 09:00:00','2025-06-06 09:00:00','ACTIVE'
 );
@@ -1302,7 +1312,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #27
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1314,7 +1324,7 @@ INSERT INTO jobs (
   '<p><strong>To qualify for the role, you must have</strong></p><ul><li>At least 3-5 years of experience working with OutSystems platform</li><li>At least a degree or diploma in a relevant technical field</li><li>Familiarity with the whole web stack, including protocols and web server optimization techniques.</li><li>Experienced in Agile Software Development</li><li>Experienced in Web Applications, HTML, CSS and JavaScript</li><li>Experienced in Software Integration using APIs and Web Services</li><li>Experienced in Database Systems</li><li>Advanced knowledge of the OutSystems platform, with the ability to code and debug issues.</li></ul><p><strong>Ideally, you’ll also have</strong></p><ul><li>OutSystems experience is a distinct advantage</li><li>Scrum Ceremonies and Artefacts experience is a distinct advantage</li><li>.NET Framework experience is an advantage</li><li>Additional Business Education is a distinct advantage</li><li>Low-code platform certification is a distinct advantage</li><li>Scrum Certification is an advantage</li></ul><p><strong>What We Look For</strong></p><p>Highly motivated individuals with excellent problem-solving skills and the ability to prioritize shifting workloads in a rapidly changing industry. An effective communicator, you’ll be a confident team player that collaborates with people from various teams while looking to develop your career in a dynamic organization.</p>',
   '<p>Why <strong>BOSCH</strong>?</p><p>Because we do not just follow trends, we <strong>create </strong>them. Together we turn ideas into reality, working every day to make the world of tomorrow a better place. Do you have high standards when it comes to your job? So do we. At Bosch, you will discover more than just work.<br> </p><p><strong>Benefits and Career Opportunities</strong><br> </p><ul><li>Working in one of the <strong>Best Places to Work</strong> in Vietnam and Top 30 of the <strong>Most Innovative Companies </strong>all over the world</li><li><strong>English-speaking</strong> environment, with opportunity to be part of innovation team and work in global projects</li><li><strong>Onsite opportunities</strong></li><li>Engage in our <strong>diverse training</strong> programs which surely help strengthen both your personal and professionalism</li><li><strong>Flexible </strong>working time</li><li><strong>13th-month</strong> salary bonus + attractive <strong>performance bonus</strong> (you''ll love it!) + annual performance appraisal</li><li><strong>100% offered salary</strong> and mandatory <strong>social insurances</strong> in 2-month probation</li><li><strong>15++ days</strong> of annual leave + 1-day of birthday leave</li><li>Premium health insurance for employee and <strong>02 family members</strong></li><li>Lunch and parking allowance</li><li>Good benefits of company activities such as: football, badminton, yoga, Aerobic, team building…</li></ul>',
   '364 Cong Hoa street, ward 13, Quận Tân Bình, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','ONSITE','SENIOR',
   '2025-05-06 09:00:00','2025-06-06 09:00:00','ACTIVE'
 );
@@ -1322,7 +1332,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #28
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1334,7 +1344,7 @@ INSERT INTO jobs (
   '<ul><li><strong>Proven Experience:</strong> 5+ years of Business Analysis experience, with a demonstrable track record of success in internal IT solutions and workflows platform migration projects. </li><li><strong>Education Background:</strong> Graduate in Bachelor’s degree or preferably Master’s degree in Information Technology Business Management or Computer Science. </li><li><strong>Leadership & Mentorship:</strong> Proven ability to lead, inspire, and mentor a team of BAs and consultants, fostering a high-performing and collaborative environment. </li><li><strong>Analytical Acumen:</strong> Exceptional analytical and problem-solving skills, with the ability to dissect complex systems and processes and identify opportunities for improvement. </li><li><strong>Exceptional Communication:</strong> Superior written and verbal communication skills, adept at tailoring your message to both technical and non-technical audiences and building strong relationships with stakeholders at all levels. </li><li><strong>Data-Driven Decision Making:</strong> Proficiency in data analysis and visualization tools, with a demonstrated ability to derive actionable insights from complex datasets. </li><li><strong>Agile Expertise:</strong> Experience working in an Agile environment, with a solid understanding of Agile principles, practices, and ceremonies. </li><li><strong>Technical Aptitude:</strong> Familiarity with the software development lifecycle, relevant technologies, and architectural principles. </li><li><strong>Certifications:</strong> Relevant certifications such as CBAP, PMI-PBA, or Agile certifications are highly desirable. </li><li><strong>Cross-Cultural Sensitivity:</strong> Ability to work effectively in a diverse and multinational environment, demonstrating respect and appreciation for different perspectives and cultural nuances.</li></ul>',
   '<p>Why <strong>BOSCH</strong>?</p><ul><li>Because we don''t just follow trends, we <strong>create </strong>them.</li><li>Because we do not just follow trends, we <strong>create </strong>them. Together we turn ideas into reality, working every day to make the world of tomorrow a better place. </li></ul><p>Do you have high standards when it comes to your job? So do we. At Bosch, you will discover more than just work.</p><p><strong>Benefits and Career Opportunities</strong></p><ul><li>Working in one of the <strong>Best Places to Work</strong> in Vietnam and Top 30 of the <strong>Most Innovative Companies </strong>all over the world</li><li><strong>English-speaking</strong> environment, with opportunity to be part of innovation team and work in global projects</li><li><strong>Onsite opportunities</strong></li><li>Engage in our <strong>diverse training</strong> programs which surely help strengthen both your personal and professionalism</li><li><strong>Flexible </strong>working time and working model</li><li><strong>13th-month</strong> salary bonus + attractive <strong>performance bonus</strong> (you''ll love it!) + annual performance appraisal</li><li><strong>100% offered salary</strong> and mandatory <strong>social insurances</strong> in 2-month probation</li><li><strong>15++ days</strong> of annual leave + 1-day of birthday leave</li><li>Premium health insurance for employee and <strong>02 family members</strong></li><li>Lunch and parking allowance</li><li>Good benefits of company activities such as: football, badminton, yoga, Aerobic, team building…</li></ul>',
   '364 Cong Hoa street, ward 13, Quận Tân Bình, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','FLEXIBLE','SENIOR',
   '2025-04-10 09:00:00','2025-05-11 09:00:00','ACTIVE'
 );
@@ -1342,7 +1352,7 @@ INSERT INTO jobs (
 -- =========================================
 -- JOB #29
 -- =========================================
-INSERT INTO jobs (
+INSERT INTO job (
   company_id, title, slug, job_reason, job_description, job_requirements, why_join_us,
   location, city_id, salary, job_type, experience_level, posted_at, expires_at, status
 ) VALUES (
@@ -1354,141 +1364,141 @@ INSERT INTO jobs (
   '<p>- Tốt nghiệp đại học chính quy chuyên ngành Công nghệ thông tin;</p><p>- Có 1 năm kinh nghiệm trở lên ở vị trí tương đương;</p><p>- Có kinh nghiệm về Splunk, Solarwinds, K8S;</p><p>- Có khả năng suy luận, tư duy logic về phân tích log, phân tích hệ thống, kỹ năng giải quyết vấn đề;</p><p>- Có khả năng giao tiếp hiệu quả, làm cầu nối giữa đối tác triển khai, nhà cung cấp giải pháp, các nhóm nội bộ và các bộ phận người dùng khác;</p><p>- Có khả năng làm việc độc lập, định hướng công việc chuyên môn cho nhóm;</p><p>- Đọc hiểu tốt các tài liệu kỹ thuật bằng tiếng Anh, giao tiếp cơ bản;</p><p>- Ưu tiên ứng viên:</p><p>Có kinh nghiệm về lập trình;</p><p>Có kinh nghiệm về Application Performance Monitoring hoặc Digital Experience Monitoring[HTX4] [DNQ5];</p><p>Có kinh nghiệm về Cloud Monitoring;</p><p>Có kiến thức về ITIL, ITSM[HTX6] [DNQ7];</p><p>Có kinh nghiệm làm việc trong lĩnh vực tài chính, chứng khoán.</p>',
   '<p><strong>Chứng khoán SSI nhận 3 giải thưởng nơi làm việc tốt nhất: </strong></p><ul><li>Highly competitive remuneration package: Attractive monthly salary, 13th month salary, KPIs cash bonus, Public holiday cash bonus, Birthday gift, Lunar new year gift,...</li><li>Premium AON healthcare insurane and full labor insurance</li><li>12 days Annual leave + 2 days sick leave with full paid</li><li>Luxury team-building trip and varied engagement activities</li><li>Joining the leisure clubs: Football, E-Sport, Running, Gym, Yoga....</li><li>Fully sponsored training to build your career</li><li>Professional, open minded and supportive working enviroment</li></ul>',
   'Dali Tower - 24c Phan Dang Luu, Quận Bình Thạnh, TP Hồ Chí Minh',
-  (SELECT id FROM cities WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
+  (SELECT id FROM city WHERE city_name=N'TP Hồ Chí Minh' LIMIT 1),
   'You''ll love it','ONSITE','JUNIOR',
   '2025-04-24 09:00:00','2025-05-25 09:00:00','ACTIVE'
 );
 
 -- Test Manager
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j
-JOIN skills s ON s.skill_name IN ('MANAGER','Tester','Automation Test')
+SELECT j.id, s.id FROM job j
+JOIN skill s ON s.skill_name IN ('MANAGER','Tester','Automation Test')
 WHERE j.slug = 'test-manager-auto-test-performance-test-mb-bank-1';
 
 -- Java Fullstack
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j
-JOIN skills s ON s.skill_name IN ('Java','MySQL','Spring')
+SELECT j.id, s.id FROM job j
+JOIN skill s ON s.skill_name IN ('Java','MySQL','Spring')
 WHERE j.slug = 'middle-senior-java-fullstack-developer-spring-mb-bank-2';
 
 -- Python Backend
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j
-JOIN skills s ON s.skill_name IN ('Python','Django','PostgreSQL')
+SELECT j.id, s.id FROM job j
+JOIN skill s ON s.skill_name IN ('Python','Django','PostgreSQL')
 WHERE j.slug = 'middle-senior-python-backend-developer-django-mb-bank-3';
 
 -- Fullstack SE - Data Engineer
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j
-JOIN skills s ON s.skill_name IN ('Java','PostgreSQL','Angular')
+SELECT j.id, s.id FROM job j
+JOIN skill s ON s.skill_name IN ('Java','PostgreSQL','Angular')
 WHERE j.slug = 'fullstack-software-engineer-data-engineer-mb-bank-4';
 
 -- Business Customer Data Analyst
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j
-JOIN skills s ON s.skill_name IN ('Data Analyst','SQL','Oracle','Angular')
+SELECT j.id, s.id FROM job j
+JOIN skill s ON s.skill_name IN ('Data Analyst','SQL','Oracle','Angular')
 WHERE j.slug = 'business-customer-data-analyst-mb-bank-5';
 
 -- Viedoc - Senior Fullstack .NET
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j
-JOIN skills s ON s.skill_name IN ('.NET','SQL','Azure')
+SELECT j.id, s.id FROM job j
+JOIN skill s ON s.skill_name IN ('.NET','SQL','Azure')
 WHERE j.slug = 'viedoc-senior-fullstack-net-developer-c-sql-azure-scandinavian-software-park-6';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('.NET','SQL','JavaScript')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('.NET','SQL','JavaScript')
 WHERE j.slug = 'trapets-fullstack-net-developer-net-sql-js-scandinavian-software-park-7';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Automation Test','Python','Java')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Automation Test','Python','Java')
 WHERE j.slug = 'milient-qa-automation-engineer-python-js-java-scandinavian-software-park-8';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Software Architect','DevOps','Cloud')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Software Architect','DevOps','Cloud')
 WHERE j.slug = 'da-nang-ho-chi-minh-technical-architect-one-tech-stop-9';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Product Manager','English','UI-UX')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Product Manager','English','UI-UX')
 WHERE j.slug = 'ho-chi-minh-da-nang-product-owner-one-tech-stop-10';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('UI-UX','Agile','Designer')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('UI-UX','Agile','Designer')
 WHERE j.slug = 'ho-chi-minh-da-nang-uiux-designer-one-tech-stop-11';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('NodeJS','TypeScript','ReactJS')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('NodeJS','TypeScript','ReactJS')
 WHERE j.slug = 'ho-chi-minh-fullstack-developer-reactjsnodejs-one-tech-stop-12';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Tester','Java','Automation Test')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Tester','Java','Automation Test')
 WHERE j.slug = 'tester-manual-automation-mcredit-13';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Java','Spring','J2EE')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Java','Spring','J2EE')
 WHERE j.slug = 'senior-java-developer-j2ee-spring-mcredit-14';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Java','AWS','Spring Boot')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Java','AWS','Spring Boot')
 WHERE j.slug = 'java-api-engineer-hcm-microservice-aws-tymex-15';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Python','AI','Java')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Python','AI','Java')
 WHERE j.slug='product-prompt-engineer-java-python-tymex-16';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('iOS','Android','Team Leader')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('iOS','Android','Team Leader')
 WHERE j.slug='mobile-technical-lead-ios-android-kotlin-swift-tymex-17';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('QA QC','Tester')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('QA QC','Tester')
 WHERE j.slug='senior-qa-engineer-manual-mobile-api-testing-tymex-18';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Ruby','Ruby on Rails','AWS')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Ruby','Ruby on Rails','AWS')
 WHERE j.slug='senior-principal-ruby-on-rails-dev-aws-backend-andpad-19';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Golang','MySQL','AWS')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Golang','MySQL','AWS')
 WHERE j.slug='senior-golang-developer-backend-aws-mysql-andpad-20';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('ReactJS','TypeScript','VueJS')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('ReactJS','TypeScript','VueJS')
 WHERE j.slug='senior-frontend-developer-reactjs-vuejs-andpad-21';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('iOS','Swift')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('iOS','Swift')
 WHERE j.slug='senior-ios-native-engineer-swift-andpad-22';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('ReactJS','JavaScript','TypeScript')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('ReactJS','JavaScript','TypeScript')
 WHERE j.slug='mid-senior-frontend-engineer-reactjs-employment-hero-23';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('NodeJS','JavaScript','Java')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('NodeJS','JavaScript','Java')
 WHERE j.slug='mid-senior-backend-engineer-nodejs-java-go-preferred-employment-hero-24';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Project Manager','Software Architect','Embedded')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Project Manager','Software Architect','Embedded')
 WHERE j.slug='women-leadership-in-tech-bosch-25';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Embedded Android','Embedded')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Embedded Android','Embedded')
 WHERE j.slug='android-automotive-expert-bosch-26';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('OutSystems','English','Agile')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('OutSystems','English','Agile')
 WHERE j.slug='senior-outsystems-solution-expert-bosch-27';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Business Analyst','Product Manager','Presale')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('Business Analyst','Product Manager','Presale')
 WHERE j.slug='senior-it-consultant-lead-manager-bosch-28';
 
 INSERT INTO job_skill (job_id, skill_id)
-SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('IT Support','Cloud','System Admin')
+SELECT j.id, s.id FROM job j JOIN skill s ON s.skill_name IN ('IT Support','Cloud','System Admin')
 WHERE j.slug='chuyen-vien-ho-tro-ung-dung-ssi-securities-corporation-29';
 
 
-INSERT INTO applications
+INSERT INTO application
 (id, seeker_id, job_id, full_name, phone_number, resume_url, cover_letter, status, employer_message, created_at, updated_at)
 VALUES
 -- 1
@@ -1636,7 +1646,7 @@ VALUES
 -- 72
 ('00000000-0000-0000-0000-000000000072','a1b2c3d4-e5f6-11ee-s1ek-0111ac130006',19,N'Nguyen Van A','0987654321','https://example.com/resume/seeker6.pdf',N'Tôi rất quan tâm đến công việc số 19 và tin rằng kỹ năng của tôi phù hợp.','ACCEPTED','<p>Kính gửi anh/chị Nguyen Van A,<br>Cảm ơn anh/chị đã ứng tuyển vào vị trí công việc số 19 tại công ty chúng tôi. Chúng tôi rất vui thông báo rằng đơn ứng tuyển của anh/chị đã được <strong>chấp nhận</strong>.<br>Vui lòng tham dự buổi phỏng vấn vào:</p><ul><li><p><strong>Thời gian</strong>: 10:00 AM, ngày 05/05/2025</p></li><li><p><strong>Địa điểm</strong>: Văn phòng công ty, Tầng 5, Tòa nhà ABC, 123 Đường Láng, Hà Nội</p></li><li><p><strong>Yêu cầu</strong>: Vui lòng mang theo CV bản cứng và các tài liệu liên quan.<br>Trân trọng,<br>Bộ phận Tuyển dụng</p></li></ul><p></p>','2025-05-07 03:39:17','2025-05-07 03:39:17');
 
-INSERT INTO applications
+INSERT INTO application
 (id, seeker_id, job_id, full_name, phone_number, resume_url, cover_letter, status, employer_message, created_at, updated_at)
 VALUES
 -- 73

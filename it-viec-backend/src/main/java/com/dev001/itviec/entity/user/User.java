@@ -1,13 +1,13 @@
 package com.dev001.itviec.entity.user;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
 
-import org.hibernate.annotations.GenerationTime;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,11 +18,14 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Data
-@Table(name = "users")
+@Table(name = "user")
+@Getter
+@Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
 
     @GeneratedValue(strategy = GenerationType.UUID)
     @Id
@@ -38,24 +41,8 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     Role role;
 
-    @OneToMany(mappedBy = "user")
-    List<Token> tokens;
-
-    @Column(
-            name = "created_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
-    LocalDateTime createdAt;
-
-    @Column(
-            name = "updated_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
-    LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Token> tokens = new ArrayList<>();
 
 
     @Override

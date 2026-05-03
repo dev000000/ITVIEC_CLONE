@@ -1,36 +1,39 @@
 package com.dev001.itviec.entity.job;
 
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.dev001.itviec.entity.base.BaseEntity;
+import jakarta.persistence.*;
+
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-
-import static com.dev001.itviec.enums.JobStatus.ACTIVE;
-
 @Entity
-@Data
-@Table(name = "jobs")
+@Table(name = "job")
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Job {
+public class Job extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
     Company company;
 
     @Column(name = "title", nullable = false, columnDefinition = "NVARCHAR(255)")
@@ -54,7 +57,7 @@ public class Job {
     @Column(columnDefinition = "NVARCHAR(255)")
     String location;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     City city;
 
@@ -76,27 +79,16 @@ public class Job {
     LocalDateTime expiresAt;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status" ,nullable = false)
-    JobStatus jobStatus = ACTIVE;
+    @Column(name = "status", nullable = false)
+    @Builder.Default
+    JobStatus status = JobStatus.ACTIVE;
 
-    @Column(
-            name = "created_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
-    )
-    LocalDateTime createdAt;
 
-    @Column(
-            name = "updated_at",
-            insertable = false,
-            updatable = false,
-            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
-    )
-    LocalDateTime updatedAt;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
-    List<Skill> skills;
-
+    @ManyToMany
+    @JoinTable(
+            name = "job_skill",
+            joinColumns = @JoinColumn(name = "job_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    @Builder.Default
+    Set<Skill> skills = new HashSet<>();
 }
