@@ -1,6 +1,6 @@
-import './styles/App.css'
-import AllRouter from './components/AllRouter'
-import ScrollToTop from './components/ScrollToTop'
+import '@/styles/App.css'
+import AllRouter from '@/components/AllRouter'
+import ScrollToTop from '@/components/ScrollToTop'
 
 function App() {
 
