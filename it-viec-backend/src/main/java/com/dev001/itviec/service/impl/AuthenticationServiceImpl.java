@@ -1,6 +1,6 @@
 package com.dev001.itviec.service.impl;
 
-import static com.dev001.itviec.enums.Role.USER;
+import static com.dev001.itviec.enums.Role.SEEKER;
 import static com.dev001.itviec.enums.TokenType.BEARER;
 import static com.dev001.itviec.exception.ErrorCode.*;
 
@@ -134,7 +134,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String hashedPassword = passwordEncoder.encode(request.getPassword());
         user.setPassword(hashedPassword);
         // 4. set roles to user (default role is USER for user register)
-        user.setRole(USER);
+        user.setRole(SEEKER);
         // 5. save user to DB
         User savedUser = null;
         try {
