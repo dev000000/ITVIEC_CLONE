@@ -36,7 +36,7 @@ public class Job extends BaseEntity {
     @JoinColumn(name = "company_id", nullable = false)
     Company company;
 
-    @Column(name = "title", nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)")
     String title;
 
     @Column(unique = true, columnDefinition = "VARCHAR(255)")
@@ -54,7 +54,7 @@ public class Job extends BaseEntity {
     @Column(name = "why_join_us", columnDefinition = "MEDIUMTEXT")
     String whyJoinUs;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)")
     String location;
 
     @ManyToOne(fetch = FetchType.LAZY)

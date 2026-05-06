@@ -36,13 +36,13 @@ public class Company extends BaseEntity {
     @JoinColumn(name = "employer_id", nullable = false, unique = true)
     Employer employer;
 
-    @Column(name = "company_name", nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "company_name", nullable = false, columnDefinition = "VARCHAR(255)")
     String companyName;
 
     @Column(unique = true, columnDefinition = "VARCHAR(255)")
     String slug;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)")
     String description;
 
     @Column(columnDefinition = "VARCHAR(255)")
@@ -51,14 +51,14 @@ public class Company extends BaseEntity {
     @Column(name = "logo_url", columnDefinition = "VARCHAR(255)")
     String logoUrl;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)")
     String address;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "company_model")
     CompanyModel companyModel;
 
-    @Column(columnDefinition = "NVARCHAR(100)")
+    @Column(columnDefinition = "VARCHAR(100)")
     String industry;
 
     @Enumerated(EnumType.STRING)
