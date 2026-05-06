@@ -6,7 +6,8 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {SeekerMapper.class, JobMapper.class, CityMapper.class})
 public interface ApplicationMapper {
     List<ApplicationResponse> toApplicationResponse(List<Application> applications);
+    ApplicationResponse toApplicationResponse(Application application);
 }

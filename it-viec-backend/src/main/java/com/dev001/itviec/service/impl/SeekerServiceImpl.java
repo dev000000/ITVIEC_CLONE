@@ -2,6 +2,13 @@ package com.dev001.itviec.service.impl;
 
 import java.util.List;
 
+import com.dev001.itviec.entity.seeker.Seeker;
+import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.exception.AppException;
+import com.dev001.itviec.exception.ErrorCode;
+import com.dev001.itviec.repository.CompanyRepository;
+import com.dev001.itviec.repository.UserRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.dev001.itviec.dto.response.SeekerResponse;
@@ -19,9 +26,29 @@ public class SeekerServiceImpl implements SeekerService {
 
     private final SeekerMapper seekerMapper;
     private final SeekerRepository seekerRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<SeekerResponse> getAllSeekers() {
         return seekerMapper.toSeekerResponse(seekerRepository.findAll());
+    }
+
+    @Override
+    public SeekerResponse getSeekerByCookie() {
+        // 1. lấy email từ SecurityContext (do JwtAuthenticationFilter set)
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        String email = authentication.getName();
+
+        // 2. tìm user trong DB theo email
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        // 3. tìm seeker theo user
+        Seeker seeker = seekerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND));
+
+        return seekerMapper.toSeekerResponse(seeker);
+
     }
 }

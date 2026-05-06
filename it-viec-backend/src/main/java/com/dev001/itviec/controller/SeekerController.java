@@ -2,6 +2,7 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,10 +23,20 @@ public class SeekerController {
     private final SeekerService seekerService;
 
     @GetMapping
-    public ApiResponse<List<SeekerResponse>> getSkills() {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<List<SeekerResponse>> getSeekers() {
         return ApiResponse.<List<SeekerResponse>>builder()
                 .code(1000)
                 .result(seekerService.getAllSeekers())
+                .build();
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<SeekerResponse> getCurrentSeeker() {
+        return ApiResponse.<SeekerResponse>builder()
+                .code(1000)
+                .result(seekerService.getSeekerByCookie())
                 .build();
     }
 }

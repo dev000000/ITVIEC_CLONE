@@ -7,4 +7,6 @@ import com.dev001.itviec.dto.response.SeekerResponse;
 public interface SeekerService {
 
     List<SeekerResponse> getAllSeekers();
+
+    SeekerResponse getSeekerByCookie();
 }

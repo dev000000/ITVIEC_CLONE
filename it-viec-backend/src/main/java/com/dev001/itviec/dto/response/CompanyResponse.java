@@ -1,11 +1,9 @@
 package com.dev001.itviec.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
-import com.dev001.itviec.entity.country.Country;
-import com.dev001.itviec.entity.employer.Employer;
-import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
 import com.dev001.itviec.enums.OvertimePolicy;
@@ -21,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CompanyResponse {
     String id;
-    Employer employer;
+    EmployerResponse employer;
     String companyName;
     String slug;
     String description;
@@ -31,7 +29,7 @@ public class CompanyResponse {
     CompanyModel companyModel;
     String industry;
     CompanySize companySize;
-    Country country;
+    CountryResponse country;
     WorkingHours workingHours;
     OvertimePolicy overtimePolicy;
     String companyIntroduction;
@@ -39,5 +37,6 @@ public class CompanyResponse {
     String whyWorkHere;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    Set<Skill> skills;
+    Set<SkillResponse> companySkills;
+//    List<JobResponse> jobs;
 }

@@ -25,7 +25,9 @@ public enum ErrorCode {
     REFRESH_TOKEN_EXPIRED(1011, "Your session has expired. Please login again.", HttpStatus.UNAUTHORIZED),
     LOGOUT_FAIL(1012, "Logout fail!", HttpStatus.BAD_REQUEST),
     JOB_NOT_FOUND(1013, "Job not found!", HttpStatus.NOT_FOUND),
-    COMPANY_NOT_FOUND(1014, "Company not found!", HttpStatus.NOT_FOUND);
+    COMPANY_NOT_FOUND(1014, "Company not found!", HttpStatus.NOT_FOUND),
+    SEEKER_NOT_FOUND(1015, "Seeker not found", HttpStatus.NOT_FOUND),
+    EMPLOYER_NOT_FOUND(1016, "Employer not found", HttpStatus.NOT_FOUND);
 
     private int code;
     private String message;

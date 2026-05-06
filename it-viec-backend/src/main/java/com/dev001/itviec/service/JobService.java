@@ -18,4 +18,6 @@ public interface JobService {
     List<JobResponse> getJobsByCompanyId(String companyId);
 
     void deleteJob(String slug);
+
+    List<JobResponse> getJobsByCurrentEmployer();
 }
