@@ -99,8 +99,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private void revokeAllUserTokens(User user, boolean isRevokeRefreshToken) {
         var validUserTokens = isRevokeRefreshToken
-                ? tokenRepository.findAllValidTokensByUser(user.getId())
-                : tokenRepository.findAllValidAccessTokensByUser(user.getId());
+                ? tokenRepository.findByUserAndRevokedTrue(user)
+                : tokenRepository.findByUserAndRevokedTrueAndAccessTokenTrue(user);
         if (validUserTokens.isEmpty()) {
             return;
         }
@@ -113,7 +113,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .user(user)
                 .token(token)
                 .tokenType(BEARER)
-                .isAccessToken(isAccessToken)
+                .accessToken(isAccessToken)
                 .expiryTime(jwtService.extractExpiration(token))
                 .revoked(false)
                 .build();
