@@ -4,9 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import com.dev001.itviec.entity.city.City;
-import com.dev001.itviec.entity.skill.Skill;
-import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.Gender;
 
 import lombok.AccessLevel;
@@ -19,18 +16,18 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SeekerResponse {
     String id;
-    User user;
+    UserResponse user;
     String fullName;
     String jobTitle;
     String phoneNumber;
-    LocalDate dob;
+    LocalDate dateOfBirth;
     Gender gender;
-    City city;
+    CityResponse city;
     String address;
     String personalLink;
     String coverLetter;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    Set<Skill> skills;
-    Set<City> desiredLocations;
+    Set<SkillResponse> skills;
+    Set<CityResponse> desiredLocations;
 }
