@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface SeekerRepository extends JpaRepository<Seeker, String> {
 
     @EntityGraph(attributePaths = {"user", "city", "skills", "desiredLocations"})
-    Optional<Seeker> findSeekerByUser(User user);
+    Optional<Seeker> findByUser(User user);
 
     @EntityGraph(attributePaths = {"user", "city", "skills", "desiredLocations"})
     List<Seeker> findAll();

@@ -46,7 +46,7 @@ public class SeekerServiceImpl implements SeekerService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         // 3. tìm seeker theo user
-        Seeker seeker = seekerRepository.findSeekerByUser(user).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND));
+        Seeker seeker = seekerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND));
 
         return seekerMapper.toSeekerResponse(seeker);
 
