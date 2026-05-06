@@ -22,7 +22,7 @@ public class JobController {
     private final JobService jobService;
 
     @GetMapping
-    public ApiResponse<List<JobResponse>> getJobs() {
+    public ApiResponse<List<JobResponse>> getAllJobs() {
         return ApiResponse.<List<JobResponse>>builder()
                 .code(1000)
                 .result(jobService.getAllJobs())
@@ -30,22 +30,24 @@ public class JobController {
     }
 
     @GetMapping("/{slug}")
-    public ApiResponse<JobResponse> getJobDetail(@PathVariable String slug) {
+    public ApiResponse<JobResponse>getJobBySlug(@PathVariable String slug) {
         return ApiResponse.<JobResponse>builder()
                 .code(1000)
                 .result(jobService.getJobBySlug(slug))
                 .build();
     }
 
-    @GetMapping("/company/{companyId}")
-    public ApiResponse<List<JobResponse>> getJobsByCompanyId(@PathVariable String companyId) {
+
+    @GetMapping("/my-jobs")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<List<JobResponse>> getMyJobs() {
         return ApiResponse.<List<JobResponse>>builder()
                 .code(1000)
-                .result(jobService.getJobsByCompanyId(companyId))
+                .result(jobService.getJobsByCurrentEmployer())
                 .build();
     }
 
-    // create job is only for employer
+
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<JobResponse> createJob(@RequestBody JobCreateRequest request) {

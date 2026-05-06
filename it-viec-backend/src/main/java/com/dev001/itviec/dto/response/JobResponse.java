@@ -29,7 +29,7 @@ public class JobResponse {
     ExperienceLevel experienceLevel;
     LocalDateTime postedAt;
     LocalDateTime expiresAt;
-    JobStatus jobStatus;
+    JobStatus status;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     Set<SkillResponse> skills;

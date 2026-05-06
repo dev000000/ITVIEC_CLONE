@@ -8,6 +8,11 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
+import com.dev001.itviec.entity.employer.Employer;
+import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.exception.ErrorCode;
+import com.dev001.itviec.repository.EmployerRepository;
+import com.dev001.itviec.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +37,8 @@ public class JobServiceImpl implements JobService {
     private final JobMapper jobMapper;
     private final JobRepository jobRepository;
     private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
+    private final EmployerRepository employerRepository;
 
     @Override
     public List<JobResponse> getAllJobs() {
@@ -90,11 +97,32 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public List<JobResponse> getJobsByCompanyId(String companyId) {
-        return jobMapper.toJobResponse(jobRepository.findByCompanyId(companyId));
+        return List.of();
     }
 
     @Override
     public void deleteJob(String slug) {}
+
+    @Override
+    public List<JobResponse> getJobsByCurrentEmployer() {
+        // 1. lấy email từ SecurityContext
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        String email = authentication.getName();
+        // 2. lấy user từ email
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        // 3. lấy employer từ user
+        Employer employer = employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+
+        // 4. lấy company từ employer
+        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+
+        // 5. lấy toàn bộ job từ company
+        return jobMapper.toJobResponse(jobRepository.findByCompany(company));
+    }
 
     private String slugify(String text) {
         return text.trim()
