@@ -21,11 +21,12 @@ public class JobController {
 
     private final JobService jobService;
 
+    // API get all jobs in system ( public = status => active )
     @GetMapping
     public ApiResponse<List<JobResponse>> getAllJobs() {
         return ApiResponse.<List<JobResponse>>builder()
                 .code(1000)
-                .result(jobService.getAllJobs())
+                .result(jobService.getAllJobsActive())
                 .build();
     }
 

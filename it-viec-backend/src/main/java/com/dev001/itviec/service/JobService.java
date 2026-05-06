@@ -7,7 +7,7 @@ import com.dev001.itviec.dto.response.JobResponse;
 
 public interface JobService {
 
-    List<JobResponse> getAllJobs();
+    List<JobResponse> getAllJobsActive();
 
     JobResponse getJobBySlug(String slug);
 

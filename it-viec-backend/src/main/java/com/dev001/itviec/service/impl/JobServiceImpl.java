@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.UserRepository;
@@ -41,10 +42,9 @@ public class JobServiceImpl implements JobService {
     private final EmployerRepository employerRepository;
 
     @Override
-    public List<JobResponse> getAllJobs() {
-        return jobMapper.toJobResponse(jobRepository.findAllWithDetails());
+    public List<JobResponse> getAllJobsActive() {
+        return jobMapper.toJobResponse(jobRepository.findByStatus(ACTIVE));
     }
-
 
     @Override
     public JobResponse getJobBySlug(String slug) {
