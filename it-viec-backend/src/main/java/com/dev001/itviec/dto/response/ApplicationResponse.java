@@ -1,10 +1,6 @@
 package com.dev001.itviec.dto.response;
 
-import com.dev001.itviec.entity.city.City;
-import com.dev001.itviec.entity.job.Job;
-import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.enums.ApplicationStatus;
-import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Builder
@@ -19,8 +16,8 @@ import java.util.List;
 public class ApplicationResponse {
 
     String id;
-    Seeker seeker;
-    Job job;
+    SeekerResponse seeker;
+    JobResponse job;
     String fullName;
     String phoneNumber;
     String resumeUrl;
@@ -29,5 +26,5 @@ public class ApplicationResponse {
     String employerMessage;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-    List<City> desiredLocations;
+    Set<CityResponse> desiredLocations;
 }

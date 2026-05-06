@@ -11,7 +11,6 @@ import com.dev001.itviec.entity.job.Job;
 @Mapper(componentModel = "spring", uses = {CityMapper.class, SkillMapper.class, CompanyMapper.class})
 public interface JobMapper {
     List<JobResponse> toJobResponse(List<Job> jobs);
-
     JobResponse toJobResponse(Job job);
 
 }
