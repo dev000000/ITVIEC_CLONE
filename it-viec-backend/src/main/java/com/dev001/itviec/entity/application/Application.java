@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "application")
+@Table(name = "applications")
 @Getter
 @Setter
 @Builder
@@ -36,7 +36,7 @@ public class Application extends BaseEntity {
     @JoinColumn(name = "job_id", nullable = false)
     Job job;
 
-    @Column(name = "full_name", nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "full_name", nullable = false, columnDefinition = "VARCHAR(255)")
     String fullName;
 
     @Column(name = "phone_number", columnDefinition = "VARCHAR(10)")
@@ -45,7 +45,7 @@ public class Application extends BaseEntity {
     @Column(name = "resume_url", columnDefinition = "VARCHAR(255)")
     String resumeUrl;
 
-    @Column(name = "cover_letter", columnDefinition = "NVARCHAR(500)")
+    @Column(name = "cover_letter", columnDefinition = "VARCHAR(500)")
     String coverLetter;
 
     @Enumerated(EnumType.STRING)
@@ -55,10 +55,10 @@ public class Application extends BaseEntity {
     @Column(name = "employer_message", columnDefinition = "MEDIUMTEXT")
     String employerMessage;
 
-    //    Noi lam viec mong muon trong don ung tuyen
+//    Nơi làm việc mong muốn viết trong đơn ứng tuyển
     @ManyToMany
     @JoinTable(
-            name = "application_city",
+            name = "application_cities",
             joinColumns = @JoinColumn(name = "application_id"),
             inverseJoinColumns = @JoinColumn(name = "city_id"))
     @Builder.Default

@@ -16,20 +16,20 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class BaseEntity {
     @Column(name= "created_at", updatable = false)
-    LocalDateTime createAt;
+    LocalDateTime createdAt;
 
     @Column(name= "updated_at")
-    LocalDateTime updateAt;
+    LocalDateTime updatedAt;
 
     @PrePersist
     protected void onCreate() {
-        createAt = LocalDateTime.now();
-        updateAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updateAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
 
 }

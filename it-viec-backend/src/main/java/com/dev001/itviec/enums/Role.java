@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 public enum Role {
     ADMIN,
     EMPLOYER,
-    USER;
+    SEEKER;
 
     public List<SimpleGrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();

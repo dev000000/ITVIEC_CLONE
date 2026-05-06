@@ -20,7 +20,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "job")
+@Table(name = "jobs")
 @Getter
 @Setter
 @Builder
@@ -36,7 +36,7 @@ public class Job extends BaseEntity {
     @JoinColumn(name = "company_id", nullable = false)
     Company company;
 
-    @Column(name = "title", nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)")
     String title;
 
     @Column(unique = true, columnDefinition = "VARCHAR(255)")
@@ -54,7 +54,7 @@ public class Job extends BaseEntity {
     @Column(name = "why_join_us", columnDefinition = "MEDIUMTEXT")
     String whyJoinUs;
 
-    @Column(columnDefinition = "NVARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(255)")
     String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -86,7 +86,7 @@ public class Job extends BaseEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "job_skill",
+            name = "job_skills",
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     @Builder.Default

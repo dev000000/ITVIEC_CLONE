@@ -12,7 +12,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "token")
+@Table(name = "tokens")
 @Getter
 @Setter
 @Builder
@@ -35,10 +35,11 @@ public class Token {
     @Column(name = "expiry_time")
     Date expiryTime;
 
+    @Column(name = "is_revoked")
     boolean revoked;
 
     @Column(name = "is_access_token")
-    boolean isAccessToken;
+    boolean accessToken;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

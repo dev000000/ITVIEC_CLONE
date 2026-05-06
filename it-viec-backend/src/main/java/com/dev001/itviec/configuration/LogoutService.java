@@ -52,7 +52,7 @@ public class LogoutService implements LogoutHandler {
         }
         // if token exist in database, then get all tokens of user ( get user in token (already get in db) )
         var validUserTokens =
-                tokenRepository.findAllValidTokensByUser(savedToken.getUser().getId());
+                tokenRepository.findByUserAndRevokedTrue(savedToken.getUser());
         // if list of valid token is empty, then return
         if (validUserTokens.isEmpty()) {
             request.setAttribute("auth.error.code", "LOGOUT_FAIL");

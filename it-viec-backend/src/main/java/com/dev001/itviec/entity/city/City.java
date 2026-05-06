@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "city")
+@Table(name = "cities")
 @Getter
 @Setter
 @Builder
@@ -18,6 +18,6 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "city_name", nullable = false, columnDefinition = "NVARCHAR(100)")
+    @Column(name = "city_name", nullable = false, columnDefinition = "VARCHAR(100)")
     String cityName;
 }
