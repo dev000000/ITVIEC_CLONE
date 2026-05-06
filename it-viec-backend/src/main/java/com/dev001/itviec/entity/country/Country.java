@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "country")
+@Table(name = "countries")
 @Getter
 @Setter
 @Builder

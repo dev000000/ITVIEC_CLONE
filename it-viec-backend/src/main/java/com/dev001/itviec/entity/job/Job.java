@@ -20,7 +20,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "job")
+@Table(name = "jobs")
 @Getter
 @Setter
 @Builder
@@ -86,7 +86,7 @@ public class Job extends BaseEntity {
 
     @ManyToMany
     @JoinTable(
-            name = "job_skill",
+            name = "job_skills",
             joinColumns = @JoinColumn(name = "job_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id"))
     @Builder.Default

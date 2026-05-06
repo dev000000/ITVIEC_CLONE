@@ -11,7 +11,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "employer")
+@Table(name = "employers")
 @Getter
 @Setter
 @Builder
@@ -28,10 +28,10 @@ public class Employer extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     User user;
 
-    @Column(name = "full_name", nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "full_name", nullable = false, columnDefinition = "VARCHAR(255)")
     String fullName;
 
-    @Column(name = "job_title", columnDefinition = "NVARCHAR(255)")
+    @Column(name = "job_title", columnDefinition = "VARCHAR(255)")
     String jobTitle;
 
     @Column(name = "phone_number", columnDefinition = "VARCHAR(10)")

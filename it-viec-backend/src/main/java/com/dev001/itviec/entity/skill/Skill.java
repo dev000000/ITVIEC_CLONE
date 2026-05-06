@@ -6,7 +6,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table(name = "skill")
+@Table(name = "skills")
 @Getter
 @Setter
 @Builder
