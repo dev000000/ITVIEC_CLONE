@@ -3,6 +3,7 @@ package com.dev001.itviec.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.dev001.itviec.entity.employer.Employer;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -16,4 +17,6 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
     @EntityGraph(attributePaths = {"jobs"})
     @Query("SELECT DISTINCT c FROM Company c")
     List<Company> findAllWithJobs();
+
+    Optional<Company> findByEmployer(Employer employer);
 }
