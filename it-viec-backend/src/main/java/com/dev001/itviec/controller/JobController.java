@@ -2,6 +2,8 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
+import com.dev001.itviec.dto.response.JobCardResponse;
+import com.dev001.itviec.dto.response.PageResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +25,13 @@ public class JobController {
 
     // API get all jobs in system ( public = status => active )
     @GetMapping
-    public ApiResponse<List<JobResponse>> getAllJobs() {
-        return ApiResponse.<List<JobResponse>>builder()
+    public ApiResponse<PageResponse<JobCardResponse>> getJobs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ApiResponse.<PageResponse<JobCardResponse>>builder()
                 .code(1000)
-                .result(jobService.getAllJobsActive())
+                .result(jobService.getJobCards(page, size))
                 .build();
     }
 
@@ -37,8 +42,6 @@ public class JobController {
                 .result(jobService.getJobBySlug(slug))
                 .build();
     }
-
-
     @GetMapping("/my-jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<List<JobResponse>> getMyJobs() {
@@ -47,8 +50,6 @@ public class JobController {
                 .result(jobService.getJobsByCurrentEmployer())
                 .build();
     }
-
-
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<JobResponse> createJob(@RequestBody JobCreateRequest request) {
@@ -57,4 +58,11 @@ public class JobController {
                 .result(jobService.createJob(request))
                 .build();
     }
+//    @GetMapping
+//    public ApiResponse<List<JobResponse>> getAllJobs() {
+//        return ApiResponse.<List<JobResponse>>builder()
+//                .code(1000)
+//                .result(jobService.getAllJobsActive())
+//                .build();
+//    }
 }

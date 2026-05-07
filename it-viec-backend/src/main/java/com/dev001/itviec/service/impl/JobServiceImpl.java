@@ -8,12 +8,17 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
+import com.dev001.itviec.dto.response.JobCardResponse;
+import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +34,7 @@ import com.dev001.itviec.service.JobService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -41,10 +47,10 @@ public class JobServiceImpl implements JobService {
     private final UserRepository userRepository;
     private final EmployerRepository employerRepository;
 
-    @Override
-    public List<JobResponse> getAllJobsActive() {
-        return jobMapper.toJobResponse(jobRepository.findByStatus(ACTIVE));
-    }
+//    @Override
+//    public List<JobResponse> getAllJobsActive() {
+//        return jobMapper.toJobResponse(jobRepository.findByStatus(ACTIVE));
+//    }
 
     @Override
     public JobResponse getJobBySlug(String slug) {
@@ -122,6 +128,30 @@ public class JobServiceImpl implements JobService {
 
         // 5. lấy toàn bộ job từ company
         return jobMapper.toJobResponse(jobRepository.findByCompany(company));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public PageResponse<JobCardResponse> getJobCards(int page, int size) {
+
+        // 1. Tạo Pageable
+        Pageable pageable = PageRequest.of(page, size);
+        // 2. query db
+        Page<Job> jobPage = jobRepository.findByStatus(ACTIVE, pageable);
+
+        // 3. map dto job -> jobCard
+        List<JobCardResponse> jobCardResponseList = jobMapper.toJobCardResponse(jobPage.getContent());
+
+
+        return PageResponse.<JobCardResponse>builder()
+                .data(jobCardResponseList)
+                .size(jobCardResponseList.size())
+                .page(jobPage.getNumber())
+                .totalElements(jobPage.getTotalElements())
+                .totalPages(jobPage.getTotalPages())
+                .isFirst(jobPage.isFirst())
+                .isLast(jobPage.isLast())
+                .build();
     }
 
     private String slugify(String text) {
