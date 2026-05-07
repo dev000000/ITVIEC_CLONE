@@ -15,7 +15,7 @@ public enum ErrorCode {
     USER_EXISTED(1001, "User already existed", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1002, "User not found", HttpStatus.NOT_FOUND),
     USERNAME_INVALID(1003, "Username must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
-    PASSWORD_INVALID(1004, "Password must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(1004, "Password must be at least 12 chars and include upper, lower, number, special", HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1005, "User is not authenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1006, "User is not permitted", HttpStatus.FORBIDDEN),
     DOB_INVALID(1007, "User must be > {min}", HttpStatus.BAD_REQUEST),
@@ -27,7 +27,15 @@ public enum ErrorCode {
     JOB_NOT_FOUND(1013, "Job not found!", HttpStatus.NOT_FOUND),
     COMPANY_NOT_FOUND(1014, "Company not found!", HttpStatus.NOT_FOUND),
     SEEKER_NOT_FOUND(1015, "Seeker not found", HttpStatus.NOT_FOUND),
-    EMPLOYER_NOT_FOUND(1016, "Employer not found", HttpStatus.NOT_FOUND);
+    EMPLOYER_NOT_FOUND(1016, "Employer not found", HttpStatus.NOT_FOUND),
+    EMAIL_EXISTED(1017, "Email already existed", HttpStatus.BAD_REQUEST),
+    FULL_NAME_EXISTED(1018, "Full name already existed", HttpStatus.BAD_REQUEST),
+    EMAIL_REQUIRED(1019, "Email must not be blank", HttpStatus.BAD_REQUEST),
+    EMAIL_INVALID(1020, "Email is invalid", HttpStatus.BAD_REQUEST),
+    PASSWORD_REQUIRED(1021, "Password must not be blank", HttpStatus.BAD_REQUEST),
+    FULL_NAME_REQUIRED(1022, "Full name must not be blank", HttpStatus.BAD_REQUEST),
+    FULL_NAME_SIZE(1023, "Full name must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    ;
 
     private int code;
     private String message;

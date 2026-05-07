@@ -4,6 +4,8 @@ import static com.dev001.itviec.enums.Role.SEEKER;
 import static com.dev001.itviec.enums.TokenType.BEARER;
 import static com.dev001.itviec.exception.ErrorCode.*;
 
+import com.dev001.itviec.entity.seeker.Seeker;
+import com.dev001.itviec.repository.SeekerRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,9 +21,9 @@ import org.springframework.stereotype.Service;
 import com.dev001.itviec.configuration.CookieFactory;
 import com.dev001.itviec.configuration.JwtService;
 import com.dev001.itviec.dto.request.AuthenticationRequest;
-import com.dev001.itviec.dto.request.RegisterRequest;
+import com.dev001.itviec.dto.request.RegisterUserSeekerRequest;
 import com.dev001.itviec.dto.response.AuthenticationResponse;
-import com.dev001.itviec.dto.response.RegisterResponse;
+import com.dev001.itviec.dto.response.RegisterUserSeekerResponse;
 import com.dev001.itviec.entity.token.Token;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.exception.AppException;
@@ -32,6 +34,7 @@ import com.dev001.itviec.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -45,6 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final TokenRepository tokenRepository;
     private final UserMapper userMapper;
     private final CookieFactory cookieFactory;
+    private final SeekerRepository seekerRepository;
 
     @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
@@ -121,7 +125,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public RegisterResponse register(RegisterRequest request, HttpServletResponse response) {
+    public RegisterUserSeekerResponse register(RegisterUserSeekerRequest request, HttpServletResponse response) {
 
         // 1. check username existed
         // Don't need this
@@ -150,13 +154,47 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         saveUserToken(savedUser, refreshToken, false);
         // 8. convert user to RegisterResponse and return
 
-        RegisterResponse RegisResponse = userMapper.toRegisterResponse(user);
+        RegisterUserSeekerResponse RegisResponse = userMapper.toRegisterResponse(user);
         // 9. set cookie for response
         // response.addHeader(HttpHeaders.SET_COOKIE,
         // cookieFactory.accessCookie(accessToken).toString());
         // response.addHeader(HttpHeaders.SET_COOKIE,
         // cookieFactory.refreshCookie(refreshToken).toString());
         return RegisResponse;
+    }
+
+
+    @Override
+    @Transactional
+    public void registerUserSeeker(RegisterUserSeekerRequest request, HttpServletResponse response) {
+        // 1. kiếm tra email đã tồn tại chưa
+        if(userRepository.existsByEmail(request.getEmail())) {
+            throw new AppException(EMAIL_EXISTED);
+        }
+        // 2. kiểm tra họ và tên đã tồn tại chưa
+        if(seekerRepository.existsByFullNameIgnoreCase(request.getFullName())) {
+            throw new AppException(FULL_NAME_EXISTED);
+        }
+        // 4. Hash password trước khi save vào DB
+        String hashedPassword = passwordEncoder.encode(request.getPassword());
+
+        // 5. Tạo đối tượng User từ request và set các trường cần thiết
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(hashedPassword)
+                .role(SEEKER)
+                .build();
+        User savedUser = userRepository.save(user);
+
+        // 6.Normalize fullName trước khi save vào DB: loại bỏ khoảng trắng thừa, chuyển nhiều khoảng trắng thành 1 khoảng trắng
+        String normalizedFullName = request.getFullName()
+                .trim()
+                .replaceAll("\\s+", " ");
+        // 7. Tạo đối tượng Seeker
+        Seeker seeker = Seeker.builder().user(savedUser).fullName(normalizedFullName).build();
+        // 8. Save Seeker vào DB
+        seekerRepository.save(seeker);
+
     }
 
     @Override

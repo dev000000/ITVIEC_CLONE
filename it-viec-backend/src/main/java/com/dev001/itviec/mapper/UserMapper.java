@@ -2,12 +2,12 @@ package com.dev001.itviec.mapper;
 
 import java.util.List;
 
+import com.dev001.itviec.dto.request.RegisterUserSeekerRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-import com.dev001.itviec.dto.request.RegisterRequest;
 import com.dev001.itviec.dto.request.UserUpdateRequest;
-import com.dev001.itviec.dto.response.RegisterResponse;
+import com.dev001.itviec.dto.response.RegisterUserSeekerResponse;
 import com.dev001.itviec.dto.response.UserResponse;
 import com.dev001.itviec.entity.user.User;
 
@@ -19,9 +19,9 @@ public interface UserMapper {
 
     List<UserResponse> toUserResponse(List<User> users);
 
-    RegisterResponse toRegisterResponse(User user);
+    RegisterUserSeekerResponse toRegisterResponse(User user);
 
-    User toUser(RegisterRequest request);
+    User toUser(RegisterUserSeekerRequest request);
 
     //    @Mapping(target = "roles", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
