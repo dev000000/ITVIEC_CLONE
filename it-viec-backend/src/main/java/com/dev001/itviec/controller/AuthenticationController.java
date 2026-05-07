@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.request.*;
@@ -41,14 +40,14 @@ public class AuthenticationController {
                 .build();
     }
 
-    @PostMapping("/register")
-    public ApiResponse<RegisterResponse> register(
-            @RequestBody @Valid RegisterRequest request, HttpServletResponse response) {
 
-        RegisterResponse RegisResponse = authenticationService.register(request, response);
-        return ApiResponse.<RegisterResponse>builder()
+    // API đăng ký một tài khoản cho người tìm việc (seeker)
+    @PostMapping("/register/user_seeker")
+    public ApiResponse<Void> register(
+            @RequestBody @Valid RegisterUserSeekerRequest request, HttpServletResponse response) {
+        authenticationService.registerUserSeeker(request, response);
+        return ApiResponse.<Void>builder()
                 .code(1000)
-                .result(RegisResponse)
                 .build();
     }
 

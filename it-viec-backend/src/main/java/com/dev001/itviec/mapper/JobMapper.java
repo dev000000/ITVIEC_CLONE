@@ -2,6 +2,7 @@ package com.dev001.itviec.mapper;
 
 import java.util.List;
 
+import com.dev001.itviec.dto.response.JobCardResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,5 +13,9 @@ import com.dev001.itviec.entity.job.Job;
 public interface JobMapper {
     List<JobResponse> toJobResponse(List<Job> jobs);
     JobResponse toJobResponse(Job job);
+
+    JobCardResponse toJobCardResponse(Job job);
+
+    List<JobCardResponse> toJobCardResponse(List<Job> jobs);
 
 }

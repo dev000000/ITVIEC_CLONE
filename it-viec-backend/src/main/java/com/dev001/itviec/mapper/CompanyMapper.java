@@ -15,4 +15,5 @@ public interface CompanyMapper {
 
     CompanySummaryResponse toCompanySummaryResponse(Company company);
     CompanyResponse toCompanyResponse(Company company);
+
 }

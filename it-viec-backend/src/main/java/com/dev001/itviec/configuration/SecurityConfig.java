@@ -46,6 +46,8 @@ public class SecurityConfig {
                         .permitAll() // cho phep CORS preflight
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 )

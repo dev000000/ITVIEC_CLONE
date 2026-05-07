@@ -9,4 +9,7 @@ import com.dev001.itviec.entity.user.User;
 public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByEmail(String email);
+
+    boolean existsByEmail(String email);
+
 }

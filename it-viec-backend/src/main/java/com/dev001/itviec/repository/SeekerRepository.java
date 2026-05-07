@@ -18,4 +18,7 @@ public interface SeekerRepository extends JpaRepository<Seeker, String> {
 
     @EntityGraph(attributePaths = {"user", "city", "skills", "desiredLocations"})
     List<Seeker> findAll();
+
+    boolean existsByFullNameIgnoreCase(String fullName);
 }
+
