@@ -17,5 +17,6 @@ public class CompanyCardResponse {
     String logoUrl;
     String address;
     Set<SkillResponse> companySkills;
-    int numberOfJobs;
+    // trả về số lượng job public cho mọi người check
+    int numberOfJobsActive;
 }

@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/companies/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 )
