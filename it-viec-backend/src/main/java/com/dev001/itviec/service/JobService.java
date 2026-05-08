@@ -4,24 +4,24 @@ import java.util.List;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
-import com.dev001.itviec.dto.response.JobResponse;
+import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 
 public interface JobService {
 
 //    List<JobResponse> getAllJobsActive();
 
-    JobResponse getJobBySlug(String slug);
+    JobDetailResponse getJobBySlug(String slug);
 
-    JobResponse createJob(JobCreateRequest jobCreateRequest);
+    JobDetailResponse createJob(JobCreateRequest jobCreateRequest);
 
-    JobResponse updateJob(String slug, JobResponse job);
+    JobDetailResponse updateJob(String slug, JobDetailResponse job);
 
-    List<JobResponse> getJobsByCompanyId(String companyId);
+    List<JobDetailResponse> getJobsByCompanyId(String companyId);
 
     void deleteJob(String slug);
 
-    List<JobResponse> getJobsByCurrentEmployer();
+    List<JobDetailResponse> getJobsByCurrentEmployer();
 
     PageResponse<JobCardResponse> getJobCards(int page, int size);
 }

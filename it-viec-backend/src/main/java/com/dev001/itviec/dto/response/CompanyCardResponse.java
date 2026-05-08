@@ -5,13 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
+
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CompanySummaryResponse {
+public class CompanyCardResponse {
     String id;
     String companyName;
     String slug;
     String logoUrl;
+    String address;
+    Set<SkillResponse> companySkills;
+    int numberOfJobs;
 }
-

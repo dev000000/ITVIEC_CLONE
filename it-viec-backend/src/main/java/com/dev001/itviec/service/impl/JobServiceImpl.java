@@ -9,10 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.dev001.itviec.dto.response.JobCardResponse;
+import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.user.User;
-import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.UserRepository;
@@ -23,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
-import com.dev001.itviec.dto.response.JobResponse;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.exception.AppException;
@@ -53,13 +52,13 @@ public class JobServiceImpl implements JobService {
 //    }
 
     @Override
-    public JobResponse getJobBySlug(String slug) {
+    public JobDetailResponse getJobBySlug(String slug) {
         Job job = jobRepository.findBySlug(slug).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
-        return jobMapper.toJobResponse(job);
+        return jobMapper.toJobDetailResponse(job);
     }
 
     @Override
-    public JobResponse createJob(JobCreateRequest request) {
+    public JobDetailResponse createJob(JobCreateRequest request) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         String companyId = authentication.getName();
         Company company = companyRepository.findById(companyId).orElseThrow(() -> new AppException(COMPANY_NOT_FOUND));
@@ -93,16 +92,16 @@ public class JobServiceImpl implements JobService {
         // 4. save lan 2 => update slug
         job = jobRepository.save(job);
 
-        return jobMapper.toJobResponse(job);
+        return jobMapper.toJobDetailResponse(job);
     }
 
     @Override
-    public JobResponse updateJob(String slug, JobResponse job) {
+    public JobDetailResponse updateJob(String slug, JobDetailResponse job) {
         return null;
     }
 
     @Override
-    public List<JobResponse> getJobsByCompanyId(String companyId) {
+    public List<JobDetailResponse> getJobsByCompanyId(String companyId) {
         return List.of();
     }
 
@@ -110,7 +109,7 @@ public class JobServiceImpl implements JobService {
     public void deleteJob(String slug) {}
 
     @Override
-    public List<JobResponse> getJobsByCurrentEmployer() {
+    public List<JobDetailResponse> getJobsByCurrentEmployer() {
         // 1. lấy email từ SecurityContext
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if(authentication == null || !authentication.isAuthenticated()) {
@@ -127,7 +126,7 @@ public class JobServiceImpl implements JobService {
         Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
         // 5. lấy toàn bộ job từ company
-        return jobMapper.toJobResponse(jobRepository.findByCompany(company));
+        return jobMapper.toJobDetailResponse(jobRepository.findByCompany(company));
     }
 
     @Transactional(readOnly = true)

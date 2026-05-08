@@ -2,9 +2,9 @@ package com.dev001.itviec.service.impl;
 
 import java.util.List;
 
+import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import org.springframework.stereotype.Service;
 
-import com.dev001.itviec.dto.response.CompanyResponse;
 import com.dev001.itviec.mapper.CompanyMapper;
 import com.dev001.itviec.repository.CompanyRepository;
 import com.dev001.itviec.service.CompanyService;
@@ -21,11 +21,11 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyRepository companyRepository;
 
     @Override
-    public List<CompanyResponse> getAllCompanies() {
-        return companyMapper.toCompanyResponse(companyRepository.findAll());
+    public List<CompanyDetailResponse> getAllCompanies() {
+        return companyMapper.toCompanyDetailResponse(companyRepository.findAll());
     }
     @Override
-    public List<CompanyResponse> getAllCompaniesWithJobs() {
-        return companyMapper.toCompanyResponse(companyRepository.findAllWithJobs());
+    public List<CompanyDetailResponse> getAllCompaniesWithJobs() {
+        return companyMapper.toCompanyDetailResponse(companyRepository.findAllWithJobs());
     }
 }

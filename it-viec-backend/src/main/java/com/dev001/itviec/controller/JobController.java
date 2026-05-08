@@ -3,13 +3,13 @@ package com.dev001.itviec.controller;
 import java.util.List;
 
 import com.dev001.itviec.dto.response.JobCardResponse;
+import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
-import com.dev001.itviec.dto.response.JobResponse;
 import com.dev001.itviec.service.JobService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,33 +36,27 @@ public class JobController {
     }
 
     @GetMapping("/{slug}")
-    public ApiResponse<JobResponse>getJobBySlug(@PathVariable String slug) {
-        return ApiResponse.<JobResponse>builder()
+    public ApiResponse<JobDetailResponse>getJobBySlug(@PathVariable String slug) {
+        return ApiResponse.<JobDetailResponse>builder()
                 .code(1000)
                 .result(jobService.getJobBySlug(slug))
                 .build();
     }
     @GetMapping("/my-jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<List<JobResponse>> getMyJobs() {
-        return ApiResponse.<List<JobResponse>>builder()
+    public ApiResponse<List<JobDetailResponse>> getMyJobs() {
+        return ApiResponse.<List<JobDetailResponse>>builder()
                 .code(1000)
                 .result(jobService.getJobsByCurrentEmployer())
                 .build();
     }
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<JobResponse> createJob(@RequestBody JobCreateRequest request) {
-        return ApiResponse.<JobResponse>builder()
+    public ApiResponse<JobDetailResponse> createJob(@RequestBody JobCreateRequest request) {
+        return ApiResponse.<JobDetailResponse>builder()
                 .code(1000)
                 .result(jobService.createJob(request))
                 .build();
     }
-//    @GetMapping
-//    public ApiResponse<List<JobResponse>> getAllJobs() {
-//        return ApiResponse.<List<JobResponse>>builder()
-//                .code(1000)
-//                .result(jobService.getAllJobsActive())
-//                .build();
-//    }
+
 }

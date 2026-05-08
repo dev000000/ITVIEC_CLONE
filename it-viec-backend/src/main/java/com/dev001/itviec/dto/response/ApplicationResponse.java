@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Data
@@ -17,7 +16,7 @@ public class ApplicationResponse {
 
     String id;
     SeekerResponse seeker;
-    JobResponse job;
+    JobDetailResponse job;
     String fullName;
     String phoneNumber;
     String resumeUrl;

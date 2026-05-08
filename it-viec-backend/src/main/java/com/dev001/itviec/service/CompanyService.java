@@ -2,9 +2,9 @@ package com.dev001.itviec.service;
 
 import java.util.List;
 
-import com.dev001.itviec.dto.response.CompanyResponse;
+import com.dev001.itviec.dto.response.CompanyDetailResponse;
 
 public interface CompanyService {
-    List<CompanyResponse> getAllCompanies();
-    List<CompanyResponse> getAllCompaniesWithJobs();
+    List<CompanyDetailResponse> getAllCompanies();
+    List<CompanyDetailResponse> getAllCompaniesWithJobs();
 }
