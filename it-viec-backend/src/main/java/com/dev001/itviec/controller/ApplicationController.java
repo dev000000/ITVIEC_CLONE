@@ -19,15 +19,14 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    @GetMapping
-    public ApiResponse<List<ApplicationResponse>> getApplications() {
-        return ApiResponse.<List<ApplicationResponse>>builder()
-                .code(1000)
-                .result(applicationService.getAllApplications())
-                .build();
-    }
-//    @GetMapping
-//    public String getApplications(){
-//        return "ok";
-//    }
+    // API cho nhà tuyển dụng lấy toàn bộ đơn ứng tuyển của công ty đó => get
+
+    // API cho phép nhà tuyển dụng cập nhật trạng thái đơn ứng tuyển, thông báo phỏng vấn ( nếu có ) => put
+
+    // API cho phép người xin việc (seeker) lấy toàn bộ đơn ứng tuyển của họ => get
+
+    // API cho phép người xin việc ứng tuyển vào 1 công việc  => post
+
+    // API cho phép quản trị viên lấy toàn bộ đơn ứng tuyển trong hệ thống => get
+
 }

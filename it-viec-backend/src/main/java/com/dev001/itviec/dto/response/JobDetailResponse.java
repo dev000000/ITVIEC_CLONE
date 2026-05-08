@@ -13,9 +13,9 @@ import lombok.experimental.FieldDefaults;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JobResponse {
+public class JobDetailResponse {
     Long id;
-    CompanySummaryResponse company;
+    CompanyBriefResponse company;
     String title;
     String slug;
     String jobReason;

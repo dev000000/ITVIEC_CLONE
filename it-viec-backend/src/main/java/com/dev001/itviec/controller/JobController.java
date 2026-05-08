@@ -3,13 +3,13 @@ package com.dev001.itviec.controller;
 import java.util.List;
 
 import com.dev001.itviec.dto.response.JobCardResponse;
+import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
-import com.dev001.itviec.dto.response.JobResponse;
 import com.dev001.itviec.service.JobService;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class JobController {
 
     private final JobService jobService;
 
-    // API get all jobs in system ( public = status => active )
+    // API trả về toàn bộ job đang active có phân trang, để hiển thị ở trang chủ và trang tìm kiếm
     @GetMapping
     public ApiResponse<PageResponse<JobCardResponse>> getJobs(
             @RequestParam(defaultValue = "0") int page,
@@ -35,34 +35,38 @@ public class JobController {
                 .build();
     }
 
+    // API trả về thông tin chi tiết của job theo slug, công việc phải được active
     @GetMapping("/{slug}")
-    public ApiResponse<JobResponse>getJobBySlug(@PathVariable String slug) {
-        return ApiResponse.<JobResponse>builder()
+    public ApiResponse<JobDetailResponse>getJobBySlug(@PathVariable String slug) {
+        return ApiResponse.<JobDetailResponse>builder()
                 .code(1000)
                 .result(jobService.getJobBySlug(slug))
                 .build();
     }
+
+    // API cho phép công ty hiện tại lấy toàn bộ công việc của công ty đó (bất kể trạng thái nào)
     @GetMapping("/my-jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<List<JobResponse>> getMyJobs() {
-        return ApiResponse.<List<JobResponse>>builder()
+    public ApiResponse<List<JobDetailResponse>> getMyJobs() {
+        return ApiResponse.<List<JobDetailResponse>>builder()
                 .code(1000)
                 .result(jobService.getJobsByCurrentEmployer())
                 .build();
     }
+
+    // API cho phép công ty hiện tại tạo mới công việc
+    // ( *chỉ công ty đó mới được tạo cv của họ, không công ty nào khác được phép tạo cv của công ty khác* )
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<JobResponse> createJob(@RequestBody JobCreateRequest request) {
-        return ApiResponse.<JobResponse>builder()
+    public ApiResponse<JobDetailResponse> createJob(@RequestBody JobCreateRequest request) {
+        return ApiResponse.<JobDetailResponse>builder()
                 .code(1000)
                 .result(jobService.createJob(request))
                 .build();
     }
-//    @GetMapping
-//    public ApiResponse<List<JobResponse>> getAllJobs() {
-//        return ApiResponse.<List<JobResponse>>builder()
-//                .code(1000)
-//                .result(jobService.getAllJobsActive())
-//                .build();
-//    }
+
+    // API cho phép công ty hiện tại chỉnh sửa công việc
+    // ( *chỉ công ty đó mới được chỉnh sửa cv của họ, không công ty nào khác được phép chỉnh sửa cv của công ty khác* )
+
+
 }

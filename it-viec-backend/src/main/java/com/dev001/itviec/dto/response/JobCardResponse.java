@@ -21,5 +21,5 @@ public class JobCardResponse {
     JobType jobType;
     LocalDateTime postedAt;
     Set<SkillResponse> skills;
-    CompanySummaryResponse company;
+    CompanyBaseResponse company;
 }

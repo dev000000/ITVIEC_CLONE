@@ -22,6 +22,7 @@ public class SeekerController {
 
     private final SeekerService seekerService;
 
+    // API riêng cho admin, trả về toàn bộ seeker có trong hệ thống, để admin quản lý seeker
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<SeekerResponse>> getSeekers() {
@@ -31,6 +32,7 @@ public class SeekerController {
                 .build();
     }
 
+    // API riêng cho seeker, trả về thông tin của seeker hiện tại dựa vào cookie, để hiển thị ở trang profile của seeker
     @GetMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerResponse> getCurrentSeeker() {
