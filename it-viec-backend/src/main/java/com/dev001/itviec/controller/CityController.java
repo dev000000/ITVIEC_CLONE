@@ -21,6 +21,7 @@ public class CityController {
 
     private final CityService cityService;
 
+    // API trả về toàn bộ city có trong hệ thống, để hiển thị trong select box
     @GetMapping
     public ApiResponse<List<CityResponse>> getCities() {
         return ApiResponse.<List<CityResponse>>builder()

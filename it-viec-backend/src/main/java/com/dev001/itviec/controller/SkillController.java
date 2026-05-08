@@ -21,6 +21,7 @@ public class SkillController {
 
     private final SkillService skillService;
 
+    // API trả về toàn bộ skill có trong hệ thống, để hiển thị trong select box
     @GetMapping
     public ApiResponse<List<SkillResponse>> getSkills() {
         return ApiResponse.<List<SkillResponse>>builder()

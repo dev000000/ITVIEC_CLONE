@@ -23,7 +23,7 @@ public class JobController {
 
     private final JobService jobService;
 
-    // API get all jobs in system ( public = status => active )
+    // API trả về toàn bộ job đang active có phân trang, để hiển thị ở trang chủ và trang tìm kiếm
     @GetMapping
     public ApiResponse<PageResponse<JobCardResponse>> getJobs(
             @RequestParam(defaultValue = "0") int page,
@@ -35,6 +35,7 @@ public class JobController {
                 .build();
     }
 
+    // API trả về thông tin chi tiết của job theo slug, công việc phải được active
     @GetMapping("/{slug}")
     public ApiResponse<JobDetailResponse>getJobBySlug(@PathVariable String slug) {
         return ApiResponse.<JobDetailResponse>builder()
@@ -42,6 +43,8 @@ public class JobController {
                 .result(jobService.getJobBySlug(slug))
                 .build();
     }
+
+    // API cho phép công ty hiện tại lấy toàn bộ công việc của công ty đó (bất kể trạng thái nào)
     @GetMapping("/my-jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<List<JobDetailResponse>> getMyJobs() {
@@ -50,6 +53,9 @@ public class JobController {
                 .result(jobService.getJobsByCurrentEmployer())
                 .build();
     }
+
+    // API cho phép công ty hiện tại tạo mới công việc
+    // ( *chỉ công ty đó mới được tạo cv của họ, không công ty nào khác được phép tạo cv của công ty khác* )
     @PostMapping
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<JobDetailResponse> createJob(@RequestBody JobCreateRequest request) {
@@ -58,5 +64,9 @@ public class JobController {
                 .result(jobService.createJob(request))
                 .build();
     }
+
+    // API cho phép công ty hiện tại chỉnh sửa công việc
+    // ( *chỉ công ty đó mới được chỉnh sửa cv của họ, không công ty nào khác được phép chỉnh sửa cv của công ty khác* )
+
 
 }
