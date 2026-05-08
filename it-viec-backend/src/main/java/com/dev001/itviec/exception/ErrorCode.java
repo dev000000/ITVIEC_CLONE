@@ -35,6 +35,7 @@ public enum ErrorCode {
     PASSWORD_REQUIRED(1021, "Password must not be blank", HttpStatus.BAD_REQUEST),
     FULL_NAME_REQUIRED(1022, "Full name must not be blank", HttpStatus.BAD_REQUEST),
     FULL_NAME_SIZE(1023, "Full name must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    COMPANY_NOT_FOUND_BY_SLUG(1024, "Company not found when search by slug", HttpStatus.NOT_FOUND),
     ;
 
     private int code;

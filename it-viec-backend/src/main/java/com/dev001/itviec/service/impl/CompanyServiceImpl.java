@@ -1,11 +1,17 @@
 package com.dev001.itviec.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.enums.JobStatus;
+import com.dev001.itviec.exception.AppException;
+import com.dev001.itviec.exception.ErrorCode;
+import com.dev001.itviec.repository.JobRepository;
+import com.dev001.itviec.service.JobService;
 import org.springframework.stereotype.Service;
 
 import com.dev001.itviec.mapper.CompanyMapper;
@@ -23,15 +29,8 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final CompanyMapper companyMapper;
     private final CompanyRepository companyRepository;
+    private final JobRepository jobRepository;
 
-    @Override
-    public List<CompanyDetailResponse> getAllCompanies() {
-        return companyMapper.toCompanyDetailResponse(companyRepository.findAll());
-    }
-    @Override
-    public List<CompanyDetailResponse> getAllCompaniesWithJobs() {
-        return companyMapper.toCompanyDetailResponse(companyRepository.findAllWithJobs());
-    }
     @Override
     @Transactional(readOnly = true)
     public List<CompanyCardResponse> getAllCompaniesWithJobCountActive() {
@@ -47,5 +46,21 @@ public class CompanyServiceImpl implements CompanyService {
                     return response;
                 })
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CompanyDetailResponse getCompanyWithJobsActive(String slug) {
+
+        // 1. Tìm company theo slug
+        Company company = companyRepository.findBySlug(slug).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_SLUG));
+
+        // 2. Tìm job active của company đó
+        List<Job> jobList = jobRepository.findByCompanyAndStatus(company, JobStatus.ACTIVE);
+
+        // 3. Set job vào company
+        company.setJobs(jobList);
+
+        return companyMapper.toCompanyDetailResponse(company);
     }
 }

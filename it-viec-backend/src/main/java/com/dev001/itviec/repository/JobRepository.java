@@ -15,12 +15,6 @@ import com.dev001.itviec.entity.job.Job;
 
 public interface JobRepository extends JpaRepository<Job, Long> {
 
-//    @Query("select j from Job j")
-//    @EntityGraph(attributePaths = {"company", "city", "skills"})
-//    List<Job> findAllWithDetails();
-
-//    List<Job> findByStatus(JobStatus status);
-
     @EntityGraph(attributePaths = {"company", "city", "skills"})
     Optional<Job> findBySlug(String slug);
 
@@ -29,4 +23,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @EntityGraph(attributePaths = {"company", "city", "skills"})
     Page<Job> findByStatus(JobStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"company", "city", "skills"})
+    List<Job> findByCompanyAndStatus(Company company, JobStatus status);
 }

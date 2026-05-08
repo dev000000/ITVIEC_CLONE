@@ -16,10 +16,6 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
 
     Optional<Company> findById(String id);
 
-    @EntityGraph(attributePaths = {"jobs"})
-    @Query("SELECT DISTINCT c FROM Company c")
-    List<Company> findAllWithJobs();
-
     Optional<Company> findByEmployer(Employer employer);
 
     /**
@@ -33,4 +29,7 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
             GROUP BY c
             """)
     List<Object[]> findAllCompaniesWithJobCountActive(@Param("status") JobStatus status);
+
+    @EntityGraph(attributePaths = {"jobs"})
+    Optional<Company> findBySlug(String slug);
 }

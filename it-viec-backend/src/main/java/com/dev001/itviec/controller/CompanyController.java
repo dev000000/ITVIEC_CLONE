@@ -7,6 +7,7 @@ import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController {
     CompanyService companyService;
 
+    // API trả về toàn bộ company có kèm số lượng job đang active, để hiển thị ở trang chủ
     @GetMapping
     public ApiResponse<List<CompanyCardResponse>> getCompanies() {
         return ApiResponse.<List<CompanyCardResponse>>builder()
@@ -31,12 +33,13 @@ public class CompanyController {
                 .result(companyService.getAllCompaniesWithJobCountActive())
                 .build();
     }
-
-    @GetMapping(value = "/all-with-job")
-    public ApiResponse<List<CompanyDetailResponse>> getCompaniesWithJob() {
-        return ApiResponse.<List<CompanyDetailResponse>>builder()
+    // API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết company
+    @GetMapping("/{slug}")
+    public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
+        return ApiResponse.<CompanyDetailResponse>builder()
                 .code(1000)
-                .result(companyService.getAllCompaniesWithJobs())
+                .result(companyService.getCompanyWithJobsActive(slug))
                 .build();
     }
+
 }
