@@ -2,7 +2,9 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,12 +23,22 @@ public class CityController {
 
     private final CityService cityService;
 
-    // API trả về toàn bộ city có trong hệ thống, để hiển thị trong select box
+    // 1.API trả về toàn bộ city có trong hệ thống, để hiển thị trong select box
     @GetMapping
-    public ApiResponse<List<CityResponse>> getCities() {
+    public ApiResponse<List<CityResponse>> getAllCities() {
         return ApiResponse.<List<CityResponse>>builder()
                 .code(1000)
                 .result(cityService.getAllCities())
                 .build();
     }
+
+    // 2.API cho phép admin thêm city mới vào hệ thống
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<Void> addCity() {
+        return ApiResponse.<Void>builder()
+                .code(1000)
+                .build();
+    }
+
 }
