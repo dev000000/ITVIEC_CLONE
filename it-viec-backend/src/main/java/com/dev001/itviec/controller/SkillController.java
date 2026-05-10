@@ -46,7 +46,7 @@ public class SkillController {
      */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<SkillResponse> addSkill(@RequestBody @Valid SkillCreateRequest request) {
+    public ApiResponse<SkillResponse> createSkill(@RequestBody @Valid SkillCreateRequest request) {
         SkillResponse newSkill = skillService.createSkill(request.getSkillName());
         return ApiResponse.<SkillResponse>builder().code(1000).result(newSkill).build();
     }

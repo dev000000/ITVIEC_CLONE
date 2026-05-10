@@ -32,7 +32,7 @@ public class EmployerController {
     }
 
     // 3.API này cho phép admin xem danh sách employer
-    @GetMapping()
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> getAllEmployers() {
         return ApiResponse.<Void>builder().code(1000).build();
@@ -41,7 +41,7 @@ public class EmployerController {
     // 4.API này cho phép admin xem chi tiết của employer
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> getEmployerDetail(@PathVariable String id) {
+    public ApiResponse<Void> getEmployerById(@PathVariable String id) {
         return ApiResponse.<Void>builder().code(1000).build();
     }
 }

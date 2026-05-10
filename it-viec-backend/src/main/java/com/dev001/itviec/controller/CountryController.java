@@ -12,11 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/countries")
+@RequestMapping("/api/v1")
 public class CountryController {
 
     // 1.API trả về toàn bộ country có trong hệ thống, để hiển thị trong select box
-    @GetMapping()
+    @GetMapping("/countries")
     public ApiResponse<Void> getAllCountries() {
         return ApiResponse.<Void>builder().code(1000).build();
     }

@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
     // 1.API login bằng form đăng nhập
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ApiResponse<AuthenticationResponse> login(
             @RequestBody AuthenticationRequest request, HttpServletResponse response) {
         AuthenticationResponse authResponse = authenticationService.authenticate(request, response);
@@ -33,7 +33,7 @@ public class AuthenticationController {
     }
 
     // 2.API trả về thông tin user hiện tại ( trong trường hợp refresh F5 website )
-    @GetMapping("/me")
+    @GetMapping("/auth/me")
     public ApiResponse<AuthenticationResponse> me() {
         AuthenticationResponse authResponse = authenticationService.getCurrentUser();
         return ApiResponse.<AuthenticationResponse>builder()
@@ -43,7 +43,7 @@ public class AuthenticationController {
     }
 
     // 3.API đăng ký một tài khoản cho người tìm việc (seeker)
-    @PostMapping("/register/seekers")
+    @PostMapping("/auth/register/seekers")
     public ApiResponse<Void> register(
             @RequestBody @Valid RegisterUserSeekerRequest request, HttpServletResponse response) {
         authenticationService.registerUserSeeker(request, response);
@@ -51,7 +51,7 @@ public class AuthenticationController {
     }
 
     // 4.API refresh token khi access token hết hạn
-    @PostMapping("/refresh-token")
+    @PostMapping("/auth/refresh-token")
     public ApiResponse<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         authenticationService.refreshToken(request, response);
         return ApiResponse.<Void>builder().code(1000).build();

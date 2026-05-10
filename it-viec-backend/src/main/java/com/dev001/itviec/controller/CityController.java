@@ -35,7 +35,7 @@ public class CityController {
     // 2.API cho phép admin thêm city mới vào hệ thống
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<CityResponse> addCity(@RequestBody @Valid CityCreateRequest request) {
+    public ApiResponse<CityResponse> createCity(@RequestBody @Valid CityCreateRequest request) {
         CityResponse newCity = cityService.createCity(request.getCityName());
         return ApiResponse.<CityResponse>builder().code(1000).result(newCity).build();
     }

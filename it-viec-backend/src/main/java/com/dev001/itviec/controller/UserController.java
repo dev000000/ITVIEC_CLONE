@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1")
 public class UserController {
 
     private final UserService userService;
 
     // 1.API trả về toàn bộ user có trong hệ thống, chỉ admin mới được phép truy cập
-    @GetMapping
+    @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<UserResponse>> getUsers() {
         return ApiResponse.<List<UserResponse>>builder()
@@ -32,7 +32,7 @@ public class UserController {
     }
 
     // 2.API trả về thông tin của 1 user, chỉ admin mới được phép truy cập
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUser(@PathVariable String id) {
         return ApiResponse.<UserResponse>builder()
@@ -42,7 +42,7 @@ public class UserController {
     }
 
     // 3.API cho phép admin cập nhật thông tin của 1 user, chỉ admin mới được phép truy cập
-    @PutMapping("/{id}")
+    @PutMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     // 4.API cho phép admin xóa một user
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<String> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);

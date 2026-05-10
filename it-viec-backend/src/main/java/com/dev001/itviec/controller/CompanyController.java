@@ -31,8 +31,7 @@ public class CompanyController {
                 .result(companyService.getAllCompaniesWithJobCountActive())
                 .build();
     }
-    // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết
-    // company
+    // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết company
     @GetMapping("/{slug}")
     public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
         return ApiResponse.<CompanyDetailResponse>builder()
@@ -42,7 +41,7 @@ public class CompanyController {
     }
 
     // 3.API tạo company mới, chỉ admin mới được tạo company mới
-    @PostMapping()
+    @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> createCompany() {
         return ApiResponse.<Void>builder().code(1000).build();
@@ -51,7 +50,7 @@ public class CompanyController {
     // 4.API cho phép employer cập nhật thông tin company của mình
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> updateCompany() {
+    public ApiResponse<Void> updateMyCompany() {
         return ApiResponse.<Void>builder().code(1000).build();
     }
 

@@ -13,18 +13,24 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/aws-s3")
+@RequestMapping("/api/v1/storage/objects")
 public class S3Controller {
     private final S3Service s3Service;
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws IOException {
+    /**
+     * Upload một object lên storage.
+     */
+    @PostMapping
+    public ResponseEntity<String> uploadObject(@RequestParam("file") MultipartFile file) throws IOException {
         s3Service.uploadFile(file);
         return ResponseEntity.ok("File uploaded successfully");
     }
 
-    @GetMapping("/download/{filename}")
-    public ResponseEntity<byte[]> download(@PathVariable String filename) {
+    /**
+     * Tải về một object theo tên file.
+     */
+    @GetMapping("/{filename}")
+    public ResponseEntity<byte[]> downloadObject(@PathVariable String filename) {
         byte[] data = s3Service.downloadFile(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
