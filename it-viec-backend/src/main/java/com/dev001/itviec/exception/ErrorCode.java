@@ -39,7 +39,8 @@ public enum ErrorCode {
     FULL_NAME_REQUIRED(1022, "Full name must not be blank", HttpStatus.BAD_REQUEST),
     FULL_NAME_SIZE(1023, "Full name must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     COMPANY_NOT_FOUND_BY_SLUG(1024, "Company not found when search by slug", HttpStatus.NOT_FOUND),
-    ;
+    CITY_NAME_REQUIRED(1025, "City name must not be blank", HttpStatus.BAD_REQUEST),
+    CITY_NAME_EXISTED(1026, "City name already existed", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

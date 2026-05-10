@@ -2,12 +2,16 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev001.itviec.dto.request.SkillCreateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.SkillResponse;
 import com.dev001.itviec.service.SkillService;
@@ -32,10 +36,18 @@ public class SkillController {
                 .build();
     }
 
-    // 2.API cho phép admin thêm skill mới vào hệ thống
+    /**
+     * 2. API cho phép admin thêm skill mới vào hệ thống.
+     * - Chỉ ROLE_ADMIN mới có quyền gọi.
+     * - Validate request body bằng @Valid.
+     *
+     * @param request thông tin skill cần tạo (skillName bắt buộc)
+     * @return ApiResponse chứa SkillResponse vừa tạo
+     */
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> addSkill() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<SkillResponse> addSkill(@RequestBody @Valid SkillCreateRequest request) {
+        SkillResponse newSkill = skillService.createSkill(request.getSkillName());
+        return ApiResponse.<SkillResponse>builder().code(1000).result(newSkill).build();
     }
 }

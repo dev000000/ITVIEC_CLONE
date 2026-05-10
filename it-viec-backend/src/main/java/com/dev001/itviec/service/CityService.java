@@ -7,4 +7,6 @@ import com.dev001.itviec.dto.response.CityResponse;
 public interface CityService {
 
     List<CityResponse> getAllCities();
+
+    CityResponse createCity(String cityName);
 }
