@@ -1,5 +1,12 @@
 package com.dev001.itviec.entity.company;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import jakarta.persistence.*;
+
 import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.country.Country;
 import com.dev001.itviec.entity.employer.Employer;
@@ -9,14 +16,9 @@ import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
 import com.dev001.itviec.enums.OvertimePolicy;
 import com.dev001.itviec.enums.WorkingHours;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "companies")

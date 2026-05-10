@@ -2,17 +2,17 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
-import com.dev001.itviec.dto.response.CompanyCardResponse;
-import com.dev001.itviec.dto.response.CompanyDetailResponse;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.CompanyCardResponse;
+import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.service.CompanyService;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,7 +31,8 @@ public class CompanyController {
                 .result(companyService.getAllCompaniesWithJobCountActive())
                 .build();
     }
-    // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết company
+    // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết
+    // company
     @GetMapping("/{slug}")
     public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
         return ApiResponse.<CompanyDetailResponse>builder()
@@ -44,31 +45,20 @@ public class CompanyController {
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> createCompany() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 4.API cho phép employer cập nhật thông tin company của mình
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> updateCompany() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 5.API cho phép employer xem thông tin company mình
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> getMyCompany() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
-
-
-
-
-
 }

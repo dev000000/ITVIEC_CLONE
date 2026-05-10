@@ -20,5 +20,4 @@ public class Skill {
 
     @Column(name = "skill_name", nullable = false, columnDefinition = "VARCHAR(100)")
     String skillName;
-
 }

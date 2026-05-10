@@ -4,8 +4,6 @@ import static com.dev001.itviec.enums.Role.SEEKER;
 import static com.dev001.itviec.enums.TokenType.BEARER;
 import static com.dev001.itviec.exception.ErrorCode.*;
 
-import com.dev001.itviec.entity.seeker.Seeker;
-import com.dev001.itviec.repository.SeekerRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dev001.itviec.configuration.CookieFactory;
 import com.dev001.itviec.configuration.JwtService;
@@ -24,17 +23,18 @@ import com.dev001.itviec.dto.request.AuthenticationRequest;
 import com.dev001.itviec.dto.request.RegisterUserSeekerRequest;
 import com.dev001.itviec.dto.response.AuthenticationResponse;
 import com.dev001.itviec.dto.response.RegisterUserSeekerResponse;
+import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.token.Token;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.mapper.UserMapper;
+import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.TokenRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -75,8 +75,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 cookieFactory.refreshCookie(refreshToken).toString());
 
         // 7. return response
-        return AuthenticationResponse.builder().authenticated(true).id(user.getId()).email(user.getEmail())
-                .role(user.getRole()).build();
+        return AuthenticationResponse.builder()
+                .authenticated(true)
+                .id(user.getId())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
     }
 
     @Override
@@ -89,8 +93,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String email = authentication.getName();
 
         // 2. tìm user trong DB theo email
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(USER_NOT_FOUND));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(USER_NOT_FOUND));
 
         // 3. trả về AuthenticationResponse
         return AuthenticationResponse.builder()
@@ -163,16 +166,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return RegisResponse;
     }
 
-
     @Override
     @Transactional
     public void registerUserSeeker(RegisterUserSeekerRequest request, HttpServletResponse response) {
         // 1. kiếm tra email đã tồn tại chưa
-        if(userRepository.existsByEmail(request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new AppException(EMAIL_EXISTED);
         }
         // 2. kiểm tra họ và tên đã tồn tại chưa
-        if(seekerRepository.existsByFullNameIgnoreCase(request.getFullName())) {
+        if (seekerRepository.existsByFullNameIgnoreCase(request.getFullName())) {
             throw new AppException(FULL_NAME_EXISTED);
         }
         // 4. Hash password trước khi save vào DB
@@ -186,15 +188,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         User savedUser = userRepository.save(user);
 
-        // 6.Normalize fullName trước khi save vào DB: loại bỏ khoảng trắng thừa, chuyển nhiều khoảng trắng thành 1 khoảng trắng
-        String normalizedFullName = request.getFullName()
-                .trim()
-                .replaceAll("\\s+", " ");
+        // 6.Normalize fullName trước khi save vào DB: loại bỏ khoảng trắng thừa, chuyển nhiều khoảng trắng thành 1
+        // khoảng trắng
+        String normalizedFullName = request.getFullName().trim().replaceAll("\\s+", " ");
         // 7. Tạo đối tượng Seeker
-        Seeker seeker = Seeker.builder().user(savedUser).fullName(normalizedFullName).build();
+        Seeker seeker =
+                Seeker.builder().user(savedUser).fullName(normalizedFullName).build();
         // 8. Save Seeker vào DB
         seekerRepository.save(seeker);
-
     }
 
     @Override
@@ -238,5 +239,4 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         response.addHeader(
                 HttpHeaders.SET_COOKIE, cookieFactory.accessCookie(accessToken).toString());
     }
-
 }

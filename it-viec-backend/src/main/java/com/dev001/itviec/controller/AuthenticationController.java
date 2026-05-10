@@ -42,15 +42,12 @@ public class AuthenticationController {
                 .build();
     }
 
-
     // 3.API đăng ký một tài khoản cho người tìm việc (seeker)
     @PostMapping("/register/seekers")
     public ApiResponse<Void> register(
             @RequestBody @Valid RegisterUserSeekerRequest request, HttpServletResponse response) {
         authenticationService.registerUserSeeker(request, response);
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 4.API refresh token khi access token hết hạn

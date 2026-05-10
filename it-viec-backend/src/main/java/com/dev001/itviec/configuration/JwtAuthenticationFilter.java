@@ -45,9 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // this section is for HttpOnly Cookie
         String uri = request.getRequestURI();
-        if (uri.contains("/login")
-                || uri.contains("/register")
-                || uri.contains("/refresh-token")) {
+        if (uri.contains("/login") || uri.contains("/register") || uri.contains("/refresh-token")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -79,8 +77,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .map(token -> !token.isRevoked())
                     .orElse(false);
             if (jwtService.isTokenValid(jwt, userDetails) && isTokenExistedInDatabase) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
-                        null, userDetails.getAuthorities());
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }

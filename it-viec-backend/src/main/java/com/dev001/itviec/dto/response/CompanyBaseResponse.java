@@ -14,4 +14,3 @@ public class CompanyBaseResponse {
     String slug;
     String logoUrl;
 }
-

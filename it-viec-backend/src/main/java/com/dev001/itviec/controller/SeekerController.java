@@ -30,7 +30,8 @@ public class SeekerController {
                 .build();
     }
 
-    // 2.API riêng cho seeker, trả về thông tin của seeker hiện tại dựa vào cookie, để hiển thị ở trang profile của seeker
+    // 2.API riêng cho seeker, trả về thông tin của seeker hiện tại dựa vào cookie, để hiển thị ở trang profile của
+    // seeker
     @GetMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerResponse> getCurrentSeeker() {
@@ -44,20 +45,13 @@ public class SeekerController {
     @PutMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<Void> updateSeeker() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 4.API cho phép admin xem profile của 1 seeker
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> getSeekerDetail(@PathVariable String id) {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
-
-
-
 }

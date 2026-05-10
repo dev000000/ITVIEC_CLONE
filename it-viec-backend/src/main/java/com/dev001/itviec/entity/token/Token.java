@@ -1,6 +1,5 @@
 package com.dev001.itviec.entity.token;
 
-import java.time.LocalDateTime;
 import java.util.Date;
 
 import jakarta.persistence.*;

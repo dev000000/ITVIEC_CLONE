@@ -8,5 +8,6 @@ import com.dev001.itviec.dto.response.CompanyDetailResponse;
 public interface CompanyService {
 
     List<CompanyCardResponse> getAllCompaniesWithJobCountActive();
+
     CompanyDetailResponse getCompanyWithJobsActive(String slug);
 }

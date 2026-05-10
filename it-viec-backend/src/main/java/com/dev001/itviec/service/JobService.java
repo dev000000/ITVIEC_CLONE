@@ -9,7 +9,7 @@ import com.dev001.itviec.dto.response.PageResponse;
 
 public interface JobService {
 
-//    List<JobResponse> getAllJobsActive();
+    //    List<JobResponse> getAllJobsActive();
 
     JobDetailResponse getJobBySlug(String slug);
 

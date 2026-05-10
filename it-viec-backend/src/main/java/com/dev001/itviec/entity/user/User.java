@@ -1,16 +1,15 @@
 package com.dev001.itviec.entity.user;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.token.Token;
 import com.dev001.itviec.enums.Role;
 
@@ -43,7 +42,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Token> tokens = new ArrayList<>();
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -36,8 +36,6 @@ public class SkillController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> addSkill() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 }

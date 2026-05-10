@@ -36,9 +36,6 @@ public class CityController {
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> addCity() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
-
 }

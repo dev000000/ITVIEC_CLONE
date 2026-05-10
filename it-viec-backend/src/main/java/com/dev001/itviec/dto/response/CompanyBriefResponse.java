@@ -4,11 +4,11 @@ import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
 import com.dev001.itviec.enums.OvertimePolicy;
 import com.dev001.itviec.enums.WorkingHours;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
 
 @Data
 @Builder

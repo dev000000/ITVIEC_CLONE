@@ -2,18 +2,17 @@ package com.dev001.itviec.service.impl;
 
 import java.util.List;
 
-import com.dev001.itviec.entity.seeker.Seeker;
-import com.dev001.itviec.entity.user.User;
-import com.dev001.itviec.exception.AppException;
-import com.dev001.itviec.exception.ErrorCode;
-import com.dev001.itviec.repository.CompanyRepository;
-import com.dev001.itviec.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.dev001.itviec.dto.response.SeekerResponse;
+import com.dev001.itviec.entity.seeker.Seeker;
+import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.exception.AppException;
+import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.SeekerMapper;
 import com.dev001.itviec.repository.SeekerRepository;
+import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.SeekerService;
 
 import lombok.RequiredArgsConstructor;
@@ -37,7 +36,7 @@ public class SeekerServiceImpl implements SeekerService {
     public SeekerResponse getSeekerByCookie() {
         // 1. lấy email từ SecurityContext (do JwtAuthenticationFilter set)
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         String email = authentication.getName();
@@ -46,9 +45,9 @@ public class SeekerServiceImpl implements SeekerService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         // 3. tìm seeker theo user
-        Seeker seeker = seekerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND));
+        Seeker seeker =
+                seekerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND));
 
         return seekerMapper.toSeekerResponse(seeker);
-
     }
 }

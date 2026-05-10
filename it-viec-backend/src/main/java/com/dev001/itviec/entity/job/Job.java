@@ -1,14 +1,12 @@
 package com.dev001.itviec.entity.job;
 
-
 import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
 
+import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.skill.Skill;
@@ -82,7 +80,6 @@ public class Job extends BaseEntity {
     @Column(name = "status", nullable = false)
     @Builder.Default
     JobStatus status = JobStatus.ACTIVE;
-
 
     @ManyToMany
     @JoinTable(

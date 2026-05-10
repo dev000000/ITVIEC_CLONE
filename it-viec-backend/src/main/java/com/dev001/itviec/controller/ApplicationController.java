@@ -1,11 +1,13 @@
 package com.dev001.itviec.controller;
 
-import com.dev001.itviec.dto.response.ApiResponse;
-import com.dev001.itviec.service.ApplicationService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.service.ApplicationService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -19,54 +21,41 @@ public class ApplicationController {
     @PostMapping
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<Void> applyJob() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 2.API cho phép người xin việc (seeker) xem danh sách đơn ứng tuyển của mình
     @GetMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<Void> getMyApplications() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ
     @GetMapping("/company")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> getMyCompanyApplications() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 4.API cho phép công ty cập nhật trạng thái đơn ứng tuyển của họ
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> updateApplicationStatus(@PathVariable String id) {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 5.API cho phép công ty xem chi tiết 1 đơn ứng tuyển
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> getApplicationDetail(@PathVariable String id) {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 6.API cho phép admin xem toàn bộ đơn ứng tuyển
     @GetMapping()
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> getAllApplications() {
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
-
 }

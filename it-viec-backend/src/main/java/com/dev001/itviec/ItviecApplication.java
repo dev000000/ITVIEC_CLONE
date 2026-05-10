@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @SpringBootApplication
 public class ItviecApplication {

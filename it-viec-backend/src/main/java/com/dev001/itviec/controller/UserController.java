@@ -21,15 +21,14 @@ public class UserController {
 
     private final UserService userService;
 
-
     // 1.API trả về toàn bộ user có trong hệ thống, chỉ admin mới được phép truy cập
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<UserResponse>> getUsers() {
-                return ApiResponse.<List<UserResponse>>builder()
-                            .code(1000)
-                            .result(userService.getAllUsers())
-                        .build();
+        return ApiResponse.<List<UserResponse>>builder()
+                .code(1000)
+                .result(userService.getAllUsers())
+                .build();
     }
 
     // 2.API trả về thông tin của 1 user, chỉ admin mới được phép truy cập
