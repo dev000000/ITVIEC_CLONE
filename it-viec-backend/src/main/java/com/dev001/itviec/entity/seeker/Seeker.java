@@ -1,17 +1,19 @@
 package com.dev001.itviec.entity.seeker;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+import jakarta.persistence.*;
+
 import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.Gender;
-import jakarta.persistence.*;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "seekers")

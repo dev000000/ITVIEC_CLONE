@@ -1,9 +1,10 @@
 package com.dev001.itviec.dto.request;
 
- import com.dev001.itviec.validator.PasswordConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+
+import com.dev001.itviec.validator.PasswordConstraint;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -26,5 +27,4 @@ public class RegisterUserSeekerRequest {
     @NotBlank(message = "FULL_NAME_REQUIRED")
     @Size(min = 2, max = 50, message = "FULL_NAME_SIZE")
     String fullName;
-
 }

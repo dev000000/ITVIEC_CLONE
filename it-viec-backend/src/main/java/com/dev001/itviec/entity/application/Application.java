@@ -1,8 +1,11 @@
 package com.dev001.itviec.entity.application;
 
-import com.dev001.itviec.entity.base.BaseEntity;
+import java.util.HashSet;
+import java.util.Set;
+
 import jakarta.persistence.*;
 
+import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.seeker.Seeker;
@@ -10,9 +13,6 @@ import com.dev001.itviec.enums.ApplicationStatus;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "applications")
@@ -55,7 +55,7 @@ public class Application extends BaseEntity {
     @Column(name = "employer_message", columnDefinition = "MEDIUMTEXT")
     String employerMessage;
 
-//    Nơi làm việc mong muốn viết trong đơn ứng tuyển
+    //    Nơi làm việc mong muốn viết trong đơn ứng tuyển
     @ManyToMany
     @JoinTable(
             name = "application_cities",

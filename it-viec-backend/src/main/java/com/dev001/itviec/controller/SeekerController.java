@@ -3,9 +3,7 @@ package com.dev001.itviec.controller;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
@@ -22,23 +20,38 @@ public class SeekerController {
 
     private final SeekerService seekerService;
 
-    // API riêng cho admin, trả về toàn bộ seeker có trong hệ thống, để admin quản lý seeker
+    // 1.API riêng cho admin, trả về toàn bộ seeker có trong hệ thống, để admin quản lý seeker
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<List<SeekerResponse>> getSeekers() {
+    public ApiResponse<List<SeekerResponse>> getAllSeekers() {
         return ApiResponse.<List<SeekerResponse>>builder()
                 .code(1000)
                 .result(seekerService.getAllSeekers())
                 .build();
     }
 
-    // API riêng cho seeker, trả về thông tin của seeker hiện tại dựa vào cookie, để hiển thị ở trang profile của seeker
+    // 2.API riêng cho seeker, trả về thông tin của seeker hiện tại dựa vào cookie, để hiển thị ở trang profile của
+    // seeker
     @GetMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
-    public ApiResponse<SeekerResponse> getCurrentSeeker() {
+    public ApiResponse<SeekerResponse> getMyProfile() {
         return ApiResponse.<SeekerResponse>builder()
                 .code(1000)
                 .result(seekerService.getSeekerByCookie())
                 .build();
+    }
+
+    // 3.API cho phép seeker cập nhật profile của họ
+    @PutMapping("/me")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<Void> updateMyProfile() {
+        return ApiResponse.<Void>builder().code(1000).build();
+    }
+
+    // 4.API cho phép admin xem profile của 1 seeker
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<Void> getSeekerById(@PathVariable String id) {
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 }

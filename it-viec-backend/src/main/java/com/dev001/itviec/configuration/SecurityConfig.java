@@ -27,9 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    //    private final String[] PUBLIC_URLS = {
-    //        "/api/v1/users", "/api/v1/auth/**", "/api/v1/auth/logout", "/api/v1/auth/refresh-token",
-    //    };
+    private final String[] PUBLIC_URLS = {
+        "/api/v1/users", "/api/v1/auth/**", "/api/v1/auth/logout", "/api/v1/auth/refresh-token",
+    };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -42,8 +42,12 @@ public class SecurityConfig {
         // 1. cau hinh quyen truy cap cho tung endpoint
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(req -> req.requestMatchers(HttpMethod.OPTIONS, "/**")
-                        .permitAll() // cho phep CORS preflight
+                .authorizeHttpRequests(req -> req
+                        // 1. OPTIONS luôn đầu tiên cho CORS preflight
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+
+                        // 2. Public endpoints — explicit method and path
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**")
@@ -51,8 +55,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/companies/**")
                         .permitAll()
                         .anyRequest()
-                        .authenticated()
-                )
+                        .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

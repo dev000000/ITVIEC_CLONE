@@ -2,10 +2,10 @@ package com.dev001.itviec.mapper;
 
 import java.util.List;
 
-import com.dev001.itviec.dto.request.RegisterUserSeekerRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
+import com.dev001.itviec.dto.request.RegisterUserSeekerRequest;
 import com.dev001.itviec.dto.request.UserUpdateRequest;
 import com.dev001.itviec.dto.response.RegisterUserSeekerResponse;
 import com.dev001.itviec.dto.response.UserResponse;

@@ -1,11 +1,11 @@
 package com.dev001.itviec.dto.response;
 
+import java.util.List;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -18,5 +18,4 @@ public class PageResponse<T> {
     int totalPages;
     boolean isFirst;
     boolean isLast;
-
 }

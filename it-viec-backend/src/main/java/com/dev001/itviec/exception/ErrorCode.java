@@ -15,7 +15,10 @@ public enum ErrorCode {
     USER_EXISTED(1001, "User already existed", HttpStatus.BAD_REQUEST),
     USER_NOT_FOUND(1002, "User not found", HttpStatus.NOT_FOUND),
     USERNAME_INVALID(1003, "Username must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
-    PASSWORD_INVALID(1004, "Password must be at least 12 chars and include upper, lower, number, special", HttpStatus.BAD_REQUEST),
+    PASSWORD_INVALID(
+            1004,
+            "Password must be at least 12 chars and include upper, lower, number, special",
+            HttpStatus.BAD_REQUEST),
     UNAUTHENTICATED(1005, "User is not authenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1006, "User is not permitted", HttpStatus.FORBIDDEN),
     DOB_INVALID(1007, "User must be > {min}", HttpStatus.BAD_REQUEST),
@@ -36,7 +39,8 @@ public enum ErrorCode {
     FULL_NAME_REQUIRED(1022, "Full name must not be blank", HttpStatus.BAD_REQUEST),
     FULL_NAME_SIZE(1023, "Full name must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     COMPANY_NOT_FOUND_BY_SLUG(1024, "Company not found when search by slug", HttpStatus.NOT_FOUND),
-    ;
+    CITY_NAME_REQUIRED(1025, "City name must not be blank", HttpStatus.BAD_REQUEST),
+    CITY_NAME_EXISTED(1026, "City name already existed", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

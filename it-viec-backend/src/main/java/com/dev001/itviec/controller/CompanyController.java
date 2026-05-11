@@ -2,19 +2,17 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
-import com.dev001.itviec.dto.response.CompanyCardResponse;
-import com.dev001.itviec.dto.response.CompanyDetailResponse;
-import lombok.AccessLevel;
-import lombok.experimental.FieldDefaults;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.CompanyCardResponse;
+import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.service.CompanyService;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -25,15 +23,15 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController {
     CompanyService companyService;
 
-    // API trả về toàn bộ company có kèm số lượng job đang active, để hiển thị ở trang chủ
+    // 1.API trả về toàn bộ company có kèm số lượng job đang active, để hiển thị ở trang chủ
     @GetMapping
-    public ApiResponse<List<CompanyCardResponse>> getCompanies() {
+    public ApiResponse<List<CompanyCardResponse>> getAllCompanies() {
         return ApiResponse.<List<CompanyCardResponse>>builder()
                 .code(1000)
                 .result(companyService.getAllCompaniesWithJobCountActive())
                 .build();
     }
-    // API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết company
+    // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết company
     @GetMapping("/{slug}")
     public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
         return ApiResponse.<CompanyDetailResponse>builder()
@@ -42,4 +40,24 @@ public class CompanyController {
                 .build();
     }
 
+    // 3.API tạo company mới, chỉ admin mới được tạo company mới
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<Void> createCompany() {
+        return ApiResponse.<Void>builder().code(1000).build();
+    }
+
+    // 4.API cho phép employer cập nhật thông tin company của mình
+    @PutMapping("/me")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<Void> updateMyCompany() {
+        return ApiResponse.<Void>builder().code(1000).build();
+    }
+
+    // 5.API cho phép employer xem thông tin company mình
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<Void> getMyCompany() {
+        return ApiResponse.<Void>builder().code(1000).build();
+    }
 }

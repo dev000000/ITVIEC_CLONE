@@ -1,7 +1,9 @@
 package com.dev001.itviec.service.impl;
 
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
@@ -10,17 +12,13 @@ import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
-import com.dev001.itviec.repository.JobRepository;
-import com.dev001.itviec.service.JobService;
-import org.springframework.stereotype.Service;
-
 import com.dev001.itviec.mapper.CompanyMapper;
 import com.dev001.itviec.repository.CompanyRepository;
+import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.service.CompanyService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -53,7 +51,9 @@ public class CompanyServiceImpl implements CompanyService {
     public CompanyDetailResponse getCompanyWithJobsActive(String slug) {
 
         // 1. Tìm company theo slug
-        Company company = companyRepository.findBySlug(slug).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_SLUG));
+        Company company = companyRepository
+                .findBySlug(slug)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_SLUG));
 
         // 2. Tìm job active của company đó
         List<Job> jobList = jobRepository.findByCompanyAndStatus(company, JobStatus.ACTIVE);

@@ -10,5 +10,6 @@ import com.dev001.itviec.entity.city.City;
 @Mapper(componentModel = "spring")
 public interface CityMapper {
     List<CityResponse> toCityResponse(List<City> cities);
+
     CityResponse toCityResponse(City city);
 }

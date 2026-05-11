@@ -8,32 +8,32 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
-import com.dev001.itviec.dto.response.JobCardResponse;
-import com.dev001.itviec.dto.response.JobDetailResponse;
-import com.dev001.itviec.dto.response.PageResponse;
-import com.dev001.itviec.entity.employer.Employer;
-import com.dev001.itviec.entity.user.User;
-import com.dev001.itviec.exception.ErrorCode;
-import com.dev001.itviec.repository.EmployerRepository;
-import com.dev001.itviec.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
+import com.dev001.itviec.dto.response.JobCardResponse;
+import com.dev001.itviec.dto.response.JobDetailResponse;
+import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.job.Job;
+import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.exception.AppException;
+import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.JobMapper;
 import com.dev001.itviec.repository.CompanyRepository;
+import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.JobRepository;
+import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.JobService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -46,10 +46,10 @@ public class JobServiceImpl implements JobService {
     private final UserRepository userRepository;
     private final EmployerRepository employerRepository;
 
-//    @Override
-//    public List<JobResponse> getAllJobsActive() {
-//        return jobMapper.toJobResponse(jobRepository.findByStatus(ACTIVE));
-//    }
+    //    @Override
+    //    public List<JobResponse> getAllJobsActive() {
+    //        return jobMapper.toJobResponse(jobRepository.findByStatus(ACTIVE));
+    //    }
 
     @Override
     public JobDetailResponse getJobBySlug(String slug) {
@@ -112,7 +112,7 @@ public class JobServiceImpl implements JobService {
     public List<JobDetailResponse> getJobsByCurrentEmployer() {
         // 1. lấy email từ SecurityContext
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         String email = authentication.getName();
@@ -120,10 +120,13 @@ public class JobServiceImpl implements JobService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
         // 3. lấy employer từ user
-        Employer employer = employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+        Employer employer =
+                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
 
         // 4. lấy company từ employer
-        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
         // 5. lấy toàn bộ job từ company
         return jobMapper.toJobDetailResponse(jobRepository.findByCompany(company));
@@ -140,7 +143,6 @@ public class JobServiceImpl implements JobService {
 
         // 3. map dto job -> jobCard
         List<JobCardResponse> jobCardResponseList = jobMapper.toJobCardResponse(jobPage.getContent());
-
 
         return PageResponse.<JobCardResponse>builder()
                 .data(jobCardResponseList)

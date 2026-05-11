@@ -16,13 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v1")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    // API login bằng form đăng nhập
-    @PostMapping("/login")
+    // 1.API login bằng form đăng nhập
+    @PostMapping("/auth/login")
     public ApiResponse<AuthenticationResponse> login(
             @RequestBody AuthenticationRequest request, HttpServletResponse response) {
         AuthenticationResponse authResponse = authenticationService.authenticate(request, response);
@@ -32,8 +32,8 @@ public class AuthenticationController {
                 .build();
     }
 
-    // API trả về thông tin user hiện tại ( trong trường hợp refresh F5 website )
-    @GetMapping("/me")
+    // 2.API trả về thông tin user hiện tại ( trong trường hợp refresh F5 website )
+    @GetMapping("/auth/me")
     public ApiResponse<AuthenticationResponse> me() {
         AuthenticationResponse authResponse = authenticationService.getCurrentUser();
         return ApiResponse.<AuthenticationResponse>builder()
@@ -42,20 +42,17 @@ public class AuthenticationController {
                 .build();
     }
 
-
-    // API đăng ký một tài khoản cho người tìm việc (seeker)
-    @PostMapping("/register/user_seeker")
+    // 3.API đăng ký một tài khoản cho người tìm việc (seeker)
+    @PostMapping("/auth/register/seekers")
     public ApiResponse<Void> register(
             @RequestBody @Valid RegisterUserSeekerRequest request, HttpServletResponse response) {
         authenticationService.registerUserSeeker(request, response);
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
-    // API refresh token khi access token hết hạn
-    @PostMapping("/refresh-token")
-    public ApiResponse<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+    // 4.API refresh token khi access token hết hạn
+    @PostMapping("/auth/refresh-token")
+    public ApiResponse<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         authenticationService.refreshToken(request, response);
         return ApiResponse.<Void>builder().code(1000).build();
     }

@@ -1,10 +1,8 @@
 package com.dev001.itviec.entity.employer;
 
-import java.time.LocalDateTime;
-
-import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
 
+import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.user.User;
 
 import lombok.*;
@@ -36,5 +34,4 @@ public class Employer extends BaseEntity {
 
     @Column(name = "phone_number", columnDefinition = "VARCHAR(10)")
     String phoneNumber;
-
 }

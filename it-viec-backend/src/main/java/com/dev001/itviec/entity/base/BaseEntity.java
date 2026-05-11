@@ -1,24 +1,25 @@
 package com.dev001.itviec.entity.base;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @MappedSuperclass
 @Getter
 @Setter
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class BaseEntity {
-    @Column(name= "created_at", updatable = false)
+    @Column(name = "created_at", updatable = false)
     LocalDateTime createdAt;
 
-    @Column(name= "updated_at")
+    @Column(name = "updated_at")
     LocalDateTime updatedAt;
 
     @PrePersist
@@ -31,5 +32,4 @@ public class BaseEntity {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }

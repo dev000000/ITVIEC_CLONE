@@ -1,7 +1,5 @@
 package com.dev001.itviec.dto.response;
 
-import java.time.LocalDate;
-
 import com.dev001.itviec.enums.Role;
 
 import lombok.AccessLevel;
