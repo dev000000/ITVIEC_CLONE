@@ -1,14 +1,5 @@
 package com.dev001.itviec.configuration;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.Optional;
-import java.util.function.Function;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -16,6 +7,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.Date;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Slf4j
 @Service
@@ -60,13 +59,11 @@ public class JwtService {
         if (email == null) {
             return false;
         }
-        //        userDetails.getUsername() => email of userDetail
         return (email.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     public boolean isTokenExpired(String token) {
         try {
-            // extract expiration throw ex if token is expired
             return extractExpiration(token).before(new Date());
         } catch (ExpiredJwtException e) {
             return true;

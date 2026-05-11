@@ -1,28 +1,10 @@
 package com.dev001.itviec.service.impl;
 
-import static com.dev001.itviec.enums.Role.SEEKER;
-import static com.dev001.itviec.enums.TokenType.BEARER;
-import static com.dev001.itviec.exception.ErrorCode.*;
-
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dev001.itviec.configuration.CookieFactory;
 import com.dev001.itviec.configuration.JwtService;
 import com.dev001.itviec.dto.request.AuthenticationRequest;
 import com.dev001.itviec.dto.request.RegisterUserSeekerRequest;
 import com.dev001.itviec.dto.response.AuthenticationResponse;
-import com.dev001.itviec.dto.response.RegisterUserSeekerResponse;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.token.Token;
 import com.dev001.itviec.entity.user.User;
@@ -32,9 +14,22 @@ import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.TokenRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.AuthenticationService;
-
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import static com.dev001.itviec.enums.Role.SEEKER;
+import static com.dev001.itviec.enums.TokenType.BEARER;
+import static com.dev001.itviec.exception.ErrorCode.*;
 
 @Slf4j
 @Service
@@ -50,19 +45,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final CookieFactory cookieFactory;
     private final SeekerRepository seekerRepository;
 
+    // Method xác thực khi đăng nhập bằng form login
     @Override
+    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
-        // 1. Authenticate user
+        // 1. Xác thực email và password
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        // 2. Check user exist
+        // 2. Check user có tồn tại trong DB không
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(USER_NOT_FOUND));
 
-        // 3. revoke all tokens of user in database
+        // 3. revoke toàn bộ token của user trong DB ( nếu có ) trước khi cấp token mới, tránh trường hợp user đăng nhập ở nhiều nơi cùng lúc
         revokeAllUserTokens(user, true);
-        // 4. generate new token for user
+
+        // 4. tạo accesstoken và refresh token cho user
         String accessToken = jwtService.generateToken(user, false);
         String refreshToken = jwtService.generateToken(user, true);
+
         // 5. save token to database
         saveUserToken(user, accessToken, true);
         saveUserToken(user, refreshToken, false);
@@ -83,6 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    // Method lấy current user dựa trên https only cookie ( không phải đăng nhập )
     @Override
     public AuthenticationResponse getCurrentUser() {
         // 1. lấy email từ SecurityContext (do JwtAuthenticationFilter set)
@@ -104,10 +104,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
+    // Method triển khai việc revoke toàn bộ token của user, nếu isRevokeRefreshToken = true thì sẽ revoke cả access token và refresh token, ngược lại chỉ revoke access token
     private void revokeAllUserTokens(User user, boolean isRevokeRefreshToken) {
         var validUserTokens = isRevokeRefreshToken
-                ? tokenRepository.findByUserAndRevokedTrue(user)
-                : tokenRepository.findByUserAndRevokedTrueAndAccessTokenTrue(user);
+                ? tokenRepository.findByUserAndRevokedFalse(user)
+                : tokenRepository.findByUserAndRevokedFalseAndAccessTokenTrue(user);
         if (validUserTokens.isEmpty()) {
             return;
         }
@@ -115,6 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         tokenRepository.saveAll(validUserTokens);
     }
 
+    // Method lưu token vào database
     private void saveUserToken(User user, String token, boolean isAccessToken) {
         var savedToken = Token.builder()
                 .user(user)
@@ -125,45 +127,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .revoked(false)
                 .build();
         tokenRepository.save(savedToken);
-    }
-
-    @Override
-    public RegisterUserSeekerResponse register(RegisterUserSeekerRequest request, HttpServletResponse response) {
-
-        // 1. check username existed
-        // Don't need this
-        // if (userRepository.existsByUsername(request.getUsername())) {
-        // throw new AppException(USER_EXISTED);
-        // }
-        // 2. convert RegisterRequest to User
-        User user = userMapper.toUser(request);
-        // 3. hash password and set it to user
-        String hashedPassword = passwordEncoder.encode(request.getPassword());
-        user.setPassword(hashedPassword);
-        // 4. set roles to user (default role is USER for user register)
-        user.setRole(SEEKER);
-        // 5. save user to DB
-        User savedUser = null;
-        try {
-            savedUser = userRepository.save(user);
-        } catch (DataIntegrityViolationException e) {
-            throw new AppException(USER_EXISTED);
-        }
-        // 6. generate token for user
-        String accessToken = jwtService.generateToken(savedUser, false);
-        String refreshToken = jwtService.generateToken(savedUser, true);
-        // 7. save token to DB
-        saveUserToken(savedUser, accessToken, true);
-        saveUserToken(savedUser, refreshToken, false);
-        // 8. convert user to RegisterResponse and return
-
-        RegisterUserSeekerResponse RegisResponse = userMapper.toRegisterResponse(user);
-        // 9. set cookie for response
-        // response.addHeader(HttpHeaders.SET_COOKIE,
-        // cookieFactory.accessCookie(accessToken).toString());
-        // response.addHeader(HttpHeaders.SET_COOKIE,
-        // cookieFactory.refreshCookie(refreshToken).toString());
-        return RegisResponse;
     }
 
     @Override
@@ -199,8 +162,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
+    @Transactional
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) {
-        // 1. get refresh token from request
+
+        // 1. Lấy refresh token từ cookie
         String refreshToken = null;
         if (request.getCookies() != null) {
             for (Cookie c : request.getCookies()) {
@@ -210,32 +175,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 }
             }
         }
-        // 2. extract email from refresh token
+        // 2. Check xem user có tồn tại trong database chưa
         String email = jwtService.extractEmail(refreshToken).orElse(null);
-        // 3. check if email in token is null throw ex
         if (email == null) {
             throw new AppException(REFRESH_TOKEN_EXPIRED);
         }
-        // 4. check if user not exist in db throw ex
         var userDetails = userRepository.findByEmail(email).orElseThrow(() -> new AppException(REFRESH_TOKEN_EXPIRED));
-        // 5. check if token is expired or not valid throw ex
+
+        // 3. kiểm tra refresh token có hợp lệ không
         if (!jwtService.isTokenValid(refreshToken, userDetails)) {
             throw new AppException(REFRESH_TOKEN_EXPIRED);
         }
-        // 6. check if token is revoked or not throw ex
-        var isTokenRevoked = tokenRepository
-                .findByToken(refreshToken)
-                .map(token -> !token.isRevoked())
-                .orElse(false);
-        if (!isTokenRevoked) {
-            throw new AppException(REFRESH_TOKEN_EXPIRED);
-        }
-        // 6. revoke all token available of user, then generate new access token for
-        // user and save it to DB,
+
+        // 4. kiểm tra token đã bị revoke chưa ( trường hợp user logout nhưng refresh token vẫn còn trong cookie )
+        Token token = tokenRepository.findByTokenAndRevokedFalse(refreshToken).orElseThrow(() -> new AppException(REFRESH_TOKEN_EXPIRED));
+
+        // 5. revoke toàn bộ access token của user
         revokeAllUserTokens(userDetails, false);
+
+        // 6. tạo access token mới và lưu vào database
         var accessToken = jwtService.generateToken(userDetails, false);
         saveUserToken(userDetails, accessToken, true);
-        // 7. set cookie for response
+
+        // 7. set cookie cho access token mới
         response.addHeader(
                 HttpHeaders.SET_COOKIE, cookieFactory.accessCookie(accessToken).toString());
     }

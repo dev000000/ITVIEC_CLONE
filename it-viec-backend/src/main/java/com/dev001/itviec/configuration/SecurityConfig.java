@@ -1,5 +1,7 @@
 package com.dev001.itviec.configuration;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -18,9 +20,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_URLS = {
-        "/api/v1/users", "/api/v1/auth/**", "/api/v1/auth/logout", "/api/v1/auth/refresh-token",
+            "/api/v1/cities",
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -39,29 +38,30 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        // 1. cau hinh quyen truy cap cho tung endpoint
+        // 1. Cấu hình quyền truy cập cho từng endpoint
         http.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         // 1. OPTIONS luôn đầu tiên cho CORS preflight
-                        .requestMatchers(HttpMethod.OPTIONS, "/**")
-                        .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                         // 2. Public endpoints — explicit method and path
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/**")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/companies/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh-token").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/seekers").permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_URLS).permitAll()
+
+                        // 3. Các endpoints còn lại thì authentication
+                        .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler(logoutSuccessHandler))
+                        .logoutSuccessHandler(logoutSuccessHandler)
+                        .clearAuthentication(true)
+                )
                 .exceptionHandling(e -> e.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new JwtAccessDeniedHandler()));
 
