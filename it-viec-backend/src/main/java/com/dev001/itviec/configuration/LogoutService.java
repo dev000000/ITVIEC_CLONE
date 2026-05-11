@@ -52,6 +52,5 @@ public class LogoutService implements LogoutHandler {
             validUserTokens.forEach(token -> token.setRevoked(true));
             tokenRepository.saveAll(validUserTokens);
         }
-
     }
 }

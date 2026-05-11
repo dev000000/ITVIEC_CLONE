@@ -55,7 +55,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 2. Check user có tồn tại trong DB không
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(USER_NOT_FOUND));
 
-        // 3. revoke toàn bộ token của user trong DB ( nếu có ) trước khi cấp token mới, tránh trường hợp user đăng nhập ở nhiều nơi cùng lúc
+        // 3. revoke toàn bộ token của user trong DB ( nếu có ) trước khi cấp token mới, tránh trường hợp user đăng nhập
+        // ở nhiều nơi cùng lúc
         revokeAllUserTokens(user, true);
 
         // 4. tạo accesstoken và refresh token cho user
@@ -104,7 +105,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    // Method triển khai việc revoke toàn bộ token của user, nếu isRevokeRefreshToken = true thì sẽ revoke cả access token và refresh token, ngược lại chỉ revoke access token
+    // Method triển khai việc revoke toàn bộ token của user, nếu isRevokeRefreshToken = true thì sẽ revoke cả access
+    // token và refresh token, ngược lại chỉ revoke access token
     private void revokeAllUserTokens(User user, boolean isRevokeRefreshToken) {
         var validUserTokens = isRevokeRefreshToken
                 ? tokenRepository.findByUserAndRevokedFalse(user)
@@ -188,7 +190,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         // 4. kiểm tra token đã bị revoke chưa ( trường hợp user logout nhưng refresh token vẫn còn trong cookie )
-        Token token = tokenRepository.findByTokenAndRevokedFalse(refreshToken).orElseThrow(() -> new AppException(REFRESH_TOKEN_EXPIRED));
+        Token token = tokenRepository
+                .findByTokenAndRevokedFalse(refreshToken)
+                .orElseThrow(() -> new AppException(REFRESH_TOKEN_EXPIRED));
 
         // 5. revoke toàn bộ access token của user
         revokeAllUserTokens(userDetails, false);

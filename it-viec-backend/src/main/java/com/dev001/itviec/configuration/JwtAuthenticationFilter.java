@@ -38,9 +38,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         var uri = request.getRequestURI();
         var method = request.getMethod();
 
-        return (uri.contains("/api/v1/cities") && method.equals("GET")) || uri.contains("/register/seekers") || uri.contains("/refresh-token") || uri.contains("/login");
-
+        return (uri.contains("/api/v1/cities") && method.equals("GET"))
+                || uri.contains("/register/seekers")
+                || uri.contains("/refresh-token")
+                || uri.contains("/login");
     }
+
     @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,

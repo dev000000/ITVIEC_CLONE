@@ -43,25 +43,29 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(req -> req
                         // 1. OPTIONS luôn đầu tiên cho CORS preflight
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
 
                         // 2. Public endpoints — explicit method and path
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh-token").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/seekers").permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_URLS).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh-token")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/seekers")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.GET, PUBLIC_URLS)
+                        .permitAll()
 
                         // 3. Các endpoints còn lại thì authentication
-                        .anyRequest().authenticated())
+                        .anyRequest()
+                        .authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout(logout -> logout
-                        .logoutUrl("/api/v1/auth/logout")
+                .logout(logout -> logout.logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
                         .logoutSuccessHandler(logoutSuccessHandler)
-                        .clearAuthentication(true)
-                )
+                        .clearAuthentication(true))
                 .exceptionHandling(e -> e.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                         .accessDeniedHandler(new JwtAccessDeniedHandler()));
 

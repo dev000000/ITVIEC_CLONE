@@ -26,7 +26,8 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
 
-        // 1. Đầu tiên gán errorCode là LOGOUT_SUCCESS, sau đó check nếu có lỗi xảy ra trong LogoutService thì sẽ gán lại errorCode là LOGOUT_FAIL
+        // 1. Đầu tiên gán errorCode là LOGOUT_SUCCESS, sau đó check nếu có lỗi xảy ra trong LogoutService thì sẽ gán
+        // lại errorCode là LOGOUT_FAIL
         ErrorCode errorCode;
         errorCode = ErrorCode.LOGOUT_SUCCESS;
         String code = (String) request.getAttribute("auth.error.code");
@@ -39,7 +40,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
                 HttpHeaders.SET_COOKIE, cookieFactory.deleteAccessCookie().toString());
         response.addHeader(
                 HttpHeaders.SET_COOKIE, cookieFactory.deleteRefreshCookie().toString());
-
 
         // 3. Trả về response cho client
         request.removeAttribute("auth.error.code");

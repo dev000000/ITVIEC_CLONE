@@ -13,7 +13,6 @@ public interface TokenRepository extends JpaRepository<Token, String> {
 
     List<Token> findByUserAndRevokedFalseAndAccessTokenTrue(User user);
 
-
     Optional<Token> findByTokenAndRevokedFalse(String token);
 
     Optional<Token> findByToken(String token);

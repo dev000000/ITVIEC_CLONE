@@ -1,13 +1,11 @@
 package com.dev001.itviec.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.service.ApplicationService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -72,5 +70,4 @@ public class ApplicationController {
     public ApiResponse<Void> getApplicationsByJobId(@PathVariable String id) {
         return ApiResponse.<Void>builder().code(1000).build();
     }
-
 }
