@@ -1,17 +1,18 @@
 package com.dev001.itviec.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.dev001.itviec.dto.response.SkillResponse;
 import com.dev001.itviec.entity.skill.Skill;
+import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.mapper.SkillMapper;
 import com.dev001.itviec.repository.SkillRepository;
 import com.dev001.itviec.service.SkillService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static com.dev001.itviec.exception.ErrorCode.SKILL_NAME_EXISTED;
 
 /**
  * Triển khai nghiệp vụ cho tính năng quản lý Skill.
@@ -43,16 +44,19 @@ public class SkillServiceImpl implements SkillService {
      */
     @Override
     public SkillResponse createSkill(String skillName) {
-        log.info("Creating new skill with name: {}", skillName);
+        // 1. check skill exist
+        boolean isSkillNameExisted = skillRepository.existsBySkillName(skillName);
+        if (isSkillNameExisted) {
+            throw new AppException(SKILL_NAME_EXISTED);
+        }
 
-        // Khởi tạo entity Skill từ tên skill
-        Skill newSkill = Skill.builder().skillName(skillName).build();
+        // 2. create skil
+        Skill skill = Skill.builder().skillName(skillName).build();
 
-        // Lưu vào DB
-        Skill saved = skillRepository.save(newSkill);
-        log.info("Created skill id={}, name={}", saved.getId(), saved.getSkillName());
+        // 3. save skill
+        Skill saved = skillRepository.save(skill);
 
-        // Trả về DTO
+        // 4. return skill
         return skillMapper.toSkillResponse(saved);
     }
 }
