@@ -1,13 +1,14 @@
 package com.dev001.itviec.configuration;
 
-import java.io.IOException;
-
+import com.dev001.itviec.exception.TokenExpiredException;
+import com.dev001.itviec.repository.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,11 +19,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.dev001.itviec.exception.TokenExpiredException;
-import com.dev001.itviec.repository.TokenRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +34,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String secretKey;
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        var uri = request.getRequestURI();
+        var method = request.getMethod();
+
+        return (uri.contains("/api/v1/cities") && method.equals("GET"))
+                || uri.contains("/api/v1/skills") && method.equals("GET")
+                || uri.contains("/api/v1/countries") && method.equals("GET")
+                || uri.contains("/register/seekers")
+                || uri.contains("/refresh-token")
+                || uri.contains("/login");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
@@ -44,8 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // this section is for HttpOnly Cookie
-        String uri = request.getRequestURI();
-        if (uri.contains("/login") || uri.contains("/register") || uri.contains("/refresh-token")) {
+        if (shouldNotFilter(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -72,11 +81,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         email = jwtService.extractEmail(jwt).orElse(null);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
-            boolean isTokenExistedInDatabase = tokenRepository
+            boolean isTokenExistedInDatabaseAndNotRevoked = tokenRepository
                     .findByToken(jwt)
                     .map(token -> !token.isRevoked())
                     .orElse(false);
-            if (jwtService.isTokenValid(jwt, userDetails) && isTokenExistedInDatabase) {
+            if (jwtService.isTokenValid(jwt, userDetails) && isTokenExistedInDatabaseAndNotRevoked) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

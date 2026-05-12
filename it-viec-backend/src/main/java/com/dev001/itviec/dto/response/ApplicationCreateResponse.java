@@ -12,16 +12,15 @@ import java.util.Set;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ApplicationResponse {
+// Response trả về sau khi ứng tuyển thành công
+public class ApplicationCreateResponse {
     String id;
-    SeekerResponse seeker;
     JobDetailResponse job;
     String fullName;
     String phoneNumber;
     String resumeUrl;
     String coverLetter;
     ApplicationStatus status;
-    String employerMessage;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     Set<CityResponse> desiredLocations;

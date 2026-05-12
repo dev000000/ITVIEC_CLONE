@@ -1,16 +1,14 @@
 package com.dev001.itviec.controller;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.service.SeekerService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -37,7 +35,7 @@ public class SeekerController {
     public ApiResponse<SeekerResponse> getMyProfile() {
         return ApiResponse.<SeekerResponse>builder()
                 .code(1000)
-                .result(seekerService.getSeekerByCookie())
+                .result(seekerService.getMyProfile())
                 .build();
     }
 

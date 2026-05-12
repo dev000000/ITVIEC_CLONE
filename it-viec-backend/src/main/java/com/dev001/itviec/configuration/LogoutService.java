@@ -1,16 +1,13 @@
 package com.dev001.itviec.configuration;
 
+import com.dev001.itviec.repository.TokenRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
-
-import com.dev001.itviec.repository.TokenRepository;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -20,16 +17,7 @@ public class LogoutService implements LogoutHandler {
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        // CASE 1 : RETURN JSON FOR STORING IN LOCAL STORAGE
-        //        final String authHeader = request.getHeader("Authorization");
-        //        final String jwt;
-        //        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-        //            request.setAttribute("auth.error.code", "LOGOUT_FAIL");
-        //            return;
-        //        }
-        //        jwt = authHeader.substring("Bearer ".length());
-
-        // CASE 2 : USE HTTP ONLY COOKIE
+        // 1. Lấy JWT từ cookie
         String jwt = null;
         if (request.getCookies() != null) {
             for (Cookie c : request.getCookies()) {
@@ -44,21 +32,25 @@ public class LogoutService implements LogoutHandler {
             return;
         }
 
+        // 2.Kiểm tra token có tồn tại trong DB không
         var savedToken = tokenRepository.findByToken(jwt).orElse(null);
-        // check if token not exist in database, then return
         if (savedToken == null) {
             request.setAttribute("auth.error.code", "LOGOUT_FAIL");
             return;
         }
-        // if token exist in database, then get all tokens of user ( get user in token (already get in db) )
-        var validUserTokens = tokenRepository.findByUserAndRevokedTrue(savedToken.getUser());
-        // if list of valid token is empty, then return
-        if (validUserTokens.isEmpty()) {
-            request.setAttribute("auth.error.code", "LOGOUT_FAIL");
-            return;
+
+        // Token đã bị revoke trước đó → coi như logout thành công (idempotent)
+        if (savedToken.isRevoked()) {
+            return; // không set LOGOUT_FAIL, vẫn trả success
         }
-        // revoke all valid token of user
-        validUserTokens.forEach(token -> token.setRevoked(true));
-        tokenRepository.saveAll(validUserTokens);
+
+        // 3.lấy TẤT CẢ token còn valid của user (revoked = false)
+        var validUserTokens = tokenRepository.findByUserAndRevokedFalse(savedToken.getUser());
+
+        // 4. Revoke hêt tất cả token còn hiệu lực
+        if (!validUserTokens.isEmpty()) {
+            validUserTokens.forEach(token -> token.setRevoked(true));
+            tokenRepository.saveAll(validUserTokens);
+        }
     }
 }

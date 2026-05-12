@@ -1,12 +1,11 @@
 package com.dev001.itviec.exception;
 
-import java.util.Arrays;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import java.util.Arrays;
 
 @AllArgsConstructor
 @Getter
@@ -40,7 +39,16 @@ public enum ErrorCode {
     FULL_NAME_SIZE(1023, "Full name must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     COMPANY_NOT_FOUND_BY_SLUG(1024, "Company not found when search by slug", HttpStatus.NOT_FOUND),
     CITY_NAME_REQUIRED(1025, "City name must not be blank", HttpStatus.BAD_REQUEST),
-    CITY_NAME_EXISTED(1026, "City name already existed", HttpStatus.BAD_REQUEST);
+    CITY_NAME_EXISTED(1026, "City name already existed", HttpStatus.BAD_REQUEST),
+    SKILL_NAME_EXISTED(1027, "Skill name already existed", HttpStatus.BAD_REQUEST),
+    SEEKER_ID_REQUIRED(1028, "Seeker ID must not be blank", HttpStatus.BAD_REQUEST),
+    PHONE_NUMBER_REQUIRED(1029, "Phone number must not be blank", HttpStatus.BAD_REQUEST),
+    RESUME_URL_REQUIRED(1030, "Resume URL must not be blank", HttpStatus.BAD_REQUEST),
+    DESIRED_LOCATIONS_REQUIRED(1031, "Desired locations must not be blank", HttpStatus.BAD_REQUEST),
+    PHONE_NUMBER_SIZE(1032, "Phone number must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
+    PHONE_NUMBER_INVALID(1033, "Phone number is invalid", HttpStatus.BAD_REQUEST),
+    APPLICATION_ALREADY_EXISTS(1034, "Application already exists", HttpStatus.BAD_REQUEST),
+    DESIRED_LOCATION_SIZE(1035, "Desired location must be at least {min}", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
