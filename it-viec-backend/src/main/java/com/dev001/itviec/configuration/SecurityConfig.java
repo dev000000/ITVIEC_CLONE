@@ -27,7 +27,7 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_URLS = {
-            "/api/v1/cities", "/api/v1/skills",
+            "/api/v1/cities", "/api/v1/skills", "/api/v1/countries",
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

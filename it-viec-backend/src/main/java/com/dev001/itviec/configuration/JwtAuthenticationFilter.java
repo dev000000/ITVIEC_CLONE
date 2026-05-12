@@ -40,6 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         return (uri.contains("/api/v1/cities") && method.equals("GET"))
                 || uri.contains("/api/v1/skills") && method.equals("GET")
+                || uri.contains("/api/v1/countries") && method.equals("GET")
                 || uri.contains("/register/seekers")
                 || uri.contains("/refresh-token")
                 || uri.contains("/login");
@@ -53,7 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // this section is for HttpOnly Cookie
-        String uri = request.getRequestURI();
         if (shouldNotFilter(request)) {
             filterChain.doFilter(request, response);
             return;
