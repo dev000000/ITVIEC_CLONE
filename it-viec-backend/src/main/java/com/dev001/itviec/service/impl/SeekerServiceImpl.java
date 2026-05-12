@@ -1,10 +1,5 @@
 package com.dev001.itviec.service.impl;
 
-import java.util.List;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.user.User;
@@ -14,9 +9,13 @@ import com.dev001.itviec.mapper.SeekerMapper;
 import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.SeekerService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -33,7 +32,13 @@ public class SeekerServiceImpl implements SeekerService {
     }
 
     @Override
-    public SeekerResponse getSeekerByCookie() {
+    @Transactional
+    public SeekerResponse getMyProfile() {
+        return seekerMapper.toSeekerResponse(getSeekerByCookie());
+    }
+
+    @Override
+    public Seeker getSeekerByCookie() {
         // 1. lấy email từ SecurityContext (do JwtAuthenticationFilter set)
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -48,6 +53,6 @@ public class SeekerServiceImpl implements SeekerService {
         Seeker seeker =
                 seekerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND));
 
-        return seekerMapper.toSeekerResponse(seeker);
+        return seeker;
     }
 }

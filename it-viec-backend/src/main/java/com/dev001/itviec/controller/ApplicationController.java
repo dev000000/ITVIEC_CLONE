@@ -1,7 +1,10 @@
 package com.dev001.itviec.controller;
 
+import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.service.ApplicationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,8 +21,13 @@ public class ApplicationController {
     // 1.API cho phép nộp đơn ứng tuyển (seeker nộp) theo job cụ thể
     @PostMapping("/jobs/{jobId}/applications")
     @PreAuthorize("hasRole('SEEKER')")
-    public ApiResponse<Void> applyToJob(@PathVariable String jobId) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<ApplicationCreateResponse> applyToJob(
+            @PathVariable Long jobId, @RequestBody @Valid ApplicationRequest request) {
+        ApplicationCreateResponse response = applicationService.applyToJob(jobId, request);
+        return ApiResponse.<ApplicationCreateResponse>builder()
+                .code(1000)
+                .result(response)
+                .build();
     }
 
     // 2.API cho phép người xin việc (seeker) xem danh sách đơn ứng tuyển của mình
