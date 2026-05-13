@@ -104,4 +104,15 @@ public class ApplicationServiceImpl implements ApplicationService {
         // 3. Tìm tất cả đơn ứng tuyển của nhà tuyển dụng đó (công ty đó)
         return applicationMapper.toApplicationResponse(applicationRepository.findByCompany(company));
     }
+
+    @Override
+    public ApplicationResponse getApplicationById(String id) {
+        // 1. Kiểm tra người xin việc đó có tồn tại hay không
+        Seeker seeker = seekerService.getSeekerByCookie();
+
+        Application application = applicationRepository.findByIdAndSeeker(id, seeker).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
+        // 2. Tìm đơn ứng tuyển theo id và đơn ứng tuyển đó phải của
+        return applicationMapper.toApplicationResponse(application);
+
+    }
 }

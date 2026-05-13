@@ -21,4 +21,6 @@ public interface ApplicationRepository extends JpaRepository<Application, String
 
     @Query("SELECT a FROM Application a JOIN a.job j WHERE j.company = :company")
     List<Application> findByCompany(@Param("company") Company company);
+
+    Optional<Application> findByIdAndSeeker(String id, Seeker seeker);
 }

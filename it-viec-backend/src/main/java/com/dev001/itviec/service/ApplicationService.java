@@ -14,4 +14,6 @@ public interface ApplicationService {
     List<ApplicationResponse> getMyApplications();
 
     List<ApplicationResponse> getMyCompanyApplications();
+
+    ApplicationResponse getApplicationById(String id);
 }

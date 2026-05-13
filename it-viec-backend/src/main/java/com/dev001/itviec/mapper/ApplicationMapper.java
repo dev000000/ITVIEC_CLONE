@@ -15,7 +15,11 @@ import java.util.List;
 public interface ApplicationMapper {
     List<ApplicationResponse> toApplicationResponse(List<Application> applications);
 
+    ApplicationResponse toApplicationResponse(Application application);
+
     ApplicationCreateResponse toApplicationCreateResponse(Application application);
+
+    List<ApplicationCreateResponse> toApplicationCreateResponse(List<Application> applications);
 
     JobDetailResponse toJobDetailResponse(Job job);
 }

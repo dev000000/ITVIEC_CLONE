@@ -77,8 +77,8 @@ public class ApplicationController {
     // 7.API cho phép người xin việc xem chi tiết 1 đơn ứng tuyển của họ
     @GetMapping("/seekers/me/applications/{id}")
     @PreAuthorize("hasRole('SEEKER')")
-    public ApiResponse<Void> getMyApplicationById(@PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<ApplicationResponse> getMyApplicationById(@PathVariable String id) {
+        return ApiResponse.<ApplicationResponse>builder().code(1000).result(applicationService.getApplicationById(id)).build();
     }
 
     // 8.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể
