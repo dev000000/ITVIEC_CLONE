@@ -4,6 +4,8 @@ import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.entity.application.Application;
+import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.enums.ApplicationStatus;
@@ -12,9 +14,11 @@ import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.ApplicationMapper;
 import com.dev001.itviec.repository.ApplicationRepository;
+import com.dev001.itviec.repository.CompanyRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.service.ApplicationService;
+import com.dev001.itviec.service.EmployerService;
 import com.dev001.itviec.service.SeekerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +36,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationMapper applicationMapper;
     private final SeekerRepository seekerRepository;
     private final SeekerService seekerService;
+    private final EmployerService employerService;
+    private final CompanyRepository companyRepository;
 
     @Override
     public List<ApplicationResponse> getAllApplications() {
@@ -82,5 +88,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 2. Tìm tất cả đơn ứng tuyển của người xin việc đó
         return applicationMapper.toApplicationResponse(applicationRepository.findBySeeker(seeker));
+    }
+
+    @Override
+    public List<ApplicationResponse> getMyCompanyApplications() {
+
+        // 1. Kiểm tra nhà tuyển dụng đó có tồn tại hay không
+        Employer employer = employerService.getEmployerByCookie();
+
+        // 2. Kiểm tra công ty của nhà tuyển dụng
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+
+        // 3. Tìm tất cả đơn ứng tuyển của nhà tuyển dụng đó (công ty đó)
+        return applicationMapper.toApplicationResponse(applicationRepository.findByCompany(company));
     }
 }

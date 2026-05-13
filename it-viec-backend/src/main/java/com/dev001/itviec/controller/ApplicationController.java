@@ -37,14 +37,20 @@ public class ApplicationController {
     @GetMapping("/seekers/me/applications")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<List<ApplicationResponse>> getMyApplications() {
-        return ApiResponse.<List<ApplicationResponse>>builder().code(1000).result(applicationService.getMyApplications()).build();
+        return ApiResponse.<List<ApplicationResponse>>builder()
+                .code(1000)
+                .result(applicationService.getMyApplications())
+                .build();
     }
 
     // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ
     @GetMapping("/companies/me/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> getMyCompanyApplications() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<List<ApplicationResponse>> getMyCompanyApplications() {
+        return ApiResponse.<List<ApplicationResponse>>builder()
+                .code(1000)
+                .result(applicationService.getMyCompanyApplications())
+                .build();
     }
 
     // 4.API cho phép công ty cập nhật trạng thái đơn ứng tuyển của họ

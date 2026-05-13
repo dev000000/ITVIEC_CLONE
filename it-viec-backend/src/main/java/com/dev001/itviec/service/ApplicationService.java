@@ -12,4 +12,6 @@ public interface ApplicationService {
     ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request);
 
     List<ApplicationResponse> getMyApplications();
+
+    List<ApplicationResponse> getMyCompanyApplications();
 }
