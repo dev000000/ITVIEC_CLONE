@@ -18,4 +18,6 @@ public interface ApplicationService {
     ApplicationResponse getMyApplicationById(String id);
 
     ApplicationResponse getApplicationById(String id);
+
+    List<ApplicationResponse> getApplicationsByJobId(Long id);
 }

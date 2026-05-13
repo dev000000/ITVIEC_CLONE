@@ -133,4 +133,20 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         return applicationMapper.toApplicationResponse(application);
     }
+
+    @Override
+    public List<ApplicationResponse> getApplicationsByJobId(Long id) {
+        // 1. Kiểm tra nhà tuyển dụng đó có tồn tại hay không
+        Employer employer = employerService.getEmployerByCookie();
+
+        // 2. Kiểm tra công ty của nhà tuyển dụng
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+
+        // 3. Tìm toàn bộ đơn ứng tuyển của job đó, đảm bảo công ty đó mới được xem đơn ứng tuyển của job đó
+        List<Application> applications = applicationRepository.findByJobIdAndCompany(id, company);
+
+        return applicationMapper.toApplicationResponse(applications);
+    }
 }

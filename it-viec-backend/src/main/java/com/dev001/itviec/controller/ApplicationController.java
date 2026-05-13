@@ -84,7 +84,7 @@ public class ApplicationController {
     // 8.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể
     @GetMapping("/companies/me/jobs/{id}/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> getApplicationsByJobId(@PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<List<ApplicationResponse>> getApplicationsByJobId(@PathVariable Long id) {
+        return ApiResponse.<List<ApplicationResponse>>builder().code(1000).result(applicationService.getApplicationsByJobId(id)).build();
     }
 }
