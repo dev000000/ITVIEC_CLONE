@@ -70,8 +70,8 @@ public class ApplicationController {
     // 6.API cho phép admin xem toàn bộ đơn ứng tuyển
     @GetMapping("/applications")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> getAllApplications() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<List<ApplicationResponse>> getAllApplications() {
+        return ApiResponse.<List<ApplicationResponse>>builder().code(1000).result(applicationService.getAllApplications()).build();
     }
 
     // 7.API cho phép người xin việc xem chi tiết 1 đơn ứng tuyển của họ
