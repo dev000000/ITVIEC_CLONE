@@ -15,5 +15,7 @@ public interface ApplicationService {
 
     List<ApplicationResponse> getMyCompanyApplications();
 
+    ApplicationResponse getMyApplicationById(String id);
+
     ApplicationResponse getApplicationById(String id);
 }

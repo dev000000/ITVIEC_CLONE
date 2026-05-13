@@ -23,4 +23,7 @@ public interface ApplicationRepository extends JpaRepository<Application, String
     List<Application> findByCompany(@Param("company") Company company);
 
     Optional<Application> findByIdAndSeeker(String id, Seeker seeker);
+
+    @Query("SELECT a FROM Application a JOIN a.job j WHERE j.company = :company AND a.id = :id")
+    Optional<Application> findByIdAndCompany(@Param("id") String id, @Param("company") Company company);
 }

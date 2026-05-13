@@ -106,13 +106,31 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public ApplicationResponse getApplicationById(String id) {
+    public ApplicationResponse getMyApplicationById(String id) {
         // 1. Kiểm tra người xin việc đó có tồn tại hay không
         Seeker seeker = seekerService.getSeekerByCookie();
 
+        // 2. Tìm đơn ứng tuyển theo id và đơn ứng tuyển đó phải của người xin việc đó hay không
         Application application = applicationRepository.findByIdAndSeeker(id, seeker).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
-        // 2. Tìm đơn ứng tuyển theo id và đơn ứng tuyển đó phải của
+
+
         return applicationMapper.toApplicationResponse(application);
 
+    }
+
+    @Override
+    public ApplicationResponse getApplicationById(String id) {
+        // 1. Kiểm tra nhà tuyển dụng đó có tồn tại hay không
+        Employer employer = employerService.getEmployerByCookie();
+
+        // 2. Kiểm tra công ty của nhà tuyển dụng
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+
+        // 3. Tìm đơn ứng tuyển có id đó và check xem có phải của công ty đó không
+        Application application = applicationRepository.findByIdAndCompany(id, company).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        return applicationMapper.toApplicationResponse(application);
     }
 }

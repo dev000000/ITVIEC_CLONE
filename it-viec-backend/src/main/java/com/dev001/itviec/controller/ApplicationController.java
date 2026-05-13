@@ -63,8 +63,8 @@ public class ApplicationController {
     // 5.API cho phép công ty xem chi tiết 1 đơn ứng tuyển
     @GetMapping("/companies/me/applications/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> getApplicationById(@PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<ApplicationResponse> getApplicationById(@PathVariable String id) {
+        return ApiResponse.<ApplicationResponse>builder().code(1000).result(applicationService.getApplicationById(id)).build();
     }
 
     // 6.API cho phép admin xem toàn bộ đơn ứng tuyển
@@ -78,7 +78,7 @@ public class ApplicationController {
     @GetMapping("/seekers/me/applications/{id}")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<ApplicationResponse> getMyApplicationById(@PathVariable String id) {
-        return ApiResponse.<ApplicationResponse>builder().code(1000).result(applicationService.getApplicationById(id)).build();
+        return ApiResponse.<ApplicationResponse>builder().code(1000).result(applicationService.getMyApplicationById(id)).build();
     }
 
     // 8.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể
