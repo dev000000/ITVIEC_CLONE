@@ -3,12 +3,15 @@ package com.dev001.itviec.controller;
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
+import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -33,8 +36,8 @@ public class ApplicationController {
     // 2.API cho phép người xin việc (seeker) xem danh sách đơn ứng tuyển của mình
     @GetMapping("/seekers/me/applications")
     @PreAuthorize("hasRole('SEEKER')")
-    public ApiResponse<Void> getMyApplications() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<List<ApplicationResponse>> getMyApplications() {
+        return ApiResponse.<List<ApplicationResponse>>builder().code(1000).result(applicationService.getMyApplications()).build();
     }
 
     // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ

@@ -74,4 +74,13 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         return applicationMapper.toApplicationCreateResponse(savedApplication);
     }
+
+    @Override
+    public List<ApplicationResponse> getMyApplications() {
+        // 1. Kiểm tra người xin việc đó có tồn tại hay không
+        Seeker seeker = seekerService.getSeekerByCookie();
+
+        // 2. Tìm tất cả đơn ứng tuyển của người xin việc đó
+        return applicationMapper.toApplicationResponse(applicationRepository.findBySeeker(seeker));
+    }
 }

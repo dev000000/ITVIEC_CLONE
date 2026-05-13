@@ -10,4 +10,6 @@ public interface ApplicationService {
     List<ApplicationResponse> getAllApplications();
 
     ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request);
+
+    List<ApplicationResponse> getMyApplications();
 }
