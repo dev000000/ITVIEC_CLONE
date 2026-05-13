@@ -1,6 +1,7 @@
 package com.dev001.itviec.service.impl;
 
 import com.dev001.itviec.dto.request.ApplicationRequest;
+import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.entity.application.Application;
@@ -111,11 +112,11 @@ public class ApplicationServiceImpl implements ApplicationService {
         Seeker seeker = seekerService.getSeekerByCookie();
 
         // 2. Tìm đơn ứng tuyển theo id và đơn ứng tuyển đó phải của người xin việc đó hay không
-        Application application = applicationRepository.findByIdAndSeeker(id, seeker).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
-
+        Application application = applicationRepository
+                .findByIdAndSeeker(id, seeker)
+                .orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
 
         return applicationMapper.toApplicationResponse(application);
-
     }
 
     @Override
@@ -129,7 +130,9 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
         // 3. Tìm đơn ứng tuyển có id đó và check xem có phải của công ty đó không
-        Application application = applicationRepository.findByIdAndCompany(id, company).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
+        Application application = applicationRepository
+                .findByIdAndCompany(id, company)
+                .orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
 
         return applicationMapper.toApplicationResponse(application);
     }
@@ -148,5 +151,28 @@ public class ApplicationServiceImpl implements ApplicationService {
         List<Application> applications = applicationRepository.findByJobIdAndCompany(id, company);
 
         return applicationMapper.toApplicationResponse(applications);
+    }
+
+    @Override
+    public ApplicationResponse updateApplicationStatus(String id, ApplicationUpdateRequest request) {
+        // 1. Kiểm tra nhà tuyển dụng đó có tồn tại hay không
+        Employer employer = employerService.getEmployerByCookie();
+
+        // 2. Kiểm tra công ty của nhà tuyển dụng
+        boolean existsByEmployer = companyRepository.existsByEmployer(employer);
+
+        if (!existsByEmployer) {
+            throw new AppException(ErrorCode.COMPANY_NOT_FOUND);
+        }
+
+        // 3. tìm đơn ứng tuyển đó
+        Application application =
+                applicationRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        // 4. cập nhật đơn ứng tuyển ( status, employerMessage )
+        application.setStatus(request.getStatus());
+        application.setEmployerMessage(request.getEmployerMessage());
+
+        return applicationMapper.toApplicationResponse(applicationRepository.save(application));
     }
 }

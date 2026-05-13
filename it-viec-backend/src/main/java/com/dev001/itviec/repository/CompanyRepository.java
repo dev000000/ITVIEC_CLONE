@@ -1,22 +1,23 @@
 package com.dev001.itviec.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.employer.Employer;
+import com.dev001.itviec.enums.JobStatus;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.dev001.itviec.entity.company.Company;
-import com.dev001.itviec.entity.employer.Employer;
-import com.dev001.itviec.enums.JobStatus;
+import java.util.List;
+import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<Company, String> {
 
     Optional<Company> findById(String id);
 
     Optional<Company> findByEmployer(Employer employer);
+
+    boolean existsByEmployer(Employer employer);
 
     /**
      * Fetch all companies cùng với số lượng job theo status nhất định.
