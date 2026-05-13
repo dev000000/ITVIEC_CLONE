@@ -50,7 +50,8 @@ public enum ErrorCode {
     APPLICATION_ALREADY_EXISTS(1034, "Application already exists", HttpStatus.BAD_REQUEST),
     DESIRED_LOCATION_SIZE(1035, "Desired location must be at least {min}", HttpStatus.BAD_REQUEST),
     APPLICATION_NOT_FOUND(1036, "Application not found", HttpStatus.NOT_FOUND),
-    STATUS_REQUIRED(1037, "Status must not be blank", HttpStatus.BAD_REQUEST);
+    STATUS_REQUIRED(1037, "Status must not be blank", HttpStatus.BAD_REQUEST),
+    COMPANY_NOT_FOUND_BY_EMPLOYER(1038, "Company not found when search by employer", HttpStatus.NOT_FOUND);
 
     private int code;
     private String message;

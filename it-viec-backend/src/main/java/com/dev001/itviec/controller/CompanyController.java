@@ -32,7 +32,7 @@ public class CompanyController {
 
     // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết
     // company
-    @GetMapping("/{slug}")
+    @GetMapping("/slug/{slug}")
     public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
         return ApiResponse.<CompanyDetailResponse>builder()
                 .code(1000)
@@ -57,7 +57,7 @@ public class CompanyController {
     // 5.API cho phép employer xem thông tin company mình
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> getMyCompany() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<CompanyDetailResponse> getMyCompany() {
+        return ApiResponse.<CompanyDetailResponse>builder().code(1000).result(companyService.getMyCompany()).build();
     }
 }

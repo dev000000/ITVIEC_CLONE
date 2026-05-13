@@ -1,13 +1,9 @@
 package com.dev001.itviec.service.impl;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.exception.AppException;
@@ -16,9 +12,13 @@ import com.dev001.itviec.mapper.CompanyMapper;
 import com.dev001.itviec.repository.CompanyRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.service.CompanyService;
-
+import com.dev001.itviec.service.EmployerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,6 +28,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyMapper companyMapper;
     private final CompanyRepository companyRepository;
     private final JobRepository jobRepository;
+    private final EmployerService employerService;
 
     @Override
     @Transactional(readOnly = true)
@@ -61,6 +62,16 @@ public class CompanyServiceImpl implements CompanyService {
         // 3. Set job vào company
         company.setJobs(jobList);
 
+        return companyMapper.toCompanyDetailResponse(company);
+    }
+
+    @Override
+    public CompanyDetailResponse getMyCompany() {
+        // 1.Lấy thông tin nhà tuyển dụng hiện tại từ cookie
+        Employer employer = employerService.getEmployerByCookie();
+
+        // 2.Lấy thông tin công ty của nhà tuyển dụng đó
+        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
         return companyMapper.toCompanyDetailResponse(company);
     }
 }
