@@ -14,8 +14,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationResponse {
     String id;
-    SeekerResponse seeker;
-    JobDetailResponse job;
+    //    JobDetailResponse job;
     String fullName;
     String phoneNumber;
     String resumeUrl;

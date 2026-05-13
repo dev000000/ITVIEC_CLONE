@@ -48,7 +48,9 @@ public enum ErrorCode {
     PHONE_NUMBER_SIZE(1032, "Phone number must be between {min} and {max} characters", HttpStatus.BAD_REQUEST),
     PHONE_NUMBER_INVALID(1033, "Phone number is invalid", HttpStatus.BAD_REQUEST),
     APPLICATION_ALREADY_EXISTS(1034, "Application already exists", HttpStatus.BAD_REQUEST),
-    DESIRED_LOCATION_SIZE(1035, "Desired location must be at least {min}", HttpStatus.BAD_REQUEST);
+    DESIRED_LOCATION_SIZE(1035, "Desired location must be at least {min}", HttpStatus.BAD_REQUEST),
+    APPLICATION_NOT_FOUND(1036, "Application not found", HttpStatus.NOT_FOUND),
+    STATUS_REQUIRED(1037, "Status must not be blank", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
