@@ -1,9 +1,11 @@
 package com.dev001.itviec.controller;
 
+import com.dev001.itviec.dto.request.CompanyUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.service.CompanyService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -50,8 +52,8 @@ public class CompanyController {
     // 4.API cho phép employer cập nhật thông tin company của mình
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> updateMyCompany() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<CompanyDetailResponse> updateMyCompany(@RequestBody @Valid CompanyUpdateRequest request) {
+        return ApiResponse.<CompanyDetailResponse>builder().code(1000).result(companyService.updateMyCompany(request)).build();
     }
 
     // 5.API cho phép employer xem thông tin company mình

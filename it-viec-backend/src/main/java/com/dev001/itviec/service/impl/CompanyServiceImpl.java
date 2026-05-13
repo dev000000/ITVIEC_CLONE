@@ -1,5 +1,6 @@
 package com.dev001.itviec.service.impl;
 
+import com.dev001.itviec.dto.request.CompanyUpdateRequest;
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.entity.company.Company;
@@ -18,7 +19,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -74,4 +77,57 @@ public class CompanyServiceImpl implements CompanyService {
         Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
         return companyMapper.toCompanyDetailResponse(company);
     }
+
+    @Override
+    public CompanyDetailResponse updateMyCompany(CompanyUpdateRequest request) {
+        // 1.Lấy thông tin nhà tuyển dụng hiện tại từ cookie
+        Employer employer = employerService.getEmployerByCookie();
+
+        // 2.Lấy thông tin công ty của nhà tuyển dụng đó
+        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
+
+        // 3. Cập nhật thông tin company với dữ liệu từ request
+        company.setCompanyName(request.getCompanyName());
+        company.setDescription(request.getDescription());
+        company.setWebsite(request.getWebsite());
+        company.setLogoUrl(request.getLogoUrl());
+        company.setAddress(request.getAddress());
+        company.setCompanyModel(request.getCompanyModel());
+        company.setIndustry(request.getIndustry());
+        company.setCompanySize(request.getCompanySize());
+        company.setCountry(request.getCountry());
+        company.setWorkingHours(request.getWorkingHours());
+        company.setOvertimePolicy(request.getOvertimePolicy());
+        company.setCompanyIntroduction(request.getCompanyIntroduction());
+        company.setOurExpertise(request.getOurExpertise());
+        company.setWhyWorkHere(request.getWhyWorkHere());
+        company.setCompanySkills(request.getCompanySkills());
+        company.setSlug(generateCompanySlug(request.getCompanyName()));
+
+        return companyMapper.toCompanyDetailResponse(companyRepository.save(company));
+    }
+
+    public String generateCompanySlug(String companyName) {
+        if (companyName == null || companyName.trim().isEmpty()) {
+            return "";
+        }
+
+        String slug = companyName.trim().toLowerCase(Locale.ROOT);
+
+        // Chuẩn hóa unicode và bỏ dấu
+        slug = Normalizer.normalize(slug, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+        // Xử lý riêng ký tự đ/Đ tiếng Việt
+        slug = slug.replace("đ", "d").replace("Đ", "d");
+
+        // Thay mọi ký tự không phải chữ hoặc số thành dấu -
+        slug = slug.replaceAll("[^a-z0-9]+", "-");
+
+        // Xóa dấu - ở đầu/cuối
+        slug = slug.replaceAll("^-+|-+$", "");
+
+        return slug;
+    }
+
 }

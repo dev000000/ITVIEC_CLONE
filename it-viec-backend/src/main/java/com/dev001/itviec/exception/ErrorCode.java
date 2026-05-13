@@ -51,7 +51,19 @@ public enum ErrorCode {
     DESIRED_LOCATION_SIZE(1035, "Desired location must be at least {min}", HttpStatus.BAD_REQUEST),
     APPLICATION_NOT_FOUND(1036, "Application not found", HttpStatus.NOT_FOUND),
     STATUS_REQUIRED(1037, "Status must not be blank", HttpStatus.BAD_REQUEST),
-    COMPANY_NOT_FOUND_BY_EMPLOYER(1038, "Company not found when search by employer", HttpStatus.NOT_FOUND);
+    COMPANY_NOT_FOUND_BY_EMPLOYER(1038, "Company not found when search by employer", HttpStatus.NOT_FOUND),
+    COMPANY_NAME_REQUIRED(1039, "Company name must not be blank", HttpStatus.BAD_REQUEST),
+    ADDRESS_REQUIRED(1040, "Address must not be blank", HttpStatus.BAD_REQUEST),
+    COMPANY_MODEL_REQUIRED(1041, "Company model must not be null", HttpStatus.BAD_REQUEST),
+    INDUSTRY_REQUIRED(1042, "Industry must not be blank", HttpStatus.BAD_REQUEST),
+    COMPANY_SIZE_REQUIRED(1043, "Company size must not be null", HttpStatus.BAD_REQUEST),
+    COUNTRY_REQUIRED(1044, "Country must not be null", HttpStatus.BAD_REQUEST),
+    WORKING_HOURS_REQUIRED(1045, "Working hours must not be null", HttpStatus.BAD_REQUEST),
+    OVERTIME_POLICY_REQUIRED(1046, "Overtime policy must not be null", HttpStatus.BAD_REQUEST),
+    COMPANY_INTRODUCTION_REQUIRED(1047, "Company introduction must not be blank", HttpStatus.BAD_REQUEST),
+    OUR_EXPERTISE_REQUIRED(1048, "Our expertise must not be blank", HttpStatus.BAD_REQUEST),
+    WHY_WORK_HERE_REQUIRED(1049, "Why work here must not be blank", HttpStatus.BAD_REQUEST),
+    AT_LEAST_3_SKILLS_REQUIRED(1050, "At least 3 skills are required", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
