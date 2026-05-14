@@ -186,12 +186,13 @@ VALUES ('Vietnam'),
   ('Qatar'),
   ('Kuwait'),
   ('Others');
-INSERT INTO users (id, email, password, role, created_at)
+INSERT INTO users (id, email, password, role, status, created_at)
 VALUES (
     'a1b2c3d4-e5f6-11ee-b1a2-0242ac120002',
     'mb@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   -- mk : Temp@2025!
@@ -200,6 +201,7 @@ VALUES (
     'scandinavian@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -207,6 +209,7 @@ VALUES (
     'onetechstop@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -214,6 +217,7 @@ VALUES (
     'mcredit@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -221,6 +225,7 @@ VALUES (
     'tymex@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -228,6 +233,7 @@ VALUES (
     'andpad@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -235,6 +241,7 @@ VALUES (
     'employmenthero@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -242,6 +249,7 @@ VALUES (
     'boschhr@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -249,6 +257,7 @@ VALUES (
     'ssihhr@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'EMPLOYER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -256,6 +265,7 @@ VALUES (
     'seeker1@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-03 19:17:00'
   ),
   (
@@ -263,6 +273,7 @@ VALUES (
     'seeker2@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-04 10:20:00'
   ),
   (
@@ -270,6 +281,7 @@ VALUES (
     'seeker3@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-04 12:30:00'
   ),
   (
@@ -277,6 +289,7 @@ VALUES (
     'seeker4@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-05 09:15:00'
   ),
   (
@@ -284,6 +297,7 @@ VALUES (
     'seeker5@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-05 11:30:00'
   ),
   (
@@ -291,6 +305,7 @@ VALUES (
     'seeker6@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-06 08:45:00'
   ),
   (
@@ -298,6 +313,7 @@ VALUES (
     'seeker7@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-06 14:20:00'
   ),
   (
@@ -305,6 +321,7 @@ VALUES (
     'seeker8@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-07 10:00:00'
   ),
   (
@@ -312,6 +329,7 @@ VALUES (
     'seeker9@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-07 13:15:00'
   ),
   (
@@ -319,6 +337,7 @@ VALUES (
     'seeker10@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-07 15:30:00'
   ),
   (
@@ -326,6 +345,7 @@ VALUES (
     'seeker11@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-07 17:00:00'
   ),
   (
@@ -333,6 +353,7 @@ VALUES (
     'seeker12@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-07 18:30:00'
   ),
   (
@@ -340,6 +361,7 @@ VALUES (
     'seeker13@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-05-07 20:00:00'
   ),
   (
@@ -347,6 +369,7 @@ VALUES (
     'seeker14@example.com',
     '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
     'SEEKER',
+    'ACTIVE',
     '2025-06-22 10:10:41'
   ),
   (
@@ -354,6 +377,7 @@ VALUES (
     'admin@example.com',
     '$2b$10$jV0YhD2FctnfQcuuaCQWf.DjHIaIzmJUUK3QtXbFg3gRB/dg5SbPK',
     'ADMIN',
+    'ACTIVE',
     '2025-05-01 00:00:00'
   );
 -- mk : admin@123

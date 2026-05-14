@@ -1,9 +1,11 @@
 package com.dev001.itviec.controller;
 
+import com.dev001.itviec.dto.request.CompanyUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.service.CompanyService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,7 +34,7 @@ public class CompanyController {
 
     // 2.API trả về company theo slug kèm theo toàn bộ job đang active của company đó, để hiển thị ở trang chi tiết
     // company
-    @GetMapping("/{slug}")
+    @GetMapping("/slug/{slug}")
     public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
         return ApiResponse.<CompanyDetailResponse>builder()
                 .code(1000)
@@ -40,24 +42,23 @@ public class CompanyController {
                 .build();
     }
 
-    // 3.API tạo company mới, chỉ admin mới được tạo company mới
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> createCompany() {
-        return ApiResponse.<Void>builder().code(1000).build();
-    }
-
-    // 4.API cho phép employer cập nhật thông tin company của mình
+    // 3.API cho phép employer cập nhật thông tin company của mình
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> updateMyCompany() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<CompanyDetailResponse> updateMyCompany(@RequestBody @Valid CompanyUpdateRequest request) {
+        return ApiResponse.<CompanyDetailResponse>builder()
+                .code(1000)
+                .result(companyService.updateMyCompany(request))
+                .build();
     }
 
-    // 5.API cho phép employer xem thông tin company mình
+    // 4.API cho phép employer xem thông tin company mình
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> getMyCompany() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<CompanyDetailResponse> getMyCompany() {
+        return ApiResponse.<CompanyDetailResponse>builder()
+                .code(1000)
+                .result(companyService.getMyCompany())
+                .build();
     }
 }

@@ -1,17 +1,15 @@
 package com.dev001.itviec.controller;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import com.dev001.itviec.dto.request.UserUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.UserResponse;
 import com.dev001.itviec.service.UserService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,7 +29,7 @@ public class UserController {
                 .build();
     }
 
-    // 2.API trả về thông tin của 1 user, chỉ admin mới được phép truy cập
+    // 2.API trả về thông tin chi tiết của 1 user, chỉ admin mới được phép truy cập
     @GetMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUser(@PathVariable String id) {
@@ -41,25 +39,13 @@ public class UserController {
                 .build();
     }
 
-    // 3.API cho phép admin cập nhật thông tin của 1 user, chỉ admin mới được phép truy cập
-    @PutMapping("/users/{id}")
+    // 3.API cho phép admin cập nhật status của 1 user, để khóa/mở khóa tài khoản của user đó
+    @PatchMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUserStatus(@PathVariable String id, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .code(1000)
-                .result(userService.updateUser(id, request))
-                .build();
-    }
-
-    // 4.API cho phép admin xóa một user
-    @DeleteMapping("/users/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<String> deleteUser(@PathVariable String id) {
-        userService.deleteUser(id);
-
-        return ApiResponse.<String>builder()
-                .code(1000)
-                .message("User deleted successfully")
+                .result(userService.updateUserStatus(id, request))
                 .build();
     }
 }

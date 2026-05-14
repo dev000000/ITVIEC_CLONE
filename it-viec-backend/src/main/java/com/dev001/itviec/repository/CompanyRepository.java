@@ -15,6 +15,7 @@ public interface CompanyRepository extends JpaRepository<Company, String> {
 
     Optional<Company> findById(String id);
 
+    @EntityGraph(attributePaths = {"employer", "country", "companySkills"})
     Optional<Company> findByEmployer(Employer employer);
 
     boolean existsByEmployer(Employer employer);

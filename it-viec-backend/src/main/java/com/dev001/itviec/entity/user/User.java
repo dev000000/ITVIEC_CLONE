@@ -1,20 +1,18 @@
 package com.dev001.itviec.entity.user;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import jakarta.persistence.*;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.token.Token;
 import com.dev001.itviec.enums.Role;
-
+import com.dev001.itviec.enums.UserStatus;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -42,6 +40,10 @@ public class User extends BaseEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Token> tokens = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    UserStatus status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
