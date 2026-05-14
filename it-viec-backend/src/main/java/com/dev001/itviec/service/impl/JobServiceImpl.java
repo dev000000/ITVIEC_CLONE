@@ -1,21 +1,7 @@
 package com.dev001.itviec.service.impl;
 
-import static com.dev001.itviec.enums.JobStatus.ACTIVE;
-import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.dev001.itviec.dto.request.JobCreateRequest;
+import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
@@ -31,9 +17,26 @@ import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.JobService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.Normalizer;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.dev001.itviec.enums.JobStatus.ACTIVE;
+import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
+import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -85,8 +88,7 @@ public class JobServiceImpl implements JobService {
         job = jobRepository.save(job);
 
         // 3. Generate slug = slug va id
-        String slugBase = slugify(request.getTitle()) + "-" + slugify(company.getCompanyName());
-        String slug = slugBase + "-" + job.getId();
+        String slug = generateSlug(job.getTitle(), company.getCompanyName(), job.getId());
         job.setSlug(slug);
 
         // 4. save lan 2 => update slug
@@ -94,19 +96,6 @@ public class JobServiceImpl implements JobService {
 
         return jobMapper.toJobDetailResponse(job);
     }
-
-    @Override
-    public JobDetailResponse updateJob(String slug, JobDetailResponse job) {
-        return null;
-    }
-
-    @Override
-    public List<JobDetailResponse> getJobsByCompanyId(String companyId) {
-        return List.of();
-    }
-
-    @Override
-    public void deleteJob(String slug) {}
 
     @Override
     public List<JobDetailResponse> getJobsByCurrentEmployer() {
@@ -155,11 +144,79 @@ public class JobServiceImpl implements JobService {
                 .build();
     }
 
-    private String slugify(String text) {
-        return text.trim()
-                .toLowerCase()
-                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "") // xu li dau tieng viet
-                .replaceAll("[^a-z0-9\\s-]", "") // loai bo ki tu dac biet
-                .replaceAll("\\s+", "-"); // space -> -
+    @Override
+    public JobDetailResponse updateJob(Long id, JobUpdateRequest request) {
+        // 1. lấy email từ SecurityContext
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+        String email = authentication.getName();
+        // 2. lấy user từ email
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        // 3. lấy employer từ user
+        Employer employer =
+                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+
+        // 4. lấy company từ employer
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+
+        // 5. lấy job chi tiết đó bằng id và job đó phải thuộc công ty
+        Job job = jobRepository.findByIdAndCompany(id, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+
+        // 6. Cập nhật thông tin của job đó
+        job.setTitle(request.getTitle());
+        job.setJobReason(request.getJobReason());
+        job.setJobDescription(request.getJobDescription());
+        job.setJobRequirements(request.getJobRequirements());
+        job.setWhyJoinUs(request.getWhyJoinUs());
+        job.setLocation(request.getLocation());
+        job.setCity(request.getCity());
+        job.setSalary(request.getSalary());
+        job.setJobType(request.getJobType());
+        job.setExperienceLevel(request.getExperienceLevel());
+        job.setPostedAt(request.getPostedAt());
+        job.setExpiresAt(request.getExpiresAt());
+        job.setStatus(request.getStatus());
+        job.setSkills(request.getSkills());
+
+        // 7. Tạo slug
+        String slug = generateSlug(job.getTitle(), company.getCompanyName(), job.getId());
+        job.setSlug(slug);
+
+        // 8. Lưu vào db
+        return jobMapper.toJobDetailResponse(jobRepository.save(job));
+    }
+
+    public String generateSlug(String jobTitle, String companyName, Long jobId) {
+        if (jobId == null) {
+            return "";
+        }
+
+        String titleSlug = normalizeToSlug(jobTitle);
+        String companySlug = normalizeToSlug(companyName);
+
+        return Stream.of(titleSlug, companySlug, String.valueOf(jobId))
+                .filter(part -> part != null && !part.isBlank())
+                .collect(Collectors.joining("-"));
+    }
+
+    public String normalizeToSlug(String input) {
+        if (input == null || input.trim().isEmpty()) {
+            return "";
+        }
+
+        String slug = input.trim().toLowerCase(Locale.ROOT);
+
+        slug = Normalizer.normalize(slug, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+
+        slug = slug.replace("đ", "d").replace("Đ", "d");
+
+        slug = slug.replaceAll("[^a-z0-9]+", "-").replaceAll("^-+|-+$", "");
+
+        return slug;
     }
 }
