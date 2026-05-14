@@ -69,7 +69,9 @@ public enum ErrorCode {
     GENDER_REQUIRED(1053, "Gender must not be blank", HttpStatus.BAD_REQUEST),
     CITY_REQUIRED(1054, "City must not be blank", HttpStatus.BAD_REQUEST),
     AT_LEAST_3_DESIRED_LOCATIONS_REQUIRED(1055, "At least 3 desired locations are required", HttpStatus.BAD_REQUEST),
-    DATE_OF_BIRTH_MUST_BE_IN_PAST(1056, "Date of birth must be in the past", HttpStatus.BAD_REQUEST);
+    DATE_OF_BIRTH_MUST_BE_IN_PAST(1056, "Date of birth must be in the past", HttpStatus.BAD_REQUEST),
+    INVALID_USER_STATUS(1057, "Invalid user status", HttpStatus.BAD_REQUEST),
+    ADMIN_IS_NOT_ALLOWED_TO_UPDATE_STATUS_ADMIN(1058, "Admin is not allowed to update status of admin", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
