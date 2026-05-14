@@ -1,6 +1,5 @@
 package com.dev001.itviec.dto.request;
 
-
 import com.dev001.itviec.enums.UserStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;

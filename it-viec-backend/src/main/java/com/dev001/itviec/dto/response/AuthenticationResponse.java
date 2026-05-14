@@ -19,4 +19,3 @@ public class AuthenticationResponse {
     Role role;
     UserStatus status;
 }
-
