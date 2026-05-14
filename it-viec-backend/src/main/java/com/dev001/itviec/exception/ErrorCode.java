@@ -63,7 +63,13 @@ public enum ErrorCode {
     COMPANY_INTRODUCTION_REQUIRED(1047, "Company introduction must not be blank", HttpStatus.BAD_REQUEST),
     OUR_EXPERTISE_REQUIRED(1048, "Our expertise must not be blank", HttpStatus.BAD_REQUEST),
     WHY_WORK_HERE_REQUIRED(1049, "Why work here must not be blank", HttpStatus.BAD_REQUEST),
-    AT_LEAST_3_SKILLS_REQUIRED(1050, "At least 3 skills are required", HttpStatus.BAD_REQUEST);
+    AT_LEAST_3_SKILLS_REQUIRED(1050, "At least 3 skills are required", HttpStatus.BAD_REQUEST),
+    JOB_TITLE_REQUIRED(1051, "Job title must not be blank", HttpStatus.BAD_REQUEST),
+    DATE_OF_BIRTH_REQUIRED(1052, "Date of birth must not be blank", HttpStatus.BAD_REQUEST),
+    GENDER_REQUIRED(1053, "Gender must not be blank", HttpStatus.BAD_REQUEST),
+    CITY_REQUIRED(1054, "City must not be blank", HttpStatus.BAD_REQUEST),
+    AT_LEAST_3_DESIRED_LOCATIONS_REQUIRED(1055, "At least 3 desired locations are required", HttpStatus.BAD_REQUEST),
+    DATE_OF_BIRTH_MUST_BE_IN_PAST(1056, "Date of birth must be in the past", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

@@ -1,8 +1,10 @@
 package com.dev001.itviec.controller;
 
+import com.dev001.itviec.dto.request.SeekerUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.service.SeekerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,14 +44,20 @@ public class SeekerController {
     // 3.API cho phép seeker cập nhật profile của họ
     @PutMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
-    public ApiResponse<Void> updateMyProfile() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<SeekerResponse> updateMyProfile(@RequestBody @Valid SeekerUpdateRequest request) {
+        return ApiResponse.<SeekerResponse>builder()
+                .code(1000)
+                .result(seekerService.updateMyProfile(request))
+                .build();
     }
 
     // 4.API cho phép admin xem profile của 1 seeker
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<SeekerResponse> getSeekerById(@PathVariable String id) {
-        return ApiResponse.<SeekerResponse>builder().code(1000).result(seekerService.getSeekerById(id)).build();
+        return ApiResponse.<SeekerResponse>builder()
+                .code(1000)
+                .result(seekerService.getSeekerById(id))
+                .build();
     }
 }

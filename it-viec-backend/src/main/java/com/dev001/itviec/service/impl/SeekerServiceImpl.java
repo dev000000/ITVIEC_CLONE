@@ -1,5 +1,6 @@
 package com.dev001.itviec.service.impl;
 
+import com.dev001.itviec.dto.request.SeekerUpdateRequest;
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.user.User;
@@ -59,6 +60,30 @@ public class SeekerServiceImpl implements SeekerService {
     @Override
     public SeekerResponse getSeekerById(String id) {
 
-        return seekerMapper.toSeekerResponse(seekerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND)));
+        return seekerMapper.toSeekerResponse(
+                seekerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND)));
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse updateMyProfile(SeekerUpdateRequest request) {
+        // 1. Lấy thông tin người ứng tuyển từ cookie
+        Seeker seeker = getSeekerByCookie();
+
+        // 2. Cập nhật thông tin
+        seeker.setFullName(request.getFullName());
+        seeker.setJobTitle(request.getJobTitle());
+        seeker.setPhoneNumber(request.getPhoneNumber());
+        seeker.setDateOfBirth(request.getDateOfBirth());
+        seeker.setGender(request.getGender());
+        seeker.setCity(request.getCity());
+        seeker.setAddress(request.getAddress());
+        seeker.setPersonalLink(request.getPersonalLink());
+        seeker.setCoverLetter(request.getCoverLetter());
+        seeker.setSkills(request.getSkills());
+        seeker.setDesiredLocations(request.getDesiredLocations());
+
+        // 3. Lưu thông tin người ứng tuyển vào DB
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
     }
 }
