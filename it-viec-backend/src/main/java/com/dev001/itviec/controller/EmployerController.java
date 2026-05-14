@@ -1,14 +1,14 @@
 package com.dev001.itviec.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import com.dev001.itviec.dto.response.ApiResponse;
-
+import com.dev001.itviec.dto.response.EmployerResponse;
+import com.dev001.itviec.service.EmployerService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -16,12 +16,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/v1/employers")
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployerController {
+    EmployerService employerService;
 
     // 1.API này trả về cho employer profile của bản thân
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> getMyProfile() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<EmployerResponse> getMyProfile() {
+        return ApiResponse.<EmployerResponse>builder().code(1000).result(employerService.getMyProfile()).build();
     }
 
     // 2.API này cho phép employer cập nhật profile của bản thân

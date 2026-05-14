@@ -1,5 +1,6 @@
 package com.dev001.itviec.service.impl;
 
+import com.dev001.itviec.dto.response.EmployerResponse;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.exception.AppException;
@@ -39,5 +40,10 @@ public class EmployerServiceImpl implements EmployerService {
                 employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
 
         return Employer;
+    }
+
+    @Override
+    public EmployerResponse getMyProfile() {
+        return employerMapper.toEmployerResponse(getEmployerByCookie());
     }
 }
