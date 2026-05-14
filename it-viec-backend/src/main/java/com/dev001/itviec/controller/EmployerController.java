@@ -1,8 +1,10 @@
 package com.dev001.itviec.controller;
 
+import com.dev001.itviec.dto.request.EmployerUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.EmployerResponse;
 import com.dev001.itviec.service.EmployerService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -28,8 +30,8 @@ public class EmployerController {
     // 2.API này cho phép employer cập nhật profile của bản thân
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> updateMyProfile() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<EmployerResponse> updateMyProfile(@RequestBody @Valid EmployerUpdateRequest request) {
+        return ApiResponse.<EmployerResponse>builder().code(1000).result(employerService.updateMyProfile(request)).build();
     }
 
     // 3.API này cho phép admin xem danh sách employer
@@ -40,7 +42,7 @@ public class EmployerController {
     }
 
     // 4.API này cho phép admin xem chi tiết của employer
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<Void> getEmployerById(@PathVariable String id) {
         return ApiResponse.<Void>builder().code(1000).build();

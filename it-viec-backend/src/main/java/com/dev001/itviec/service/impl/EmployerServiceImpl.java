@@ -1,5 +1,6 @@
 package com.dev001.itviec.service.impl;
 
+import com.dev001.itviec.dto.request.EmployerUpdateRequest;
 import com.dev001.itviec.dto.response.EmployerResponse;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.user.User;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -45,5 +47,18 @@ public class EmployerServiceImpl implements EmployerService {
     @Override
     public EmployerResponse getMyProfile() {
         return employerMapper.toEmployerResponse(getEmployerByCookie());
+    }
+
+    @Transactional
+    @Override
+    public EmployerResponse updateMyProfile(EmployerUpdateRequest request) {
+        // 1. Lấy employer hiện tại từ cookie
+        Employer employer = getEmployerByCookie();
+        // 2. Cập nhật thông tin của employer
+        employer.setFullName(request.getFullName());
+        employer.setJobTitle(request.getJobTitle());
+        employer.setPhoneNumber(request.getPhoneNumber());
+
+        return employerMapper.toEmployerResponse(employerRepository.save(employer));
     }
 }
