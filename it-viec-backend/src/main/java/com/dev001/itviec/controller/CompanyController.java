@@ -42,21 +42,15 @@ public class CompanyController {
                 .build();
     }
 
-    // 3.API tạo company mới, chỉ admin mới được tạo company mới
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> createCompany() {
-        return ApiResponse.<Void>builder().code(1000).build();
-    }
 
-    // 4.API cho phép employer cập nhật thông tin company của mình
+    // 3.API cho phép employer cập nhật thông tin company của mình
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> updateMyCompany(@RequestBody @Valid CompanyUpdateRequest request) {
         return ApiResponse.<CompanyDetailResponse>builder().code(1000).result(companyService.updateMyCompany(request)).build();
     }
 
-    // 5.API cho phép employer xem thông tin company mình
+    // 4.API cho phép employer xem thông tin company mình
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> getMyCompany() {

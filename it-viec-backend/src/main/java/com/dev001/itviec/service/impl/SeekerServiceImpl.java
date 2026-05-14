@@ -55,4 +55,10 @@ public class SeekerServiceImpl implements SeekerService {
 
         return seeker;
     }
+
+    @Override
+    public SeekerResponse getSeekerById(String id) {
+
+        return seekerMapper.toSeekerResponse(seekerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SEEKER_NOT_FOUND)));
+    }
 }

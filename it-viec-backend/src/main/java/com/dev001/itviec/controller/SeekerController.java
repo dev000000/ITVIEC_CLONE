@@ -49,7 +49,7 @@ public class SeekerController {
     // 4.API cho phép admin xem profile của 1 seeker
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> getSeekerById(@PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<SeekerResponse> getSeekerById(@PathVariable String id) {
+        return ApiResponse.<SeekerResponse>builder().code(1000).result(seekerService.getSeekerById(id)).build();
     }
 }

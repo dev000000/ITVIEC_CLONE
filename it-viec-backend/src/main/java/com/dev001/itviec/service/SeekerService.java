@@ -12,4 +12,6 @@ public interface SeekerService {
     SeekerResponse getMyProfile();
 
     Seeker getSeekerByCookie();
+
+    SeekerResponse getSeekerById(String id);
 }
