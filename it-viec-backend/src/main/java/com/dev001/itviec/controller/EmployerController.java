@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -24,27 +26,39 @@ public class EmployerController {
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<EmployerResponse> getMyProfile() {
-        return ApiResponse.<EmployerResponse>builder().code(1000).result(employerService.getMyProfile()).build();
+        return ApiResponse.<EmployerResponse>builder()
+                .code(1000)
+                .result(employerService.getMyProfile())
+                .build();
     }
 
     // 2.API này cho phép employer cập nhật profile của bản thân
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<EmployerResponse> updateMyProfile(@RequestBody @Valid EmployerUpdateRequest request) {
-        return ApiResponse.<EmployerResponse>builder().code(1000).result(employerService.updateMyProfile(request)).build();
+        return ApiResponse.<EmployerResponse>builder()
+                .code(1000)
+                .result(employerService.updateMyProfile(request))
+                .build();
     }
 
     // 3.API này cho phép admin xem danh sách employer
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> getAllEmployers() {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<List<EmployerResponse>> getAllEmployers() {
+        return ApiResponse.<List<EmployerResponse>>builder()
+                .code(1000)
+                .result(employerService.getAllEmployers())
+                .build();
     }
 
     // 4.API này cho phép admin xem chi tiết của employer
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<Void> getEmployerById(@PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<EmployerResponse> getEmployerById(@PathVariable String id) {
+        return ApiResponse.<EmployerResponse>builder()
+                .code(1000)
+                .result(employerService.getEmployerById(id))
+                .build();
     }
 }

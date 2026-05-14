@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -60,5 +62,17 @@ public class EmployerServiceImpl implements EmployerService {
         employer.setPhoneNumber(request.getPhoneNumber());
 
         return employerMapper.toEmployerResponse(employerRepository.save(employer));
+    }
+
+    @Override
+    public List<EmployerResponse> getAllEmployers() {
+        return employerMapper.toEmployerResponse(employerRepository.findAll());
+    }
+
+    @Override
+    public EmployerResponse getEmployerById(String id) {
+        Employer employer =
+                employerRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+        return employerMapper.toEmployerResponse(employer);
     }
 }
