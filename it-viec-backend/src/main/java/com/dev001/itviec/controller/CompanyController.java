@@ -46,6 +46,7 @@ public class CompanyController {
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> updateMyCompany(@RequestBody @Valid CompanyUpdateRequest request) {
+        log.info("Received request to update company: {}", request);
         return ApiResponse.<CompanyDetailResponse>builder()
                 .code(1000)
                 .result(companyService.updateMyCompany(request))

@@ -1,19 +1,19 @@
 package com.dev001.itviec.controller;
 
-import java.util.List;
-
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
 import com.dev001.itviec.dto.request.JobCreateRequest;
+import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.JobCardResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.service.JobService;
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -68,17 +68,16 @@ public class JobController {
     // )
     @PutMapping("/companies/me/jobs/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> updateJob(@RequestBody JobCreateRequest request, @PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
+    public ApiResponse<JobDetailResponse> updateJob(
+            @RequestBody @Valid JobUpdateRequest request, @PathVariable Long id) {
+        log.info("updateJob: {}", request);
+        return ApiResponse.<JobDetailResponse>builder()
+                .code(1000)
+                .result(jobService.updateJob(id, request))
+                .build();
     }
 
-    // 6.API cho phép công ty hiện tại chỉnh sửa công việc ( cập nhật trạng thái )
-    @PatchMapping("/companies/me/jobs/{id}")
-    @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<Void> updateJobStatus(@RequestBody JobCreateRequest request, @PathVariable String id) {
-        return ApiResponse.<Void>builder().code(1000).build();
-    }
-    // 7.API cho phép công ty hiện tại xóa công việc của họ
+    // 6.API cho phép công ty hiện tại xóa công việc của họ -- Sẽ xử lí xóa mềm (soft delete)
     @DeleteMapping("/companies/me/jobs/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> deleteJob(@PathVariable String id) {

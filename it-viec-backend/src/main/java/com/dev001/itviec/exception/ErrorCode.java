@@ -72,7 +72,21 @@ public enum ErrorCode {
     DATE_OF_BIRTH_MUST_BE_IN_PAST(1056, "Date of birth must be in the past", HttpStatus.BAD_REQUEST),
     INVALID_USER_STATUS(1057, "Invalid user status", HttpStatus.BAD_REQUEST),
     ADMIN_IS_NOT_ALLOWED_TO_UPDATE_STATUS_ADMIN(
-            1058, "Admin is not allowed to update status of admin", HttpStatus.BAD_REQUEST);
+            1058, "Admin is not allowed to update status of admin", HttpStatus.BAD_REQUEST),
+    TITLE_REQUIRED(1059, "Title must not be blank", HttpStatus.BAD_REQUEST),
+    JOB_REASON_REQUIRED(1060, "Job reason must not be blank", HttpStatus.BAD_REQUEST),
+    JOB_DESCRIPTION_REQUIRED(1061, "Job description must not be blank", HttpStatus.BAD_REQUEST),
+    JOB_REQUIREMENTS_REQUIRED(1062, "Job requirements must not be blank", HttpStatus.BAD_REQUEST),
+    WHY_JOIN_US_REQUIRED(1063, "Why join us must not be blank", HttpStatus.BAD_REQUEST),
+    LOCATION_REQUIRED(1064, "Location must not be blank", HttpStatus.BAD_REQUEST),
+    SALARY_REQUIRED(1065, "Salary must not be blank", HttpStatus.BAD_REQUEST),
+    JOB_TYPE_REQUIRED(1066, "Job type must not be null", HttpStatus.BAD_REQUEST),
+    EXPERIENCE_LEVEL_REQUIRED(1067, "Experience level must not be null", HttpStatus.BAD_REQUEST),
+    POSTED_AT_REQUIRED(1068, "Posted at must not be blank", HttpStatus.BAD_REQUEST),
+    EXPIRES_AT_REQUIRED(1069, "Expires at must not be blank", HttpStatus.BAD_REQUEST),
+    INVALID_JOB_TYPE(1070, "Invalid job type", HttpStatus.BAD_REQUEST),
+    INVALID_EXPERIENCE_LEVEL(1071, "Invalid experience level", HttpStatus.BAD_REQUEST),
+    INVALID_JOB_STATUS(1072, "Invalid job status", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

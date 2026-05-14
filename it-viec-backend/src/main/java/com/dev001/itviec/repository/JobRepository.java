@@ -27,4 +27,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @EntityGraph(attributePaths = {"company", "city", "skills"})
     List<Job> findByCompanyAndStatus(Company company, JobStatus status);
+
+    @EntityGraph(attributePaths = {"company", "city", "skills"})
+    Optional<Job> findByIdAndCompany(Long id, Company company);
 }
