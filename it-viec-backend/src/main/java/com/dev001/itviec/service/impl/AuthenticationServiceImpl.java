@@ -8,6 +8,8 @@ import com.dev001.itviec.dto.response.AuthenticationResponse;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.token.Token;
 import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.enums.Role;
+import com.dev001.itviec.enums.UserStatus;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.mapper.UserMapper;
 import com.dev001.itviec.repository.SeekerRepository;
@@ -27,7 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.dev001.itviec.enums.Role.SEEKER;
 import static com.dev001.itviec.enums.TokenType.BEARER;
 import static com.dev001.itviec.exception.ErrorCode.*;
 
@@ -80,6 +81,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .status(user.getStatus())
                 .build();
     }
 
@@ -102,6 +104,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .id(user.getId())
                 .email(user.getEmail())
                 .role(user.getRole())
+                .status(user.getStatus())
                 .build();
     }
 
@@ -149,7 +152,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(hashedPassword)
-                .role(SEEKER)
+                .role(Role.SEEKER)
+                .status(UserStatus.ACTIVE)
                 .build();
         User savedUser = userRepository.save(user);
 
