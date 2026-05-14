@@ -61,5 +61,4 @@ public class CompanyUpdateRequest {
 
     @Size(min = 3, message = "AT_LEAST_3_SKILLS_REQUIRED")
     Set<Skill> companySkills = new HashSet<>();
-
 }

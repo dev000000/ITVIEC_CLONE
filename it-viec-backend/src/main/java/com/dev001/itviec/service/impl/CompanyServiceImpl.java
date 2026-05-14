@@ -74,7 +74,9 @@ public class CompanyServiceImpl implements CompanyService {
         Employer employer = employerService.getEmployerByCookie();
 
         // 2.Lấy thông tin công ty của nhà tuyển dụng đó
-        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
         return companyMapper.toCompanyDetailResponse(company);
     }
 
@@ -84,7 +86,9 @@ public class CompanyServiceImpl implements CompanyService {
         Employer employer = employerService.getEmployerByCookie();
 
         // 2.Lấy thông tin công ty của nhà tuyển dụng đó
-        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND_BY_EMPLOYER));
 
         // 3. Cập nhật thông tin company với dữ liệu từ request
         company.setCompanyName(request.getCompanyName());
@@ -115,8 +119,7 @@ public class CompanyServiceImpl implements CompanyService {
         String slug = companyName.trim().toLowerCase(Locale.ROOT);
 
         // Chuẩn hóa unicode và bỏ dấu
-        slug = Normalizer.normalize(slug, Normalizer.Form.NFD)
-                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        slug = Normalizer.normalize(slug, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 
         // Xử lý riêng ký tự đ/Đ tiếng Việt
         slug = slug.replace("đ", "d").replace("Đ", "d");
@@ -129,5 +132,4 @@ public class CompanyServiceImpl implements CompanyService {
 
         return slug;
     }
-
 }
