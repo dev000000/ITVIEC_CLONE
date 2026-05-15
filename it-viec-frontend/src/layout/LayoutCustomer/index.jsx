@@ -16,7 +16,7 @@ import { setLogin } from "../../actions/User";
 import { clearCompanyInfo, setCompanyFullInfo } from "../../actions/Company";
 import { CgProfile } from "react-icons/cg";
 function LayoutCustomer() {
-  const company = useSelector(state => state.CompanyReducer);
+  const company = useSelector((state) => state.CompanyReducer);
   const dispatch = useDispatch();
   const [isLoadingCompany, setIsLoadingCompany] = useState(false);
   const userId = localStorage.getItem("id");
@@ -34,7 +34,7 @@ function LayoutCustomer() {
               id: 0,
               ok: false,
               userType: "none",
-            })
+            }),
           );
           clearStorage();
           navigate("/");
@@ -62,7 +62,7 @@ function LayoutCustomer() {
             id: 0,
             ok: false,
             userType: "none",
-          })
+          }),
         );
         dispatch(clearCompanyInfo());
         clearStorage();

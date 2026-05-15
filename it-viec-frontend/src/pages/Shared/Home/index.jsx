@@ -7,28 +7,28 @@ import SearchFormHome from "../../../components/SearchFormHome";
 
 function Home() {
   // const [companyList , setCompanyList] = useState([]);
-  const [jobList , setJobList] = useState([]);
-  useEffect( () => {
-      const getData = async () => {
-        try {
-          // const companies = await getCompanyDetails();
-          const jobs = await getJobDetails();
-          console.log("job", jobs);
-          
-          // setCompanyList(companies || []);
-          setJobList(jobs.data?.result || []);
-        } catch (error) {
-          console.log("Loi khi load company hoac job...." , error);
-        }
+  const [jobList, setJobList] = useState([]);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        // const companies = await getCompanyDetails();
+        const jobs = await getJobDetails();
+        console.log("job", jobs);
+
+        // setCompanyList(companies || []);
+        setJobList(jobs.data?.result || []);
+      } catch (error) {
+        console.log("Loi khi load company hoac job....", error);
       }
-      getData();
-    },[])
+    };
+    getData();
+  }, []);
   return (
     <>
       <SearchFormHome jobList={jobList} />
       <CampaignHighLight />
       {/* <TopCompanies companyList={companyList}/> */}
-      <TopJob jobList={jobList}/>
+      <TopJob jobList={jobList} />
     </>
   );
 }

@@ -31,7 +31,7 @@ function EmployerLoginForm() {
           id: result[0].id,
           ok: true,
           userType: result[0].userType,
-        })
+        }),
       );
       Swal.fire({
         title: "Đăng nhập thành công!",
@@ -159,16 +159,13 @@ function EmployerLoginForm() {
               <div className="employerLogin-form__contact-list">
                 <ul>
                   <li>
-                    <LiaPhoneVolumeSolid /> Hồ Chí Minh:
-                    (+84) XXX XXX XXX
+                    <LiaPhoneVolumeSolid /> Hồ Chí Minh: (+84) XXX XXX XXX
                   </li>
                   <li>
-                    <LiaPhoneVolumeSolid /> Hà Nội: (+84)
-                    XXX XXX XXX
+                    <LiaPhoneVolumeSolid /> Hà Nội: (+84) XXX XXX XXX
                   </li>
                   <li>
-                    <RxEnvelopeClosed/> Email:
-                    vuongdachaivang@gmail.com
+                    <RxEnvelopeClosed /> Email: vuongdachaivang@gmail.com
                   </li>
                 </ul>
               </div>

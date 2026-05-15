@@ -17,17 +17,17 @@ import { setCompanyFullInfo } from "../../../actions/Company";
 import { isObjectEmpty } from "../../../helpers/checkObject";
 
 const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-45%, -50%)",
-      padding: 0,
-      overflow: "hidden",
-    },
-  };
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-45%, -50%)",
+    padding: 0,
+    overflow: "hidden",
+  },
+};
 const companySizeOptions = [
   { value: "1-10", label: "1-10" },
   { value: "11-50", label: "11-50" },
@@ -41,7 +41,7 @@ const overTimePolicyOptions = [
   { value: "No OT", label: "No OT" },
   { value: "Extra salary for OT", label: "Extra salary for OT" },
   { value: "OT", label: "OT" },
-]
+];
 const workingHoursOptions = [
   { value: "Thứ 2 - Thứ 6", label: "Thứ 2 - Thứ 6" },
   { value: "Thứ 2 - Thứ 7", label: "Thứ 2 - Thứ 7" },
@@ -49,8 +49,8 @@ const workingHoursOptions = [
   { value: "Shift", label: "Shift" },
   { value: "Weekend", label: "Weekend" },
   { value: "Flexible", label: "Flexible" },
-  { value: "Remote", label: "Remote" }
-]
+  { value: "Remote", label: "Remote" },
+];
 function EmployerProfile() {
   const [form] = Form.useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -80,57 +80,56 @@ function EmployerProfile() {
       ourExpertise: companyInfor.ourExpertise,
       whyWorkHere: companyInfor.whyWorkHere,
     });
-
   };
   const closeModal = () => {
     setIsOpen(false);
   };
   const onFinish = async (values) => {
     try {
-          const result = await updateCompany(companyInfor.id, values);
-          if (!isObjectEmpty(result)) {
-            Swal.fire({
-              title: "Update Success!",
-              icon: "success",
-              draggable: true,
-            });
-            dispatch(setCompanyFullInfo(result));
-            closeModal();
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: "Update Fail!",
-            });
-          }
-        } catch (error) {
-          console.error("Loi cap nhat update company", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Update Fail!",
-          });
-        }
+      const result = await updateCompany(companyInfor.id, values);
+      if (!isObjectEmpty(result)) {
+        Swal.fire({
+          title: "Update Success!",
+          icon: "success",
+          draggable: true,
+        });
+        dispatch(setCompanyFullInfo(result));
+        closeModal();
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Update Fail!",
+        });
+      }
+    } catch (error) {
+      console.error("Loi cap nhat update company", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Update Fail!",
+      });
+    }
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
   useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const result = await getSkills();
-          setSkills(result || []);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Failed to load company or job data!",
-          });
-        }
-      };
-      fetchData();
-    }, []);
+    const fetchData = async () => {
+      try {
+        const result = await getSkills();
+        setSkills(result || []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Failed to load company or job data!",
+        });
+      }
+    };
+    fetchData();
+  }, []);
   return (
     <>
       <div className="employer-profile">
@@ -204,7 +203,6 @@ function EmployerProfile() {
                       <Select
                         placeholder="Please select company size"
                         options={companySizeOptions}
-                        
                       ></Select>
                     </Form.Item>
                   </Col>
@@ -218,16 +216,17 @@ function EmployerProfile() {
                       <Select
                         placeholder="Please select working hours"
                         options={workingHoursOptions}
-                        
                       ></Select>
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Chính sách làm thêm giờ" name="overtimePolicy">
+                    <Form.Item
+                      label="Chính sách làm thêm giờ"
+                      name="overtimePolicy"
+                    >
                       <Select
                         placeholder="Please select overtime policy"
                         options={overTimePolicyOptions}
-                        
                       ></Select>
                     </Form.Item>
                   </Col>
@@ -247,22 +246,30 @@ function EmployerProfile() {
                         mode="multiple"
                         placeholder="Please select required skills"
                         options={skillList}
-                        
                       ></Select>
                     </Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item name="companyIntroduction" label="Giới thiệu công ty">
+                    <Form.Item
+                      name="companyIntroduction"
+                      label="Giới thiệu công ty"
+                    >
                       <SimpleEditor />
                     </Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item name="ourExpertise" label="Chuyên môn của chúng tôi">
+                    <Form.Item
+                      name="ourExpertise"
+                      label="Chuyên môn của chúng tôi"
+                    >
                       <SimpleEditor />
                     </Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item name="whyWorkHere" label="Tại sao bạn sẽ yêu thích làm việc tại đây?">
+                    <Form.Item
+                      name="whyWorkHere"
+                      label="Tại sao bạn sẽ yêu thích làm việc tại đây?"
+                    >
                       <SimpleEditor />
                     </Form.Item>
                   </Col>

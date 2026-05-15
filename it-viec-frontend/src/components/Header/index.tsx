@@ -1,9 +1,7 @@
 import "./Header.scss";
 import logo from "../../assets/images/nhieu viec (355 x 85 px).png";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
-import { setLogin } from "../../actions/User";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import avatar from "../../assets/images/unnamed.jpg";
 import { RxDashboard } from "react-icons/rx";
@@ -14,12 +12,13 @@ import { BsMailbox2Flag } from "react-icons/bs";
 import { MdMailOutline } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { MdOutlineLogout } from "react-icons/md";
-import { clearSeekerInfo } from "../../actions/Seeker";
 import Cascader from "../Cascader";
 import { FaBars } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
+import { useSeekerStore } from "@/store/seekerStore";
+import { useUserStore } from "@/store/userStore";
 const jobItems = {
   header: "Việc làm IT",
   items: [
@@ -428,9 +427,12 @@ const companyItems = {
     },
   ],
 };
-function Header({ type }) {
-  const isLogin = useSelector((state) => state.UserReducer);
-  const seeker = useSelector((state) => state.SeekerReducer);
+
+const Header = ({ type }) => {
+  const fullName = useSeekerStore((state) => state.fullName);
+  const authenticated = useUserStore((state) => state.authenticated);
+  const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+  const logout = useUserStore((state) => state.logout);
   const [sidebar, setSidebar] = useState({
     left: false,
     right: false,
@@ -439,7 +441,6 @@ function Header({ type }) {
     active: false,
     id: null,
   });
-  const dispatch = useDispatch();
   const handleLogout = () => {
     Swal.fire({
       title: "Đăng xuất?",
@@ -451,15 +452,8 @@ function Header({ type }) {
       confirmButtonText: "Yes!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(clearSeekerInfo());
-        dispatch(
-          setLogin({
-            id: 0,
-            ok: false,
-            role: "none",
-          })
-        );
-        localStorage.clear();
+        clearSeekerInfo();
+        logout();
         Swal.fire({
           title: "Ok!",
           text: "Bạn đã đăng xuất thành công",
@@ -565,7 +559,7 @@ function Header({ type }) {
               </Link>
             </li>
             <li>
-              <Link onClick={handleLogout}>
+              <Link to={''} onClick={handleLogout}>
                 <MdOutlineLogout />
                 <span> Đăng xuất </span>
               </Link>
@@ -632,7 +626,7 @@ function Header({ type }) {
                     key={`${item.id}-child1`}
                     onClick={() => setSubSidebar({ active: true, id: item.id })}
                   >
-                    <Link>
+                    <Link to={''}>
                       <span>{item.label}</span>
                       <IoIosArrowForward />
                     </Link>
@@ -646,7 +640,7 @@ function Header({ type }) {
                     })
                   }
                 >
-                  <Link>
+                  <Link to={''}>
                     <span>{companyItems.header}</span>
                     <IoIosArrowForward />
                   </Link>
@@ -656,7 +650,7 @@ function Header({ type }) {
                     setSubSidebar({ active: true, id: blogItems.items[0].id })
                   }
                 >
-                  <Link>
+                  <Link to={''}>
                     <span>{blogItems.header}</span>
                     <IoIosArrowForward />
                   </Link>
@@ -685,7 +679,7 @@ function Header({ type }) {
               </Link>
             </div>
             <div className="header__login-mobile">
-              {isLogin?.ok ? (
+              {authenticated ? (
                 <li
                   className="header__menu header__menu--mobile"
                   onClick={() => setSidebar({ left: false, right: true })}
@@ -741,7 +735,7 @@ function Header({ type }) {
                         </Link>
                       </li>
                       <li>
-                        <Link onClick={handleLogout}>
+                        <Link to={''} onClick={handleLogout}>
                           <MdOutlineLogout />
                           <span> Đăng xuất </span>
                         </Link>
@@ -758,7 +752,7 @@ function Header({ type }) {
 
             <div className="header__nav header__nav--home">
               <div className="header__nav-left">
-                <Cascader menuItems={jobItems} />
+                <Cascader menuItems={jobItems} type="small"/>
                 <Cascader menuItems={companyItems} type="small" />
                 <Cascader menuItems={blogItems} type="small" />
               </div>
@@ -768,14 +762,14 @@ function Header({ type }) {
                     Nhà tuyển dụng
                   </Link>
                 </li>
-                {isLogin?.ok ? (
+                {authenticated ? (
                   <li className="header__menu">
                     <div className="header__menu-avatar">
                       <img src={avatar} alt="user_avatar" />
                     </div>
                     <div className="header__menu-name-wrap">
                       <span className="header__menu-name">
-                        {seeker.fullName || "Tên người dùng"}
+                        {fullName || "Tên người dùng"}
                       </span>
                       <IoIosArrowDown />
                     </div>
@@ -824,7 +818,7 @@ function Header({ type }) {
                           </Link>
                         </li>
                         <li>
-                          <Link onClick={handleLogout}>
+                          <Link to={''} onClick={handleLogout}>
                             <MdOutlineLogout />
                             <span> Đăng xuất </span>
                           </Link>

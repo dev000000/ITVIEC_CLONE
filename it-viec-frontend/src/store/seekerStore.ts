@@ -2,19 +2,19 @@ import { create } from "zustand";
 import type { SeekerState, SeekerActions } from "@/types/slice.types";
 
 const seekerInitial: SeekerState = {
-  id: 0,
-  userId: 0,
-  fullName: "",
-  jobTitle: "",
-  phoneNumber: "",
+  id: undefined,
+  fullName: undefined,
+  jobTitle: undefined,
+  phoneNumber: undefined,
+  dateOfBirth: undefined,
+  gender: undefined,
+  city: undefined,
+  address: undefined,
+  personalLink: undefined,
+  coverLetter: undefined,
+  createdAt: undefined, // LocalDateTime (ISO string)
+  updatedAt: undefined, // LocalDateTime (ISO string)
   skills: [],
-  dateOfBirth: "",
-  gender: "",
-  city: "",
-  address: "",
-  personalLink: "",
-  gmail: "",
-  coverLetter: "",
   desiredLocations: [],
   isLoaded: false,
 };

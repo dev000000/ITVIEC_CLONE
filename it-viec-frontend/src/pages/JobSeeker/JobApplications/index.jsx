@@ -27,7 +27,7 @@ function JobApplications() {
   const isLogin = useSelector((state) => state.UserReducer);
   const dispatch = useDispatch();
   const [desiredLocations, setDesiredLocations] = useState(
-    seeker.desiredLocations || []
+    seeker.desiredLocations || [],
   );
   const [coverLetter, setCoverLetter] = useState(seeker.coverLetter || "");
   const [jobId, setJobId] = useState(null);
@@ -136,7 +136,7 @@ function JobApplications() {
         seekerId: seeker.id,
         jobId: jobId,
       });
-      if( checkApplication && checkApplication.length > 0) {
+      if (checkApplication && checkApplication.length > 0) {
         Swal.fire({
           icon: "warning",
           title: "Đơn ứng tuyển đã tồn tại",
@@ -329,7 +329,8 @@ function JobApplications() {
                   />
                 </Form.Item>
                 <div style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                  Còn lại {500 - coverLetter.length} trong tổng số 500 ký tự{" "}
+                  Còn lại {500 - coverLetter.length} trong tổng số 500 ký
+                  tự{" "}
                 </div>
                 <Form.Item label={null}>
                   <ButtonSubmit text="Gửi CV của tôi" type="max" />

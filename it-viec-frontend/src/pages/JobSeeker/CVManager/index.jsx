@@ -13,7 +13,7 @@ import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { clearSeekerInfo, setSeekerFullInfo } from "../../../actions/Seeker";
 import { updateSeekerInfor } from "../../../services/SeekerServices";
-import { isObjectEmpty } from "../../../helpers/checkObject"
+import { isObjectEmpty } from "../../../helpers/checkObject";
 const customStyles = {
   content: {
     top: "50%",
@@ -28,7 +28,6 @@ const customStyles = {
 };
 const maxCountCity = 3;
 function CVManager() {
-  
   const [form] = Form.useForm();
   const [coverLetterForm] = Form.useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -68,8 +67,7 @@ function CVManager() {
       fullName: seeker.fullName || "",
       phoneNumber: seeker.phoneNumber || "",
       desiredLocations: seeker.desiredLocations || [],
-    })
-
+    });
   };
   const onClick = () => {
     console.log("upload");
@@ -81,7 +79,7 @@ function CVManager() {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
       clearStorage();
-      dispatch(clearSeekerInfo()); 
+      dispatch(clearSeekerInfo());
       navigate("/login");
       return;
     }
@@ -307,10 +305,7 @@ function CVManager() {
                 <Col className="cv-manager__title" span={8}>
                   Họ và Tên
                 </Col>
-                <Col
-                  className={getFieldsClassName(seeker.fullName)}
-                  span={16}
-                >
+                <Col className={getFieldsClassName(seeker.fullName)} span={16}>
                   {seeker.fullName || "Chưa cập nhật"}
                 </Col>
                 <Col className="cv-manager__title" span={8}>
@@ -329,8 +324,7 @@ function CVManager() {
                   className={getFieldsClassName(seeker.desiredLocations)}
                   span={16}
                 >
-                  {seeker.desiredLocations &&
-                  seeker.desiredLocations.length > 0
+                  {seeker.desiredLocations && seeker.desiredLocations.length > 0
                     ? seeker.desiredLocations.join(", ")
                     : "Chưa cập nhật"}
                 </Col>

@@ -1,84 +1,88 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useUserStore } from "@/store/userStore";
+import { refreshTokenCookieApi } from "./authApi";
 
-// initialize axios instance to customize and define configurations fot the project
+/**
+ * Khởi tạo axios instance để tùy chỉnh cấu hình cho toàn bộ dự án.
+ */
 const apiClient = axios.create();
 
-// set timeout for each request : thoi gian cho moi request
-apiClient.defaults.timeout = 1000 * 60 * 10; // 10 minutes
+// Thiết lập thời gian chờ cho mỗi request (10 phút)
+apiClient.defaults.timeout = 1000 * 60 * 10;
 
-// allow to send cookies with request to backend ( case save JWT tokens (refresh, access) in https-only cookies )
+// Cho phép gửi kèm cookies (dùng cho HttpOnly JWT tokens)
 apiClient.defaults.withCredentials = true;
 
-// 
-// authorizedAxiosInstance.defaults.xsrfCookieName = "XSRF-TOKEN",
-// authorizedAxiosInstance.defaults.xsrfHeaderName = "X-XSRF-TOKEN",
-
-
-// Add a request interceptor
+/**
+ * Interceptor cho Request: Thực hiện các hành động trước khi gửi request.
+ */
 apiClient.interceptors.request.use(
   (config) => {
-    // Do something before request is sent
+    // Có thể thêm Authorization header ở đây nếu không dùng cookie
     return config;
   },
   (error) => {
-    // Do something with request error
     return Promise.reject(error);
-  }
+  },
 );
 
-// Create a promise for calling the refresh_token API
-// The purpose of this Promise is that when the first refreshToken request comes in,
-// it will hold back calling the refresh_token API until the first one finishes successfully.
-// Only when will it retry the previous failed APIs, Instead of calling refresh repeatedly for each failed request.
-let refreshTokenPromise = null;
+/**
+ * Biến lưu trữ Promise của việc làm mới token.
+ * Giúp tránh việc gọi API refresh token nhiều lần đồng thời.
+ */
+let refreshTokenPromise: Promise<void> | null = null;
 
-// Add a response interceptor
+/**
+ * Interceptor cho Response: Xử lý dữ liệu trả về hoặc lỗi tập trung.
+ */
 apiClient.interceptors.response.use(
   function onFulfilled(response) {
-    // Any status code that lie within the range of 2xx cause this function to trigger
-    // Do something with response data
+    // Trả về trực tiếp response object cho các code 2xx
     return response;
   },
   async function onRejected(error) {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    // hanle error globally here : show toast error message for every Api call
-    // do not show toast if status is 410 (GONE) , 410 serve automatically refresh token when access token expired
-
     const originalRequest = error.config;
+
+    // Lỗi 401: Chưa xác thực (thường là do chưa đăng nhập)
     if (error.response?.status === 401) {
-      toast.error(error.response?.data?.message || error.message);
-      // callLogout();
+      toast.error(error.response?.data?.message || "Phiên đăng nhập hết hạn.");
       return Promise.reject(error);
     }
 
-    // if status = 410 GONE ( need refresh token )
+    // Lỗi 410 (GONE): Access Token hết hạn, cần gọi refresh token
     if (error.response?.status === 410 && originalRequest) {
-      // Access Token was expired
       if (!refreshTokenPromise) {
-        refreshTokenPromise = refreshTokenCookie()
-          .then((res: any) => {
+        refreshTokenPromise = refreshTokenCookieApi()
+          .then(() => {
+            // Refresh thành công
           })
           .catch((_error) => {
-            // If error in process refresh token => LOGOUT
-            toast.error(_error.response?.data?.message || _error.message);
-            // callLogout();
+            // Refresh thất bại -> Đăng xuất người dùng
+            toast.error(_error.response?.data?.message || "Vui lòng đăng nhập lại.");
+            useUserStore.getState().logout();
             return Promise.reject(_error);
           })
           .finally(() => {
             refreshTokenPromise = null;
           });
       }
+
+      // Đợi refresh token hoàn tất rồi thử lại request ban đầu
       return refreshTokenPromise.then(() => {
-        return authorizedAxiosInstance(originalRequest);
+        return apiClient(originalRequest);
       });
     }
-    if (error.response?.status === 403 && error.response.data) {
-      toast.error(error.response?.data?.message || error.message);
+
+    // Lỗi 403: Không có quyền truy cập
+    if (error.response?.status === 403) {
+      toast.error(error.response?.data?.message || "Bạn không có quyền thực hiện hành động này.");
       return Promise.reject(error);
     }
+
+    // Các lỗi khác
     return Promise.reject(error);
-  }
+  },
 );
+
 export default apiClient;
