@@ -18,7 +18,7 @@ function LayoutCheckToken({ checkRole }) {
         if (!token || !userType) {
           setIsCheckingToken(false);
           return;
-        } 
+        }
         const result = await checkTokenUsers(token, userType);
         if (userType === checkRole) {
           if (result.length > 0) {
@@ -27,7 +27,7 @@ function LayoutCheckToken({ checkRole }) {
                 id: result[0].id,
                 ok: true,
                 userType: userType,
-              })
+              }),
             );
           } else {
             clearStorage();

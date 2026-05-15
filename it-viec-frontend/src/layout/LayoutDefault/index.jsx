@@ -1,75 +1,47 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { Layout } from "antd";
 import "./LayoutDefault.scss";
-import Header from "../../components/Header";
-import FooterComp from "../../components/Footer";
-import { useDispatch, useSelector } from "react-redux";
+import Header from "@/components/Header";
+import FooterComp from "@/components/Footer";
 import { useEffect, useState } from "react";
-import { checkTokenUsers } from "../../services/UserServices";
-import { setLogin } from "../../actions/User";
-import { clearSeekerInfo, setSeekerFullInfo } from "../../actions/Seeker";
-import { getSeekerInforByUserId } from "../../services/SeekerServices";
-const { Content } = Layout;
-function LayoutDefault() {
-  const checkRole = "jobSeeker";
-  const isLogin = useSelector((state) => state.UserReducer);
-  const seeker = useSelector((state) => state.SeekerReducer);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [isCheckingToken, setIsCheckingToken] = useState(true);
-  useEffect(() => {
-    const checkToken = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const userType = localStorage.getItem("userType");
+import { getMeApi } from "@/services_new/authApi";
+import { useUserStore } from "@/store/userStore";
+import { useSeekerStore } from "@/store/seekerStore";
 
-        if (!token || !userType) {
-          setIsCheckingToken(false);
-          return;
-        }
-        const resultCheckToken = await checkTokenUsers(token, userType);
-        if (userType === checkRole) {
-          if (resultCheckToken.length > 0) {
-            const resultSeeker = await getSeekerInforByUserId(
-              resultCheckToken[0].id
-            );
-            dispatch(
-              setLogin({
-                id: resultCheckToken[0].id,
-                ok: true,
-                userType: userType,
-              })
-            );
-            if (resultSeeker && resultSeeker[0]) {
-                dispatch(setSeekerFullInfo(resultSeeker[0]));
-            }
-          } else {
-            dispatch(
-              setLogin({
-                id: 0,
-                ok: false,
-                role: "none",
-              })
-            );
-            localStorage.clear();
-            navigate("/login");
-          }
-        }
+const { Content } = Layout;
+
+function LayoutDefault() {
+  const navigate = useNavigate();
+  const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+  // const authenticated = useUserStore((state) => state.authenticated);
+  const setLogin = useUserStore((state) => state.setLogin);
+  const logout = useUserStore((state) => state.logout);
+  const [isCheckingToken, setIsCheckingToken] = useState(true);
+
+   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await getMeApi();
+        console.log("response me", response);
+        setLogin(response.data?.result);
       } catch (error) {
-        console.error("Error checking token:", error);
+        console.error("Error checking auth:", error);
+        logout();
+        clearSeekerInfo();
       } finally {
         setIsCheckingToken(false);
       }
-    };
-    checkToken();
+    }
+    checkAuth();
   }, []);
+
   return (
     <>
       {isCheckingToken ? (
         <div>....Loading</div>
       ) : (
         <Layout className="layout-default">
-          <Header type="jobSeeker"/>
+          <Header type="jobSeeker" />
           <Content className="content">
             <Outlet />
           </Content>

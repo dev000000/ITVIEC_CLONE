@@ -5,7 +5,7 @@ import { FaRegHeart } from "react-icons/fa6";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { checkApplication } from "../../../services/Shared";
+// import { checkApplication } from "../../../services/Shared";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import dayjs from "dayjs";
 function CardJobHead({ job }) {

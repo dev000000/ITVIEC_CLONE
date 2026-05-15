@@ -244,7 +244,7 @@ function EmployerApplications() {
       const applicationList = await getApplicationsWithJobPagination(
         company.id,
         (Pagination.current - 1) * Pagination.pageSize,
-        Pagination.pageSize
+        Pagination.pageSize,
       );
       console.log(applicationList);
       setDatasource(applicationList || []);
@@ -371,9 +371,8 @@ function EmployerApplications() {
             columns={columns}
             scroll={{ x: "max-content" }}
             bordered
-            rowKey={record => record.id}
+            rowKey={(record) => record.id}
             pagination={{
-              
               pageSize: 10,
               showSizeChanger: false,
               showTotal: (total, range) =>

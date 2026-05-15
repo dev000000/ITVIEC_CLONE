@@ -30,7 +30,7 @@ function EmployerDetail() {
         const result = await getCompanyWithJobsBySlug(slug);
         if (result && result.length > 0 && result[0].jobs) {
           result[0].jobs = result[0].jobs.filter(
-            (job) => job.status === "Active"
+            (job) => job.status === "Active",
           );
         }
         setCompanyInfor(result[0] || companyDefault);

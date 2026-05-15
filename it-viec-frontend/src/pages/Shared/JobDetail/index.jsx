@@ -6,7 +6,7 @@ import CardJobShowInfor from "../../../components/CardJobDetail/CardJobShowInfor
 import CardJobContent from "../../../components/CardJobDetail/CardJobContent";
 import CardInforEmployer from "../../../components/CardInforEmployer";
 import { getJobDetailByID } from "../../../services/Shared";
-function JobDetail({slug}) {
+function JobDetail({ slug }) {
   console.log("JobDetail");
   const [job, setJob] = useState({});
   const parts = slug.split("-");
@@ -29,7 +29,7 @@ function JobDetail({slug}) {
   return (
     <div className="job-detail">
       <div className="background-gradient"></div>
-      <div className="container" >
+      <div className="container">
         <div className="employer-job__form">
           <Row gutter={[20, 20]}>
             <Col xxl={16} xl={16} lg={24} md={24} sm={24} xs={24}>

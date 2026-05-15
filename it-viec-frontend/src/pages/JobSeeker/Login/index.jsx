@@ -30,7 +30,7 @@ function Login() {
           id: result[0].id,
           ok: true,
           userType: "jobSeeker",
-        })
+        }),
       );
       if (resultSeeker && resultSeeker[0]) {
         if (seeker.isLoaded === true) {

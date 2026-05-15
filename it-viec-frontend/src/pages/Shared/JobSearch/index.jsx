@@ -11,9 +11,7 @@ import { VIETNAM_CITIES } from "../../../constants";
 function JobSearch({ keyword, city }) {
   if (!city) {
     const decodedKeyword = decodeURIComponent(keyword);
-    const result = VIETNAM_CITIES.find(
-      (item) => item.value === decodedKeyword
-    );
+    const result = VIETNAM_CITIES.find((item) => item.value === decodedKeyword);
     if (result) {
       city = decodedKeyword;
       keyword = "";
@@ -41,7 +39,7 @@ function JobSearch({ keyword, city }) {
         setListJob(result || []);
         if (result && result.length > 0) {
           const selectedJob = result.find(
-            (job) => job.slug === jobSelectedSlug
+            (job) => job.slug === jobSelectedSlug,
           );
           if (selectedJob) {
             setJobSelected(selectedJob);
@@ -90,7 +88,7 @@ function JobSearch({ keyword, city }) {
           >
             <Row gutter={[{ xxl: 16, xl: 16, lg: 0, md: 0, sm: 0, xs: 0 }, 10]}>
               <Col xxl={5} xl={5} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item name="city" >
+                <Form.Item name="city">
                   <Select
                     showSearch
                     optionFilterProp="label"
@@ -211,7 +209,7 @@ function JobSearch({ keyword, city }) {
                                 }}
                               />
                             </div>
-                          )
+                          ),
                         )}
                     </div>
                   </Col>

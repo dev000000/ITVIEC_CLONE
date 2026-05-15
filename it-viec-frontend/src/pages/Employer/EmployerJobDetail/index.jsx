@@ -66,31 +66,26 @@ function EmployerJobDetail() {
   const statusList = [
     {
       value: "Draft",
-      label: (
-        <span style={{ color: "#CB8E3C" }}>Draft</span>
-      ),
+      label: <span style={{ color: "#CB8E3C" }}>Draft</span>,
     },
     {
       value: "Active",
-      label: (
-        <span style={{ color: "#46963E" }}>Active</span>
-      ),
+      label: <span style={{ color: "#46963E" }}>Active</span>,
     },
     {
       value: "Expired",
-      label: (
-        <span style={{ color: "#040404" }}>Expired</span>
-      ),
+      label: <span style={{ color: "#040404" }}>Expired</span>,
     },
     {
       value: "Closed",
-      label: (
-        <span style={{ color: "#AD3D35" }}>Closed</span>
-      ),
+      label: <span style={{ color: "#AD3D35" }}>Closed</span>,
     },
   ];
   const skillList = skills.map((skill) => {
-    return { value: { id : skill.id , skillName : skill.skillName }, label: <span>{skill.skillName}</span> };
+    return {
+      value: { id: skill.id, skillName: skill.skillName },
+      label: <span>{skill.skillName}</span>,
+    };
   });
   const handleBack = () => {
     navigate(-1);
@@ -109,7 +104,7 @@ function EmployerJobDetail() {
               id: 0,
               ok: false,
               role: "none",
-            })
+            }),
           );
           navigate("/");
         }
@@ -153,14 +148,14 @@ function EmployerJobDetail() {
       confirmButtonText: "Yes, delete it!",
     }).then(async (result) => {
       try {
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
           await deleteJob(id);
-        Swal.fire({
-          title: "Deleted!",
-          text: "Your job has been deleted.",
-          icon: "success",
-        });
-        navigate(-1);
+          Swal.fire({
+            title: "Deleted!",
+            text: "Your job has been deleted.",
+            icon: "success",
+          });
+          navigate(-1);
         }
       } catch (error) {
         console.error("Lỗi khi xóa job:", error);
@@ -371,7 +366,7 @@ function EmployerJobDetail() {
           ></ButtonAction>
         </div>
         <div className="employer-job__form">
-          <Row gutter={[{xxl: 20, xl: 20 , lg: 10 , md: 0 , sm: 0 , xs : 0},20]}>
+          <Row gutter={[{ xxl: 20, xl: 20, lg: 10, md: 0, sm: 0, xs: 0 }, 20]}>
             <Col xxl={16} xl={16} lg={24} md={24} sm={24} xs={24}>
               <CardJobHead job={job} />
               <CardJobShowInfor job={job} />

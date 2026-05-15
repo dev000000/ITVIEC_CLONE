@@ -14,8 +14,14 @@ import { ImNotification } from "react-icons/im";
 
 function AppliedJobs() {
   const seeker = useSelector((state) => state.SeekerReducer);
-  const { applicationList, setPagination, setSort, totalApplications, pagination, sort } =
-    useOutletContext();
+  const {
+    applicationList,
+    setPagination,
+    setSort,
+    totalApplications,
+    pagination,
+    sort,
+  } = useOutletContext();
 
   return totalApplications === 0 ? (
     <div className="applied-jobs">
@@ -30,26 +36,30 @@ function AppliedJobs() {
     <>
       <div className="applied-jobs">
         <div className="job-empty-state__notification-wrapper">
-            <div className="job-empty-state__notification">
-              <ImNotification className="job-empty-state__icon" />
-              <span className="job-empty-state__text">
-                Các công việc bạn đã ứng tuyển được lưu trữ trong 12 tháng gần đây.
-              </span>
-            </div>
-            <div className="job-empty-state__select">
-              <span>Sắp xếp theo: </span>
-              <Select
-                defaultValue="desc"
-                value={sort}
-                style={{ width: 240 }}
-                options={[{ value: "desc", label: "Ngày ứng tuyển gần nhất" },{ value: "asc", label: "Ngày ứng tuyển xa nhất" }]}
-                onChange={(value) => {
-                  setSort(value);
-                  setPagination((prev) => ({ ...prev, current: 1 }));
-                }}
-              />
-            </div>
+          <div className="job-empty-state__notification">
+            <ImNotification className="job-empty-state__icon" />
+            <span className="job-empty-state__text">
+              Các công việc bạn đã ứng tuyển được lưu trữ trong 12 tháng gần
+              đây.
+            </span>
           </div>
+          <div className="job-empty-state__select">
+            <span>Sắp xếp theo: </span>
+            <Select
+              defaultValue="desc"
+              value={sort}
+              style={{ width: 240 }}
+              options={[
+                { value: "desc", label: "Ngày ứng tuyển gần nhất" },
+                { value: "asc", label: "Ngày ứng tuyển xa nhất" },
+              ]}
+              onChange={(value) => {
+                setSort(value);
+                setPagination((prev) => ({ ...prev, current: 1 }));
+              }}
+            />
+          </div>
+        </div>
         <Row className="applied-jobs__row">
           {applicationList.map((application, index) => (
             <Col key={index} span={24}>

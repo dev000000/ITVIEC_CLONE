@@ -298,7 +298,7 @@ function EmployerJobs() {
                   key={job.id}
                 >
                   {/* <CardJob job={job} /> */}
-                  <TopJobItem job={job} type="employer"/>
+                  <TopJobItem job={job} type="employer" />
                 </Col>
               );
             })}

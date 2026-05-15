@@ -15,7 +15,7 @@ function MyJobs() {
     current: 1,
     pageSize: 5,
   });
-  const [sort , setSort] = useState("desc");
+  const [sort, setSort] = useState("desc");
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -100,7 +100,16 @@ function MyJobs() {
         </div>
       ) : (
         <div className="job-seeker-section job-seeker-section--custom4">
-          <Outlet context={{ applicationList, setPagination, setSort, totalApplications, pagination , sort}} />
+          <Outlet
+            context={{
+              applicationList,
+              setPagination,
+              setSort,
+              totalApplications,
+              pagination,
+              sort,
+            }}
+          />
         </div>
       )}
     </div>
