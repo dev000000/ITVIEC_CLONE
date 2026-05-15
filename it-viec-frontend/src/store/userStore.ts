@@ -2,9 +2,11 @@ import type { UserState, UserActions } from "@/types/slice.types";
 import { create } from "zustand";
 
 const userInitial: UserState = {
-  ok: false,
-  id: null,
-  userType: "none",
+  authenticated: false,
+  id: undefined,
+  email: undefined,
+  role: undefined,
+  status: undefined
 };
 export const useUserStore = create<UserState & UserActions>((set) => ({
   ...userInitial,
