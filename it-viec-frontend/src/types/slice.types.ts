@@ -1,7 +1,8 @@
+import type { Role } from "./common.types";
+
 export interface UserState {
-  ok: boolean;
-  id: number | null;
-  userType: 'none' | 'jobSeeker' | 'employer';
+  id: string | null;
+  role: Role;
 }
 
 export interface SeekerState {
@@ -51,7 +52,7 @@ export interface CompanyState {
 }
 
 export interface UserActions {
-  setLogin: (data: Pick<UserState, 'id' | 'ok' | 'userType'>) => void;
+  setLogin: (data: Pick<UserState, 'id' | 'role'>) => void;
   logout: () => void;
 }
 
