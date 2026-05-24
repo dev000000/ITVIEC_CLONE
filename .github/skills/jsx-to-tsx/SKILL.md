@@ -1,16 +1,18 @@
 ---
 name: jsx-to-tsx
-description: "Migrate a JSX/JS file to TSX/TS. Use when converting existing React components to TypeScript. Steps: rename file, convert relative imports to @/ alias, add TypeScript types to props/state/functions. Logic is preserved exactly — no refactoring."
-argument-hint: "Path to the JSX file to migrate, e.g. src/components/Header/index.jsx"
+description: "Migrate a JSX React component to TSX with TypeScript. Use for files with JSX markup (React components). Steps: rename file, convert relative imports to @/ alias, add TypeScript types to props/state/hooks/functions. Logic is preserved exactly — no refactoring."
+argument-hint: "Path to the JSX component file to migrate, e.g. src/components/Header/index.jsx"
 ---
 
-# JSX → TSX Migration
+# JSX → TSX Migration (React Components)
 
 ## When to Use
 
-- Converting an existing `.jsx` component to `.tsx`
-- Converting an existing `.js` module to `.ts`
-- User says "migrate", "convert to TypeScript", or "chuyển sang tsx"
+- Converting an existing **React component** (`.jsx`) to `.tsx`
+- File contains **JSX markup** (e.g., `<Component />`, hooks like `useState`, `useEffect`)
+- User says "migrate component", "convert to TypeScript", or "chuyển component sang tsx"
+
+**Note:** For utility/helper modules **without JSX**, use the **jsx-to-ts** skill instead.
 
 ## Rules (Non-Negotiable)
 
