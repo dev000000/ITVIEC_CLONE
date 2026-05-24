@@ -58,15 +58,16 @@ Analyze the diff and generate a commit message:
 - Imperative mood ("add types" not "added types")
 - ≤72 characters (excluding `#1-` prefix)
 
-**Short commit** (no body): When all changes fall under one clear theme:
+**Default: short commit (no body)**. A single subject line is almost always enough:
 
 ```
 #1-refactor(typescript): migrate helper and constants modules to ts
 ```
 
-**Body** (include when there are 3+ distinct logical changes):
+**Body** (only when changes span multiple unrelated areas AND a single subject line cannot capture the intent — rare):
 
 - Bullet list, each item ≤80 chars
+- If in doubt, omit the body
 
 ### Phase 3 — Inline Confirmation Loop (single request)
 
