@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-export const getRelativeTime = (dateString) => {
+export const getRelativeTime = (dateString: string): string => {
   if (!dateString || !dayjs(dateString).isValid()) return "Không xác định";
   const now = dayjs();
   const posted = dayjs(dateString);
