@@ -7,25 +7,29 @@ argument-hint: "Path to the JSX file to migrate, e.g. src/components/Header/inde
 # JSX → TSX Migration
 
 ## When to Use
+
 - Converting an existing `.jsx` component to `.tsx`
 - Converting an existing `.js` module to `.ts`
 - User says "migrate", "convert to TypeScript", or "chuyển sang tsx"
 
 ## Rules (Non-Negotiable)
+
 - **Do NOT change logic** — only add types and fix imports
 - **Do NOT refactor** — keep the same structure, hooks, variable names
 - **Never use `any`** — infer types from usage; use `unknown` if truly unclear
 - Use `import type` for type-only imports
-- All new imports must use `@/` alias (never relative paths)
+- All new imports must use `@/` alias (never relative paths) **EXCEPT** SCSS module imports — keep them as relative (e.g., `./ComponentName.scss`) because the folder moves as a unit
 
 ---
 
 ## Procedure
 
 ### Step 1 — Read the source file
+
 Read the full content of the target `.jsx` / `.js` file before making any changes.
 
 ### Step 2 — Rename the file
+
 - `.jsx` → `.tsx`
 - `.js` → `.ts` (if no JSX present)
 
@@ -47,7 +51,15 @@ import { setLogin } from "@/actions/User";
 import { clearStorage } from "@/helpers/localStorage";
 ```
 
-> Imports within the same folder (e.g. `./MyComponent.scss`) stay as-is.
+**Exception:** SCSS module imports in the same folder stay as relative paths:
+
+```ts
+// ✅ Correct — keep as relative because the folder moves as a unit
+import "./ComponentName.scss";
+
+// ❌ Do NOT convert SCSS imports to @/
+import "@/components/ComponentName/ComponentName.scss"; // Wrong!
+```
 
 ### Step 4 — Type the component props
 
@@ -108,6 +120,7 @@ import type { UserData } from "@/types/response.types";
 ### Step 8 — Fix ESLint issues
 
 Check for:
+
 - `@typescript-eslint/no-unused-vars` — remove or prefix with `_`
 - `react-hooks/rules-of-hooks` — hooks must be at top level
 - `@typescript-eslint/no-explicit-any` — replace with a specific type
@@ -115,8 +128,9 @@ Check for:
 ### Step 9 — Verify
 
 Before finishing, confirm:
+
 - [ ] File extension is `.tsx` / `.ts`
-- [ ] No relative `../` imports remaining (except same-folder assets)
+- [ ] No relative `../` imports remaining (except SCSS module imports in same folder)
 - [ ] All props and state variables are typed
 - [ ] Zero `any` in the new file
 - [ ] Logic is identical to the original — no added/removed behavior
@@ -126,6 +140,7 @@ Before finishing, confirm:
 ## Example: Full Migration
 
 **Input** (`index.jsx`):
+
 ```jsx
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -139,7 +154,10 @@ function LayoutCheckToken({ checkRole }) {
   useEffect(() => {
     const run = async () => {
       const token = localStorage.getItem("token");
-      if (!token) { setIsChecking(false); return; }
+      if (!token) {
+        setIsChecking(false);
+        return;
+      }
       await checkTokenUsers(token, checkRole);
       setIsChecking(false);
     };
@@ -153,6 +171,7 @@ export default LayoutCheckToken;
 ```
 
 **Output** (`index.tsx`):
+
 ```tsx
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -171,7 +190,10 @@ function LayoutCheckToken({ checkRole }: LayoutCheckTokenProps) {
   useEffect(() => {
     const run = async () => {
       const token = localStorage.getItem("token");
-      if (!token) { setIsChecking(false); return; }
+      if (!token) {
+        setIsChecking(false);
+        return;
+      }
       await checkTokenUsers(token, checkRole);
       setIsChecking(false);
     };
