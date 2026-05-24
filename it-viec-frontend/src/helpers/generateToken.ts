@@ -1,5 +1,5 @@
 // #TODO: taofolder helper de luu nhung lam 
-function generateToken(length = 20) {
+function generateToken(length: number = 20): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let token = "";
   for (let i = 0; i < length; i++) {

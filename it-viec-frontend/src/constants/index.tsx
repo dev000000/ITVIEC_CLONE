@@ -1,4 +1,21 @@
-export const VIETNAM_CITIES = [
+import React from "react";
+
+interface CityOption {
+  value: string;
+  label: string;
+}
+
+interface SelectOption {
+  value: string;
+  label: React.ReactNode;
+}
+
+interface CompanyImageItem {
+  name: string;
+  url: string;
+}
+
+export const VIETNAM_CITIES: CityOption[] = [
     { value: "all", label: "Tất cả thành phố" },
     { value: "Hà Nội", label: "Hà Nội" },
     { value: "Hồ Chí Minh", label: "Hồ Chí Minh" },
@@ -65,12 +82,12 @@ export const VIETNAM_CITIES = [
     { value: "Quốc tế", label: "Quốc tế" },
     
   ];
-export const GENDER_OPTIONS = [
+export const GENDER_OPTIONS: SelectOption[] = [
     { value: "Nam", label: <span>Nam</span> },
     { value: "Nữ", label: <span>Nữ</span> },
     { value: "Khác", label: <span>Khác</span> },
 ];
-export const COMPANY_IMAGE_URL = [
+export const COMPANY_IMAGE_URL: CompanyImageItem[] = [
   { name: "mb-bank", url: "MBLOGO.webp" },
   { name: "scandinavian-software-park", url: "ScandinavianLOGO.webp" },
   { name: "one-tech-stop-vietnam-company-ltd", url: "OTSVLOGO.webp" },
