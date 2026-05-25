@@ -1,21 +1,27 @@
 import { useEffect, useState } from "react";
 import CampaignHighLight from "@/components/CampaignHighLight";
 import TopJob from "@/components/TopJob";
-import { getJobDetails } from "@/services/Shared";
 import SearchFormHome from "@/components/SearchFormHome";
+import { getAllJobsApi } from "@/services_new/jobApi";
+import { getAllCompaniesApi } from "@/services_new/companyApi";
+import type { CompanyCardResponse, JobCardResponse } from "@/types/response.types";
+import TopCompanies from "@/components/TopCompanies";
 
 function Home() {
-  // const [companyList , setCompanyList] = useState([]);
-  const [jobList, setJobList] = useState<unknown[]>([]);
+  const [companyList, setCompanyList] = useState<CompanyCardResponse[]>([]);
+  const [jobList, setJobList] = useState<JobCardResponse[]>([]);
+  const [totalJobs, setTotalJobs] = useState<number>(0);
   useEffect(() => {
     const getData = async () => {
       try {
-        // const companies = await getCompanyDetails();
-        const jobs = await getJobDetails();
-        console.log("job", jobs);
+        const [companiesResponse, jobsResponse] = await Promise.all([
+          getAllCompaniesApi(),
+          getAllJobsApi(0, 10),
+        ]);
 
-        // setCompanyList(companies || []);
-        setJobList((jobs.data?.result as unknown[]) || []);
+        setCompanyList(companiesResponse.data.result ?? []);
+        setJobList(jobsResponse.data.result.data ?? []);
+        setTotalJobs(jobsResponse.data.result.totalElements ?? 0);
       } catch (error) {
         console.log("Loi khi load company hoac job....", error);
       }
@@ -26,8 +32,8 @@ function Home() {
     <>
       <SearchFormHome jobList={jobList} />
       <CampaignHighLight />
-      {/* <TopCompanies companyList={companyList}/> */}
-      <TopJob jobList={jobList} />
+      <TopCompanies companyList={companyList}/>
+      <TopJob jobList={jobList} totalJobs={totalJobs} />
     </>
   );
 }

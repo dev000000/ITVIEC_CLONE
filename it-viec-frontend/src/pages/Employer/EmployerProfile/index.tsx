@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 import EmployerStart from "@/components/EmployerStart";
 import CardCompanyHead from "@/components/CardCompanyDetail/CardCompanyHead";
 import { NavLink, Outlet } from "react-router-dom";
-import TopJobItem from "@/components/TopJobItem";
+import TopJobItem from "@/components/TopJobItemHome";
 import { useDispatch, useSelector } from "react-redux";
 import { TbEdit } from "react-icons/tb";
 import ButtonAction from "@/components/ButtonAction";
@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import { setCompanyFullInfo } from "@/actions/Company";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import type { SkillResponse, JobCardResponse } from "@/types/response.types";
+import TopJobItemHome from "@/components/TopJobItemHome";
 
 interface LegacyCompanyState {
   id: string | number;
@@ -390,9 +391,8 @@ function EmployerProfile() {
                     <div className="employer-detail__job-wrap">
                       {companyInfor.jobs.map((job) => (
                         <div className="employer-detail__job" key={job.id}>
-                          <TopJobItem
+                          <TopJobItemHome
                             job={job}
-                            type="home"
                             companyInfoAdd={{
                               companyName: companyInfor.companyName,
                               slug: companyInfor.slug,

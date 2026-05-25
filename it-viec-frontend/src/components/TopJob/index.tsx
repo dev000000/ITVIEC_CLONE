@@ -1,28 +1,29 @@
 import { Col, Row } from "antd";
 import "./TopJob.scss";
-import { Link, useNavigate } from "react-router-dom";
-import TopJobItem from "@/components/TopJobItem";
+import { Link } from "react-router-dom";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import type { JobCardResponse } from "@/types/response.types";
+import TopJobItemHome from "@/components/TopJobItemHome";
 
 interface TopJobProps {
   jobList: JobCardResponse[];
+  totalJobs: number;
 }
 
-function TopJob({ jobList }: TopJobProps) {
-  jobList = jobList || [];
-  const _navigate = useNavigate();
+function TopJob({ jobList, totalJobs }: TopJobProps) {
+  console.log("jobList in TopJob component:", jobList);
+  console.log("totalJobs in TopJob component:", totalJobs);
   return (
     <>
-      {jobList.length > 8 && (
+      {totalJobs > 8 && (
         <div className="top-job">
           <div className="container">
             <h1 className="top-job__title">
-              {jobList.length} Việc làm IT cho Developer "Chất"
+              {totalJobs} Việc làm IT cho Developer "Chất"
             </h1>
             <div className="top-job__list">
               <Row gutter={[20, 20]}>
-                {jobList.slice(0, 8).map((job) => (
+                {jobList.map((job) => (
                   <Col
                     xxl={6}
                     xl={6}
@@ -32,13 +33,8 @@ function TopJob({ jobList }: TopJobProps) {
                     xs={24}
                     key={job.id}
                   >
-                    <TopJobItem
+                    <TopJobItemHome
                       job={job}
-                      type="home"
-                    // companyInfoAdd={{
-                    //   companyName: job.company.companyName,
-                    //   slug: job.company.slug,
-                    // }}
                     />
                   </Col>
                 ))}
@@ -46,7 +42,7 @@ function TopJob({ jobList }: TopJobProps) {
             </div>
             <div className="top-job__button-more">
               <Link to="/viec-lam-it">
-                <span>Xem thêm {jobList.length - 8} công việc khác</span>
+                <span>Xem thêm {totalJobs - 8} công việc khác</span>
                 <MdKeyboardArrowRight />
               </Link>
             </div>

@@ -4,10 +4,11 @@ import "./JobSearch.scss";
 import { FiSearch } from "react-icons/fi";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import { getJobsSearch } from "@/services/Shared";
-import TopJobItem from "@/components/TopJobItem";
+import TopJobItem from "@/components/TopJobItemHome";
 import imgNoJob from "@/assets/images/robby-oops.svg";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import { VIETNAM_CITIES } from "@/constants";
+import TopJobItemHome from "@/components/TopJobItemHome";
 
 interface JobItem {
   id: number | string;
@@ -19,13 +20,13 @@ interface JobItem {
 }
 
 interface JobSearchProps {
-  keyword: string;
+  keyword?: string;
   city?: string;
 }
 
 function JobSearch({ keyword, city }: JobSearchProps) {
   if (!city) {
-    const decodedKeyword = decodeURIComponent(keyword);
+    const decodedKeyword = decodeURIComponent(keyword || "");
     const result = VIETNAM_CITIES.find((item) => item.value === decodedKeyword);
     if (result) {
       city = decodedKeyword;
@@ -193,9 +194,8 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                       {listJob.length > 0 &&
                         listJob.map((job) =>
                           isMobile ? (
-                            <TopJobItem
+                            <TopJobItemHome
                               job={job}
-                              type="home"
                               key={job.id}
                               companyInfoAdd={{
                                 companyName: job.company.companyName,
@@ -215,9 +215,8 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                                 setJobSelected(job);
                               }}
                             >
-                              <TopJobItem
+                              <TopJobItemHome
                                 job={job}
-                                type="search"
                                 companyInfoAdd={{
                                   companyName: job.company.companyName,
                                   slug: job.company.slug,

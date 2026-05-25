@@ -17,7 +17,8 @@ import dayjs from "dayjs";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import TopJobItem from "@/components/TopJobItem";
+import TopJobItem from "@/components/TopJobItemHome";
+import TopJobItemEmployer from "@/components/TopJobItemEmployer";
 
 interface LegacySkill {
   id: number;
@@ -320,7 +321,7 @@ function EmployerJobs() {
                   key={job.id}
                 >
                   {/* <CardJob job={job} /> */}
-                  <TopJobItem job={job} type="employer" />
+                  <TopJobItemEmployer job={job} />
                 </Col>
               );
             })}

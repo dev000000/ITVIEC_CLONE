@@ -372,6 +372,7 @@ const blogItems = {
 };
 const companyItems = {
   header: "Top Công ty IT",
+  link: "/cong-ty-it-tot-nhat-vietnam",
   items: [
     {
       id: "topcompanychild1",
@@ -428,7 +429,10 @@ const companyItems = {
   ],
 };
 
-const Header = ({ type }) => {
+interface HeaderProps {
+  type: "jobSeeker" | "employer";
+}
+const Header = ({ type }: HeaderProps) => {
   const fullName = useSeekerStore((state) => state.fullName);
   const authenticated = useUserStore((state) => state.authenticated);
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
@@ -504,9 +508,8 @@ const Header = ({ type }) => {
     <>
       <header className="header">
         <div
-          className={`header__sidebar header__sidebar${
-            sidebar.right ? "--active" : ""
-          } header__sidebar--right`}
+          className={`header__sidebar header__sidebar${sidebar.right ? "--active" : ""
+            } header__sidebar--right`}
         >
           <div
             className="header__sidebar-button header__sidebar-button--close"
@@ -567,14 +570,12 @@ const Header = ({ type }) => {
           </ul>
         </div>
         <div
-          className={`header__sidebar header__sidebar${
-            sidebar.left ? "--active" : ""
-          } header__sidebar--left`}
+          className={`header__sidebar header__sidebar${sidebar.left ? "--active" : ""
+            } header__sidebar--left`}
         >
           <div
-            className={`header__sidebar-wrapbutton ${
-              subsidebar.active ? "" : "header__sidebar-wrapbutton--single"
-            }`}
+            className={`header__sidebar-wrapbutton ${subsidebar.active ? "" : "header__sidebar-wrapbutton--single"
+              }`}
           >
             {subsidebar.active && (
               <div
@@ -752,7 +753,7 @@ const Header = ({ type }) => {
 
             <div className="header__nav header__nav--home">
               <div className="header__nav-left">
-                <Cascader menuItems={jobItems} type="small"/>
+                <Cascader menuItems={jobItems} type="small" />
                 <Cascader menuItems={companyItems} type="small" />
                 <Cascader menuItems={blogItems} type="small" />
               </div>

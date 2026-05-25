@@ -12,6 +12,7 @@ import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
 import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
+import type { CompanyCardResponse } from "@/types/response.types";
 
 const logoMap: Record<string, string> = {
   "mb-bank": MB,
@@ -25,21 +26,8 @@ const logoMap: Record<string, string> = {
   "ssi-securities-corporation": SSI,
 };
 
-interface CompanyJob {
-  status: string;
-}
-
-interface CompanyItem {
-  id: string | number;
-  companyName: string;
-  slug: string;
-  address: string;
-  skills: string[];
-  jobs: CompanyJob[];
-}
-
 interface TopCompaniesProps {
-  companyList: CompanyItem[];
+  companyList: CompanyCardResponse[];
 }
 
 function TopCompanies({ companyList }: TopCompaniesProps) {
@@ -54,9 +42,6 @@ function TopCompanies({ companyList }: TopCompaniesProps) {
           <div className="top-companies__list">
             <Row gutter={[{ xs: 0, sm: 16, md: 20, lg: 20 }, 20]}>
               {companyList.map((company) => {
-                company.jobs = company.jobs.filter(
-                  (job) => job.status === "Active"
-                );
 
                 return (
                   <Col
@@ -84,9 +69,9 @@ function TopCompanies({ companyList }: TopCompaniesProps) {
                         {company.companyName}
                       </div>
                       <div className="top-companies__list-tag">
-                        {company.skills.map((skill) => (
-                          <div className="top-companies__tag" key={skill}>
-                            {skill}
+                        {company.companySkills.map((skill) => (
+                          <div className="top-companies__tag" key={skill.id}>
+                            {skill.skillName}
                           </div>
                         ))}
                       </div>
@@ -94,7 +79,7 @@ function TopCompanies({ companyList }: TopCompaniesProps) {
                         <div>{company.address}</div>
                         <div className="top-companies__view-more">
                           <RiRadioButtonLine className="top-companies__icon-live" />
-                          <div>{company.jobs.length} Việc làm</div>
+                          <div>{company.numberOfJobsActive} Việc làm</div>
                           <MdOutlineKeyboardArrowRight />
                         </div>
                       </div>
