@@ -1,20 +1,60 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
-import EmployerStart from "../../../components/EmployerStart";
-import CardCompanyHead from "../../../components/CardCompanyDetail/CardCompanyHead";
+import EmployerStart from "@/components/EmployerStart";
+import CardCompanyHead from "@/components/CardCompanyDetail/CardCompanyHead";
 import { NavLink, Outlet } from "react-router-dom";
-import TopJobItem from "../../../components/TopJobItem";
+import TopJobItem from "@/components/TopJobItem";
 import { useDispatch, useSelector } from "react-redux";
 import { TbEdit } from "react-icons/tb";
-import ButtonAction from "../../../components/ButtonAction";
+import ButtonAction from "@/components/ButtonAction";
 import "./EmployerProfile.scss";
 import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
-import { SimpleEditor } from "../../../components/tiptap-templates/simple/simple-editor";
-import { getSkills, updateCompany } from "../../../services/EmployerServices";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
+import { getSkills, updateCompany } from "@/services/EmployerServices";
 import Swal from "sweetalert2";
-import { setCompanyFullInfo } from "../../../actions/Company";
-import { isObjectEmpty } from "../../../helpers/checkObject";
+import { setCompanyFullInfo } from "@/actions/Company";
+import { isObjectEmpty } from "@/helpers/checkObject";
+import type { SkillResponse, JobCardResponse } from "@/types/response.types";
+
+interface LegacyCompanyState {
+  id: string | number;
+  companyName: string;
+  description: string;
+  address: string;
+  companyModel: string;
+  industry: string;
+  companySize: string;
+  country: string;
+  workingHours: string;
+  overtimePolicy: string;
+  companyIntroduction: string;
+  ourExpertise: string;
+  whyWorkHere: string;
+  slug: string;
+  skills: string[];
+  jobs: JobCardResponse[];
+}
+
+interface LegacyRootState {
+  CompanyReducer: LegacyCompanyState;
+}
+
+interface UpdateCompanyFormValues {
+  companyName: string;
+  description: string;
+  address: string;
+  companyModel: string;
+  industry: string;
+  companySize: string;
+  country: string;
+  workingHours: string;
+  overtimePolicy: string;
+  skills: string[];
+  companyIntroduction: string;
+  ourExpertise: string;
+  whyWorkHere: string;
+}
 
 const customStyles = {
   content: {
@@ -52,10 +92,10 @@ const workingHoursOptions = [
   { value: "Remote", label: "Remote" },
 ];
 function EmployerProfile() {
-  const [form] = Form.useForm();
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const companyInfor = useSelector((state) => state.CompanyReducer);
-  const [skills, setSkills] = useState([]);
+  const [form] = Form.useForm<UpdateCompanyFormValues>();
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const companyInfor = useSelector((state: LegacyRootState) => state.CompanyReducer);
+  const [skills, setSkills] = useState<SkillResponse[]>([]);
   const dispatch = useDispatch();
   const skillList = skills.map((skill) => {
     return { value: skill.skillName, label: <span>{skill.skillName}</span> };
@@ -84,7 +124,7 @@ function EmployerProfile() {
   const closeModal = () => {
     setIsOpen(false);
   };
-  const onFinish = async (values) => {
+  const onFinish = async (values: UpdateCompanyFormValues) => {
     try {
       const result = await updateCompany(companyInfor.id, values);
       if (!isObjectEmpty(result)) {
@@ -111,7 +151,7 @@ function EmployerProfile() {
       });
     }
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
   useEffect(() => {

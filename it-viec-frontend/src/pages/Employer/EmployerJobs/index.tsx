@@ -1,30 +1,48 @@
-import EmployerStart from "../../../components/EmployerStart";
+import EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
 import {
   getJobs,
   getSkills,
   postJob,
-} from "../../../services/EmployerServices";
+} from "@/services/EmployerServices";
 import "./EmployerJobs.scss";
-import ButtonAction from "../../../components/ButtonAction";
+import ButtonAction from "@/components/ButtonAction";
 import { MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { Col, DatePicker, Row, Select } from "antd";
 import { Button, Form, Input } from "antd";
-import { SimpleEditor } from "../../../components/tiptap-templates/simple/simple-editor";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import dayjs from "dayjs";
-import { isObjectEmpty } from "../../../helpers/checkObject";
+import { isObjectEmpty } from "@/helpers/checkObject";
 import Swal from "sweetalert2";
 import { useSelector } from "react-redux";
-import TopJobItem from "../../../components/TopJobItem";
+import TopJobItem from "@/components/TopJobItem";
+
+interface LegacySkill {
+  id: number;
+  skillName: string;
+}
+
+interface LegacyJobItem {
+  id?: number;
+  [key: string]: unknown;
+}
+
+interface LegacyCompanyState {
+  id: string | number;
+}
+
+interface LegacyRootState {
+  CompanyReducer: LegacyCompanyState;
+}
 
 function EmployerJobs() {
-  const company = useSelector((state) => state.CompanyReducer);
-  const [jobs, setJobs] = useState([]);
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
+  const [jobs, setJobs] = useState<LegacyJobItem[]>([]);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
-  const [skills, setSkills] = useState([]);
+  const [skills, setSkills] = useState<LegacySkill[]>([]);
   const jobTypeList = [
     { value: "Tại văn phòng", label: <span>Tại văn phòng</span> },
     { value: "Làm Từ Xa", label: <span>Làm Từ Xa</span> },
@@ -67,7 +85,7 @@ function EmployerJobs() {
       ),
     },
   ];
-  const skillList = skills.map((skill) => {
+  const skillList = skills.map((skill: LegacySkill) => {
     return { value: skill.skillName, label: <span>{skill.skillName}</span> };
   });
   const customStyles = {
@@ -88,7 +106,7 @@ function EmployerJobs() {
         const result = await getSkills();
         const jobList = await getJobs(company.id);
         setSkills(result || []);
-        setJobs(jobList || []);
+        setJobs((jobList as LegacyJobItem[]) || []);
       } catch (error) {
         console.error("Error fetching company or job data:", error);
         Swal.fire({
@@ -109,10 +127,10 @@ function EmployerJobs() {
   const closeModal = () => {
     setIsOpen(false);
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (values) => {
+  const onFinish = async (values: Record<string, unknown>) => {
     const formattedValues = {
       ...values,
       companyId: company.id,
@@ -131,7 +149,7 @@ function EmployerJobs() {
         });
         setIsOpen(false);
         const jobList = await getJobs(company.id);
-        setJobs(jobList || []);
+        setJobs((jobList as LegacyJobItem[]) || []);
       }
     } catch (error) {
       console.error("Error adding job:", error);
@@ -246,21 +264,25 @@ function EmployerJobs() {
               </Col>
               <Col span={24}>
                 <Form.Item name="jobReason" label="Lý do để gia nhập công ty">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item name="jobDescription" label="Mô tả công việc">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item name="jobRequirements" label="Yêu cầu công việc">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item name="whyJoinUs" label="Tại sao bạn nên gia nhập">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>

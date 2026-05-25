@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
-import EmployerStart from "../../../components/EmployerStart";
-import Card from "../../../components/Card";
+import EmployerStart from "@/components/EmployerStart";
+import Card from "@/components/Card";
 
 function EmployerReports () {
   return (

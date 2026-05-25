@@ -1,7 +1,7 @@
 
-import EmployerLoginForm from "../../../components/EmployerLoginForm";
+import EmployerLoginForm from "@/components/EmployerLoginForm";
 import "./EmployerLogin.scss"
-function EmployerLogin () {
+function EmployerLogin() {
   console.log("EmployerLogin");
   return (
     <>
@@ -12,7 +12,7 @@ function EmployerLogin () {
           </div>
         </div>
         <div className="employer-login__right">
-          <EmployerLoginForm/>
+          <EmployerLoginForm />
         </div>
       </div>
     </>
