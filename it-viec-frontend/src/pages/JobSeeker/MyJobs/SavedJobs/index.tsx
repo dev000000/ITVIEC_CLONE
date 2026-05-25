@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./SavedJobs.scss";
-import { ImNotification } from "react-icons/im";
-import { Link } from "react-router-dom";
-import jobEmptyImg from "../../../../assets/images/job-empty.svg";
 import EmptyJobState from "../EmptyJobState";
+
 function SavedJobs() {
-  const [jobList, setJobList] = useState([]);
+  const [jobList, _setJobList] = useState<unknown[]>([]);
+
   return jobList.length === 0 ? (
     <div className="saved-jobs">
       <EmptyJobState

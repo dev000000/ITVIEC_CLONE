@@ -1,19 +1,43 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
+import React from "react";
 import "./CVManager.scss";
 import { Link, useNavigate } from "react-router-dom";
-import uploadImg from "../../../assets/images/uploaded-resume.svg";
-import ButtonUpload from "../../../components/ButtonUpload";
+import uploadImg from "@/assets/images/uploaded-resume.svg";
+import ButtonUpload from "@/components/ButtonUpload";
 import { FaRegEdit } from "react-icons/fa";
-import { VIETNAM_CITIES } from "../../../constants";
+import { VIETNAM_CITIES } from "@/constants";
 import Modal from "react-modal";
 import { Form, Input } from "antd";
 import { Col, Row, Select } from "antd";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSeekerInfo, setSeekerFullInfo } from "../../../actions/Seeker";
-import { updateSeekerInfor } from "../../../services/SeekerServices";
-import { isObjectEmpty } from "../../../helpers/checkObject";
+import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
+import { updateSeekerInfor } from "@/services/SeekerServices";
+import { isObjectEmpty } from "@/helpers/checkObject";
+import { clearStorage } from "@/helpers/localStorage";
+
+interface LegacySeekerState {
+  id: number;
+  fullName: string;
+  phoneNumber: string;
+  coverLetter: string;
+  desiredLocations: string[];
+}
+
+interface LegacyRootState {
+  SeekerReducer: LegacySeekerState;
+}
+
+interface CVManagerFormValues {
+  fullName: string;
+  phoneNumber: string;
+  desiredLocations: string[];
+}
+
+interface CoverLetterFormValues {
+  coverLetter: string;
+}
 const customStyles = {
   content: {
     top: "50%",
@@ -31,11 +55,11 @@ function CVManager() {
   const [form] = Form.useForm();
   const [coverLetterForm] = Form.useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [userId, setUserId] = useState(localStorage.getItem("id") || "");
+  const [userId] = useState(localStorage.getItem("id") || "");
   const [isEditing, setIsEditing] = useState(false);
-  const seeker = useSelector((state) => state.SeekerReducer);
+  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
   const [coverLetter, setCoverLetter] = useState(seeker.coverLetter || "");
-  const [value, setValue] = useState(seeker.desiredLocations || []);
+  const [value, setValue] = useState<string[]>(seeker.desiredLocations || []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -72,10 +96,10 @@ function CVManager() {
   const onClick = () => {
     console.log("upload");
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (values) => {
+  const onFinish = async (values: CVManagerFormValues) => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
       clearStorage();
@@ -103,7 +127,7 @@ function CVManager() {
       });
     }
   };
-  const onFinish2 = async (values) => {
+  const onFinish2 = async (values: CoverLetterFormValues) => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
       clearStorage();
@@ -133,7 +157,7 @@ function CVManager() {
       });
     }
   };
-  const getFieldsClassName = (value) => {
+  const getFieldsClassName = (value: unknown) => {
     return value
       ? `cv-manager__content`
       : `cv-manager__content cv-manager__content--default`;
@@ -383,7 +407,7 @@ function CVManager() {
             </div>
             <div className="devider"></div>
             <p
-              ref={originalCoverLetter}
+              ref={originalCoverLetter as unknown as React.RefObject<HTMLParagraphElement>}
               className={
                 isEditing
                   ? "cv-manager__mail cv-manager__mail--close"
@@ -447,7 +471,7 @@ function CVManager() {
                       <Form.Item label={null}>
                         <button
                           className="cv-form__save-button cv-form__save-button--custom"
-                          htmltype="submit"
+                          type="submit"
                         >
                           Lưu
                         </button>

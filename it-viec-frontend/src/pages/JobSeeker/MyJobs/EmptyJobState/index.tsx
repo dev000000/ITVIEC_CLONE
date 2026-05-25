@@ -1,16 +1,24 @@
-import React from "react";
 import "./EmptyJobState.scss";
 import { Link } from "react-router-dom";
 import { ImNotification } from "react-icons/im";
 import jobEmptyImg from "../../../../assets/images/job-empty.svg";
 import { Select } from "antd";
+
+interface EmptyJobStateProps {
+  notificationText?: string;
+  emptyMessage?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  showNotification?: boolean;
+}
+
 function EmptyJobState({
   notificationText,
   emptyMessage,
   buttonText = "Tìm việc ngay",
   buttonLink = "/",
   showNotification = true,
-}) {
+}: EmptyJobStateProps) {
   return (
     <div className="job-empty-state">
       {showNotification && (
@@ -27,7 +35,10 @@ function EmptyJobState({
               <Select
                 defaultValue="asc"
                 style={{ width: 240 }}
-                options={[{ value: "desc", label: "Ngày ứng tuyển gần nhất" },{ value: "asc", label: "Ngày ứng tuyển xa nhất" }]}
+                options={[
+                  { value: "desc", label: "Ngày ứng tuyển gần nhất" },
+                  { value: "asc", label: "Ngày ứng tuyển xa nhất" },
+                ]}
               />
             </div>
           </div>

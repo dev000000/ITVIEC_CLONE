@@ -1,25 +1,38 @@
 import { Col, Form, Row, Input } from "antd";
 import { IoMdCheckmark } from "react-icons/io";
 import "./Login.scss";
-import logo from "../../../assets/images/logo_nhieuviec4.png";
+import logo from "@/assets/images/logo_nhieuviec4.png";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import ButtonSubmit from "../../../components/Button";
-import { checkLogin } from "../../../services/UserServices";
+import ButtonSubmit from "@/components/Button";
+import { checkLogin } from "@/services/UserServices";
 import { useNavigate } from "react-router-dom";
-import { setLocalStorageUser } from "../../../helpers/localStorage";
+import { setLocalStorageUser } from "@/helpers/localStorage";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "../../../actions/User";
+import { setLogin } from "@/actions/User";
 import Swal from "sweetalert2";
-import { getSeekerInforByUserId } from "../../../services/SeekerServices";
-import { clearSeekerInfo, setSeekerFullInfo } from "../../../actions/Seeker";
+import { getSeekerInforByUserId } from "@/services/SeekerServices";
+import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
+
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
+interface LegacySeekerState {
+  isLoaded: boolean;
+}
+
+interface LegacyRootState {
+  SeekerReducer: LegacySeekerState;
+}
 
 function Login() {
-  const seeker = useSelector((state) => state.SeekerReducer);
+  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
   console.log("Login");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const onFinish = async (values) => {
+  const onFinish = async (values: LoginFormValues) => {
     const newValues = { ...values, userType: "jobSeeker" };
     const result = await checkLogin(newValues);
     if (result.length > 0) {
