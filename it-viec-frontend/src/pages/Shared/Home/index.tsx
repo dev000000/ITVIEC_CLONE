@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import CampaignHighLight from "../../../components/CampaignHighLight";
-import TopCompanies from "../../../components/TopCompanies";
-import TopJob from "../../../components/TopJob";
-import { getCompanyDetails, getJobDetails } from "../../../services/Shared";
-import SearchFormHome from "../../../components/SearchFormHome";
+import CampaignHighLight from "@/components/CampaignHighLight";
+import TopJob from "@/components/TopJob";
+import { getJobDetails } from "@/services/Shared";
+import SearchFormHome from "@/components/SearchFormHome";
 
 function Home() {
   // const [companyList , setCompanyList] = useState([]);
-  const [jobList, setJobList] = useState([]);
+  const [jobList, setJobList] = useState<unknown[]>([]);
   useEffect(() => {
     const getData = async () => {
       try {
@@ -16,7 +15,7 @@ function Home() {
         console.log("job", jobs);
 
         // setCompanyList(companies || []);
-        setJobList(jobs.data?.result || []);
+        setJobList((jobs.data?.result as unknown[]) || []);
       } catch (error) {
         console.log("Loi khi load company hoac job....", error);
       }

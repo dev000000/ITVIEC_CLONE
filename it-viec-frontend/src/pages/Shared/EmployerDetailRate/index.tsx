@@ -1,6 +1,6 @@
-import React from "react";
 import "./EmployerDetailRate.scss";
-import image from "../../../assets/images/everything-empty.svg"
+import image from "@/assets/images/everything-empty.svg";
+
 function EmployerDetailRate() {
   return (
     <div className="employer-detail-rate">

@@ -1,14 +1,28 @@
-import React, { useEffect, useState } from "react";
 import "./EmployerDetailInfo.scss";
 import { Col, Row } from "antd";
-import TagSkill from "../../../components/TagSkill";
-import { useOutletContext, useParams } from "react-router-dom";
+import TagSkill from "@/components/TagSkill";
+import { useOutletContext } from "react-router-dom";
 import DOMPurify from "dompurify";
 
+interface CompanyInfor {
+  companyModel: string;
+  industry: string;
+  companySize: string;
+  country: string;
+  workingHours: string;
+  skills: string[];
+  companyIntroduction: string;
+  ourExpertise: string;
+  whyWorkHere: string;
+}
+
+interface EmployerDetailOutletContext {
+  companyInfor: CompanyInfor;
+}
+
 function EmployerDetailInfo() {
-  const { companyInfor } = useOutletContext();
+  const { companyInfor } = useOutletContext<EmployerDetailOutletContext>();
   console.log("companyInfor", companyInfor);
-  const { slug } = useParams();
 
   const skills = ["JavaScript", "React", "Node.js", "Python", "Java", "C#"];
   return (

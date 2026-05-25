@@ -1,12 +1,35 @@
 import { Col, Row } from "antd";
-import CardCompanyHead from "../../../components/CardCompanyDetail/CardCompanyHead";
+import CardCompanyHead from "@/components/CardCompanyDetail/CardCompanyHead";
 import "./EmployerDetail.scss";
 import { NavLink, Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getCompanyWithJobsBySlug } from "../../../services/Shared";
-import TopJobItem from "../../../components/TopJobItem";
-const companyDefault = {
+import { getCompanyWithJobsBySlug } from "@/services/Shared";
+import TopJobItem from "@/components/TopJobItem";
+
+interface JobItem {
+  id: number | string;
+  status: string;
+  slug: string;
+}
+
+interface CompanyWithJobs {
+  companyName: string;
+  address: string;
+  slug: string;
+  companyModel: string;
+  industry: string;
+  companySize: string;
+  country: string;
+  workingHours: string;
+  skills: string[];
+  companyIntroduction: string;
+  ourExpertise: string;
+  whyWorkHere: string;
+  jobs: JobItem[];
+}
+
+const companyDefault: CompanyWithJobs = {
   companyName: "",
   address: "",
   slug: "",
@@ -21,13 +44,14 @@ const companyDefault = {
   whyWorkHere: "",
   jobs: [],
 };
+
 function EmployerDetail() {
-  const [companyInfor, setCompanyInfor] = useState(companyDefault);
-  const { slug } = useParams();
+  const [companyInfor, setCompanyInfor] = useState<CompanyWithJobs>(companyDefault);
+  const { slug } = useParams<{ slug: string }>();
   useEffect(() => {
     const getCompanyandJobs = async () => {
       try {
-        const result = await getCompanyWithJobsBySlug(slug);
+        const result: CompanyWithJobs[] = await getCompanyWithJobsBySlug(slug);
         if (result && result.length > 0 && result[0].jobs) {
           result[0].jobs = result[0].jobs.filter(
             (job) => job.status === "Active",

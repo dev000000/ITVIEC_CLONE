@@ -1,24 +1,46 @@
 import "./JobSearchDetail.scss";
 import { Link, useOutletContext } from "react-router-dom";
 import { ImCoinDollar } from "react-icons/im";
-import logo from "../../../assets/images/Companylogo.webp";
+import logo from "@/assets/images/Companylogo.webp";
 import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { MdLocationCity } from "react-icons/md";
 import { GoClock } from "react-icons/go";
-import TagSkill from "../../../components/TagSkill";
+import TagSkill from "@/components/TagSkill";
 import { Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
-import { getRelativeTime } from "../../../helpers/formattedTime";
+import { getRelativeTime } from "@/helpers/formattedTime";
+
+interface JobSelected {
+  requiredSkills: string[];
+  slug: string;
+  title: string;
+  company?: {
+    companyName: string;
+  };
+  salary: string;
+  location: string;
+  jobType: string;
+  postedAt: string;
+  jobReason: string;
+  jobRequirements: string;
+  whyJoinUs: string;
+  jobDescription: string;
+}
+
+interface JobSearchDetailOutletContext {
+  jobSelected: JobSelected;
+}
+
 function JobSearchDetail() {
-  let { jobSelected } = useOutletContext();
-    const sortedSkills = [...jobSelected.requiredSkills].sort(
+  const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
+  const sortedSkills = [...jobSelected.requiredSkills].sort(
     (a, b) => a.length - b.length
   );
   const isLogin = useSelector((state) => state.UserReducer);
-  const tagListRef = useRef(null);
+  const tagListRef = useRef<HTMLDivElement>(null);
   const [visibleTagsCount, setVisibleTagsCount] = useState(
     sortedSkills.length || 0
   );
@@ -26,7 +48,7 @@ function JobSearchDetail() {
     const handleTagOverflow = () => {
       const tagList = tagListRef.current;
       if (!tagList) return;
-      const tagElements = tagList.getElementsByClassName("tag-skill");
+      const tagElements = tagList.getElementsByClassName("tag-skill") as HTMLCollectionOf<HTMLElement>;
       const wrapperWidth = tagList.offsetWidth;
       let totalWidth = 0;
       let count = 0;

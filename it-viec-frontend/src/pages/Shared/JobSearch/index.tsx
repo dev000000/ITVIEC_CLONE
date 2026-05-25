@@ -3,12 +3,27 @@ import { Button, Col, Form, Input, Row, Select } from "antd";
 import "./JobSearch.scss";
 import { FiSearch } from "react-icons/fi";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
-import { getJobsSearch } from "../../../services/Shared";
-import TopJobItem from "../../../components/TopJobItem";
-import imgNoJob from "../../../assets/images/robby-oops.svg";
-import { isObjectEmpty } from "../../../helpers/checkObject";
-import { VIETNAM_CITIES } from "../../../constants";
-function JobSearch({ keyword, city }) {
+import { getJobsSearch } from "@/services/Shared";
+import TopJobItem from "@/components/TopJobItem";
+import imgNoJob from "@/assets/images/robby-oops.svg";
+import { isObjectEmpty } from "@/helpers/checkObject";
+import { VIETNAM_CITIES } from "@/constants";
+
+interface JobItem {
+  id: number | string;
+  slug: string;
+  company: {
+    companyName: string;
+    slug: string;
+  };
+}
+
+interface JobSearchProps {
+  keyword: string;
+  city?: string;
+}
+
+function JobSearch({ keyword, city }: JobSearchProps) {
   if (!city) {
     const decodedKeyword = decodeURIComponent(keyword);
     const result = VIETNAM_CITIES.find((item) => item.value === decodedKeyword);
@@ -22,8 +37,8 @@ function JobSearch({ keyword, city }) {
   }
   const [searchParams] = useSearchParams();
   const jobSelectedSlug = searchParams.get("job_selected");
-  const [listJob, setListJob] = useState([]);
-  const [jobSelected, setJobSelected] = useState({});
+  const [listJob, setListJob] = useState<JobItem[]>([]);
+  const [jobSelected, setJobSelected] = useState<JobItem | Record<string, never>>({});
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 1199;
   const [form] = Form.useForm();
@@ -34,7 +49,7 @@ function JobSearch({ keyword, city }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getJobsSearch({ keyword: keyword, city: city });
+        const result: JobItem[] = await getJobsSearch({ keyword: keyword, city: city });
         console.log(result);
         setListJob(result || []);
         if (result && result.length > 0) {
@@ -58,7 +73,7 @@ function JobSearch({ keyword, city }) {
     };
     fetchData();
   }, [keyword, city]);
-  const handleFinish = (values) => {
+  const handleFinish = (values: { keyword?: string; city?: string }) => {
     if (values.city === "all") {
       values.city = "";
     }
@@ -73,7 +88,7 @@ function JobSearch({ keyword, city }) {
     }
     return navigate(`/viec-lam-it`);
   };
-  const handleFinishFail = (errorInfo) => {
+  const handleFinishFail = (errorInfo: unknown) => {
     console.log("Form failed:", errorInfo);
   };
   return (

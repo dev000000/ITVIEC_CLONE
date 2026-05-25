@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import "./JobDetail.scss";
 import { Col, Row } from "antd";
-import CardJobHead from "../../../components/CardJobDetail/CardJobHead";
-import CardJobShowInfor from "../../../components/CardJobDetail/CardJobShowInfor";
-import CardJobContent from "../../../components/CardJobDetail/CardJobContent";
-import CardInforEmployer from "../../../components/CardInforEmployer";
-import { getJobDetailByID } from "../../../services/Shared";
-function JobDetail({ slug }) {
+import CardJobHead from "@/components/CardJobDetail/CardJobHead";
+import CardJobShowInfor from "@/components/CardJobDetail/CardJobShowInfor";
+import CardJobContent from "@/components/CardJobDetail/CardJobContent";
+import CardInforEmployer from "@/components/CardInforEmployer";
+import { getJobDetailByID } from "@/services/Shared";
+
+interface JobDetailProps {
+  slug: string;
+}
+
+function JobDetail({ slug }: JobDetailProps) {
   console.log("JobDetail");
-  const [job, setJob] = useState({});
+  const [job, setJob] = useState<Record<string, unknown>>({});
   const parts = slug.split("-");
   const id = parts[parts.length - 1];
   useEffect(() => {
