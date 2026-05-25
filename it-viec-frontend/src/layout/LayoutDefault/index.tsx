@@ -4,17 +4,18 @@ import "./LayoutDefault.scss";
 import Header from "@/components/Header";
 import FooterComp from "@/components/Footer";
 import { useEffect, useState } from "react";
-import { getMeApi } from "@/services_new/authApi";
+import { getMeApi, logoutApi } from "@/services_new/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
 
 const { Content } = Layout;
 
-function LayoutDefault(): JSX.Element {
-  const navigate = useNavigate();
+// LayoutDefault sẽ dùng để check login từ token ( cookies ) để tránh việc người dùng đã login nhưng refresh lại trang thì sẽ bị mất thông tin login
+const LayoutDefault = () => {
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const setLogin = useUserStore((state) => state.setLogin);
   const logout = useUserStore((state) => state.logout);
+
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
   useEffect(() => {
@@ -22,17 +23,20 @@ function LayoutDefault(): JSX.Element {
       try {
         const response = await getMeApi();
         console.log("response me", response);
-        setLogin(response.data?.result);
       } catch (error) {
-        console.error("Error checking auth:", error);
+        // Gọi API logout để clear token ở cookies
+        await logoutApi();
+        // Clear thông tin user trong store
         logout();
+        // Clear thông tin seeker trong store nếu có
         clearSeekerInfo();
       } finally {
         setIsCheckingToken(false);
       }
-    };
+    }
     checkAuth();
-  }, []);
+
+    }, []); 
 
   return (
     <>

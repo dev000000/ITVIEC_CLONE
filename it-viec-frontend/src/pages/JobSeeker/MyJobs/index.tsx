@@ -1,21 +1,54 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./MyJobs.scss";
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import {
   getApplicationsBySeekerId,
   getApplicationsBySeekerIdWithPagination,
-} from "../../../services/SeekerServices";
+} from "@/services/SeekerServices";
+
+interface ApplicationItem {
+  appliedAt: string;
+  job?: { slug?: string; title?: string; salary?: string };
+  company?: { companyName?: string; slug?: string };
+  fullName: string;
+  phoneNumber: string;
+  resumeUrl: string;
+  coverLetter: string;
+  desiredLocations: string[];
+  status: string;
+  employerMessage?: string;
+}
+
+interface PaginationState {
+  current: number;
+  pageSize: number;
+}
+
+interface RootState {
+  SeekerReducer: { id: number | string };
+}
+
+export interface MyJobsOutletContext {
+  applicationList: ApplicationItem[];
+  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
+  setSort: React.Dispatch<React.SetStateAction<string>>;
+  totalApplications: number;
+  pagination: PaginationState;
+  sort: string;
+}
+
 function MyJobs() {
-  const [applicationList, setApplicationList] = useState([]);
+  const [applicationList, setApplicationList] = useState<ApplicationItem[]>([]);
   const [totalApplications, setTotalApplications] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const seeker = useSelector((state) => state.SeekerReducer);
-  const [pagination, setPagination] = useState({
+  const seeker = useSelector((state: RootState) => state.SeekerReducer);
+  const [pagination, setPagination] = useState<PaginationState>({
     current: 1,
     pageSize: 5,
   });
   const [sort, setSort] = useState("desc");
+
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -28,6 +61,7 @@ function MyJobs() {
     };
     fetchApplications();
   }, [seeker.id]);
+
   useEffect(() => {
     const fetchApplications = async () => {
       try {
@@ -47,6 +81,7 @@ function MyJobs() {
     };
     fetchApplications();
   }, [seeker.id, pagination.current, pagination.pageSize, sort]);
+
   return (
     <div className="my-jobs">
       <div className="job-seeker-section job-seeker-section--custom2">

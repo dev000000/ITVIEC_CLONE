@@ -2,39 +2,68 @@ import { useEffect, useState } from "react";
 import "./JobApplications.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { IoIosArrowBack } from "react-icons/io";
-import logo from "../../../assets/images/nhieu viec (355 x 85 px).png";
+import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
 import { Form, Input, Select } from "antd";
-import ButtonSubmit from "../../../components/Button";
-import { VIETNAM_CITIES } from "../../../constants";
+import ButtonSubmit from "@/components/Button";
+import { VIETNAM_CITIES } from "@/constants";
 import { useSelector } from "react-redux";
 import {
   checkApplicationExist,
   getJobDetailBySlug,
   getSeekerInforByUserId,
   postApplication,
-} from "../../../services/SeekerServices";
+} from "@/services/SeekerServices";
 import Swal from "sweetalert2";
-import { setSeekerFullInfo } from "../../../actions/Seeker";
+import { setSeekerFullInfo } from "@/actions/Seeker";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import { isObjectEmpty } from "../../../helpers/checkObject";
+import { isObjectEmpty } from "@/helpers/checkObject";
+
+interface LegacySeekerState {
+  id: number;
+  userId: number;
+  fullName: string;
+  phoneNumber: string;
+  coverLetter: string;
+  desiredLocations: string[];
+  resumeUrl: string;
+  isLoaded: boolean;
+}
+
+interface LegacyUserState {
+  id: number | null;
+  ok: boolean;
+  userType: string;
+}
+
+interface LegacyRootState {
+  SeekerReducer: LegacySeekerState;
+  UserReducer: LegacyUserState;
+}
+
+interface JobApplicationFormValues {
+  fullName: string;
+  phoneNumber: string;
+  desiredLocations: string[];
+  coverLetter: string;
+}
 const maxCountCity = 3;
 function JobApplications() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { slug } = useParams();
-  const seeker = useSelector((state) => state.SeekerReducer);
-  const isLogin = useSelector((state) => state.UserReducer);
+  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
+  const isLogin = useSelector((state: LegacyRootState) => state.UserReducer);
   const dispatch = useDispatch();
-  const [desiredLocations, setDesiredLocations] = useState(
+  const [desiredLocations, setDesiredLocations] = useState<string[]>(
     seeker.desiredLocations || [],
   );
-  const [coverLetter, setCoverLetter] = useState(seeker.coverLetter || "");
-  const [jobId, setJobId] = useState(null);
-  const [jobTitle, setJobTitle] = useState("");
-  const [companyId, setCompanyId] = useState(0);
-  const [isValidJob, setIsValidJob] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [coverLetter, setCoverLetter] = useState<string>(seeker.coverLetter || "");
+  const [jobId, setJobId] = useState<number | null>(null);
+  const [jobTitle, setJobTitle] = useState<string>("");
+  const [companyId, setCompanyId] = useState<number>(0);
+  const [isValidJob, setIsValidJob] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useEffect(() => {
     const validateJobSlug = async () => {
       try {
@@ -119,10 +148,10 @@ function JobApplications() {
       setCoverLetter(seeker.coverLetter || "");
     }
   }, [seeker.isLoaded, form]);
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const onFinishFailed = () => {
+    console.log("Failed");
   };
-  const onFinish = async (values) => {
+  const onFinish = async (values: JobApplicationFormValues) => {
     if (!jobId || !isValidJob) {
       Swal.fire({
         icon: "error",

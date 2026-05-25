@@ -1,33 +1,40 @@
-import { Col, Form, Row, Button, Checkbox, Input } from "antd";
+import { Col, Row } from "antd";
 import "./EmployerHome.scss";
 
-import img from "../../../assets/images/hire-the-best-it.webp";
-import ButtonSubmit from "../../../components/Button";
-import firstHand from "../../../assets/images/first-hand.svg";
-import secondHand from "../../../assets/images/second-hand.svg";
-import thirdHand from "../../../assets/images/third-hand.svg";
-import jobPostingImg from "../../../assets/images/job-posting.webp";
-import OpporTunitiesImg from "../../../assets/images/opportunities.svg";
-import rightSkillImg from "../../../assets/images/right-skill.svg";
-import aiMatchImg from "../../../assets/images/ai-match.webp";
-import secondCandidateImg from "../../../assets/images/second-candidate.svg";
-import firstCandidateImg from "../../../assets/images/first-candidate.svg";
-import firstEmployerImg from "../../../assets/images/first-employer.svg";
-import secondEmployerImg from "../../../assets/images/second-employer.svg";
-import employerBrandingImg from "../../../assets/images/employer-branding.webp";
+import img from "@/assets/images/hire-the-best-it.webp";
+import ButtonSubmit from "@/components/Button";
+import firstHand from "@/assets/images/first-hand.svg";
+import secondHand from "@/assets/images/second-hand.svg";
+import thirdHand from "@/assets/images/third-hand.svg";
+import jobPostingImg from "@/assets/images/job-posting.webp";
+import OpporTunitiesImg from "@/assets/images/opportunities.svg";
+import rightSkillImg from "@/assets/images/right-skill.svg";
+import aiMatchImg from "@/assets/images/ai-match.webp";
+import secondCandidateImg from "@/assets/images/second-candidate.svg";
+import firstCandidateImg from "@/assets/images/first-candidate.svg";
+import firstEmployerImg from "@/assets/images/first-employer.svg";
+import secondEmployerImg from "@/assets/images/second-employer.svg";
+import employerBrandingImg from "@/assets/images/employer-branding.webp";
 import { FiPhone } from "react-icons/fi";
 import { FaRegClock } from "react-icons/fa6";
 
+// @ts-expect-error — swiper/css is a CSS side-effect import handled by Vite
 import "swiper/css";
-import SwiperFeedback from "../../../components/SwiperFeedback";
-import ContactEmployerForm from "../../../components/ContactEmployerForm";
+import SwiperFeedback from "@/components/SwiperFeedback";
+import ContactEmployerForm from "@/components/ContactEmployerForm";
 import { useEffect, useRef, useState } from "react";
+interface LogoItem {
+  id: number;
+  name: string;
+  path: string;
+}
+
 function Employer() {
-  const formRef = useRef(null);
+  const formRef = useRef<HTMLDivElement>(null);
   const focusForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 1200);
@@ -39,7 +46,7 @@ function Employer() {
     };
   }, []);
 
-  const dataLogo = [
+  const dataLogo: LogoItem[] = [
     {
       id: 1,
       name: "Atomidigital",

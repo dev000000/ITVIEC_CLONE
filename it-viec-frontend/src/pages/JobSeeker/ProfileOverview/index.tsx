@@ -1,19 +1,31 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./ProfileOverview.scss";
 import { MdMailOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
-import avatar from "../../../assets/images/unnamed.jpg";
+import avatar from "@/assets/images/unnamed.jpg";
 import { LuBriefcase } from "react-icons/lu";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import uploadImg from "../../../assets/images/uploaded-resume.svg"; 
+import uploadImg from "@/assets/images/uploaded-resume.svg";
 import { Col, Row } from "antd";
-import paperplaneImg from "../../../assets/images/paper-plane.svg";
-import heathcareImg from "../../../assets/images/healthcare.svg";
-import mailImg from "../../../assets/images/mail.svg";
+import paperplaneImg from "@/assets/images/paper-plane.svg";
+import heathcareImg from "@/assets/images/healthcare.svg";
+import mailImg from "@/assets/images/mail.svg";
 import { useSelector } from "react-redux";
+
+interface LegacySeekerState {
+  fullName: string;
+  jobTitle: string;
+  gmail: string;
+}
+
+interface RootState {
+  SeekerReducer: LegacySeekerState;
+}
+
 function ProfileOverview() {
-  const [userId, setUserId] = useState(localStorage.getItem("id") || "");
-  const seeker = useSelector((state) => state.SeekerReducer);
+  const [_userId, _setUserId] = useState(localStorage.getItem("id") || "");
+  const seeker = useSelector((state: RootState) => state.SeekerReducer);
+
   return (
     <div className="profile-overview">
       <div className="job-seeker-section">
@@ -22,14 +34,32 @@ function ProfileOverview() {
             <img src={avatar} alt="user_avatar" />
           </div>
           <div className="profile-overview__details">
-            <h1 className="profile-overview__name">{seeker.fullName || "Cập nhật tên"}</h1>
+            <h1 className="profile-overview__name">
+              {seeker.fullName || "Cập nhật tên"}
+            </h1>
             <div className="profile-overview__job-title">
               <LuBriefcase />
-              <span className={seeker.jobTitle ? "profile-overview__text" : "profile-overview__text profile-overview__text--default"}>{seeker.jobTitle || "Cập nhật chức danh"}</span>
+              <span
+                className={
+                  seeker.jobTitle
+                    ? "profile-overview__text"
+                    : "profile-overview__text profile-overview__text--default"
+                }
+              >
+                {seeker.jobTitle || "Cập nhật chức danh"}
+              </span>
             </div>
             <div className="profile-overview__email">
               <MdMailOutline />
-              <div className={seeker.gmail ? "profile-overview__text" : "profile-overview__text profile-overview__text--default"}>{seeker.gmail || "Cập nhật email"}</div>
+              <div
+                className={
+                  seeker.gmail
+                    ? "profile-overview__text"
+                    : "profile-overview__text profile-overview__text--default"
+                }
+              >
+                {seeker.gmail || "Cập nhật email"}
+              </div>
             </div>
             <div className="profile-overview__update-link">
               <Link to="/ho-so-cv">
@@ -71,7 +101,10 @@ function ProfileOverview() {
         <div className="profile-overview__activity">
           <Row gutter={[16, 16]}>
             <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
-              <Link to="/viec-lam-cua-toi/ung-tuyen" className="profile-overview__activity-item">
+              <Link
+                to="/viec-lam-cua-toi/ung-tuyen"
+                className="profile-overview__activity-item"
+              >
                 <h3 className="profile-overview__activity-title">
                   Việc làm đã ứng tuyển
                 </h3>
@@ -86,7 +119,10 @@ function ProfileOverview() {
               </Link>
             </Col>
             <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
-              <Link to="/viec-lam-cua-toi" className="profile-overview__activity-item profile-overview__activity-item--red">
+              <Link
+                to="/viec-lam-cua-toi"
+                className="profile-overview__activity-item profile-overview__activity-item--red"
+              >
                 <h3 className="profile-overview__activity-title">
                   Việc làm đã lưu
                 </h3>

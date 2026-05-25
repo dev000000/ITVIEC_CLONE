@@ -1,4 +1,4 @@
-import "./TopJobItem.scss";
+import "./TopJobItemEmployer.scss";
 import { Tooltip } from "antd";
 import { ImCoinDollar } from "react-icons/im";
 import { MdLocationCity } from "react-icons/md";
@@ -18,6 +18,7 @@ import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
 import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
+import type { JobCardResponse } from "@/types/response.types";
 
 const logoMap: Record<string, string> = {
   "mb-bank": MB,
@@ -32,30 +33,7 @@ const logoMap: Record<string, string> = {
 };
 
 type JobStatusLabel = "Active" | "Closed" | "Expired" | "Draft";
-type JobItemType = "home" | "employer" | "job-detail";
 
-interface JobSkill {
-  id: number;
-  skillName: string;
-}
-
-interface JobData {
-  id?: number;
-  title?: string;
-  slug?: string;
-  salary?: string;
-  jobType?: string;
-  jobStatus?: JobStatusLabel;
-  postedAt?: string;
-  city?: { cityName: string };
-  skills?: JobSkill[];
-  company?: { companyName?: string };
-}
-
-interface CompanyInfo {
-  companyName: string;
-  slug: string;
-}
 
 interface LegacyUserState {
   ok: boolean;
@@ -64,36 +42,18 @@ interface LegacyUserState {
 }
 
 interface TopJobItemProps {
-  job?: JobData;
-  type?: JobItemType;
-  companyInfoAdd?: CompanyInfo;
+  job?: JobCardResponse;
 }
 
-function TopJobItem({ job, type, companyInfoAdd }: TopJobItemProps) {
-  // type  can be "home", "employer", or "job-detail"
+function TopJobItemEmployer({ job }: TopJobItemProps) {
   const navigate = useNavigate();
-  companyInfoAdd = companyInfoAdd || {
-    companyName: "",
-    slug: "",
-  };
-  job = job || {};
-  job = {
-    ...job,
-    company: {
-      companyName: job.company?.companyName || "",
-    },
-  };
+
   const isLogin = useSelector(
     (state: { UserReducer: LegacyUserState }) => state.UserReducer
   );
 
   const handleClick = () => {
     navigate(`${job!.id}`);
-  };
-  const handleNavigate = () => {
-    if (type === "home") {
-      return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
-    }
   };
 
   const tagListRef = useRef<HTMLDivElement>(null);
@@ -126,14 +86,14 @@ function TopJobItem({ job, type, companyInfoAdd }: TopJobItemProps) {
     handleTagOverflow();
   }, [sortedSkills.length]);
 
-  if (type === "employer") {
+
     return (
       <div className="job__item">
         <div className="job__label job__label--hot">
           <span>HOT</span>
         </div>
         <div className="job__time">{getRelativeTime(job.postedAt)}</div>
-        <TagStatus status={job.jobStatus!} />
+        {/* <TagStatus status={job.jobStatus!} /> */}
         <div className="job__name">{job.title}</div>
         <div
           className={
@@ -178,66 +138,8 @@ function TopJobItem({ job, type, companyInfoAdd }: TopJobItemProps) {
         </div>
       </div>
     );
-  }
+  
 
-  return (
-    <div className="job__item" onClick={handleNavigate}>
-      <div className="job__label job__label--hot">
-        <span>HOT</span>
-      </div>
-      <div className="job__time">{getRelativeTime(job.postedAt)}</div>
-      <div className="job__name">{job.title}</div>
-      <div className="job__companies">
-        <div className="job__companies-logo">
-          <img src={logoMap[companyInfoAdd.slug]} alt="logo_companies" />
-        </div>
-        <div className="job__companies-name">
-          {companyInfoAdd.companyName
-            ? companyInfoAdd.companyName
-            : job.company?.companyName || ""}
-        </div>
-      </div>
-
-      <div
-        className={
-          isLogin.ok === true
-            ? "job__salary job__salary--visible"
-            : "job__salary"
-        }
-      >
-        <ImCoinDollar />{" "}
-        <span>
-          {isLogin.ok === true ? job.salary : "Đăng nhập để xem mức lương"}{" "}
-        </span>
-      </div>
-      <div className="job__location">
-        <MdLocationCity className="job__location-icon" />
-        <span>{job.jobType}</span>
-      </div>
-      <div className="job__city">
-        <CiLocationOn className="job__city-icon" />
-        <span>{job.city?.cityName}</span>
-      </div>
-      <div className="job__list-tag" ref={tagListRef}>
-        {sortedSkills.slice(0, visibleTagsCount).map((skill) => (
-          <TagSkill key={skill.id} text={skill.skillName} />
-        ))}
-        {sortedSkills.length > visibleTagsCount && (
-          <Tooltip
-            title={sortedSkills
-              .slice(visibleTagsCount)
-              .map((skill) => skill.skillName)
-              .join(", ")}
-            placement="top"
-          >
-            <span className="job__more-tags">
-              +{sortedSkills.length - visibleTagsCount}
-            </span>
-          </Tooltip>
-        )}
-      </div>
-    </div>
-  );
 }
 
-export default TopJobItem;
+export default TopJobItemEmployer;

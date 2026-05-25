@@ -12,19 +12,11 @@ import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
 import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
+import type { CompanyDetailResponse } from "@/types/response.types";
 
-interface CompanyInfor {
-  slug: string;
-  companyName: string;
-  address: string;
-  jobs: unknown[];
-  rating: number;
-  reviewCount: number;
-  recommendationRate: number;
-}
 
 interface CardCompanyHeadProps {
-  companyInfor: CompanyInfor;
+  companyInfor: CompanyDetailResponse;
 }
 
 const logoMap: Record<string, string> = {
@@ -53,11 +45,11 @@ function CardCompanyHead({ companyInfor }: CardCompanyHeadProps) {
                 <div className="card-company__head-item-wrap">
                   <div className="card-company__head-item card-company__head-location">
                     <IoLocationOutline />
-                    <span>{companyInfor.address || "Tên công ty "}</span>
+                    <span>{companyInfor.address || "Địa chỉ công ty"}</span>
                   </div>
                   <div className="card-company__head-item card-company__head-jobs">
                     <LuBriefcase />
-                    <Link>{companyInfor.jobs.length} việc làm đang tuyển dụng </Link>
+                    <Link to={`/nha-tuyen-dung/${companyInfor.slug}`}>{companyInfor.jobs.length} việc làm đang tuyển dụng </Link>
                   </div>
                 </div>
                 <div className="card-company__head-button-wrap">
@@ -74,14 +66,14 @@ function CardCompanyHead({ companyInfor }: CardCompanyHeadProps) {
           <Col xxl={8} xl={8} lg={24} md={24} sm={24} xs={24}>
             <div className="card-company__head-right">
               <div className="card-company__head-rate-wrap">
-                <div className="card-company__head-rate">{companyInfor.rating || 5 }</div>
+                <div className="card-company__head-rate">{ 5 }</div>
                 <div className="card-company__head-star">
-                  <Rate disabled defaultValue={companyInfor.rating || 5 } className="card-company__head-rate-antd"/>
-                  <div className="card-company__head-count">{companyInfor.reviewCount || "Tên công ty "} đánh giá</div>
+                  <Rate disabled defaultValue={ 5 } className="card-company__head-rate-antd"/>
+                  <div className="card-company__head-count">{ 0 } đánh giá</div>
                 </div>
               </div>
               <div className="card-company__head-percent-wrap">
-                <div className="card-company__head-percent">{companyInfor.recommendationRate || 100 }<span>%</span></div>
+                <div className="card-company__head-percent">{ 100 }<span>%</span></div>
                 <div className="card-company__head-percent-text">Khuyến khích làm việc tại đây</div>
               </div>
             </div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./CVProfile.scss";
 import { FaRegEdit } from "react-icons/fa";
-import avatar from "../../../assets/images/unnamed.jpg";
+import avatar from "@/assets/images/unnamed.jpg";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
 import { CiGift } from "react-icons/ci";
@@ -9,27 +9,59 @@ import { LuUser } from "react-icons/lu";
 import { IoClose, IoLocationOutline } from "react-icons/io5";
 import { RiGlobalLine } from "react-icons/ri";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import outImg from "../../../assets/images/outinfor.svg";
-import educationImg from "../../../assets/images/education.svg";
-import expImg from "../../../assets/images/experienceb.svg";
-import skillImg from "../../../assets/images/skill.svg";
-import projImg from "../../../assets/images/project.svg";
-import certificateImg from "../../../assets/images/certificate.svg";
-import awardImg from "../../../assets/images/award.svg";
+import outImg from "@/assets/images/outinfor.svg";
+import educationImg from "@/assets/images/education.svg";
+import expImg from "@/assets/images/experienceb.svg";
+import skillImg from "@/assets/images/skill.svg";
+import projImg from "@/assets/images/project.svg";
+import certificateImg from "@/assets/images/certificate.svg";
+import awardImg from "@/assets/images/award.svg";
 import Modal from "react-modal";
 import { Col, DatePicker, Row, Select } from "antd";
 import { Form, Input } from "antd";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
-import { updateSeekerInfor } from "../../../services/SeekerServices";
-import { GENDER_OPTIONS, VIETNAM_CITIES } from "../../../constants";
-import { isObjectEmpty } from "../../../helpers/checkObject";
+import { updateSeekerInfor } from "@/services/SeekerServices";
+import { GENDER_OPTIONS, VIETNAM_CITIES } from "@/constants";
+import { isObjectEmpty } from "@/helpers/checkObject";
 import dayjs from "dayjs";
-import { clearStorage } from "../../../helpers/localStorage";
+import { clearStorage } from "@/helpers/localStorage";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
-import { clearSeekerInfo, setSeekerFullInfo } from "../../../actions/Seeker";
+import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
+
+interface LegacySeekerState {
+  id: number;
+  userId: number;
+  fullName: string;
+  jobTitle: string;
+  phoneNumber: string;
+  dateOfBirth: string;
+  gender: string;
+  city: string;
+  address: string;
+  personalLink: string;
+  gmail: string;
+  coverLetter: string;
+  isLoaded: boolean;
+}
+
+interface LegacyRootState {
+  SeekerReducer: LegacySeekerState;
+}
+
+interface CVProfileFormValues {
+  fullName: string;
+  jobTitle: string;
+  gmail: string;
+  phoneNumber: string;
+  dateOfBirth: dayjs.Dayjs;
+  gender: string | null;
+  city: string | null;
+  address: string;
+  personalLink: string;
+}
 
 const dateFormat = "DD/MM/YYYY";
 const customStyles = {
@@ -45,7 +77,7 @@ const customStyles = {
   },
 };
 function CVProfile() {
-  const seeker = useSelector((state) => state.SeekerReducer);
+  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -70,10 +102,10 @@ function CVProfile() {
   const closeModal = () => {
     setIsOpen(false);
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
-  const onFinish = async (values) => {
+  const onFinish = async (values: CVProfileFormValues) => {
     const currentUserId = localStorage.getItem("id");
     console.log("Current User ID:", currentUserId);
     console.log("Seeker User ID:", seeker.userId);

@@ -1,32 +1,46 @@
 import { Link, Navigate } from "react-router-dom";
-import logo from "../../../assets/images/logo_nhieuviec4.png";
+import logo from "@/assets/images/logo_nhieuviec4.png";
 import "./Register.scss";
 import { Form, Input } from "antd";
 import { FcGoogle } from "react-icons/fc";
 import { useState } from "react";
 import { LuCircle } from "react-icons/lu";
-import ButtonSubmit from "../../../components/Button";
-import AgreementCheckBox from "../../../components/AgreementCheckbox";
-import { checkExist, register } from "../../../services/UserServices";
+import ButtonSubmit from "@/components/Button";
+import AgreementCheckBox from "@/components/AgreementCheckbox";
+import { checkExist, register } from "@/services/UserServices";
 import Swal from "sweetalert2";
-import generateToken from "../../../helpers/generateToken";
+import generateToken from "@/helpers/generateToken";
 import { useNavigate } from "react-router-dom";
-import { createSeekerDetail } from "../../../services/SeekerServices";
+import { createSeekerDetail } from "@/services/SeekerServices";
+
+interface RegisterFormValues {
+  fullName: string;
+  email: string;
+  password: string;
+}
+
+interface PasswordRule {
+  key: string;
+  text: string;
+  regex: RegExp;
+}
 
 function Register() {
   const navigate = useNavigate();
   const [checkedGG, setCheckedGG] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [passWord, setPassWord] = useState({});
-  const [validate, setValidate] = useState({});
-  const onHandleChange = (e) => {
+  const [_passWord, _setPassWord] = useState<Record<string, string>>({});
+  const [validate, setValidate] = useState<Record<string, boolean>>({});
+
+  const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.id === "agreement-registerform") {
       setChecked(e.target.checked);
     } else {
       setCheckedGG(e.target.checked);
     }
   };
-  const passwordRules = [
+
+  const passwordRules: PasswordRule[] = [
     { key: "length", text: "Ít nhất 12 ký tự", regex: /.{12,}/ },
     {
       key: "special",
@@ -37,16 +51,19 @@ function Register() {
     { key: "uppercase", text: "Ít nhất 1 chữ viết HOA", regex: /[A-Z]/ },
     { key: "lowercase", text: "Ít nhất 1 chữ viết thường", regex: /[a-z]/ },
   ];
-  const validationPassword = (values) => {
-    let check = true;
-    const newValidate = passwordRules.reduce((acc, rule) => {
-      acc[rule.key] = rule.regex.test(values);
-      return acc;
-    }, {});
 
+  const validationPassword = (values: string) => {
+    const newValidate = passwordRules.reduce<Record<string, boolean>>(
+      (acc, rule) => {
+        acc[rule.key] = rule.regex.test(values);
+        return acc;
+      },
+      {}
+    );
     setValidate(newValidate);
   };
-  const onFinish = async (values) => {
+
+  const onFinish = async (values: RegisterFormValues) => {
     console.log(values);
     const result = await checkExist(values);
     if (result.length > 0) {
@@ -96,9 +113,10 @@ function Register() {
         });
       }
     }
-    // const result = await register(values);
   };
-  const onFinishFailed = () => {};
+
+  const onFinishFailed = () => { };
+
   return (
     <>
       <div className="register">
@@ -178,11 +196,6 @@ function Register() {
                   {
                     pattern:
                       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{12,}$/,
-                    // pattern: /[a-z]/,
-                    // pattern: /[A-Z]/,
-                    // pattern: /\d/,
-                    // pattern: /[!@#$%^&*]/,
-                    // pattern: /.{12,}/,
                     message: "Chưa đúng định dạng",
                   },
                 ]}
@@ -198,23 +211,21 @@ function Register() {
                 <ul>
                   {passwordRules.map((item) => (
                     <li
-                      className={`${
-                        validate.hasOwnProperty(item.key)
+                      className={`${Object.prototype.hasOwnProperty.call(validate, item.key)
                           ? validate[item.key]
                             ? "register__checkpass-li--true"
                             : "register__checkpass-li--false"
                           : ""
-                      }`}
+                        }`}
                       key={item.key}
                     >
                       <LuCircle
-                        className={`register__checkpass-icon ${
-                          validate.hasOwnProperty(item.key)
+                        className={`register__checkpass-icon ${Object.prototype.hasOwnProperty.call(validate, item.key)
                             ? validate[item.key]
                               ? "register__checkpass-icon--true"
                               : "register__checkpass-icon--false"
                             : ""
-                        }`}
+                          }`}
                       />
                       {item.text}
                     </li>
@@ -242,4 +253,5 @@ function Register() {
     </>
   );
 }
+
 export default Register;

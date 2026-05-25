@@ -1,19 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
 import "./AppliedJobs.scss";
 import EmptyJobState from "../EmptyJobState";
-import CardApplication from "../../../../components/CardApplication";
+import CardApplication from "@/components/CardApplication";
 import { Row, Col, Select } from "antd";
-import { useSelector } from "react-redux";
-import {
-  getApplicationsBySeekerId,
-  getApplicationsBySeekerIdWithPagination,
-} from "../../../../services/SeekerServices";
 import { useOutletContext } from "react-router-dom";
 import { Pagination } from "antd";
 import { ImNotification } from "react-icons/im";
+import type { MyJobsOutletContext } from "../index";
 
 function AppliedJobs() {
-  const seeker = useSelector((state) => state.SeekerReducer);
   const {
     applicationList,
     setPagination,
@@ -21,7 +15,7 @@ function AppliedJobs() {
     totalApplications,
     pagination,
     sort,
-  } = useOutletContext();
+  } = useOutletContext<MyJobsOutletContext>();
 
   return totalApplications === 0 ? (
     <div className="applied-jobs">
@@ -83,4 +77,5 @@ function AppliedJobs() {
     </>
   );
 }
+
 export default AppliedJobs;

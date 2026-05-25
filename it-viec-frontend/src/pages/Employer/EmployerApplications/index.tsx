@@ -10,23 +10,50 @@ import {
   DatePicker,
   Button,
 } from "antd";
-import EmployerStart from "../../../components/EmployerStart";
+import EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
 import {
   getApplicationsWithJob,
   getApplicationsWithJobPagination,
   updateApplication,
-} from "../../../services/EmployerServices";
+} from "@/services/EmployerServices";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import Modal from "react-modal";
-import { SimpleEditor } from "../../../components/tiptap-templates/simple/simple-editor";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import "./EmployerApplications.scss";
 import dayjs from "dayjs";
-import { VIETNAM_CITIES } from "../../../constants/index";
+import { VIETNAM_CITIES } from "@/constants/index";
 import Swal from "sweetalert2";
 import TextArea from "antd/es/input/TextArea";
+import type { TableColumnsType } from "antd";
+
+interface ApplicationRecord {
+  id: string;
+  job: { id: string; title: string };
+  fullName: string;
+  phoneNumber: string;
+  resumeUrl: string;
+  coverLetter: string;
+  desiredLocations: string[];
+  appliedAt: string;
+  status: string;
+  employerMessage: string;
+}
+
+interface PaginationState {
+  current: number;
+  pageSize: number;
+}
+
+interface LegacyCompanyState {
+  id: string | number;
+}
+
+interface LegacyRootState {
+  CompanyReducer: LegacyCompanyState;
+}
 
 const customStyles = {
   content: {
@@ -55,15 +82,15 @@ const statusList = [
   },
 ];
 function EmployerApplications() {
-  const company = useSelector((state) => state.CompanyReducer);
-  const [datasource, setDatasource] = useState([]);
-  const [Pagination, setPagination] = useState({ current: 1, pageSize: 10 });
-  const [total, setTotal] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
+  const [datasource, setDatasource] = useState<ApplicationRecord[]>([]);
+  const [Pagination, setPagination] = useState<PaginationState>({ current: 1, pageSize: 10 });
+  const [total, setTotal] = useState<number>(0);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
-  const [update, setUpdate] = useState(false);
-  const columns = [
+  const [update, setUpdate] = useState<boolean>(false);
+  const columns: TableColumnsType<ApplicationRecord> = [
     {
       title: "ID",
       dataIndex: "id",
@@ -73,10 +100,10 @@ function EmployerApplications() {
       title: "Tên công việc",
       dataIndex: "job",
       key: "job",
-      render: (job) => (
+      render: (job: ApplicationRecord["job"]) => (
         <Link to={`/customer/job/${job.id}`}> {job?.title || "N/A"} </Link>
       ),
-      fixed: isMobile ? "" : "left",
+      fixed: isMobile ? undefined : "left",
     },
     {
       title: "Họ và Tên",
@@ -92,8 +119,8 @@ function EmployerApplications() {
       title: "Hồ sơ",
       dataIndex: "resumeUrl",
       key: "resumeUrl",
-      render: (text) => (
-        <a href={text} target="_blank">
+      render: (text: string) => (
+        <a href={text} target="_blank" rel="noopener noreferrer">
           {text}
         </a>
       ),
@@ -103,7 +130,7 @@ function EmployerApplications() {
       dataIndex: "coverLetter",
       key: "coverLetter",
       width: 200,
-      render: (text) => (
+      render: (text: string) => (
         <Tooltip placement="topLeft" title={text}>
           <div
             style={{
@@ -122,13 +149,13 @@ function EmployerApplications() {
       title: "Nơi làm việc mong muốn",
       dataIndex: "desiredLocations",
       key: "desiredLocations",
-      render: (text) => text.join(", "),
+      render: (text: string[]) => text.join(", "),
     },
     {
       title: "Thời gian nộp",
       dataIndex: "appliedAt",
       key: "appliedAt",
-      render: (text) =>
+      render: (text: string) =>
         new Date(text).toLocaleDateString("vi-VN", {
           year: "numeric",
           month: "2-digit",
@@ -142,7 +169,7 @@ function EmployerApplications() {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
-      render: (status) => {
+      render: (status: string) => {
         switch (status) {
           case "Rejected":
             return <Badge status="error" text="Rejected" />;
@@ -158,8 +185,8 @@ function EmployerApplications() {
     {
       title: "Hành động",
       key: "action",
-      fixed: isMobile ? "" : "right",
-      render: (text, record) => (
+      fixed: isMobile ? undefined : "right",
+      render: (_text: unknown, record: ApplicationRecord) => (
         <div className="button--detail" onClick={() => openModal(record)}>
           Xem chi tiết
         </div>
@@ -167,7 +194,7 @@ function EmployerApplications() {
     },
   ];
 
-  const onFinish = async (values) => {
+  const onFinish = async (values: Record<string, unknown>) => {
     const updatedValues = {
       status: values.status,
       employerMessage: values.employerMessage || "",
@@ -198,10 +225,10 @@ function EmployerApplications() {
       return;
     }
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
-  const openModal = (record) => {
+  const openModal = (record: ApplicationRecord) => {
     form.setFieldsValue({
       id: record.id,
       title: record.job?.title || "",
@@ -237,6 +264,7 @@ function EmployerApplications() {
       setTotal(applicationList.length);
     };
     getApplication();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -250,6 +278,7 @@ function EmployerApplications() {
       setDatasource(applicationList || []);
     };
     getApplication();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Pagination, update]);
   return (
     <>
@@ -349,6 +378,7 @@ function EmployerApplications() {
               </Col>
               <Col span={24}>
                 <Form.Item name="employerMessage" label="Thông báo phỏng vấn">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
@@ -365,7 +395,7 @@ function EmployerApplications() {
       </Modal>
       <div className="dashboard-employer">
         <EmployerStart content="Applications" type="search" />
-        <div styles={{ color: "black" }}>
+        <div style={{ color: "black" }}>
           <Table
             dataSource={datasource}
             columns={columns}

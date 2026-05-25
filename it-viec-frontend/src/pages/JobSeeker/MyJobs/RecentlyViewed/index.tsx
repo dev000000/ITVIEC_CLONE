@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./RecentlyViewed.scss";
 import EmptyJobState from "../EmptyJobState";
+
 function RecentlyViewed() {
-  const [jobList, setJobList] = useState([]);
+  const [jobList, _setJobList] = useState<unknown[]>([]);
+
   return jobList.length === 0 ? (
     <div className="applied-jobs">
       <EmptyJobState

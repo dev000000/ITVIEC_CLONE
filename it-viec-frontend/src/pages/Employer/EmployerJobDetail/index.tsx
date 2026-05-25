@@ -6,33 +6,65 @@ import {
   getJobWithCompany,
   getSkills,
   updateJob,
-} from "../../../services/EmployerServices";
-import EmployerStart from "../../../components/EmployerStart";
+} from "@/services/EmployerServices";
+import EmployerStart from "@/components/EmployerStart";
 import { Col, DatePicker, Row, Select } from "antd";
-import CardInforEmployer from "../../../components/CardInforEmployer";
-import CardJobHead from "../../../components/CardJobDetail/CardJobHead";
-import CardJobShowInfor from "../../../components/CardJobDetail/CardJobShowInfor";
-import CardJobContent from "../../../components/CardJobDetail/CardJobContent";
-import { isObjectEmpty } from "../../../helpers/checkObject";
+import CardInforEmployer from "@/components/CardInforEmployer";
+import CardJobHead from "@/components/CardJobDetail/CardJobHead";
+import CardJobShowInfor from "@/components/CardJobDetail/CardJobShowInfor";
+import CardJobContent from "@/components/CardJobDetail/CardJobContent";
+import { isObjectEmpty } from "@/helpers/checkObject";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
 import Modal from "react-modal";
 import { Button, Form, Input } from "antd";
 import { IoClose } from "react-icons/io5";
-import { SimpleEditor } from "../../../components/tiptap-templates/simple/simple-editor";
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-import { clearStorage } from "../../../helpers/localStorage";
+import { clearStorage } from "@/helpers/localStorage";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "../../../actions/User";
-import ButtonAction from "../../../components/ButtonAction";
+import { setLogin } from "@/actions/User";
+import ButtonAction from "@/components/ButtonAction";
+
+interface LegacySkill {
+  id: number;
+  skillName: string;
+}
+
+interface LegacyJobDetail {
+  id?: number;
+  companyId?: string | number;
+  title?: string;
+  location?: string;
+  salary?: string;
+  jobType?: string;
+  experienceLevel?: string;
+  postedAt?: string;
+  expiresAt?: string;
+  status?: string;
+  requiredSkills?: string[];
+  jobReason?: string;
+  jobDescription?: string;
+  jobRequirements?: string;
+  whyJoinUs?: string;
+}
+
+interface LegacyCompanyState {
+  id: string | number;
+}
+
+interface LegacyRootState {
+  CompanyReducer: LegacyCompanyState;
+}
+
 function EmployerJobDetail() {
-  const company = useSelector((state) => state.CompanyReducer);
+  const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
   const [form] = Form.useForm();
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const { id } = useParams();
-  const [job, setJob] = useState({});
-  const [skills, setSkills] = useState([]);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const { id } = useParams<{ id: string }>();
+  const [job, setJob] = useState<LegacyJobDetail>({});
+  const [skills, setSkills] = useState<LegacySkill[]>([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const customStyles = {
@@ -81,7 +113,7 @@ function EmployerJobDetail() {
       label: <span style={{ color: "#AD3D35" }}>Closed</span>,
     },
   ];
-  const skillList = skills.map((skill) => {
+  const skillList = skills.map((skill: LegacySkill) => {
     return {
       value: { id: skill.id, skillName: skill.skillName },
       label: <span>{skill.skillName}</span>,
@@ -95,7 +127,7 @@ function EmployerJobDetail() {
       try {
         const skillList = await getSkills();
         setSkills(skillList || []);
-        const jobInfo = await getJobWithCompany(id);
+        const jobInfo = await getJobWithCompany(id) as LegacyJobDetail;
         console.log("jobInfo", jobInfo);
         if (jobInfo.companyId != company.id) {
           clearStorage();
@@ -162,7 +194,7 @@ function EmployerJobDetail() {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: `Failed to delete job: ${error.message}`,
+          text: `Failed to delete job: ${(error as Error).message}`,
         });
       }
     });
@@ -173,7 +205,7 @@ function EmployerJobDetail() {
   function openModal() {
     setIsOpen(true);
   }
-  const onFinish = async (values) => {
+  const onFinish = async (values: Record<string, unknown>) => {
     try {
       const result = await updateJob(values.id, values);
       if (!isObjectEmpty(result)) {
@@ -200,7 +232,7 @@ function EmployerJobDetail() {
       });
     }
   };
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
 
@@ -322,21 +354,25 @@ function EmployerJobDetail() {
               </Col>
               <Col span={24}>
                 <Form.Item name="jobReason" label="Lý do để gia nhập công ty">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item name="jobDescription" label="Mô tả công việc">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item name="jobRequirements" label="Yêu cầu công việc">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item name="whyJoinUs" label="Tại sao bạn nên gia nhập">
+                  {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
