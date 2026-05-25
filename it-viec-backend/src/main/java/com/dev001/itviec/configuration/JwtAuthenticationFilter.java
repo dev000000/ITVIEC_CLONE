@@ -44,7 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || uri.startsWith("/api/v1/companies/slug/") && method.equals("GET")
                 || uri.contains("/register/seekers")
                 || uri.contains("/refresh-token")
-                || uri.contains("/login");
+                || uri.contains("/login")
+                || uri.contains("/api/v1/companies") && method.equals("GET")
+                || uri.contains("/api/v1/jobs") && method.equals("GET")
+                || uri.contains("/api/v1/companies/slug/*") && method.equals("GET");
     }
 
     @Override
