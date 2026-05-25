@@ -10,16 +10,15 @@ import { useSeekerStore } from "@/store/seekerStore";
 
 const { Content } = Layout;
 
-function LayoutDefault() {
+function LayoutDefault(): JSX.Element {
   const navigate = useNavigate();
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
-  // const authenticated = useUserStore((state) => state.authenticated);
   const setLogin = useUserStore((state) => state.setLogin);
   const logout = useUserStore((state) => state.logout);
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
-   useEffect(() => {
-    const checkAuth = async () => {
+  useEffect(() => {
+    const checkAuth = async (): Promise<void> => {
       try {
         const response = await getMeApi();
         console.log("response me", response);
@@ -31,7 +30,7 @@ function LayoutDefault() {
       } finally {
         setIsCheckingToken(false);
       }
-    }
+    };
     checkAuth();
   }, []);
 
@@ -51,4 +50,5 @@ function LayoutDefault() {
     </>
   );
 }
+
 export default LayoutDefault;

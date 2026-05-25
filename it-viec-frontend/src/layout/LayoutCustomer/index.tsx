@@ -1,31 +1,39 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import "./LayoutCustomer.scss";
 import { useEffect, useState } from "react";
-import logo from "../../assets/images/nhieu viec (355 x 85 px).png";
-import { getCompanyWithJobsByUserID } from "../../services/EmployerServices";
-import MenuItem from "../../components/SiderBar/MenuItem";
+import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
+import { getCompanyWithJobsByUserID } from "@/services/EmployerServices";
+import MenuItem from "@/components/SiderBar/MenuItem";
 import { FiPieChart } from "react-icons/fi";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { BsBriefcase } from "react-icons/bs";
 import { HiOutlineDocument } from "react-icons/hi2";
 import { IoIosLogOut } from "react-icons/io";
-import { clearStorage } from "../../helpers/localStorage";
+import { clearStorage } from "@/helpers/localStorage";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "../../actions/User";
-import { clearCompanyInfo, setCompanyFullInfo } from "../../actions/Company";
+import { setLogin } from "@/actions/User";
+import { clearCompanyInfo, setCompanyFullInfo } from "@/actions/Company";
 import { CgProfile } from "react-icons/cg";
-function LayoutCustomer() {
-  const company = useSelector((state) => state.CompanyReducer);
+
+interface CompanyState {
+  id?: number;
+  userId?: string;
+  name?: string;
+}
+
+function LayoutCustomer(): JSX.Element {
+  const company = useSelector((state: any) => state.CompanyReducer) as CompanyState;
   const dispatch = useDispatch();
   const [isLoadingCompany, setIsLoadingCompany] = useState(false);
   const userId = localStorage.getItem("id");
   const navigate = useNavigate();
+
   useEffect(() => {
-    const getCompanyInfo = async () => {
+    const getCompanyInfo = async (): Promise<void> => {
       try {
         const companyInfor = await getCompanyWithJobsByUserID(userId);
-        if (companyInfor.length > 0 && companyInfor[0].userId == userId) {
+        if (companyInfor.length > 0 && companyInfor[0].userId === userId) {
           dispatch(setCompanyFullInfo(companyInfor[0]));
           setIsLoadingCompany(true);
         } else {
@@ -34,7 +42,7 @@ function LayoutCustomer() {
               id: 0,
               ok: false,
               userType: "none",
-            }),
+            })
           );
           clearStorage();
           navigate("/");
@@ -47,8 +55,10 @@ function LayoutCustomer() {
     };
     getCompanyInfo();
   }, [userId]);
+
   console.log("company", company);
-  const handleLogout = () => {
+
+  const handleLogout = (): void => {
     Swal.fire({
       title: "Are you sure?",
       icon: "warning",
@@ -62,7 +72,7 @@ function LayoutCustomer() {
             id: 0,
             ok: false,
             userType: "none",
-          }),
+          })
         );
         dispatch(clearCompanyInfo());
         clearStorage();
@@ -74,6 +84,7 @@ function LayoutCustomer() {
       }
     });
   };
+
   return (
     <>
       {isLoadingCompany ? (
@@ -132,9 +143,6 @@ function LayoutCustomer() {
               <Outlet />
             </div>
           </div>
-          {/* <Col span={5}>
-            <div className="layout-customer__rightcontent"><DashBoardSider/></div>
-          </Col> */}
         </div>
       ) : (
         <div>Loading.....</div>
@@ -142,4 +150,5 @@ function LayoutCustomer() {
     </>
   );
 }
+
 export default LayoutCustomer;

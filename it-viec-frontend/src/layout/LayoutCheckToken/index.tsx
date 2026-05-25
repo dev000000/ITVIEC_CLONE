@@ -1,17 +1,29 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { checkTokenUsers } from "../../services/UserServices";
-import { setLogin } from "../../actions/User";
-import { clearStorage } from "../../helpers/localStorage";
+import { checkTokenUsers } from "@/services/UserServices";
+import { setLogin } from "@/actions/User";
+import { clearStorage } from "@/helpers/localStorage";
+import "./LayoutCheckToken.scss";
 
-function LayoutCheckToken({ checkRole }) {
-  const isLogin = useSelector((state) => state.UserReducer);
+interface LayoutCheckTokenProps {
+  checkRole: string;
+}
+
+interface UserState {
+  id: number;
+  ok: boolean;
+  userType: string;
+}
+
+function LayoutCheckToken({ checkRole }: LayoutCheckTokenProps): JSX.Element {
+  const isLogin = useSelector((state: any) => state.UserReducer) as UserState;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isCheckingToken, setIsCheckingToken] = useState(true);
+
   useEffect(() => {
-    const checkToken = async () => {
+    const checkToken = async (): Promise<void> => {
       try {
         const token = localStorage.getItem("token");
         const userType = localStorage.getItem("userType");
@@ -27,13 +39,12 @@ function LayoutCheckToken({ checkRole }) {
                 id: result[0].id,
                 ok: true,
                 userType: userType,
-              }),
+              })
             );
           } else {
             clearStorage();
             navigate("/");
           }
-        } else {
         }
       } catch (error) {
         console.error("Loi khi kiem tra token: ", error);
@@ -43,9 +54,12 @@ function LayoutCheckToken({ checkRole }) {
     };
     checkToken();
   }, []);
+
   if (isCheckingToken) {
     return <div>Đang tải...</div>;
   }
+
   return <Outlet />;
 }
+
 export default LayoutCheckToken;
