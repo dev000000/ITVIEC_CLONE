@@ -1,19 +1,11 @@
-import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
-
-interface LegacyUserState {
-  ok: boolean;
-  id: string | null;
-  userType: string;
-}
+import { useUserStore } from "@/store/userStore";
 
 const EmployerPrivateRoute = () => {
-  const isLogin = useSelector(
-    (state: { UserReducer: LegacyUserState }) => state.UserReducer
-  );
-  const isLoggedIsAnEmployer = isLogin?.ok && isLogin?.userType === "employer";
+  const { authenticated, role } = useUserStore();
+  const isLoggedAndIsAnEmployer = authenticated && role === "EMPLOYER";
   return (
-    <>{isLoggedIsAnEmployer ? <Outlet /> : <Navigate to="login" />}</>
+    <>{isLoggedAndIsAnEmployer ? <Outlet /> : <Navigate to="login" />}</>
   );
 };
 
