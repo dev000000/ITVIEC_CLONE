@@ -1,50 +1,39 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
-import { checkTokenUsers } from "@/services/UserServices";
-import { setLogin } from "@/actions/User";
 import { clearStorage } from "@/helpers/localStorage";
 import "./LayoutCheckToken.scss";
+import type { Role } from "@/types/common.types";
+import { getMeApi } from "@/services_new/authApi";
+import { useUserStore } from "@/store/userStore";
 
 interface LayoutCheckTokenProps {
-  checkRole: string;
+  checkRole: Role;
 }
 
-interface UserState {
-  id: number;
-  ok: boolean;
-  userType: string;
-}
+const LayoutCheckToken = ({ checkRole }: LayoutCheckTokenProps) => {
 
-function LayoutCheckToken({ checkRole }: LayoutCheckTokenProps): JSX.Element {
-  const isLogin = useSelector((state: any) => state.UserReducer) as UserState;
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const setLogin = useUserStore((state) => state.setLogin);
+
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
   useEffect(() => {
     const checkToken = async (): Promise<void> => {
       try {
-        const token = localStorage.getItem("token");
-        const userType = localStorage.getItem("userType");
-        if (!token || !userType) {
-          setIsCheckingToken(false);
-          return;
-        }
-        const result = await checkTokenUsers(token, userType);
-        if (userType === checkRole) {
-          if (result.length > 0) {
-            dispatch(
-              setLogin({
-                id: result[0].id,
-                ok: true,
-                userType: userType,
-              })
-            );
-          } else {
-            clearStorage();
-            navigate("/");
-          }
+        const checkTokenResult = await getMeApi();
+        const user = checkTokenResult.data.result;
+        // Kiểm tra user hiện tại có role phù hợp với route hay không
+        if (user.role === checkRole) {
+          setLogin({
+            authenticated: user.authenticated,
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+          });
+        }else {
+          // Nếu role không phù hợp, chuyển hướng về trang chủ
+          navigate("/");
         }
       } catch (error) {
         console.error("Loi khi kiem tra token: ", error);

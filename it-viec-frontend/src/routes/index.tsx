@@ -20,6 +20,7 @@ import EmployerDetailRate from '@/pages/Shared/EmployerDetailRate';
 import JobSearch from '@/pages/Shared/JobSearch';
 import RouteDecider from './RouteDecider';
 import JobSearchDetail from '@/pages/Shared/JobSearchDetail';
+import { ROLE } from '@/types/common.types';
 
 /**
  * Main application routes configuration for React Router v6
@@ -62,13 +63,13 @@ export const routes: RouteObject[] = [
         ],
       },
       {
-        element: <LayoutCheckToken checkRole="jobSeeker" />,
+        element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
         children: [PublicRoutes, PrivateRoutes],
       },
     ],
   },
   {
-    element: <LayoutCheckToken checkRole="jobSeeker" />,
+    element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
     children: [
       PublicRoutes,
       {
@@ -89,7 +90,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: 'customer',
-    element: <LayoutCheckToken checkRole="employer" />,
+    element: <LayoutCheckToken checkRole={ROLE.EMPLOYER} />,
     children: [EmployerPublicRoutes, EmployerPrivateRoutes],
   },
   {

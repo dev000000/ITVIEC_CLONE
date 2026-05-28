@@ -5,60 +5,60 @@ import logo from "@/assets/images/logo_nhieuviec4.png";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import ButtonSubmit from "@/components/Button";
-import { checkLogin } from "@/services/UserServices";
 import { useNavigate } from "react-router-dom";
-import { setLocalStorageUser } from "@/helpers/localStorage";
-import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "@/actions/User";
 import Swal from "sweetalert2";
-import { getSeekerInforByUserId } from "@/services/SeekerServices";
-import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
+import type { AuthenticationRequest } from "@/types/request.types";
+import { loginApi } from "@/services_new/authApi";
+import { getMyProfileApi } from "@/services_new/seekerApi";
+import { useUserStore } from "@/store/userStore";
+import { useSeekerStore } from "@/store/seekerStore";
 
-interface LoginFormValues {
-  email: string;
-  password: string;
-}
-
-interface LegacySeekerState {
-  isLoaded: boolean;
-}
-
-interface LegacyRootState {
-  SeekerReducer: LegacySeekerState;
-}
 
 function Login() {
-  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
-  console.log("Login");
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const onFinish = async (values: LoginFormValues) => {
-    const newValues = { ...values, userType: "jobSeeker" };
-    const result = await checkLogin(newValues);
-    if (result.length > 0) {
-      setLocalStorageUser(result[0]);
-      const resultSeeker = await getSeekerInforByUserId(result[0].id);
-      dispatch(
-        setLogin({
-          id: result[0].id,
-          ok: true,
-          userType: "jobSeeker",
-        }),
-      );
-      if (resultSeeker && resultSeeker[0]) {
-        if (seeker.isLoaded === true) {
-          dispatch(clearSeekerInfo());
-        } else {
-          dispatch(setSeekerFullInfo(resultSeeker[0]));
-        }
-      }
+  const setLogin = useUserStore((state) => state.setLogin);
+  const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
+
+  const onFinish = async (values: AuthenticationRequest) => {
+    try {
+      const { data: apiData } = await loginApi(values);
+      const user = apiData.result;
+      setLogin({
+        authenticated: user.authenticated,
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      });
+
+      const { data: seekerData } = await getMyProfileApi();
+      const seeker = seekerData.result;
+      setSeekerFullInfo({
+        id: seeker.id,
+        fullName: seeker.fullName,
+        jobTitle: seeker.jobTitle,
+        phoneNumber: seeker.phoneNumber,
+        dateOfBirth: seeker.dateOfBirth,
+        gender: seeker.gender,
+        city: seeker.city,
+        address: seeker.address,
+        personalLink: seeker.personalLink,
+        coverLetter: seeker.coverLetter,
+        createdAt: seeker.createdAt,
+        updatedAt: seeker.updatedAt,
+        skills: seeker.skills,
+        desiredLocations: seeker.desiredLocations,
+      });
+
       Swal.fire({
         title: "Đăng nhập thành công!",
         icon: "success",
         draggable: true,
       });
       navigate("/");
-    } else {
+
+    } catch (error) {
+      console.error("Lỗi khi đăng nhập: ", error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -67,7 +67,7 @@ function Login() {
     }
   };
   const onFinishFailed = () => {
-    console.log("hehe bro");
+
   };
   return (
     <>
