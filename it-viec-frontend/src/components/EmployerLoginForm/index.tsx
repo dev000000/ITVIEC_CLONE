@@ -1,49 +1,47 @@
 import { Col, Form, Row, Input } from "antd";
 import "./EmployerLoginForm.scss";
 import logo from "@/assets/images/logo_nhieuviec4.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ButtonSubmit from "@/components/Button";
-import { checkLogin } from "@/services/UserServices";
-import { useNavigate } from "react-router-dom";
-import { setLocalStorageUser } from "@/helpers/localStorage";
-import { useDispatch } from "react-redux";
-import { setLogin } from "@/actions/User";
+
 import Swal from "sweetalert2";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
 import { LiaPhoneVolumeSolid } from "react-icons/lia";
 import { RxEnvelopeClosed } from "react-icons/rx";
+import type { AuthenticationRequest } from "@/types/request.types";
+import { loginApi } from "@/services_new/authApi";
+import { useUserStore } from "@/store/userStore";
 
 function EmployerLoginForm() {
   const navigate = useNavigate();
-  // const isLogin = useSelector(state => state.userReducer);
-  const dispatch = useDispatch();
-  const onFinish = async (values: { email: string; password: string }) => {
-    console.log(values);
-    const newValues = { ...values, userType: "employer" };
-    const result = await checkLogin(newValues);
-
-    if (result.length > 0) {
-      setLocalStorageUser(result[0]);
-      dispatch(
-        setLogin({
-          id: result[0].id,
-          ok: true,
-          userType: result[0].userType,
-        }),
-      );
-      Swal.fire({
-        title: "Đăng nhập thành công!",
-        icon: "success",
-        draggable: true,
-      });
-      // navigate("/customer/dashboard");
-    } else {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Đăng nhập không thành công!",
-      });
-    }
+  const setLogin = useUserStore((state) => state.setLogin);
+  const onFinish = async (values: AuthenticationRequest) => {
+    try {
+          const { data: apiData } = await loginApi(values);
+          const user = apiData.result;
+          setLogin({
+            authenticated: user.authenticated,
+            id: user.id,
+            email: user.email,
+            role: user.role,
+            status: user.status,
+          });
+          Swal.fire({
+            title: "Đăng nhập thành công!",
+            icon: "success",
+            draggable: true,
+          });
+          navigate("/");
+    
+        } catch (error) {
+          console.error("Lỗi khi đăng nhập: ", error);
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Đăng nhập không thành công!",
+          });
+        }
+    
   };
   const onFinishFailed = () => {
     console.log("hehe bro");

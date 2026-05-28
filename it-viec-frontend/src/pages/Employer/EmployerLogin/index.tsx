@@ -2,7 +2,6 @@
 import EmployerLoginForm from "@/components/EmployerLoginForm";
 import "./EmployerLogin.scss"
 function EmployerLogin() {
-  console.log("EmployerLogin");
   return (
     <>
       <div className="employer-login">

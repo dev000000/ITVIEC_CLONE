@@ -62,16 +62,18 @@ export const routes: RouteObject[] = [
           { path: 'danh-gia', element: <EmployerDetailRate /> },
         ],
       },
+      // Public routes: không cần token check
+      PublicRoutes,
+      // Private routes: cần xác thực SEEKER
       {
         element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
-        children: [PublicRoutes, PrivateRoutes],
+        children: [PrivateRoutes],
       },
     ],
   },
   {
     element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
     children: [
-      PublicRoutes,
       {
         element: <PrivateRoute />,
         children: [
@@ -90,8 +92,15 @@ export const routes: RouteObject[] = [
   },
   {
     path: 'customer',
-    element: <LayoutCheckToken checkRole={ROLE.EMPLOYER} />,
-    children: [EmployerPublicRoutes, EmployerPrivateRoutes],
+    children: [
+      // Public routes: không cần token check (login, register)
+      EmployerPublicRoutes,
+      // Private routes: cần xác thực EMPLOYER
+      {
+        element: <LayoutCheckToken checkRole={ROLE.EMPLOYER} />,
+        children: [EmployerPrivateRoutes],
+      },
+    ],
   },
   {
     path: '*',
