@@ -34,7 +34,7 @@ public class JobController {
     }
 
     // 2.API trả về thông tin chi tiết của job theo slug, công việc phải được active
-    @GetMapping("/jobs/{slug}")
+    @GetMapping("/jobs/slug/{slug}")
     public ApiResponse<JobDetailResponse> getJobBySlug(@PathVariable String slug) {
         return ApiResponse.<JobDetailResponse>builder()
                 .code(1000)

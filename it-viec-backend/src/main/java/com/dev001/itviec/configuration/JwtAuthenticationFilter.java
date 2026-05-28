@@ -47,7 +47,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || uri.contains("/login")
                 || uri.contains("/api/v1/companies") && method.equals("GET")
                 || uri.contains("/api/v1/jobs") && method.equals("GET")
-                || uri.contains("/api/v1/companies/slug/*") && method.equals("GET");
+                || uri.contains("/api/v1/companies/slug/*") && method.equals("GET")
+                || uri.contains("/api/v1/jobs/slug/*") && method.equals("GET");
     }
 
     @Override
