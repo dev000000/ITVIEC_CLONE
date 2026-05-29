@@ -1,0 +1,63 @@
+{
+  "search": {
+    "title": "Search IT Jobs",
+    "subtitle": "{{count}}+ IT jobs waiting for you",
+    "placeholder": "Enter skills, position, company name...",
+    "cityPlaceholder": "All cities",
+    "button": "Search"
+  },
+  "card": {
+    "salary": "Salary",
+    "negotiable": "Negotiable",
+    "location": "Location",
+    "deadline": "Deadline",
+    "posted": "Posted {{time}} ago",
+    "hot": "HOT",
+    "urgent": "Urgent",
+    "applied": "Applied",
+    "saved": "Saved",
+    "save": "Save job",
+    "apply": "Apply now",
+    "viewDetails": "View details",
+    "created": "Created:",
+    "jobType": "Job type:",
+    "experienceLevel": "Experience:",
+    "postedTime": "Posted"
+  },
+  "detail": {
+    "jobDescription": "Job Description",
+    "requirements": "Requirements",
+    "benefits": "Benefits",
+    "workingTime": "Working Hours",
+    "workingLocation": "Working Location",
+    "skills": "Skills",
+    "level": "Level",
+    "experience": "Experience",
+    "jobType": "Job Type",
+    "industry": "Industry"
+  },
+  "status": {
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "closed": "Closed"
+  },
+  "myJobs": {
+    "title": "My Jobs",
+    "saved": "Saved Jobs",
+    "applied": "Applied Jobs",
+    "noSaved": "You have no saved jobs",
+    "noApplied": "You have not applied to any jobs"
+  },
+  "application": {
+    "title": "Application",
+    "coverLetter": "Cover Letter",
+    "submitAt": "Submitted at",
+    "status": "Status"
+  },
+  "loginToSeeSalary": "Sign in to see salary",
+  "topJobsTitle": "{{count}} IT Jobs for Quality Developers",
+  "viewMore": "View {{count}} more jobs",
+  "topEmployers": "Top Employers",
+  "jobCount": "{{count}} Jobs"
+}

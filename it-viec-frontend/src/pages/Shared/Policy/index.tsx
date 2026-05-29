@@ -1,8 +1,11 @@
-function Policy () {
+import { useTranslation } from "react-i18next";
+
+function Policy() {
+  const { t } = useTranslation("shared");
   return (
     <>
-        <div className="test">Trang Policy</div>
+      <div className="test">{t("policy.title")}</div>
     </>
-  )
+  );
 }
 export default Policy;

@@ -1,7 +1,9 @@
 import "./CampaignHighLight.scss";
 import img from "@/assets/images/hot 1.webp";
 import { BsArrowRightCircle } from "react-icons/bs";
+import { useTranslation } from "react-i18next";
 function CampaignHighLight() {
+  const { t } = useTranslation("jobseeker");
   return (
     <>
       <div className="campaign-highlight">
@@ -11,8 +13,8 @@ function CampaignHighLight() {
               <img src={img} alt="icon hot"></img>
             </div>
             <div className="campaign-highlight__title">
-              <div className="campaign-highlight__title-1">Khám phá Lời mời công việc</div>
-              <div className="campaign-highlight__title-2">Cập nhật CV mới nhất để x2 tốc độ tìm việc</div>
+              <div className="campaign-highlight__title-1">{t("campaign.title1")}</div>
+              <div className="campaign-highlight__title-2">{t("campaign.title2")}</div>
             </div>
             <div>
               <BsArrowRightCircle />

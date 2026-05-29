@@ -16,6 +16,7 @@ import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
 import { updateSeekerInfor } from "@/services/SeekerServices";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import { clearStorage } from "@/helpers/localStorage";
+import { useTranslation } from "react-i18next";
 
 interface LegacySeekerState {
   id: number;
@@ -62,6 +63,7 @@ function CVManager() {
   const [value, setValue] = useState<string[]>(seeker.desiredLocations || []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation("jobseeker");
 
   const originalCoverLetter = useRef("");
   const handleEditCoverLetter = () => {
@@ -112,7 +114,7 @@ function CVManager() {
       dispatch(setSeekerFullInfo(result));
       setCoverLetter(result.coverLetter || "");
       Swal.fire({
-        title: "Update Profile Success!",
+        title: t("cvManager.success.updateProfile"),
         icon: "success",
         draggable: true,
       });
@@ -123,7 +125,7 @@ function CVManager() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Update Profile Fail!",
+        text: t("cvManager.error.updateFailed"),
       });
     }
   };
@@ -142,7 +144,7 @@ function CVManager() {
       setCoverLetter(result.coverLetter || "");
       if (!isObjectEmpty(result)) {
         Swal.fire({
-          title: "Update Letter Success!",
+          title: t("cvManager.success.updateLetter"),
           icon: "success",
           draggable: true,
         });
@@ -152,8 +154,8 @@ function CVManager() {
       console.error("Error updating cover letter:", error);
       Swal.fire({
         icon: "error",
-        title: "Lỗi!",
-        text: "Cập nhật thất bại!",
+        title: "Oops...",
+        text: t("cvManager.error.updateFailed"),
       });
     }
   };
@@ -171,7 +173,7 @@ function CVManager() {
         contentLabel="Example Modal"
       >
         <div className="cv-form__title-wrap">
-          <div className="cv-form__title"> Thông tin cá nhân</div>
+          <div className="cv-form__title"> {t("cvManager.personalInfo")}</div>
           <div className="cv-form__close-button" onClick={closeModal}>
             <IoClose />
           </div>
@@ -196,12 +198,12 @@ function CVManager() {
             <Row gutter={[10, 10]}>
               <Col span={24}>
                 <Form.Item
-                  label={<label className="cv-form__label">Họ và Tên</label>}
+                  label={<label className="cv-form__label">{t("cvManager.fullName")}</label>}
                   name="fullName"
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng nhập họ và tên!",
+                      message: t("cvManager.validation.fullNameRequired"),
                     },
                   ]}
                 >
@@ -211,17 +213,17 @@ function CVManager() {
               <Col span={24}>
                 <Form.Item
                   label={
-                    <label className="cv-form__label">Số điện thoại</label>
+                    <label className="cv-form__label">{t("cvManager.phoneNumber")}</label>
                   }
                   name="phoneNumber"
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng nhập số điện thoại!",
+                      message: t("cvManager.validation.phoneRequired"),
                     },
                     {
                       pattern: /^[0-9]{10,11}$/,
-                      message: "Số điện thoại không hợp lệ!",
+                      message: t("cvManager.validation.phoneFormat"),
                     },
                   ]}
                 >
@@ -233,13 +235,13 @@ function CVManager() {
                   name="desiredLocations"
                   label={
                     <label className="cv-form__label">
-                      Nơi làm việc mong muốn
+                      {t("cvManager.desiredLocations")}
                     </label>
                   }
                   rules={[
                     {
                       required: true,
-                      message: "Vui lòng chọn địa điểm làm việc!",
+                      message: t("cvManager.validation.locationsRequired"),
                     },
                   ]}
                 >
@@ -254,7 +256,7 @@ function CVManager() {
                 </Form.Item>
                 <div>
                   {" "}
-                  {value.length}/{maxCountCity} địa điểm
+                  {t("cvManager.locationCount", { count: value.length, max: maxCountCity })}
                 </div>
               </Col>
             </Row>
@@ -271,7 +273,7 @@ function CVManager() {
               xs={12}
             >
               <div className="cv-form__cancel-button" onClick={closeModal}>
-                Hủy
+                {t("cvManager.cancel")}
               </div>
             </Col>
             <Col xxl={3} xl={3} lg={3} md={12} sm={12} xs={12}>
@@ -279,7 +281,7 @@ function CVManager() {
                 className="cv-form__save-button"
                 onClick={() => form.submit()}
               >
-                Lưu
+                {t("cvManager.save")}
               </div>
             </Col>
           </Row>
@@ -287,13 +289,12 @@ function CVManager() {
       </Modal>
       <div className="cv-manager">
         <div className="job-seeker-section">
-          <h2 className="cv-manager__main-title--custom">Quản lý CV</h2>
+          <h2 className="cv-manager__main-title--custom">{t("cvManager.title")}</h2>
           <p className="cv-manager__text">
-            Tải CV của bạn bên dưới để có thể sử dụng xuyên suốt quá trình tìm
-            việc
+            {t("cvManager.uploadDesc")}
           </p>
           <div className="cv-manager__block">
-            <h3 className="cv-manager__main-title">CV của bạn</h3>
+            <h3 className="cv-manager__main-title">{t("cvManager.yourCV")}</h3>
             <div className="update-cv update-cv--2">
               <img
                 src={uploadImg}
@@ -308,41 +309,40 @@ function CVManager() {
                   CV.docx
                 </Link>
                 <div className="update-cv__file-date">
-                  Cập nhật lần cuối: 24/05/2025
+                  {t("cvManager.yourCV")}
                 </div>
               </div>
             </div>
-            <ButtonUpload text="Tải CV lên" handleUpload={onClick} />
+            <ButtonUpload text={t("cvManager.uploadCV")} handleUpload={onClick} />
             <p className="cv-manager__text cv-manager__text--small">
-              Hỗ trợ định dạng .doc, .docx hoặc .pdf, dưới 3MB và không chứa mật
-              khẩu bảo vệ
+              {t("cvManager.supportedFormats")}
             </p>
           </div>
           <div className="cv-manager__block">
             <div className="cv-manager__header">
-              <h3 className="cv-manager__main-title">Thông tin cá nhân</h3>
+              <h3 className="cv-manager__main-title">{t("cvManager.personalInfo")}</h3>
               <FaRegEdit onClick={openModal} />
             </div>
 
             <div className="cv-manager__content-wrap">
               <Row gutter={[10, 20]}>
                 <Col className="cv-manager__title" span={8}>
-                  Họ và Tên
+                  {t("cvManager.fullName")}
                 </Col>
                 <Col className={getFieldsClassName(seeker.fullName)} span={16}>
-                  {seeker.fullName || "Chưa cập nhật"}
+                  {seeker.fullName || t("cvManager.notUpdated")}
                 </Col>
                 <Col className="cv-manager__title" span={8}>
-                  Số điện thoại
+                  {t("cvManager.phoneNumber")}
                 </Col>
                 <Col
                   className={getFieldsClassName(seeker.phoneNumber)}
                   span={16}
                 >
-                  {seeker.phoneNumber || "Chưa cập nhật"}
+                  {seeker.phoneNumber || t("cvManager.notUpdated")}
                 </Col>
                 <Col className="cv-manager__title" span={8}>
-                  Nơi làm việc mong muốn
+                  {t("cvManager.desiredLocations")}
                 </Col>
                 <Col
                   className={getFieldsClassName(seeker.desiredLocations)}
@@ -350,7 +350,7 @@ function CVManager() {
                 >
                   {seeker.desiredLocations && seeker.desiredLocations.length > 0
                     ? seeker.desiredLocations.join(", ")
-                    : "Chưa cập nhật"}
+                    : t("cvManager.notUpdated")}
                 </Col>
               </Row>
             </div>
@@ -360,38 +360,38 @@ function CVManager() {
           <div className="cv-manager__block cv-manager__block--main">
             <div className="cv-manager__header">
               <h3 className="cv-manager__main-title cv-manager__main-title--custom">
-                Thông tin chung
+                {t("cvManager.generalInfo")}
               </h3>
               <FaRegEdit />
             </div>
             <div className="cv-manager__content-wrap">
               <Row gutter={[10, 20]}>
                 <Col className="cv-manager__title" span={8}>
-                  Tổng số năm kinh nghiệm
+                  {t("cvManager.totalExperience")}
                 </Col>
                 <Col
                   className="cv-manager__content cv-manager__content--default"
                   span={16}
                 >
-                  Thêm thông tin
+                  {t("cvManager.addInfo")}
                 </Col>
                 <Col className="cv-manager__title" span={8}>
-                  Cấp bậc hiện tại
+                  {t("cvManager.currentLevel")}
                 </Col>
                 <Col
                   className="cv-manager__content cv-manager__content--default"
                   span={16}
                 >
-                  Thêm thông tin
+                  {t("cvManager.addInfo")}
                 </Col>
                 <Col className="cv-manager__title" span={8}>
-                  Hình thức làm việc mong muốn
+                  {t("cvManager.workType")}
                 </Col>
                 <Col
                   className="cv-manager__content cv-manager__content--default"
                   span={16}
                 >
-                  Thêm thông tin
+                  {t("cvManager.addInfo")}
                 </Col>
               </Row>
             </div>
@@ -401,7 +401,7 @@ function CVManager() {
           <div className="cv-manager__block cv-manager__block--main">
             <div className="cv-manager__header">
               <h3 className="cv-manager__main-title cv-manager__main-title--custom">
-                Thư xin việc
+                {t("cvManager.coverLetter")}
               </h3>
               <FaRegEdit onClick={handleEditCoverLetter} />
             </div>
@@ -414,8 +414,7 @@ function CVManager() {
                   : "cv-manager__mail"
               }
             >
-              {seeker.coverLetter ||
-                "Bạn chưa cập nhật thư xin việc. Hãy cập nhật để nhà tuyển dụng có thể hiểu rõ hơn về bạn!"}
+              {seeker.coverLetter || t("cvManager.coverLetterEmpty")}
             </p>
             <div
               className={
@@ -425,8 +424,7 @@ function CVManager() {
               }
             >
               <p className="cv-manager__note">
-                Gợi ý: Bắt đầu bằng việc mô tả những gì bạn có thể mang đến cho
-                công việc và tại sao công việc này lại khiến bạn hứng thú
+                {t("cvManager.coverLetterHint")}
               </p>
               <Form
                 onFinish={onFinish2}
@@ -440,7 +438,7 @@ function CVManager() {
                 <Form.Item name="coverLetter" style={{ marginBottom: "5px" }}>
                   <Input.TextArea
                     rows={6}
-                    placeholder="Nhập thư xin việc của bạn tại đây..."
+                    placeholder={t("cvManager.coverLetterPlaceholder")}
                     value={coverLetter}
                     size="large"
                     maxLength={500}
@@ -448,7 +446,7 @@ function CVManager() {
                   />
                 </Form.Item>
                 <div style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                  {coverLetter.length}/500 ký tự
+                  {t("cvManager.charCount", { count: coverLetter.length })}
                 </div>
                 <div className="cv-form__footer cv-form__footer--custom">
                   <Row gutter={[10, 10]}>
@@ -464,7 +462,7 @@ function CVManager() {
                         className="cv-form__cancel-button"
                         onClick={handleCancelCoverLetter}
                       >
-                        Hủy
+                        {t("cvManager.cancel")}
                       </div>
                     </Col>
                     <Col xxl={5} xl={5} lg={5} md={12} sm={12} xs={12}>
@@ -473,7 +471,7 @@ function CVManager() {
                           className="cv-form__save-button cv-form__save-button--custom"
                           type="submit"
                         >
-                          Lưu
+                          {t("cvManager.save")}
                         </button>
                       </Form.Item>
                     </Col>

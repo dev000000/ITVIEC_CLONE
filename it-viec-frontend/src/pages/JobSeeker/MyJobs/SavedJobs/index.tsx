@@ -1,16 +1,18 @@
 import { useState } from "react";
 import "./SavedJobs.scss";
 import EmptyJobState from "../EmptyJobState";
+import { useTranslation } from "react-i18next";
 
 function SavedJobs() {
   const [jobList, _setJobList] = useState<unknown[]>([]);
+  const { t } = useTranslation("jobseeker");
 
   return jobList.length === 0 ? (
     <div className="saved-jobs">
       <EmptyJobState
-        notificationText="Bạn có thể lưu tối đa 20 công việc."
-        emptyMessage="Bạn chưa lưu công việc nào."
-        buttonText="Tìm việc ngay"
+        notificationText={t("savedJobs.notification")}
+        emptyMessage={t("savedJobs.emptyMessage")}
+        buttonText={t("savedJobs.findJob")}
         buttonLink="/"
       />
     </div>

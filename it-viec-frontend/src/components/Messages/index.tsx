@@ -1,12 +1,14 @@
 import "./Messages.scss";
 import { CiChat1 } from "react-icons/ci";
 import avatar from "@/assets/images/avatar.webp";
+import { useTranslation } from "react-i18next";
 
 function Messages() {
+  const { t } = useTranslation("employer");
   return (
     <div className="msg">
       <div className="msg__head">
-        <div className="msg__title">Messages</div>
+        <div className="msg__title">{t("messages.title")}</div>
         <div className="msg__icon">
           <CiChat1 />
         </div>

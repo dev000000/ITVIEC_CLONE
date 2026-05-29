@@ -1,9 +1,8 @@
-import { Col, Form, Row, Input } from "antd";
+import { Form, Input } from "antd";
 import "./EmployerLoginForm.scss";
 import logo from "@/assets/images/logo_nhieuviec4.png";
 import { Link, useNavigate } from "react-router-dom";
 import ButtonSubmit from "@/components/Button";
-
 import Swal from "sweetalert2";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
 import { LiaPhoneVolumeSolid } from "react-icons/lia";
@@ -11,37 +10,39 @@ import { RxEnvelopeClosed } from "react-icons/rx";
 import type { AuthenticationRequest } from "@/types/request.types";
 import { loginApi } from "@/services_new/authApi";
 import { useUserStore } from "@/store/userStore";
+import { useTranslation } from "react-i18next";
 
 function EmployerLoginForm() {
   const navigate = useNavigate();
   const setLogin = useUserStore((state) => state.setLogin);
+  const { t } = useTranslation(["employer", "auth"]);
   const onFinish = async (values: AuthenticationRequest) => {
     try {
-          const { data: apiData } = await loginApi(values);
-          const user = apiData.result;
-          setLogin({
-            authenticated: user.authenticated,
-            id: user.id,
-            email: user.email,
-            role: user.role,
-            status: user.status,
-          });
-          Swal.fire({
-            title: "Đăng nhập thành công!",
-            icon: "success",
-            draggable: true,
-          });
-          navigate("/");
-    
-        } catch (error) {
-          console.error("Lỗi khi đăng nhập: ", error);
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "Đăng nhập không thành công!",
-          });
-        }
-    
+      const { data: apiData } = await loginApi(values);
+      const user = apiData.result;
+      setLogin({
+        authenticated: user.authenticated,
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+      });
+      Swal.fire({
+        title: t("auth:login.successTitle"),
+        icon: "success",
+        draggable: true,
+      });
+      navigate("/");
+
+    } catch (error) {
+      console.error("Lỗi khi đăng nhập: ", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: t("auth:login.errorTitle"),
+      });
+    }
+
   };
   const onFinishFailed = () => {
     console.log("hehe bro");
@@ -57,12 +58,12 @@ function EmployerLoginForm() {
               </div>
               <div className="welcome__title-employer">
                 {" "}
-                CUSTOMER ADMIN SITE{" "}
+                {t("employer:loginCustomer.customerAdminSite")}{" "}
               </div>
             </div>
             <h1 className="employerLogin-form__title">
               {" "}
-              Đăng nhập NHIEUviec Customer{" "}
+              {t("employer:loginCustomer.title")}{" "}
             </h1>
 
             <div className="employerLogin-form__form">
@@ -79,11 +80,11 @@ function EmployerLoginForm() {
                   rules={[
                     {
                       required: true,
-                      message: "Thông tin bắt buộc",
+                      message: t("auth:validation.required"),
                     },
                     {
                       type: "email",
-                      message: "Email không đúng định dạng",
+                      message: t("auth:validation.emailFormat"),
                     },
                   ]}
                 >
@@ -95,63 +96,55 @@ function EmployerLoginForm() {
                 </Form.Item>
 
                 <Form.Item
-                  label="Mật khẩu"
+                  label={t("auth:login.password")}
                   name="password"
                   rules={[
                     {
                       required: true,
-                      message: "Thông tin bắt buộc",
+                      message: t("auth:validation.required"),
                     },
                   ]}
                 >
                   <Input.Password
                     className="employerLogin-form__input"
-                    placeholder="Mật khẩu"
+                    placeholder={t("auth:login.password")}
                     size="large"
                   />
                 </Form.Item>
                 <div className="employerLogin-form__remember-forget">
                   <AgreementCheckBox
                     id="remember-employerLoginForm"
-                    text="Ghi nhớ đăng nhập"
+                    text={t("employer:loginCustomer.rememberLogin")}
                     onHandleChange={() => { }}
                   />
                   <div>
-                    <a href="">Quên mật khẩu?</a>
+                    <a href="">{t("auth:login.forgotPassword")}</a>
                   </div>
                 </div>
                 <div className="employerLogin-form__terms-policy">
-                  Bằng việc đăng nhập, bạn đồng ý với các{" "}
-                  <a
-                    href="/terms-conditions-vn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Điều khoản dịch vụ
+                  {t("auth:login.termsAgree")}{" "}
+                  <a href="/terms-conditions-vn" target="_blank" rel="noopener noreferrer">
+                    {t("auth:login.termsLinkText")}
                   </a>{" "}
-                  và{" "}
-                  <a
-                    href="/quy-dinh-bao-mat"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Chính sách quyền riêng tư
+                  {t("auth:login.termsAnd")}{" "}
+                  <a href="/quy-dinh-bao-mat" target="_blank" rel="noopener noreferrer">
+                    {t("auth:login.privacyLinkText")}
                   </a>{" "}
-                  của ITviec liên quan đến thông tin riêng tư của bạn.
+                  {t("auth:login.termsOutro")}
                 </div>
                 <Form.Item label={null}>
-                  <ButtonSubmit text="Đăng nhập" type="max" />
+                  <ButtonSubmit text={t("auth:login.submit")} type="max" />
                 </Form.Item>
               </Form>
             </div>
 
             <div className="register-login">
-              Bạn chưa có tài khoản?{" "}
-              <Link to="/customer/register">Đăng ký ngay</Link>
+              {t("employer:loginCustomer.noAccount")}{" "}
+              <Link to="/customer/register">{t("auth:login.register")}</Link>
             </div>
             <div className="employerLogin-form__contact">
               <div className="employerLogin-form__contact-title">
-                Bạn chưa có tài khoản khách hàng? Liên hệ chúng tôi:
+                {t("employer:loginCustomer.contactTitle")}
               </div>
               <div className="employerLogin-form__contact-list">
                 <ul>

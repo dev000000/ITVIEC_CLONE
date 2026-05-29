@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./EmployerJobDetail.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -59,6 +60,7 @@ interface LegacyRootState {
 }
 
 function EmployerJobDetail() {
+  const { t } = useTranslation();
   const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
   const [form] = Form.useForm();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
@@ -249,7 +251,7 @@ function EmployerJobDetail() {
         contentLabel="Example Modal"
       >
         <div className="job-form__title-wrap">
-          <div className="job-form__title">Edit Jobs</div>
+          <div className="job-form__title">{t("employer:jobs.editTitle")}</div>
           <div className="job-form__close-button" onClick={closeModal}>
             <IoClose />
           </div>
@@ -275,32 +277,32 @@ function EmployerJobDetail() {
           >
             <Row gutter={[10, 10]}>
               <Col span={12}>
-                <Form.Item label="Job id" name="id">
+                <Form.Item label={t("employer:jobs.form.jobId")} name="id">
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Company id" name="companyId">
+                <Form.Item label={t("employer:jobs.form.companyId")} name="companyId">
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Tiêu đề" name="title">
+                <Form.Item label={t("employer:jobs.form.title")} name="title">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Địa điểm" name="location">
+                <Form.Item label={t("employer:jobs.form.location")} name="location">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Mức lương" name="salary">
+                <Form.Item label={t("employer:jobs.form.salary")} name="salary">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Hình thức làm việc" name="jobType">
+                <Form.Item label={t("employer:jobs.form.jobType")} name="jobType">
                   <Select
                     placeholder="Please select a job type"
                     options={jobTypeList}
@@ -308,7 +310,7 @@ function EmployerJobDetail() {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Trình độ chuyên môn" name="experienceLevel">
+                <Form.Item label={t("employer:jobs.form.experienceLevel")} name="experienceLevel">
                   <Select
                     placeholder="Please select a level"
                     options={experienceLevelList}
@@ -316,17 +318,17 @@ function EmployerJobDetail() {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="postedAt" label="Thời gian bắt đầu">
+                <Form.Item name="postedAt" label={t("employer:jobs.form.postedAt")}>
                   <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="expiresAt" label="Thời gian kết thúc">
+                <Form.Item name="expiresAt" label={t("employer:jobs.form.expiresAt")}>
                   <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Trạng thái" name="status">
+                <Form.Item label={t("employer:jobs.form.status")} name="status">
                   <Select
                     placeholder="Please select status"
                     options={statusList}
@@ -336,7 +338,7 @@ function EmployerJobDetail() {
               <Col span={24}>
                 <Form.Item
                   name="requiredSkills"
-                  label="Kỹ năng yêu cầu"
+                  label={t("employer:jobs.form.requiredSkills")}
                   rules={[
                     {
                       required: true,
@@ -353,25 +355,25 @@ function EmployerJobDetail() {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobReason" label="Lý do để gia nhập công ty">
+                <Form.Item name="jobReason" label={t("employer:jobs.form.jobReason")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobDescription" label="Mô tả công việc">
+                <Form.Item name="jobDescription" label={t("employer:jobs.form.jobDescription")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobRequirements" label="Yêu cầu công việc">
+                <Form.Item name="jobRequirements" label={t("employer:jobs.form.jobRequirements")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="whyJoinUs" label="Tại sao bạn nên gia nhập">
+                <Form.Item name="whyJoinUs" label={t("employer:jobs.form.whyJoinUs")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
@@ -379,7 +381,7 @@ function EmployerJobDetail() {
               <Col>
                 <Form.Item label={null}>
                   <Button type="primary" htmlType="submit">
-                    Submit
+                    {t("employer:jobs.form.submit")}
                   </Button>
                 </Form.Item>
               </Col>
@@ -388,15 +390,15 @@ function EmployerJobDetail() {
         </div>
       </Modal>
       <div className="employer-job">
-        <EmployerStart content="Job Detail" handleBack={handleBack} />
+        <EmployerStart content={t("employer:jobs.jobDetail")} handleBack={handleBack} />
         <div className="employer-job__button-wrap">
           <ButtonAction
-            text="Edit"
+            text={t("employer:jobs.edit")}
             icon={<TbEdit />}
             handle={handleEdit}
           ></ButtonAction>
           <ButtonAction
-            text="Delete"
+            text={t("employer:jobs.delete")}
             icon={<RiDeleteBin5Line />}
             handle={handleDelete}
           ></ButtonAction>

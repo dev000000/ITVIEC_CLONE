@@ -20,6 +20,7 @@ import TextArea from "antd/es/input/TextArea";
 import { VIETNAM_CITIES } from "@/constants";
 import DOMPurify from "dompurify";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
+import { useTranslation } from "react-i18next";
 
 interface ApplicationJob {
   slug?: string;
@@ -60,7 +61,6 @@ const logoMap: Record<string, string> = {
   "bosch-global-software-technologies-company-limited": BOSCH,
   "ssi-securities-corporation": SSI,
 };
-const content = <div> Mở trong tab mới </div>;
 const customStyles = {
   content: {
     top: "50%",
@@ -88,6 +88,8 @@ const statusList = [
   },
 ];
 function CardApplication({ application }: CardApplicationProps) {
+  const { t } = useTranslation("employer");
+  const content = <div>{t("cardApplication.openNewTab")}</div>;
   const [modalIsOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm();
   const date = dayjs(application.appliedAt).format("DD/MM/YYYY");
@@ -96,18 +98,18 @@ function CardApplication({ application }: CardApplicationProps) {
     if (!application.job?.slug) {
       return;
     }
-      return window.open(`/viec-lam-it/${application.job?.slug}`, "_blank");;
+    return window.open(`/viec-lam-it/${application.job?.slug}`, "_blank");;
   };
   const status = () => {
     switch (application.status) {
       case "Rejected":
-        return <Badge status="error" text="Rejected" />;
+        return <Badge status="error" text={t("applications.statusBadge.rejected")} />;
       case "Accepted":
-        return <Badge status="success" text="Accepted" />;
+        return <Badge status="success" text={t("applications.statusBadge.accepted")} />;
       case "Pending":
-        return <Badge status="processing" text="Pending" />;
+        return <Badge status="processing" text={t("applications.statusBadge.pending")} />;
       default:
-        return <Badge status="default" text="Không xác định" />;
+        return <Badge status="default" text={t("applications.statusBadge.unknown")} />;
     }
   };
   const closeModal = () => {
@@ -139,7 +141,7 @@ function CardApplication({ application }: CardApplicationProps) {
         contentLabel="Example Modal"
       >
         <div className="job-form__title-wrap">
-          <div className="job-form__title">Chi tiết</div>
+          <div className="job-form__title">{t("cardApplication.detailTitle")}</div>
           <div className="job-form__close-button" onClick={closeModal}>
             <IoClose />
           </div>
@@ -162,45 +164,45 @@ function CardApplication({ application }: CardApplicationProps) {
           >
             <Row gutter={[10, 10]}>
               <Col xxl={12} xl={12} lg={12} md={12} sm={24} xs={24}>
-                <Form.Item label="Tên công việc" name="title">
+                <Form.Item label={t("applications.detail.jobTitle")} name="title">
                   <Input />
                 </Form.Item>
               </Col>
 
               <Col span={12} xl={12} lg={12} md={12} sm={24} xs={24}>
-                <Form.Item label="Tên Công Ty" name="companyName">
+                <Form.Item label={t("applications.detail.companyName")} name="companyName">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item label="Mức Lương" name="salary">
+                <Form.Item label={t("applications.detail.salary")} name="salary">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={12} xl={12} lg={12} md={12} sm={24} xs={24}>
-                <Form.Item label="Họ Và Tên" name="fullName">
+                <Form.Item label={t("applications.detail.fullName")} name="fullName">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={12} xl={12} lg={12} md={12} sm={24} xs={24}>
-                <Form.Item label="Số điện thoại" name="phoneNumber">
+                <Form.Item label={t("applications.detail.phoneNumber")} name="phoneNumber">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item label="Hồ sơ" name="resumeUrl">
+                <Form.Item label={t("applications.detail.resume")} name="resumeUrl">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item label="Thư xin việc" name="coverLetter">
+                <Form.Item label={t("applications.detail.coverLetter")} name="coverLetter">
                   <TextArea rows={4} maxLength={6} />
                 </Form.Item>
               </Col>
               <Col span={10} xl={10} lg={10} md={24} sm={24} xs={24}>
                 <Form.Item
                   name="desiredLocations"
-                  label="Nơi làm việc mong muốn"
+                  label={t("applications.detail.desiredLocations")}
                   rules={[
                     {
                       required: true,
@@ -217,12 +219,12 @@ function CardApplication({ application }: CardApplicationProps) {
                 </Form.Item>
               </Col>
               <Col span={7} xl={7} lg={7} md={12} sm={24} xs={24}>
-                <Form.Item name="appliedAt" label="Thời gian nộp">
-                  <DatePicker showTime format="DD-MM-YYYY HH:mm:ss" style={{width: "100%"}} />
+                <Form.Item name="appliedAt" label={t("applications.detail.appliedAt")}>
+                  <DatePicker showTime format="DD-MM-YYYY HH:mm:ss" style={{ width: "100%" }} />
                 </Form.Item>
               </Col>
               <Col span={7} xl={7} lg={7} md={12} sm={24} xs={24}>
-                <Form.Item label="Trạng thái" name="status">
+                <Form.Item label={t("applications.detail.status")} name="status">
                   <Select
                     placeholder="Please select status"
                     options={statusList}
@@ -230,14 +232,14 @@ function CardApplication({ application }: CardApplicationProps) {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Thư phản hồi" name="employerMessage">
+                <Form.Item label={t("applications.detail.employerMessage")} name="employerMessage">
                   <div className="html-preview card-application__employer-message">
                     <div
                       className="preview-content"
                       dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(
                           application.employerMessage ||
-                            "Chưa có phản hồi từ nhà tuyển dụng."
+                          t("cardApplication.noReply")
                         ),
                       }}
                     />
@@ -248,7 +250,7 @@ function CardApplication({ application }: CardApplicationProps) {
           </Form>
         </div>
       </Modal>
-      <div className="card-application__date card-application__date--top">Ứng tuyển vào {date}</div>
+      <div className="card-application__date card-application__date--top">{t("cardApplication.appliedOn", { date })}</div>
       <div className="card-application__wrapper">
         <div className="card-application__left">
           <div className="card-application__img-wrap">
@@ -258,7 +260,7 @@ function CardApplication({ application }: CardApplicationProps) {
             <h4 className="card-application__title">
               {application.job?.title || "???"}{" "}
               <Popover content={content} placement="top">
-                <LuSquareArrowOutUpRight onClick={handleNavigate}/>
+                <LuSquareArrowOutUpRight onClick={handleNavigate} />
               </Popover>
             </h4>
             <Link className="card-application__company">
@@ -271,11 +273,11 @@ function CardApplication({ application }: CardApplicationProps) {
           </div>
         </div>
         <div className="card-application__right">
-          <div className="card-application__date">Ứng tuyển vào {date}</div>
+          <div className="card-application__date">{t("cardApplication.appliedOn", { date })}</div>
           <div className="card-application__status">{status()}</div>
           <div className="card-application__details" onClick={openModal}>
             {" "}
-            Xem chi tiết{" "}
+            {t("cardApplication.viewDetail")}{" "}
           </div>
         </div>
       </div>

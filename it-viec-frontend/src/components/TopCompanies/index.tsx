@@ -13,6 +13,7 @@ import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { CompanyCardResponse } from "@/types/response.types";
+import { useTranslation } from "react-i18next";
 
 const logoMap: Record<string, string> = {
   "mb-bank": MB,
@@ -32,13 +33,13 @@ interface TopCompaniesProps {
 
 function TopCompanies({ companyList }: TopCompaniesProps) {
   companyList = companyList || [];
-
   const navigate = useNavigate();
+  const { t } = useTranslation("job");
   return (
     <>
       <div className="top-companies">
         <div className="container">
-          <h1 className="top-companies__title"> Nhà tuyển dụng hàng đầu </h1>
+          <h1 className="top-companies__title">{t("topEmployers")}</h1>
           <div className="top-companies__list">
             <Row gutter={[{ xs: 0, sm: 16, md: 20, lg: 20 }, 20]}>
               {companyList.map((company) => {
@@ -79,7 +80,7 @@ function TopCompanies({ companyList }: TopCompaniesProps) {
                         <div>{company.address}</div>
                         <div className="top-companies__view-more">
                           <RiRadioButtonLine className="top-companies__icon-live" />
-                          <div>{company.numberOfJobsActive} Việc làm</div>
+                          <div>{t("jobCount", { count: company.numberOfJobsActive })}</div>
                           <MdOutlineKeyboardArrowRight />
                         </div>
                       </div>

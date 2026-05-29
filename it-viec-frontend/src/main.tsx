@@ -1,4 +1,5 @@
 import { createRoot } from "react-dom/client";
+import "@/i18n";
 import "@/styles/index.css";
 import App from "./App.jsx";
 import { BrowserRouter } from "react-router-dom";
@@ -8,8 +9,8 @@ import Modal from "react-modal";
 import { ToastContainer } from "react-toastify";
 Modal.setAppElement("#root");
 createRoot(document.getElementById("root")).render(
-    <BrowserRouter>
-      <App />
-      <ToastContainer/>
-    </BrowserRouter>
+  <BrowserRouter>
+    <App />
+    <ToastContainer />
+  </BrowserRouter>
 );

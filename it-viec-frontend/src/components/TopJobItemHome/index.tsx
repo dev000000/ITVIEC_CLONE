@@ -17,6 +17,7 @@ import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { JobCardResponse } from "@/types/response.types";
+import { useTranslation } from "react-i18next";
 
 const logoMap: Record<string, string> = {
   "mb-bank": MB,
@@ -39,9 +40,10 @@ function TopJobItemHome({ job }: TopJobItemProps) {
   const authenticated = useUserStore((state) => state.authenticated);
   const role = useUserStore((state) => state.role);
   const isSeekerLoggedIn = authenticated && role === "SEEKER";
+  const { t } = useTranslation("job");
 
   const handleNavigate = () => {
-      return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
+    return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
   };
 
   const tagListRef = useRef<HTMLDivElement>(null);
@@ -102,7 +104,7 @@ function TopJobItemHome({ job }: TopJobItemProps) {
       >
         <ImCoinDollar />{" "}
         <span>
-          {isSeekerLoggedIn ? job.salary : "Đăng nhập để xem mức lương"}{" "}
+          {isSeekerLoggedIn ? job.salary : t("loginToSeeSalary")}{" "}
         </span>
       </div>
       <div className="job__location">

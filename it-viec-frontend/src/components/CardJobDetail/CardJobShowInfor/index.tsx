@@ -6,6 +6,7 @@ import TagSkill from "@/components/TagSkill";
 import { MdLocationCity } from "react-icons/md";
 import { GoClock } from "react-icons/go";
 import { getRelativeTime } from "@/helpers/formattedTime";
+import { useTranslation } from "react-i18next";
 
 interface Job {
   postedAt?: string;
@@ -22,6 +23,7 @@ function CardJobShowInfor({ job }: CardJobShowInforProps) {
   job = job || {};
   const postedTime = getRelativeTime(job.postedAt);
   const skillList = job.requiredSkills || [];
+  const { t } = useTranslation("shared");
   return (
     <div className="card-job-showinfor">
       <div className="card-job-showinfor__list-image">
@@ -53,13 +55,13 @@ function CardJobShowInfor({ job }: CardJobShowInforProps) {
           <span>{job.jobType}</span>
         </div>
         <div className="card-job-showinfor__item">
-          <GoClock/>
+          <GoClock />
           <span>{postedTime}</span>
         </div>
         <div className="card-job-showinfor__skill-wrap">
-          <span className="card-job-showinfor__text">Kỹ năng:</span>
+          <span className="card-job-showinfor__text">{t("jobSearchDetail.skills")}</span>
           <span className="card-job-showinfor__skills">
-            {skillList.map((skill,index) => <TagSkill key={index} text={skill}/>)}
+            {skillList.map((skill, index) => <TagSkill key={index} text={skill} />)}
           </span>
         </div>
       </div>

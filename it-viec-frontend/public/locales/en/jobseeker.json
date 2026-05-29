@@ -1,0 +1,174 @@
+{
+  "campaign": {
+    "title1": "Explore Job Invitations",
+    "title2": "Update your latest CV to double your job search speed"
+  },
+  "profileOverview": {
+    "updateName": "Update name",
+    "updateJobTitle": "Update job title",
+    "updateEmail": "Update email",
+    "updateProfile": "Update profile",
+    "attachedCV": "Your attached CV",
+    "lastUpdated": "Last updated: 24/05/2025",
+    "manageAttachedCV": "Manage attached CV",
+    "yourActivity": "Your activity",
+    "appliedJobs": "Applied jobs",
+    "savedJobs": "Saved jobs",
+    "jobInvitations": "Job invitations"
+  },
+  "cvManager": {
+    "title": "CV Manager",
+    "uploadDesc": "Upload your CV below to use throughout your job search process",
+    "yourCV": "Your CV",
+    "uploadCV": "Upload CV",
+    "supportedFormats": "Supports .doc, .docx or .pdf format, under 3MB and not password protected",
+    "personalInfo": "Personal Information",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "desiredLocations": "Desired Work Location",
+    "notUpdated": "Not updated",
+    "locationCount": "{{count}}/{{max}} locations",
+    "generalInfo": "General Information",
+    "totalExperience": "Total years of experience",
+    "currentLevel": "Current level",
+    "workType": "Desired work type",
+    "addInfo": "Add information",
+    "coverLetter": "Cover Letter",
+    "coverLetterEmpty": "You haven't updated your cover letter. Update it to help employers understand you better!",
+    "coverLetterHint": "Hint: Start by describing what you can bring to the job and why this job interests you",
+    "coverLetterPlaceholder": "Enter your cover letter here...",
+    "charCount": "{{count}}/500 characters",
+    "cancel": "Cancel",
+    "save": "Save",
+    "validation": {
+      "fullNameRequired": "Please enter your full name!",
+      "phoneRequired": "Please enter your phone number!",
+      "phoneFormat": "Invalid phone number!",
+      "locationsRequired": "Please select a work location!"
+    },
+    "success": {
+      "updateProfile": "Profile updated successfully!",
+      "updateLetter": "Cover letter updated successfully!"
+    },
+    "error": {
+      "updateFailed": "Update failed!"
+    }
+  },
+  "cvProfile": {
+    "personalInfo": "Personal Information",
+    "fullNamePlaceholder": "Full name",
+    "jobTitlePlaceholder": "Update job title",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Phone number",
+    "dobPlaceholder": "Date of birth",
+    "genderPlaceholder": "Gender",
+    "addressPlaceholder": "Current address",
+    "personalLinkPlaceholder": "Personal link",
+    "fullName": "Full Name",
+    "jobTitle": "Job Title",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "dateOfBirth": "Date of Birth",
+    "gender": "Gender",
+    "currentCity": "Current Province/City",
+    "currentCityPlaceholder": "Current Province/City",
+    "address": "Current Address",
+    "addressInput": "Address (Street name, district/ward...)",
+    "personalLink": "Personal Link",
+    "personalLinkInput": "Personal link (LinkedIn, portfolio...)",
+    "editPhoto": "Edit",
+    "deletePhoto": "Delete",
+    "cancel": "Cancel",
+    "save": "Save",
+    "validation": {
+      "fullNameRequired": "Please enter your full name!",
+      "jobTitleRequired": "Please enter your job title!",
+      "phoneRequired": "Please enter your phone number!",
+      "dobRequired": "Please select your date of birth!"
+    },
+    "intro": "About Me",
+    "introDesc": "Introduce your strengths and years of experience",
+    "education": "Education",
+    "educationDesc": "Share your educational background",
+    "experience": "Work Experience",
+    "experienceDesc": "Show detailed information about your work history",
+    "skills": "Skills",
+    "skillsDesc": "List your professional skills",
+    "languages": "Languages",
+    "languagesDesc": "List the languages you know",
+    "projects": "Featured Projects",
+    "projectsDesc": "Introduce your featured projects",
+    "certificates": "Certificates",
+    "certificatesDesc": "Add certificates relevant to your skills",
+    "awards": "Awards",
+    "awardsDesc": "Show awards or achievements you have earned"
+  },
+  "myJobs": {
+    "title": "My Jobs",
+    "applied": "Applied",
+    "saved": "Saved",
+    "recentlyViewed": "Recently Viewed",
+    "loading": "Loading..."
+  },
+  "appliedJobs": {
+    "notification": "Jobs you have applied for are stored for the last 12 months.",
+    "emptyMessage": "You have not applied for any jobs in the past 12 months.",
+    "sortBy": "Sort by: ",
+    "sortNewest": "Most recent application date",
+    "sortOldest": "Oldest application date",
+    "findJob": "Find a job"
+  },
+  "savedJobs": {
+    "notification": "You can save up to 20 jobs.",
+    "emptyMessage": "You have not saved any jobs.",
+    "findJob": "Find a job"
+  },
+  "recentlyViewed": {
+    "notification": "Only shows jobs viewed in the last 3 months",
+    "emptyMessage": "You have not viewed any jobs in the past 12 months.",
+    "findJob": "Find a job"
+  },
+  "emptyJobState": {
+    "sortBy": "Sort by: ",
+    "sortNewest": "Most recent application date",
+    "sortOldest": "Oldest application date",
+    "findJob": "Find a job"
+  },
+  "jobApplications": {
+    "back": "Back",
+    "invalidJob": "Invalid job",
+    "basicInfo": "Basic Information",
+    "fullName": "Full Name",
+    "phoneNumber": "Phone Number",
+    "desiredLocations": "Desired Work Location",
+    "locationCount": "locations",
+    "coverLetterTitle": "Cover Letter (Optional)",
+    "coverLetterLabel": "What skills, projects, or achievements prove you are a potential candidate for this position?",
+    "coverLetterPlaceholder": "Give specific examples to make your application more convincing...",
+    "charsRemaining": "{{count}} remaining out of 500 characters",
+    "submitButton": "Submit My CV",
+    "loading": "Loading...",
+    "notFound": "Job not found with this ID!",
+    "backToHome": "Back to homepage",
+    "invalidJobId": "Invalid Job ID!",
+    "jobNotFound": "Job not found with this ID!",
+    "checkJobError": "An error occurred while checking the job!",
+    "loadSeekerError": "An error occurred while loading applicant information!",
+    "invalidJobSubmit": "Cannot submit application for an invalid job!",
+    "alreadyAppliedTitle": "Application already exists",
+    "alreadyApplied": "You have already applied for this job before!",
+    "successTitle": "Application submitted successfully!",
+    "successText": "We will contact you as soon as possible.",
+    "submitFailed": "Cannot submit application, please try again later!",
+    "submitError": "An error occurred while submitting the application!"
+  },
+  "settings": {
+    "title": "Settings"
+  },
+  "jobAlertSignUp": {
+    "title": "Job Alert Sign Up"
+  },
+  "jobInvitations": {
+    "title": "Job Invitations"
+  }
+}

@@ -1,5 +1,6 @@
 import { Col, Row } from "antd";
 import "./EmployerHome.scss";
+import { useTranslation } from "react-i18next";
 
 import img from "@/assets/images/hire-the-best-it.webp";
 import ButtonSubmit from "@/components/Button";
@@ -30,6 +31,7 @@ interface LogoItem {
 }
 
 function Employer() {
+  const { t } = useTranslation();
   const formRef = useRef<HTMLDivElement>(null);
   const focusForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -143,25 +145,21 @@ function Employer() {
               xs={{ span: 24, order: 2 }}
             >
               <div className="hire-it__content">
-                <h1>Tuyển dụng Nhân tài IT tại Việt Nam cùng NHIEUviec</h1>
-                <p>
-                  Với hiểu biết sâu sắc về lĩnh vực IT và các kỹ năng chuyên
-                  môn, chúng tôi có thể giúp bạn tiếp cận và tuyển dụng những
-                  ứng viên IT tốt nhất.
-                </p>
+                <h1>{t("employer:home.hero.title")}</h1>
+                <p>{t("employer:home.hero.description")}</p>
                 <ButtonSubmit
-                  text="Liên hệ ngay"
+                  text={t("employer:home.hero.contactBtn")}
                   type={isMobile ? "max" : "min"}
                   handleClick={focusForm}
                 />
                 <div className="hire-it__login">
-                  <span>Đăng nhập để đăng tin tuyển dụng</span>
+                  <span>{t("employer:home.hero.loginText")}</span>
                   <a
                     href="/customer/login"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Đăng nhập
+                    {t("employer:home.hero.loginBtn")}
                   </a>
                 </div>
               </div>
@@ -185,12 +183,9 @@ function Employer() {
         <div className="container">
           <div className="itviec-different__content">
             <div className="itviec-different__content-title">
-              Điều gì tạo nên sự khác biệt ở NHIEUviec?
+              {t("employer:home.different.title")}
             </div>
-            <p>
-              NHIEUviec là trang tuyển dụng và cơ sở dữ liệu hàng đầu về các
-              chuyên gia IT tại Việt Nam.
-            </p>
+            <p>{t("employer:home.different.desc")}</p>
           </div>
           <div className="itviec-different__list">
             <Row gutter={[20, 50]}>
@@ -202,7 +197,7 @@ function Employer() {
                   </div>
                   <div className="itviec-different__number">10,000+</div>
                   <div className="itviec-different__name">
-                    Công ty và Doanh nghiệp IT
+                    {t("employer:home.different.stat1")}
                   </div>
                 </div>
               </Col>
@@ -214,7 +209,7 @@ function Employer() {
                   </div>
                   <div className="itviec-different__number">1,500,000+</div>
                   <div className="itviec-different__name">
-                    Hồ sơ đã gửi đến Nhà tuyển dụng
+                    {t("employer:home.different.stat2")}
                   </div>
                 </div>
               </Col>
@@ -226,7 +221,7 @@ function Employer() {
                   </div>
                   <div className="itviec-different__number">300,000+</div>
                   <div className="itviec-different__name">
-                    Hồ sơ Ứng viên kinh nghiệm cao
+                    {t("employer:home.different.stat3")}
                   </div>
                 </div>
               </Col>
@@ -237,7 +232,7 @@ function Employer() {
       <div className="high-services">
         <div className="container">
           <div className="high-services__title">
-            Dịch vụ chất lượng cao dành cho Nhà tuyển dụng IT
+            {t("employer:home.services.title")}
           </div>
           <div className="high-services__list">
             <div className="high-services__item">
@@ -252,12 +247,10 @@ function Employer() {
                 >
                   <div className="high-services__item-sideContent">
                     <div className="high-services__item-title">
-                      Đăng tin tuyển dụng
+                      {t("employer:home.services.jobPosting.title")}
                     </div>
                     <p className="high-services__item-content">
-                      Đăng tuyển vị trí công việc IT, dễ dàng quản lý hồ sơ ứng
-                      viên với giao diện trực quan, đội ngũ hỗ trợ, và công cụ
-                      mạnh mẽ từ NHIEUviec
+                      {t("employer:home.services.jobPosting.desc")}
                     </p>
                     <div className="high-services__item-listFeature">
                       <Row gutter={[10, 20]}>
@@ -270,8 +263,7 @@ function Employer() {
                               ></img>
                             </div>
                             <p>
-                              Gia tăng cơ hội để tiếp cận ứng viên IT chất lượng
-                              từ ITviec
+                              {t("employer:home.services.jobPosting.feature1")}
                             </p>
                           </div>
                         </Col>
@@ -281,7 +273,7 @@ function Employer() {
                               <img src={rightSkillImg} alt="right_skill"></img>
                             </div>
                             <p>
-                              Thu hút ứng viên phù hợp với yêu cầu về kỹ năng IT
+                              {t("employer:home.services.jobPosting.feature2")}
                             </p>
                           </div>
                         </Col>
@@ -313,12 +305,10 @@ function Employer() {
                 <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
                   <div className="high-services__item-sideContent">
                     <div className="high-services__item-title">
-                      Gợi ý ứng viên AI Match
+                      {t("employer:home.services.aiMatch.title")}
                     </div>
                     <p className="high-services__item-content">
-                      Kết nối với nguồn hồ sơ ứng viên IT đa dạng, hoạt động
-                      tích cực. Dễ dàng tiếp cận ứng viên với thao tác đơn giản.
-                      Mở khóa để giúp tìm kiếm ứng viên phù hợp.
+                      {t("employer:home.services.aiMatch.desc")}
                     </p>
                     <div className="high-services__item-listFeature">
                       <Row gutter={[10, 20]}>
@@ -331,9 +321,7 @@ function Employer() {
                               ></img>
                             </div>
                             <p>
-                              Các ứng viên phù hợp nhất được lựa chọn dựa trên
-                              kỹ năng, kinh nghiệm, nhu cầu công việc và hơn thế
-                              nữa
+                              {t("employer:home.services.aiMatch.feature1")}
                             </p>
                           </div>
                         </Col>
@@ -346,14 +334,13 @@ function Employer() {
                               ></img>
                             </div>
                             <p>
-                              Chỉ kết nối nhà tuyển dụng với những nhân tài IT
-                              đang có ý định chuyển việc
+                              {t("employer:home.services.aiMatch.feature2")}
                             </p>
                           </div>
                         </Col>
                         <Col xxl={10} xl={10} lg={24} md={24} sm={24} xs={24}>
                           <ButtonSubmit
-                            text="Xem thêm về AI Match"
+                            text={t("employer:home.services.aiMatch.learnMore")}
                             type="max"
                           />
                         </Col>
@@ -375,12 +362,10 @@ function Employer() {
                 >
                   <div className="high-services__item-sideContent">
                     <div className="high-services__item-title">
-                      Thương hiệu tuyển dụng
+                      {t("employer:home.services.branding.title")}
                     </div>
                     <p className="high-services__item-content">
-                      Nâng cao nhận diện thương hiệu của Nhà tuyển dụng, tiếp
-                      cận các chuyên gia IT trên NHIEUviec qua các điểm chạm đặc
-                      biệt, và kết nối với các ứng viên IT hàng đầu tại Việt Nam
+                      {t("employer:home.services.branding.desc")}
                     </p>
                     <div className="high-services__item-listFeature">
                       <Row gutter={[10, 20]}>
@@ -394,12 +379,10 @@ function Employer() {
                             </div>
                             <div>
                               <p className="high-services__item-feature-title">
-                                Nhà tuyển dụng hàng đầu
+                                {t("employer:home.services.branding.topEmployer.title")}
                               </p>
                               <p>
-                                Các ứng viên phù hợp nhất được lựa chọn dựa trên
-                                kỹ năng, kinh nghiệm, nhu cầu công việc và hơn
-                                thế nữa
+                                {t("employer:home.services.branding.topEmployer.desc")}
                               </p>
                             </div>
                           </div>
@@ -414,11 +397,10 @@ function Employer() {
                             </div>
                             <div>
                               <p className="high-services__item-feature-title">
-                                Nhà tuyển dụng nổi bật
+                                {t("employer:home.services.branding.featuredEmployer.title")}
                               </p>
                               <p>
-                                Chỉ kết nối nhà tuyển dụng với những nhân tài IT
-                                đang có ý định chuyển việc
+                                {t("employer:home.services.branding.featuredEmployer.desc")}
                               </p>
                             </div>
                           </div>
@@ -443,10 +425,10 @@ function Employer() {
             </div>
           </div>
           <h3 className="high-services__cta-text">
-            Trải nghiệm dịch vụ của ITviec ngay hôm nay
+            {t("employer:home.services.ctaText")}
           </h3>
           <ButtonSubmit
-            text="Liên hệ ngay"
+            text={t("employer:home.services.ctaBtn")}
             type={isMobile ? "max" : "min"}
             handleClick={focusForm}
           />
@@ -455,11 +437,10 @@ function Employer() {
       <div className="top-employers">
         <div className="container">
           <div className="top-employers__title">
-            Top Công ty hàng đầu tại ITviec
+            {t("employer:home.topEmployers.title")}
           </div>
           <p className="top-employers__content">
-            Nhà tuyển dụng và đối tác của chúng tôi bao gồm các công ty IT hàng
-            đầu, và các công ty khởi nghiệp sáng tạo
+            {t("employer:home.topEmployers.desc")}
           </p>
           <div className="top-employers__list">
             <Row gutter={[20, 20]}>
@@ -473,7 +454,7 @@ function Employer() {
             </Row>
           </div>
           <div className="top-employers__feedback">
-            Khách hàng nói gì về chúng tôi?
+            {t("employer:home.topEmployers.feedback")}
           </div>
           <SwiperFeedback />
         </div>
@@ -481,11 +462,10 @@ function Employer() {
       <div className="contact-employers">
         <div className="container">
           <div className="contact-employers__title" ref={formRef}>
-            Tìm kiếm Nhân tài IT phù hợp
+            {t("employer:home.contact.title")}
           </div>
           <p className="contact-employers__desc">
-            Để lại thông tin liên hệ để nhận tư vấn từ Phòng Chăm sóc Khách hàng
-            của ITviec.
+            {t("employer:home.contact.desc")}
           </p>
           <Row gutter={[20, 20]}>
             <Col xxl={16} xl={16} lg={24} md={24} sm={24} xs={24}>
@@ -498,7 +478,7 @@ function Employer() {
                     <FiPhone />
                   </div>
                   <div className="contact-employers__item-content">
-                    <p>Hotline Hồ Chí Minh</p>
+                    <p>{t("employer:home.contact.hotlineHCM")}</p>
                     <h3>0977 460 519</h3>
                   </div>
                 </div>
@@ -507,7 +487,7 @@ function Employer() {
                     <FiPhone />
                   </div>
                   <div className="contact-employers__item-content">
-                    <p>Hotline Hà Nội</p>
+                    <p>{t("employer:home.contact.hotlineHN")}</p>
                     <h3>0983 131 531</h3>
                   </div>
                 </div>
@@ -516,8 +496,8 @@ function Employer() {
                     <FaRegClock />
                   </div>
                   <div className="contact-employers__item-content">
-                    <p>Thời gian làm việc</p>
-                    <h3>Thứ 2 - Thứ 6 | 8:30 - 17:00</h3>
+                    <p>{t("employer:home.contact.workingHours")}</p>
+                    <h3>{t("employer:home.contact.workingHoursValue")}</h3>
                   </div>
                 </div>
               </div>
@@ -531,14 +511,10 @@ function Employer() {
             <Col xxl={8} xl={8} lg={24} md={24} sm={24} xs={24}>
               <div className="excite-it__content">
                 <div className="excite-it__title">
-                  Sẵn sàng Hứng Khởi ngành IT tại Việt Nam với Tuyển Dụng "Chất"
+                  {t("employer:home.excite.title")}
                 </div>
                 <p className="excite-it__desc">
-                  Khởi đầu từ năm 2013, sứ mệnh của ITviec chính là luôn hướng
-                  đến tuyển dụng "chất" ngành IT. Chúng tôi giúp nhân sự ngành
-                  IT thăng tiến sự nghiệp, giúp doanh nghiệp tìm được những ứng
-                  viên tuyệt vời. Hãy cùng chúng tôi hứng khởi ngành IT tại Việt
-                  Nam với tuyển dụng "Chất"!
+                  {t("employer:home.excite.desc")}
                 </p>
               </div>
             </Col>

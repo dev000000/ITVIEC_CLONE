@@ -1,5 +1,6 @@
 import { FaCheck } from "react-icons/fa6";
 import "./AgreementCheckbox.scss";
+import { useTranslation } from "react-i18next";
 
 interface AgreementCheckBoxProps {
   id: string;
@@ -8,6 +9,7 @@ interface AgreementCheckBoxProps {
 }
 
 function AgreementCheckBox({ id, onHandleChange, text }: AgreementCheckBoxProps) {
+  const { t } = useTranslation("employer");
   return (
     <>
       <div className="agreement__checkbox">
@@ -20,26 +22,18 @@ function AgreementCheckBox({ id, onHandleChange, text }: AgreementCheckBoxProps)
         <label className="agreement__checkbox-label" htmlFor={id}>
           <FaCheck className="agreement__checkbox-icon" />
           {text ? (<div className="agreement__checkbox-content--custom">{text}</div>) : (<span className="agreement__checkbox-content">
-            Tôi đã đọc và đồng ý với các{" "}
-            <a
-              href="/terms-conditions-vn"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Điều khoản dịch vụ
+            {t("agreement.readAndAgree")}{" "}
+            <a href="/terms-conditions-vn" target="_blank" rel="noopener noreferrer">
+              {t("agreement.termsLink")}
             </a>{" "}
-            và{" "}
-            <a
-              href="/quy-dinh-bao-mat"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Chính sách quyền riêng tư
+            {t("agreement.and")}{" "}
+            <a href="/quy-dinh-bao-mat" target="_blank" rel="noopener noreferrer">
+              {t("agreement.privacyLink")}
             </a>{" "}
-            của NHIEUviec liên quan đến thông tin riêng tư của tôi.
+            {t("agreement.ofSite")}
           </span>)}
-          
-          
+
+
         </label>
       </div>
     </>

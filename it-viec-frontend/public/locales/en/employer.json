@@ -1,0 +1,245 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Hello, {{name}}!",
+    "totalJobs": "Total Jobs",
+    "totalApplications": "Total Applications",
+    "newApplications": "New Applications",
+    "activeJobs": "Active Jobs"
+  },
+  "jobs": {
+    "title": "Manage Jobs",
+    "create": "Post a New Job",
+    "edit": "Edit Job",
+    "delete": "Delete Job",
+    "noJobs": "No jobs posted yet",
+    "addTitle": "Add Job",
+    "editTitle": "Edit Job",
+    "jobDetail": "Job Detail",
+    "status": {
+      "active": "Active",
+      "closed": "Closed",
+      "draft": "Draft",
+      "expired": "Expired"
+    },
+    "form": {
+      "jobId": "Job id",
+      "companyId": "Company id",
+      "title": "Title",
+      "location": "Location",
+      "salary": "Salary",
+      "jobType": "Job Type",
+      "experienceLevel": "Experience Level",
+      "postedAt": "Start Date",
+      "expiresAt": "End Date",
+      "status": "Status",
+      "requiredSkills": "Required Skills",
+      "jobReason": "Reason to Join",
+      "jobDescription": "Job Description",
+      "jobRequirements": "Job Requirements",
+      "whyJoinUs": "Why You Should Join",
+      "submit": "Submit"
+    }
+  },
+  "applications": {
+    "title": "Manage Applications",
+    "viewProfile": "View Profile",
+    "download": "Download CV",
+    "noApplications": "No applications yet",
+    "viewDetail": "View Detail",
+    "columns": {
+      "id": "ID",
+      "jobTitle": "Job Title",
+      "fullName": "Full Name",
+      "phoneNumber": "Phone Number",
+      "resume": "Resume",
+      "coverLetter": "Cover Letter",
+      "desiredLocations": "Desired Locations",
+      "appliedAt": "Applied At",
+      "status": "Status",
+      "action": "Action"
+    },
+    "statusBadge": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "unknown": "Unknown"
+    },
+    "detail": {
+      "title": "Detail",
+      "jobTitle": "Job Title",      "companyName": "Company Name",
+      "salary": "Salary",      "fullName": "Full Name",
+      "phoneNumber": "Phone Number",
+      "resume": "Resume",
+      "coverLetter": "Cover Letter",
+      "desiredLocations": "Desired Locations",
+      "appliedAt": "Applied At",
+      "status": "Status",
+      "employerMessage": "Interview Message",
+      "submit": "Submit"
+    },
+    "status": {
+      "pending": "Pending",
+      "reviewed": "Reviewed",
+      "interview": "Interview",
+      "offered": "Offered",
+      "rejected": "Rejected"
+    }
+  },
+  "profile": {
+    "title": "Company Profile",
+    "companyName": "Company Name",
+    "companySize": "Company Size",
+    "industry": "Industry",
+    "website": "Website",
+    "description": "Company Description",
+    "address": "Address",
+    "logo": "Company Logo",
+    "editTitle": "Edit Information",
+    "edit": "Edit",
+    "openJobs": "{{count}} open positions",
+    "tabs": {
+      "about": "About",
+      "reviews": "Reviews",
+      "articles": "Articles"
+    },
+    "form": {
+      "companyName": "Company Name",
+      "description": "Description",
+      "address": "Address",
+      "companyModel": "Company Model",
+      "industry": "Industry",
+      "companySize": "Company Size",
+      "country": "Country",
+      "workingHours": "Working Hours",
+      "overtimePolicy": "Overtime Policy",
+      "skills": "Core Skills",
+      "companyIntroduction": "Company Introduction",
+      "ourExpertise": "Our Expertise",
+      "whyWorkHere": "Why You'll Love Working Here?",
+      "submit": "Submit"
+    }
+  },
+  "login": {
+    "title": "Employer Sign In",
+    "subtitle": "Manage your recruitment more efficiently",
+    "noAccount": "Don't have a business account?",
+    "register": "Sign up now"
+  },
+  "reports": {
+    "title": "Reports"
+  },
+  "activity": {
+    "title": "Activity",
+    "notification": "Your plan expires in 3 days.",
+    "renewNow": "Renew now"
+  },
+  "messages": {
+    "title": "Messages"
+  },
+  "loginCustomer": {
+    "customerAdminSite": "CUSTOMER ADMIN SITE",
+    "title": "Sign in to NHIEUviec Customer",
+    "rememberLogin": "Remember me",
+    "contactTitle": "Don't have a customer account? Contact us:",
+    "noAccount": "Don't have an account?"
+  },
+  "contact": {
+    "customerTitle": "Your Information",
+    "companyTitle": "Company Information",
+    "fullNamePlaceholder": "Full name",
+    "fullNameError": "Please enter your name!",
+    "titlePlaceholder": "Job title",
+    "titleError": "Please enter your job title!",
+    "emailPlaceholder": "Work email",
+    "emailError": "Please provide your company email!",
+    "phonePlaceholder": "Phone number",
+    "phoneError": "Please provide your phone number!",
+    "sourcePlaceholder": "How did you hear about ITviec?",
+    "companyNamePlaceholder": "Company name",
+    "companyNameError": "Please enter your company name!",
+    "companyAddressPlaceholder": "Company address",
+    "companyAddressError": "Please select your company address!",
+    "websitePlaceholder": "Website address",
+    "hasAccount": "Already have an account?",
+    "loginNow": "Sign in now",
+    "contactBtn": "Contact me"
+  },
+  "cardApplication": {
+    "appliedOn": "Applied on {{date}}",
+    "viewDetail": "View detail",
+    "detailTitle": "Detail",
+    "noReply": "No reply from employer yet.",
+    "openNewTab": "Open in new tab"
+  },
+  "agreement": {
+    "readAndAgree": "I have read and agree to the",
+    "termsLink": "Terms of Service",
+    "and": "and",
+    "privacyLink": "Privacy Policy",
+    "ofSite": "of NHIEUviec regarding my personal information."
+  },
+  "home": {
+    "hero": {
+      "title": "Hire IT Talent in Vietnam with NHIEUviec",
+      "description": "With deep expertise in the IT field and specialized skills, we can help you reach and hire the best IT candidates.",
+      "contactBtn": "Contact Us",
+      "loginText": "Sign in to post jobs",
+      "loginBtn": "Sign In"
+    },
+    "different": {
+      "title": "What makes NHIEUviec different?",
+      "desc": "NHIEUviec is the leading recruitment platform and database for IT professionals in Vietnam.",
+      "stat1": "IT Companies and Enterprises",
+      "stat2": "Resumes sent to Employers",
+      "stat3": "Senior Candidate Profiles"
+    },
+    "services": {
+      "title": "Premium Services for IT Employers",
+      "jobPosting": {
+        "title": "Job Posting",
+        "desc": "Post IT job openings, easily manage candidate profiles with an intuitive interface, dedicated support team, and powerful tools from NHIEUviec",
+        "feature1": "Increase opportunities to reach quality IT candidates from ITviec",
+        "feature2": "Attract candidates matching your IT skill requirements"
+      },
+      "aiMatch": {
+        "title": "AI Match Candidate Suggestions",
+        "desc": "Connect with a diverse, active pool of IT candidates. Easily reach candidates with simple actions. Unlock to help find the right candidates.",
+        "feature1": "The most suitable candidates are selected based on skills, experience, job requirements and more",
+        "feature2": "Only connects employers with IT talents who are actively looking for new opportunities",
+        "learnMore": "Learn more about AI Match"
+      },
+      "branding": {
+        "title": "Employer Branding",
+        "desc": "Enhance your employer brand recognition, reach IT professionals on NHIEUviec through special touchpoints, and connect with top IT candidates in Vietnam",
+        "topEmployer": {
+          "title": "Top Employer",
+          "desc": "The most suitable candidates are selected based on skills, experience, job requirements and more"
+        },
+        "featuredEmployer": {
+          "title": "Featured Employer",
+          "desc": "Only connects employers with IT talents who are actively looking for new opportunities"
+        }
+      },
+      "ctaText": "Experience ITviec services today",
+      "ctaBtn": "Contact Us"
+    },
+    "topEmployers": {
+      "title": "Top Companies at ITviec",
+      "desc": "Our employers and partners include leading IT companies and innovative startups",
+      "feedback": "What do our clients say about us?"
+    },
+    "contact": {
+      "title": "Find the Right IT Talent",
+      "desc": "Leave your contact information to receive consultation from ITviec's Customer Care team.",
+      "hotlineHCM": "Ho Chi Minh Hotline",
+      "hotlineHN": "Hanoi Hotline",
+      "workingHours": "Working Hours",
+      "workingHoursValue": "Mon - Fri | 8:30 - 17:00"
+    },
+    "excite": {
+      "title": "Ready to Excite the IT Industry in Vietnam with Quality Recruitment",
+      "desc": "Starting in 2013, ITviec's mission has always been to focus on quality IT recruitment. We help IT professionals advance their careers and help businesses find great candidates. Join us in exciting the IT industry in Vietnam with quality recruitment!"
+    }
+  }
+}

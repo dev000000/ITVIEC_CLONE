@@ -12,6 +12,7 @@ import { Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
+import { useTranslation } from "react-i18next";
 
 interface JobSelected {
   requiredSkills: string[];
@@ -36,6 +37,7 @@ interface JobSearchDetailOutletContext {
 
 function JobSearchDetail() {
   const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
+  const { t } = useTranslation("shared");
   const sortedSkills = [...jobSelected.requiredSkills].sort(
     (a, b) => a.length - b.length
   );
@@ -94,7 +96,7 @@ function JobSearchDetail() {
             className="card-job-head__button"
           >
             {" "}
-            Ứng tuyển{" "}
+            {t("jobSearchDetail.applyNow")}{" "}
           </Link>
           {isLogin ? (
             <div className="card-job-head__heart">
@@ -128,7 +130,7 @@ function JobSearchDetail() {
           </div>
           <div className="divide--dashed--small"></div>
           <div className="job-search-detail__skill-wrap">
-            <div className="job-search-detail__text">Kỹ năng:</div>
+            <div className="job-search-detail__text">{t("jobSearchDetail.skills")}</div>
             <div className="job-search-detail__skills">
               <div className="job__list-tag" ref={tagListRef}>
                 {sortedSkills.slice(0, visibleTagsCount).map((skill, index) => (
@@ -149,33 +151,33 @@ function JobSearchDetail() {
           </div>
           <div className="divide--dashed--large"></div>
           <div className="html-preview">
-            <h2>3 Lý do để gia nhập công ty</h2>
+            <h2>{t("jobSearchDetail.reasonToJoin")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.jobReason),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
-            <h2>Mô tả công việc</h2>
+            <h2>{t("jobSearchDetail.jobDescription")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.jobRequirements),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
-            <h2>Yêu cầu công việc</h2>
+            <h2>{t("jobSearchDetail.jobRequirements")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.whyJoinUs),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
-            <h2>Tại sao bạn sẽ yêu thích làm việc tại đây</h2>
+            <h2>{t("jobSearchDetail.whyJoinUs")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.jobDescription),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
           </div>
         </div>

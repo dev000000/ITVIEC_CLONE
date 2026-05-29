@@ -1,0 +1,38 @@
+.language-switcher {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &__btn {
+    background: transparent;
+    border: none;
+    padding: 0;
+    color: #a6a6a6;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+    line-height: 1;
+
+    &:hover:not(:disabled) {
+      color: #ffffff;
+    }
+
+    &--active {
+      color: #ffffff;
+      font-weight: 700;
+      cursor: default;
+    }
+
+    &:disabled {
+      opacity: 1;
+    }
+  }
+
+  &__sep {
+    color: #a6a6a6;
+    font-size: 14px;
+    line-height: 1;
+    user-select: none;
+  }
+}

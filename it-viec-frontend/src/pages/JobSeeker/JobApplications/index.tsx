@@ -18,6 +18,7 @@ import { setSeekerFullInfo } from "@/actions/Seeker";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import { isObjectEmpty } from "@/helpers/checkObject";
+import { useTranslation } from "react-i18next";
 
 interface LegacySeekerState {
   id: number;
@@ -55,6 +56,7 @@ function JobApplications() {
   const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
   const isLogin = useSelector((state: LegacyRootState) => state.UserReducer);
   const dispatch = useDispatch();
+  const { t } = useTranslation("jobseeker");
   const [desiredLocations, setDesiredLocations] = useState<string[]>(
     seeker.desiredLocations || [],
   );
@@ -77,7 +79,7 @@ function JobApplications() {
           Swal.fire({
             icon: "error",
             title: "Invalid Job",
-            text: "Job ID không hợp lệ!",
+            text: t("jobApplications.invalidJobId"),
           });
           navigate("/");
           return;
@@ -93,7 +95,7 @@ function JobApplications() {
           Swal.fire({
             icon: "error",
             title: "Job Not Found",
-            text: "Không tìm thấy công việc với ID này!",
+            text: t("jobApplications.jobNotFound"),
           });
           navigate("/");
           return;
@@ -103,7 +105,7 @@ function JobApplications() {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Có lỗi xảy ra khi kiểm tra công việc!",
+          text: t("jobApplications.checkJobError"),
         });
         navigate("/");
       } finally {
@@ -125,7 +127,7 @@ function JobApplications() {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: "Có lỗi xảy ra khi tải thông tin ứng viên!",
+            text: t("jobApplications.loadSeekerError"),
           });
         }
       }
@@ -168,8 +170,8 @@ function JobApplications() {
       if (checkApplication && checkApplication.length > 0) {
         Swal.fire({
           icon: "warning",
-          title: "Đơn ứng tuyển đã tồn tại",
-          text: "Bạn đã ứng tuyển cho công việc này trước đó!",
+          title: t("jobApplications.alreadyAppliedTitle"),
+          text: t("jobApplications.alreadyApplied"),
         });
         return;
       }
@@ -190,8 +192,8 @@ function JobApplications() {
       console.log("Application Result:", applicationResult);
       if (!isObjectEmpty(applicationResult)) {
         Swal.fire({
-          title: "Đơn ứng tuyển đã được gửi thành công!",
-          text: "Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.",
+          title: t("jobApplications.successTitle"),
+          text: t("jobApplications.successText"),
           icon: "success",
           confirmButtonText: "OK",
         }).then(() => {
@@ -201,7 +203,7 @@ function JobApplications() {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: "Không thể gửi đơn ứng tuyển, vui lòng thử lại sau!",
+          text: t("jobApplications.submitFailed"),
         });
         return;
       }
@@ -216,13 +218,13 @@ function JobApplications() {
     }
   };
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t("jobApplications.loading")}</div>;
   }
   if (!isValidJob) {
     return (
       <div>
-        <h2>Không tìm thấy công việc với ID này!</h2>
-        <Link to="/">Quay lại trang chủ</Link>
+        <h2>{t("jobApplications.notFound")}</h2>
+        <Link to="/">{t("jobApplications.backToHome")}</Link>
       </div>
     );
   }
@@ -239,7 +241,7 @@ function JobApplications() {
                   navigate(-1);
                 }}
               >
-                <IoIosArrowBack /> <span>Quay lại</span>{" "}
+                <IoIosArrowBack /> <span>{t("jobApplications.back")}</span>{" "}
               </Link>
               <div className="job-applications__header-logo">
                 <img src={logo} alt="logo_nhieu_viec" />
@@ -258,11 +260,11 @@ function JobApplications() {
                 <h2 className="job-applications__name-job">
                   {jobTitle ? jobTitle : "Công việc không hợp lệ"}
                 </h2>
-                <h3 className="job-applications__title">Thông tin cơ bản</h3>
+                <h3 className="job-applications__title">{t("jobApplications.basicInfo")}</h3>
                 <Form.Item
                   label={
                     <label style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                      Họ và Tên
+                      {t("jobApplications.fullName")}
                     </label>
                   }
                   name="fullName"
@@ -280,7 +282,7 @@ function JobApplications() {
                 <Form.Item
                   label={
                     <label style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                      Số điện thoại
+                      {t("jobApplications.phoneNumber")}
                     </label>
                   }
                   name="phoneNumber"
@@ -305,7 +307,7 @@ function JobApplications() {
                   name="desiredLocations"
                   label={
                     <label style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                      Nơi làm việc mong muốn
+                      {t("jobApplications.desiredLocations")}
                     </label>
                   }
                   rules={[
@@ -328,15 +330,14 @@ function JobApplications() {
                 </Form.Item>
                 <div>
                   {" "}
-                  {desiredLocations.length}/{maxCountCity} địa điểm
+                  {desiredLocations.length}/{maxCountCity} {t("jobApplications.locationCount")}
                 </div>
-                <h3>Thư xin việc (Không bắt buộc)</h3>
+                <h3>{t("jobApplications.coverLetterTitle")}</h3>
                 <Form.Item
                   name="coverLetter"
                   label={
                     <label style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                      Những kỹ năng, dự án hay thành tựu nào chứng tỏ bạn là một
-                      ứng viên tiềm năng cho vị trí ứng tuyển này?
+                      {t("jobApplications.coverLetterLabel")}
                     </label>
                   }
                   rules={[
@@ -353,16 +354,15 @@ function JobApplications() {
                     }}
                     maxLength={500}
                     rows={6}
-                    placeholder="Nêu nhiều ví dụ cụ thể để làm hồ sơ ứng tuyển của bạn thuyết phục hơn..."
+                    placeholder={t("jobApplications.coverLetterPlaceholder")}
                     size="large"
                   />
                 </Form.Item>
                 <div style={{ fontSize: "16px", color: "#a6a6a6" }}>
-                  Còn lại {500 - coverLetter.length} trong tổng số 500 ký
-                  tự{" "}
+                  {t("jobApplications.charsRemaining", { count: 500 - coverLetter.length })}
                 </div>
                 <Form.Item label={null}>
-                  <ButtonSubmit text="Gửi CV của tôi" type="max" />
+                  <ButtonSubmit text={t("jobApplications.submitButton")} type="max" />
                 </Form.Item>
               </Form>
             </div>

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { clearStorage } from "@/helpers/localStorage";
 import "./LayoutCheckToken.scss";
 import type { Role } from "@/types/common.types";
 import { getMeApi } from "@/services_new/authApi";

@@ -8,39 +8,41 @@ import { RxEnvelopeClosed } from "react-icons/rx";
 import { LuLinkedin } from "react-icons/lu";
 import { LuFacebook } from "react-icons/lu";
 import { LuYoutube } from "react-icons/lu";
+import { useTranslation } from "react-i18next";
 function FooterComp() {
+  const { t } = useTranslation("common");
   const items = [
     {
       key: "1",
-      label: "Về ITviec",
+      label: t("footer.aboutTitle"),
       children: (
         <ul>
           <li>
-            <a href="/">Trang Chủ</a>
+            <a href="/">{t("footer.home")}</a>
           </li>
           <li>
             <a href="/ve-itviec" target="_blank">
-              Về NHIEUviec.com
+              {t("footer.about")}
             </a>
           </li>
           <li>
             <a href="/dich-vu-goi-y-ung-vien" target="_blank">
-              Dịch vụ gợi ý ứng viên
+              {t("footer.candidateSuggestion")}
             </a>
           </li>
           <li>
             <a href="/lien-he" target="_blank">
-              Liên Hệ
+              {t("footer.contact")}
             </a>
           </li>
           <li>
             <a href="/viec-lam-it" target="_blank">
-              Việc Làm IT
+              {t("footer.itJobs")}
             </a>
           </li>
           <li>
             <a href="/blog/faq-cac-cau-hoi-thuong-gap/" target="_blank">
-              Câu hỏi thường gặp
+              {t("footer.faq")}
             </a>
           </li>
         </ul>
@@ -48,17 +50,17 @@ function FooterComp() {
     },
     {
       key: "2",
-      label: "Chương trình",
+      label: t("footer.programTitle"),
       children: (
         <ul>
           <li>
             <a href="/chuyen-it" target="_blank">
-              Chuyện IT
+              {t("footer.itStory")}
             </a>
           </li>
           <li>
             <a href="/cuoc-thi-viet" target="_blank">
-              Cuộc thi viết
+              {t("footer.writingContest")}
             </a>
           </li>
           <li>
@@ -66,12 +68,12 @@ function FooterComp() {
               href="/viec-lam-it-noi-bat-tai-chinh-ngan-hang-2024"
               target="_blank"
             >
-              Việc làm IT nổi bật
+              {t("footer.featuredJobs")}
             </a>
           </li>
           <li>
             <a href="/khao-sat" target="_blank">
-              Khảo sát thường niên
+              {t("footer.annualSurvey")}
             </a>
           </li>
         </ul>
@@ -79,32 +81,32 @@ function FooterComp() {
     },
     {
       key: "3",
-      label: "Điều khoản chung",
+      label: t("footer.termsTitle"),
       children: (
         <ul>
           <li>
             <a href="/blog/quy-dinh-bao-mat/" target="_blank">
-              Quy định bảo mật
+              {t("footer.privacyPolicy")}
             </a>
           </li>
           <li>
             <a href="/blog/quy-che-hoat-dong-cua-itviec/" target="_blank">
-              Quy chế hoạt động
+              {t("footer.operatingReg")}
             </a>
           </li>
           <li>
             <a href="/blog/chinh-sach-giai-quyet-khieu-nai/" target="_blank">
-              Giải quyết khiếu nại
+              {t("footer.complaintPolicy")}
             </a>
           </li>
           <li>
             <a href="/blog/terms-conditions-vn/" target="_blank">
-              Thoả thuận sử dụng
+              {t("footer.termsOfUse")}
             </a>
           </li>
           <li>
             <a href="/blog/press/" target="_blank">
-              Thông cáo báo chí
+              {t("footer.pressRelease")}
             </a>
           </li>
         </ul>
@@ -122,7 +124,7 @@ function FooterComp() {
                   <div className="footer__image">
                     <img src={logo} alt="logo nhieu viec"></img>
                   </div>
-                  <div className="footer__slogan">Nhiều nhưng mà ít</div>
+                  <div className="footer__slogan">{t("footer.slogan")}</div>
                   <div className="footer__button">
                     <div className="footer__button-icon">
                       <a href="https://www.linkedin.com" target="_blank"><LuLinkedin /></a>
@@ -149,33 +151,33 @@ function FooterComp() {
                 className="footer__list"
               >
                 <ul>
-                  <h4 className="footer__header">Về ITviec</h4>
+                  <h4 className="footer__header">{t("footer.aboutTitle")}</h4>
                   <li>
-                    <a href="/">Trang Chủ</a>
+                    <a href="/">{t("footer.home")}</a>
                   </li>
                   <li>
                     <a href="/ve-itviec" target="_blank">
-                      Về NHIEUviec.com
+                      {t("footer.about")}
                     </a>
                   </li>
                   <li>
                     <a href="/dich-vu-goi-y-ung-vien" target="_blank">
-                      Dịch vụ gợi ý ứng viên
+                      {t("footer.candidateSuggestion")}
                     </a>
                   </li>
                   <li>
                     <a href="/lien-he" target="_blank">
-                      Liên Hệ
+                      {t("footer.contact")}
                     </a>
                   </li>
                   <li>
                     <a href="/viec-lam-it" target="_blank">
-                      Việc Làm IT
+                      {t("footer.itJobs")}
                     </a>
                   </li>
                   <li>
                     <a href="/blog/faq-cac-cau-hoi-thuong-gap/" target="_blank">
-                      Câu hỏi thường gặp
+                      {t("footer.faq")}
                     </a>
                   </li>
                 </ul>
@@ -190,15 +192,15 @@ function FooterComp() {
                 className="footer__list"
               >
                 <ul>
-                  <h4 className="footer__header">Chương trình</h4>
+                  <h4 className="footer__header">{t("footer.programTitle")}</h4>
                   <li>
                     <a href="/chuyen-it" target="_blank">
-                      Chuyện IT
+                      {t("footer.itStory")}
                     </a>
                   </li>
                   <li>
                     <a href="/cuoc-thi-viet" target="_blank">
-                      Cuộc thi viết
+                      {t("footer.writingContest")}
                     </a>
                   </li>
                   <li>
@@ -206,12 +208,12 @@ function FooterComp() {
                       href="/viec-lam-it-noi-bat-tai-chinh-ngan-hang-2024"
                       target="_blank"
                     >
-                      Việc làm IT nổi bật
+                      {t("footer.featuredJobs")}
                     </a>
                   </li>
                   <li>
                     <a href="/khao-sat" target="_blank">
-                      Khảo sát thường niên
+                      {t("footer.annualSurvey")}
                     </a>
                   </li>
                 </ul>
@@ -226,10 +228,10 @@ function FooterComp() {
                 className="footer__list"
               >
                 <ul>
-                  <h4 className="footer__header">Điều khoản chung</h4>
+                  <h4 className="footer__header">{t("footer.termsTitle")}</h4>
                   <li>
                     <a href="/blog/quy-dinh-bao-mat/" target="_blank">
-                      Quy định bảo mật
+                      {t("footer.privacyPolicy")}
                     </a>
                   </li>
                   <li>
@@ -237,7 +239,7 @@ function FooterComp() {
                       href="/blog/quy-che-hoat-dong-cua-itviec/"
                       target="_blank"
                     >
-                      Quy chế hoạt động
+                      {t("footer.operatingReg")}
                     </a>
                   </li>
                   <li>
@@ -245,17 +247,17 @@ function FooterComp() {
                       href="/blog/chinh-sach-giai-quyet-khieu-nai/"
                       target="_blank"
                     >
-                      Giải quyết khiếu nại
+                      {t("footer.complaintPolicy")}
                     </a>
                   </li>
                   <li>
                     <a href="/blog/terms-conditions-vn/" target="_blank">
-                      Thoả thuận sử dụng
+                      {t("footer.termsOfUse")}
                     </a>
                   </li>
                   <li>
                     <a href="/blog/press/" target="_blank">
-                      Thông cáo báo chí
+                      {t("footer.pressRelease")}
                     </a>
                   </li>
                 </ul>
@@ -271,7 +273,7 @@ function FooterComp() {
               >
                 <ul>
                   <h4 className="footer__header">
-                    Liên hệ để đăng tin tuyển dụng tại:
+                    {t("footer.contactTitle")}
                   </h4>
                   <li className="footer__contact">
                     <LiaPhoneVolumeSolid /> Hồ Chí Minh: (+84) XXX XXX XXX
@@ -283,14 +285,14 @@ function FooterComp() {
                     <RxEnvelopeClosed /> Email: vuongdachaivang@gmail.com
                   </li>
                   <li className="footer__contact">
-                    <IoPaperPlaneOutline /> Gửi thông tin liên hệ
+                    <IoPaperPlaneOutline /> {t("footer.sendContact")}
                   </li>
                 </ul>
               </Col>
             </Row>
           </div>
           <div className="footer__copyright">
-            <p>Copyright © NHIEU VIEC JSC</p>
+            <p>{t("footer.copyright")}</p>
             <p> | </p>
             <p>MST: xxxxxxxxxx</p>
           </div>

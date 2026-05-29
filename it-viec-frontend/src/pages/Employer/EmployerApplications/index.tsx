@@ -12,6 +12,7 @@ import {
 } from "antd";
 import EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   getApplicationsWithJob,
   getApplicationsWithJobPagination,
@@ -82,6 +83,7 @@ const statusList = [
   },
 ];
 function EmployerApplications() {
+  const { t } = useTranslation();
   const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
   const [datasource, setDatasource] = useState<ApplicationRecord[]>([]);
   const [Pagination, setPagination] = useState<PaginationState>({ current: 1, pageSize: 10 });
@@ -92,12 +94,12 @@ function EmployerApplications() {
   const [update, setUpdate] = useState<boolean>(false);
   const columns: TableColumnsType<ApplicationRecord> = [
     {
-      title: "ID",
+      title: t("employer:applications.columns.id"),
       dataIndex: "id",
       key: "id",
     },
     {
-      title: "Tên công việc",
+      title: t("employer:applications.columns.jobTitle"),
       dataIndex: "job",
       key: "job",
       render: (job: ApplicationRecord["job"]) => (
@@ -106,17 +108,17 @@ function EmployerApplications() {
       fixed: isMobile ? undefined : "left",
     },
     {
-      title: "Họ và Tên",
+      title: t("employer:applications.columns.fullName"),
       dataIndex: "fullName",
       key: "fullName",
     },
     {
-      title: "Số điện thoại",
+      title: t("employer:applications.columns.phoneNumber"),
       dataIndex: "phoneNumber",
       key: "phoneNumber",
     },
     {
-      title: "Hồ sơ",
+      title: t("employer:applications.columns.resume"),
       dataIndex: "resumeUrl",
       key: "resumeUrl",
       render: (text: string) => (
@@ -126,7 +128,7 @@ function EmployerApplications() {
       ),
     },
     {
-      title: "Thư xin việc",
+      title: t("employer:applications.columns.coverLetter"),
       dataIndex: "coverLetter",
       key: "coverLetter",
       width: 200,
@@ -146,13 +148,13 @@ function EmployerApplications() {
       ),
     },
     {
-      title: "Nơi làm việc mong muốn",
+      title: t("employer:applications.columns.desiredLocations"),
       dataIndex: "desiredLocations",
       key: "desiredLocations",
       render: (text: string[]) => text.join(", "),
     },
     {
-      title: "Thời gian nộp",
+      title: t("employer:applications.columns.appliedAt"),
       dataIndex: "appliedAt",
       key: "appliedAt",
       render: (text: string) =>
@@ -166,29 +168,29 @@ function EmployerApplications() {
         }),
     },
     {
-      title: "Trạng thái",
+      title: t("employer:applications.columns.status"),
       dataIndex: "status",
       key: "status",
       render: (status: string) => {
         switch (status) {
           case "Rejected":
-            return <Badge status="error" text="Rejected" />;
+            return <Badge status="error" text={t("employer:applications.statusBadge.rejected")} />;
           case "Accepted":
-            return <Badge status="success" text="Accepted" />;
+            return <Badge status="success" text={t("employer:applications.statusBadge.accepted")} />;
           case "Pending":
-            return <Badge status="processing" text="Pending" />;
+            return <Badge status="processing" text={t("employer:applications.statusBadge.pending")} />;
           default:
-            return <Badge status="default" text="Không xác định" />;
+            return <Badge status="default" text={t("employer:applications.statusBadge.unknown")} />;
         }
       },
     },
     {
-      title: "Hành động",
+      title: t("employer:applications.columns.action"),
       key: "action",
       fixed: isMobile ? undefined : "right",
       render: (_text: unknown, record: ApplicationRecord) => (
         <div className="button--detail" onClick={() => openModal(record)}>
-          Xem chi tiết
+          {t("employer:applications.viewDetail")}
         </div>
       ),
     },
@@ -289,7 +291,7 @@ function EmployerApplications() {
         contentLabel="Example Modal"
       >
         <div className="job-form__title-wrap">
-          <div className="job-form__title">Chi tiết</div>
+          <div className="job-form__title">{t("employer:applications.detail.title")}</div>
           <div className="job-form__close-button" onClick={closeModal}>
             <IoClose />
           </div>
@@ -319,34 +321,34 @@ function EmployerApplications() {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Tên công việc" name="title">
+                <Form.Item label={t("employer:applications.detail.jobTitle")} name="title">
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Họ Và Tên" name="fullName">
+                <Form.Item label={t("employer:applications.detail.fullName")} name="fullName">
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Số điện thoại" name="phoneNumber">
+                <Form.Item label={t("employer:applications.detail.phoneNumber")} name="phoneNumber">
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Hồ sơ" name="resumeUrl">
+                <Form.Item label={t("employer:applications.detail.resume")} name="resumeUrl">
                   <Input disabled />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Thư xin việc" name="coverLetter">
+                <Form.Item label={t("employer:applications.detail.coverLetter")} name="coverLetter">
                   <TextArea rows={4} maxLength={6} disabled />
                 </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item
                   name="desiredLocations"
-                  label="Nơi làm việc mong muốn"
+                  label={t("employer:applications.detail.desiredLocations")}
                   rules={[
                     {
                       required: true,
@@ -364,12 +366,12 @@ function EmployerApplications() {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="appliedAt" label="Thời gian nộp">
+                <Form.Item name="appliedAt" label={t("employer:applications.detail.appliedAt")}>
                   <DatePicker showTime format="DD-MM-YYYY HH:mm:ss" disabled />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item label="Trạng thái" name="status">
+                <Form.Item label={t("employer:applications.detail.status")} name="status">
                   <Select
                     placeholder="Please select status"
                     options={statusList}
@@ -377,7 +379,7 @@ function EmployerApplications() {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="employerMessage" label="Thông báo phỏng vấn">
+                <Form.Item name="employerMessage" label={t("employer:applications.detail.employerMessage")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
@@ -385,7 +387,7 @@ function EmployerApplications() {
               <Col>
                 <Form.Item label={null}>
                   <Button type="primary" htmlType="submit">
-                    Submit
+                    {t("employer:applications.detail.submit")}
                   </Button>
                 </Form.Item>
               </Col>
@@ -394,7 +396,7 @@ function EmployerApplications() {
         </div>
       </Modal>
       <div className="dashboard-employer">
-        <EmployerStart content="Applications" type="search" />
+        <EmployerStart content={t("employer:applications.title")} type="search" />
         <div style={{ color: "black" }}>
           <Table
             dataSource={datasource}

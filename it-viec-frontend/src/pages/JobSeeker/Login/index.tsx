@@ -12,10 +12,12 @@ import { loginApi } from "@/services_new/authApi";
 import { getMyProfileApi } from "@/services_new/seekerApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
+import { useTranslation } from "react-i18next";
 
 
 function Login() {
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
   const setLogin = useUserStore((state) => state.setLogin);
   const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
 
@@ -51,7 +53,7 @@ function Login() {
       });
 
       Swal.fire({
-        title: "Đăng nhập thành công!",
+        title: t("login.successTitle"),
         icon: "success",
         draggable: true,
       });
@@ -62,7 +64,7 @@ function Login() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Đăng nhập không thành công!",
+        text: t("login.errorTitle"),
       });
     }
   };
@@ -74,7 +76,7 @@ function Login() {
       <div className="login">
         <div className="container">
           <div className="welcome">
-            <h3 className="welcome__title">Chào mừng bạn đến với</h3>
+            <h3 className="welcome__title">{t("login.welcome")}</h3>
             <div className="welcome__logo">
               <img src={logo} alt="logo_nhieu_viec"></img>
             </div>
@@ -83,31 +85,30 @@ function Login() {
             <Col xxl={10} xl={10} lg={10} md={10} sm={24} xs={24}>
               <div className="login__left">
                 <div className="login__terms-policy">
-                  Bằng việc đăng nhập, bạn đồng ý với các{" "}
+                  {t("login.termsAgree")}{" "}
                   <a
                     href="/terms-conditions-vn"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Điều khoản dịch vụ
+                    {t("login.termsLinkText")}
                   </a>{" "}
-                  và{" "}
+                  {t("login.termsAnd")}{" "}
                   <a
                     href="/quy-dinh-bao-mat"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Chính sách quyền riêng tư
+                    {t("login.privacyLinkText")}
                   </a>{" "}
-                  của ITviec liên quan đến thông tin riêng tư của bạn.
+                  {t("login.termsOutro")}
                 </div>
                 <div className="login__google">
-                  <FcGoogle className="login__google-logo" /> Đăng nhập bằng
-                  Google
+                  <FcGoogle className="login__google-logo" /> {t("login.loginWithGoogle")}
                 </div>
                 <div className="login__divide">
                   <hr className="login__divide-line"></hr>
-                  <div> hoặc </div>
+                  <div> {t("login.or")} </div>
                   <hr className="login__divide-line"></hr>
                 </div>
                 <div className="login__form">
@@ -124,11 +125,11 @@ function Login() {
                       rules={[
                         {
                           required: true,
-                          message: "Thông tin bắt buộc",
+                          message: t("validation.required"),
                         },
                         {
                           type: "email",
-                          message: "Email không đúng định dạng",
+                          message: t("validation.emailFormat"),
                         },
                       ]}
                     >
@@ -140,29 +141,29 @@ function Login() {
                     </Form.Item>
 
                     <Form.Item
-                      label="Mật khẩu"
+                      label={t("login.password")}
                       name="password"
                       rules={[
                         {
                           required: true,
-                          message: "Thông tin bắt buộc",
+                          message: t("validation.required"),
                         },
                       ]}
                     >
                       <Input.Password
                         className="login__input"
-                        placeholder="Mật khẩu"
+                        placeholder={t("login.passwordPlaceholder")}
                         size="large"
                       />
                     </Form.Item>
                     <Form.Item label={null}>
-                      <ButtonSubmit text="Đăng nhập bằng Email" type="max" />
+                      <ButtonSubmit text={t("login.loginWithEmail")} type="max" />
                     </Form.Item>
                   </Form>
                 </div>
                 <div className="register-login">
-                  Bạn chưa có tài khoản?{" "}
-                  <Link to="/register">Đăng ký ngay</Link>
+                  {t("login.noAccountQuestion")}{" "}
+                  <Link to="/register">{t("login.registerNow")}</Link>
                 </div>
               </div>
             </Col>
@@ -176,26 +177,24 @@ function Login() {
             >
               <div className="login__content">
                 <h2 className="login__content-title">
-                  Đăng nhập để truy cập ngay vào hàng ngàn đánh giá và dữ liệu
-                  lương thị trường IT
+                  {t("login.contentTitle")}
                 </h2>
                 <ul className="login__content-list">
                   <li>
                     <IoMdCheckmark className="login__content-icon" />
-                    Xem trước mức lương để có thể lợi thế khi thoả thuận lương
+                    {t("login.benefit1")}
                   </li>
                   <li>
                     <IoMdCheckmark className="login__content-icon" />
-                    Tìm hiểu về phúc lợi, con người, văn hóa công ty qua các
-                    đánh giá chân thật
+                    {t("login.benefit2")}
                   </li>
                   <li>
                     <IoMdCheckmark className="login__content-icon" />
-                    Dễ dàng ứng tuyển chỉ với một thao tác
+                    {t("login.benefit3")}
                   </li>
                   <li>
                     <IoMdCheckmark className="login__content-icon" />
-                    Quản lý hồ sơ và quyền riêng tư của bạn
+                    {t("login.benefit4")}
                   </li>
                 </ul>
               </div>

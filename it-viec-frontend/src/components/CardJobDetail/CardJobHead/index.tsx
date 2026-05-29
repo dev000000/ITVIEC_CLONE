@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { checkApplication } from "@/services/Shared";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import dayjs from "dayjs";
+import { useTranslation } from "react-i18next";
 
 interface Job {
   id: number;
@@ -47,6 +48,7 @@ function CardJobHead({ job }: CardJobHeadProps) {
   const company = useSelector((state: RootState) => state.CompanyReducer);
   const isLogin = useSelector((state: RootState) => state.UserReducer);
   const seeker = useSelector((state: RootState) => state.SeekerReducer);
+  const { t } = useTranslation("shared");
   const [type, setType] = useState({
     applied: false,
     appliedAt: "",
@@ -55,20 +57,20 @@ function CardJobHead({ job }: CardJobHeadProps) {
     const check = async () => {
       try {
         if (job.id) {
-        const result = await checkApplication({
-          jobId: job.id,
-          seekerId: seeker.id,
-        }) as ApplicationCheckResult[];
-        if (result && result.length > 0) {
-          const appliedAt = dayjs(result[0].appliedAt).format("DD/MM/YYYY");
-          setType({applied: true, appliedAt: appliedAt});
-        }else {
-          setType({applied: false, appliedAt: ""});
+          const result = await checkApplication({
+            jobId: job.id,
+            seekerId: seeker.id,
+          }) as ApplicationCheckResult[];
+          if (result && result.length > 0) {
+            const appliedAt = dayjs(result[0].appliedAt).format("DD/MM/YYYY");
+            setType({ applied: true, appliedAt: appliedAt });
+          } else {
+            setType({ applied: false, appliedAt: "" });
+          }
         }
-      }
       } catch (error) {
         console.error("Error checking application:", error);
-      } 
+      }
     };
     check();
   }, [job.id]);
@@ -76,54 +78,54 @@ function CardJobHead({ job }: CardJobHeadProps) {
   return (
     <>
       <div className="card-job-head">
-      <h1 className="card-job-head__job-name">{job.title}</h1>
-      <div className="card-job-head__employer-name">{company.companyName}</div>
-      {isLogin.ok ? (
-        <>
-          <div className="card-job-head__salary">
-            <AiOutlineDollarCircle />
-            <span> {job.salary} </span>
-          </div>
-        </>
-      ) : (
-        <div className="card-job-head__salary card-job-head__salary-notLogin">
-          <AiOutlineDollarCircle />
-          <Link to="/login"> Đăng nhập để xem mức lương </Link>
-        </div>
-      )}
-      <div className="card-job-head__wrap-button">
-        {!type.applied ? (
+        <h1 className="card-job-head__job-name">{job.title}</h1>
+        <div className="card-job-head__employer-name">{company.companyName}</div>
+        {isLogin.ok ? (
           <>
-            <Link
-              to="job_applications/new"
-              // target="_blank"
-              className="card-job-head__button"
-            >
-              {" "}
-              Ứng tuyển{" "}
-            </Link>
-            {isLogin.ok && isLogin.userType === "jobSeeker" ? (
-              <div className="card-job-head__heart">
-                <FaHeart />
-              </div>
-            ) : (
-              <div className="card-job-head__heart">
-                <Link to="/login">
-                  <FaHeart />
-                </Link>
-              </div>
-            )}
+            <div className="card-job-head__salary">
+              <AiOutlineDollarCircle />
+              <span> {job.salary} </span>
+            </div>
           </>
         ) : (
-          <div className="card-job-head__applied">
-            <IoMdCheckmarkCircleOutline />
-            <span>Đã ứng tuyển</span>
-            <span>{type.appliedAt}</span>
-
+          <div className="card-job-head__salary card-job-head__salary-notLogin">
+            <AiOutlineDollarCircle />
+            <Link to="/login">{t("jobSearchDetail.loginToSeeSalary")}</Link>
           </div>
         )}
+        <div className="card-job-head__wrap-button">
+          {!type.applied ? (
+            <>
+              <Link
+                to="job_applications/new"
+                // target="_blank"
+                className="card-job-head__button"
+              >
+                {" "}
+                {t("jobSearchDetail.applyNow")}{" "}
+              </Link>
+              {isLogin.ok && isLogin.userType === "jobSeeker" ? (
+                <div className="card-job-head__heart">
+                  <FaHeart />
+                </div>
+              ) : (
+                <div className="card-job-head__heart">
+                  <Link to="/login">
+                    <FaHeart />
+                  </Link>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="card-job-head__applied">
+              <IoMdCheckmarkCircleOutline />
+              <span>{t("jobSearchDetail.applied")}</span>
+              <span>{type.appliedAt}</span>
+
+            </div>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 }
