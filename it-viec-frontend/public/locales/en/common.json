@@ -58,8 +58,24 @@
     "myJobs": "My Jobs",
     "jobInvitations": "Job Invitations",
     "emailSubscription": "Email Subscription",
+    "dashboard": "Dashboard",
+    "jobs": "Jobs",
+    "applications": "Applications",
+    "reports": "Reports",
     "settings": "Settings",
     "logout": "Sign Out"
+  },
+  "layout": {
+    "hello": "Hello",
+    "defaultUser": "User",
+    "loading": "Loading...",
+    "loadCompanyError": "Unable to load company information",
+    "tokenCheckError": "Failed to verify session",
+    "logoutConfirm": "Are you sure you want to sign out?",
+    "logoutSuccess": "Signed out successfully",
+    "logoutButton": "Sign Out",
+    "employer": "Employer",
+    "logoAlt": "Nhieu Viec logo"
   },
   "logout": {
     "title": "Sign Out?",
@@ -68,7 +84,7 @@
     "successTitle": "Done!"
   },
   "language": {
-    "vi": "Tiếng Việt",
+    "vi": "Ti\u1ebfng Vi\u1ec7t",
     "en": "English"
   },
   "errors": {

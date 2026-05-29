@@ -58,8 +58,24 @@
     "myJobs": "Việc làm của tôi",
     "jobInvitations": "Lời mời công việc",
     "emailSubscription": "Đăng ký nhận email",
+    "dashboard": "Bảng điều khiển",
+    "jobs": "Việc làm",
+    "applications": "Ứng viên",
+    "reports": "Báo cáo",
     "settings": "Cài đặt",
     "logout": "Đăng xuất"
+  },
+  "layout": {
+    "hello": "Xin chào",
+    "defaultUser": "Người dùng",
+    "loading": "Đang tải...",
+    "loadCompanyError": "Không thể tải thông tin công ty",
+    "tokenCheckError": "Kiểm tra phiên đăng nhập thất bại",
+    "logoutConfirm": "Bạn có chắc chắn muốn đăng xuất?",
+    "logoutSuccess": "Đăng xuất thành công",
+    "logoutButton": "Đăng xuất",
+    "employer": "Nhà tuyển dụng",
+    "logoAlt": "Logo Nhiều Việc"
   },
   "logout": {
     "title": "Đăng xuất?",

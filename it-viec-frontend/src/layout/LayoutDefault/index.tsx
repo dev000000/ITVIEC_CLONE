@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import { getMeApi, logoutApi } from "@/services_new/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
+import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
 
 // LayoutDefault sẽ dùng để check login từ token ( cookies ) để tránh việc người dùng đã login nhưng refresh lại trang thì sẽ bị mất thông tin login
 const LayoutDefault = () => {
+  const { t } = useTranslation("common");
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const setLogin = useUserStore((state) => state.setLogin);
   const logout = useUserStore((state) => state.logout);
@@ -36,12 +38,12 @@ const LayoutDefault = () => {
     }
     checkAuth();
 
-    }, []); 
+  }, []);
 
   return (
     <>
       {isCheckingToken ? (
-        <div>....Loading</div>
+        <div>{t("layout.loading")}</div>
       ) : (
         <Layout className="layout-default">
           <Header type="jobSeeker" />
