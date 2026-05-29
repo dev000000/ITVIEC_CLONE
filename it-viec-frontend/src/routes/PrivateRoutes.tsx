@@ -7,7 +7,7 @@ import JobAlertSignUp from '@/pages/JobSeeker/JobAlertSignUp';
 import JobInvitations from '@/pages/JobSeeker/JobInvitations';
 import MyJobs from '@/pages/JobSeeker/MyJobs';
 import CVProfile from '@/pages/JobSeeker/CVProfile';
-import LayoutJobSeeker from '@/Layout/LayoutJobSeeker';
+import LayoutJobSeeker from '@/layout/LayoutJobSeeker';
 import AppliedJobs from '@/pages/JobSeeker/MyJobs/AppliedJobs';
 import SavedJobs from '@/pages/JobSeeker/MyJobs/SavedJobs';
 import RecentlyViewed from '@/pages/JobSeeker/MyJobs/RecentlyViewed';

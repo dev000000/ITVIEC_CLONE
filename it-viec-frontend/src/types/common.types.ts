@@ -1,7 +1,12 @@
 // Synced from backend enums in com.dev001.itviec.enums
 
-export const ROLE_VALUES = ["ADMIN", "EMPLOYER", "SEEKER"] as const;
-export type Role = (typeof ROLE_VALUES)[number];
+export const ROLE = {
+  ADMIN: "ADMIN",
+  EMPLOYER: "EMPLOYER",
+  SEEKER: "SEEKER",
+} as const;
+export type Role = (typeof ROLE)[keyof typeof ROLE];
+export const ROLE_VALUES = Object.values(ROLE);
 
 // Backward compatibility for old frontend value.
 export type LegacyRole = "USER";

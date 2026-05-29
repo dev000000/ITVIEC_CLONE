@@ -30,6 +30,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useDispatch, useSelector } from "react-redux";
 import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
+import { useTranslation } from "react-i18next";
 
 interface LegacySeekerState {
   id: number;
@@ -82,6 +83,7 @@ function CVProfile() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation("jobseeker");
 
   const openModal = () => {
     setIsOpen(true);
@@ -159,7 +161,7 @@ function CVProfile() {
         contentLabel="Example Modal"
       >
         <div className="cv-form__title-wrap">
-          <div className="cv-form__title"> Thông tin cá nhân</div>
+          <div className="cv-form__title"> {t("cvProfile.personalInfo")}</div>
           <div className="cv-form__close-button" onClick={closeModal}>
             <IoClose />
           </div>
@@ -189,11 +191,11 @@ function CVProfile() {
                 <div className="cv-form__button-wrap">
                   <div className="cv-form__button cv-form__button--fix">
                     <IoCameraOutline />
-                    <span className="cv-form__button-text">Sửa</span>
+                    <span className="cv-form__button-text">{t("cvProfile.editPhoto")}</span>
                   </div>
                   <div className="cv-form__button cv-form__button--delete">
                     <FaRegTrashAlt />
-                    <span className="cv-form__button-text">Xóa</span>
+                    <span className="cv-form__button-text">{t("cvProfile.deletePhoto")}</span>
                   </div>
                 </div>
               </Col>
@@ -202,13 +204,13 @@ function CVProfile() {
                   <Col span={24}>
                     <Form.Item
                       label={
-                        <label className="cv-form__label">Họ và Tên</label>
+                        <label className="cv-form__label">{t("cvProfile.fullName")}</label>
                       }
                       name="fullName"
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng nhập họ và tên!",
+                          message: t("cvProfile.validation.fullNameRequired"),
                         },
                       ]}
                     >
@@ -218,13 +220,13 @@ function CVProfile() {
                   <Col span={24}>
                     <Form.Item
                       label={
-                        <label className="cv-form__label">Chức danh</label>
+                        <label className="cv-form__label">{t("cvProfile.jobTitle")}</label>
                       }
                       name="jobTitle"
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng nhập chức danh!",
+                          message: t("cvProfile.validation.jobTitleRequired"),
                         },
                       ]}
                     >
@@ -234,7 +236,7 @@ function CVProfile() {
                   <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
                     <Form.Item
                       label={
-                        <label className="cv-form__label">Địa chỉ email</label>
+                        <label className="cv-form__label">{t("cvProfile.email")}</label>
                       }
                       name="gmail"
                     >
@@ -244,13 +246,13 @@ function CVProfile() {
                   <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
                     <Form.Item
                       label={
-                        <label className="cv-form__label">Số điện thoại</label>
+                        <label className="cv-form__label">{t("cvProfile.phone")}</label>
                       }
                       name="phoneNumber"
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng nhập số điện thoại!",
+                          message: t("cvProfile.validation.phoneRequired"),
                         },
                       ]}
                     >
@@ -260,13 +262,13 @@ function CVProfile() {
                   <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
                     <Form.Item
                       label={
-                        <label className="cv-form__label">Ngày sinh</label>
+                        <label className="cv-form__label">{t("cvProfile.dateOfBirth")}</label>
                       }
                       name="dateOfBirth"
                       rules={[
                         {
                           required: true,
-                          message: "Vui lòng chọn ngày sinh!",
+                          message: t("cvProfile.validation.dobRequired"),
                         },
                       ]}
                     >
@@ -281,7 +283,7 @@ function CVProfile() {
                     <Form.Item
                       name="gender"
                       label={
-                        <label className="cv-form__label">Giới tính</label>
+                        <label className="cv-form__label">{t("cvProfile.gender")}</label>
                       }
                     >
                       <Select options={GENDER_OPTIONS} size="large"></Select>
@@ -292,12 +294,12 @@ function CVProfile() {
                       name="city"
                       label={
                         <label className="cv-form__label">
-                          Tỉnh/Thành phố hiện tại
+                          {t("cvProfile.currentCity")}
                         </label>
                       }
                     >
                       <Select
-                        placeholder="Tỉnh/Thành phố hiện tại"
+                        placeholder={t("cvProfile.currentCityPlaceholder")}
                         options={VIETNAM_CITIES}
                         size="large"
                       ></Select>
@@ -308,12 +310,12 @@ function CVProfile() {
                       name="address"
                       label={
                         <label className="cv-form__label">
-                          Địa chỉ hiện tại
+                          {t("cvProfile.address")}
                         </label>
                       }
                     >
                       <Input
-                        placeholder="Địa chỉ (Tên đường, quận/huyện,...)"
+                        placeholder={t("cvProfile.addressInput")}
                         size="large"
                       />
                     </Form.Item>
@@ -322,11 +324,11 @@ function CVProfile() {
                     <Form.Item
                       name="personalLink"
                       label={
-                        <label className="cv-form__label">Link cá nhân</label>
+                        <label className="cv-form__label">{t("cvProfile.personalLink")}</label>
                       }
                     >
                       <Input
-                        placeholder="Link cá nhân (Linkedin, porfolio,...)"
+                        placeholder={t("cvProfile.personalLinkInput")}
                         size="large"
                       />
                     </Form.Item>
@@ -347,7 +349,7 @@ function CVProfile() {
               xs={12}
             >
               <div className="cv-form__cancel-button" onClick={closeModal}>
-                Hủy
+                {t("cvProfile.cancel")}
               </div>
             </Col>
             <Col xxl={3} xl={3} lg={3} md={12} sm={12} xs={12}>
@@ -355,7 +357,7 @@ function CVProfile() {
                 className="cv-form__save-button"
                 onClick={() => form.submit()}
               >
-                Lưu
+                {t("cvProfile.save")}
               </div>
             </Col>
           </Row>
@@ -377,7 +379,7 @@ function CVProfile() {
                         : "cv-profile__user-name cv-profile__user-name--default"
                     }
                   >
-                    {seeker.fullName || "Họ tên"}
+                    {seeker.fullName || t("cvProfile.fullNamePlaceholder")}
                   </div>
                   <h3
                     className={
@@ -386,16 +388,16 @@ function CVProfile() {
                         : "cv-profile__user-title cv-profile__user-title--default"
                     }
                   >
-                    {seeker.jobTitle || "Cập nhật chức danh"}
+                    {seeker.jobTitle || t("cvProfile.jobTitlePlaceholder")}
                   </h3>
                 </div>
               ) : (
                 <div className="cv-profile__user-wrapper">
                   <div className="cv-profile__user-name cv-profile__user-name--default">
-                    Họ tên
+                    {t("cvProfile.fullNamePlaceholder")}
                   </div>
                   <h3 className="cv-profile__user-title cv-profile__user-title--default">
-                    Cập nhật chức danh
+                    {t("cvProfile.jobTitlePlaceholder")}
                   </h3>
                 </div>
               )}
@@ -422,7 +424,7 @@ function CVProfile() {
                         : "cv-profile__item-text cv-profile__item-text--default"
                     }
                   >
-                    {seeker.gmail || "Email"}
+                    {seeker.gmail || t("cvProfile.emailPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -442,7 +444,7 @@ function CVProfile() {
                         : "cv-profile__item-text cv-profile__item-text--default"
                     }
                   >
-                    {seeker.phoneNumber || "Số điện thoại"}
+                    {seeker.phoneNumber || t("cvProfile.phonePlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -464,7 +466,7 @@ function CVProfile() {
                   >
                     {seeker.dateOfBirth
                       ? dayjs(seeker.dateOfBirth).format("DD/MM/YYYY")
-                      : "Ngày sinh"}
+                      : t("cvProfile.dobPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -484,7 +486,7 @@ function CVProfile() {
                         : "cv-profile__item-text cv-profile__item-text--default"
                     }
                   >
-                    {seeker.gender || "Giới tính"}
+                    {seeker.gender || t("cvProfile.genderPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -504,7 +506,7 @@ function CVProfile() {
                         : "cv-profile__item-text cv-profile__item-text--default"
                     }
                   >
-                    {seeker.address || "Địa chỉ hiện tại"}
+                    {seeker.address || t("cvProfile.addressPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -524,7 +526,7 @@ function CVProfile() {
                         : "cv-profile__item-text cv-profile__item-text--default"
                     }
                   >
-                    {seeker.personalLink || "Link cá nhân"}
+                    {seeker.personalLink || t("cvProfile.personalLinkPlaceholder")}
                   </span>
                 </Col>
               </Row>
@@ -543,7 +545,7 @@ function CVProfile() {
                 >
                   <MdOutlineMailOutline />
                   <span className="cv-profile__item-text cv-profile__item-text--default">
-                    Email
+                    {t("cvProfile.emailPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -557,7 +559,7 @@ function CVProfile() {
                 >
                   <FiphoneNumber />
                   <span className="cv-profile__item-text cv-profile__item-text--default">
-                    Số điện thoại
+                    {t("cvProfile.phonePlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -571,7 +573,7 @@ function CVProfile() {
                 >
                   <CiGift />
                   <span className="cv-profile__item-text cv-profile__item-text--default">
-                    Ngày sinh
+                    {t("cvProfile.dobPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -591,7 +593,7 @@ function CVProfile() {
                         : " cv-profile__item-text--default"
                     }
                   >
-                    Giới tính
+                    {t("cvProfile.genderPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -605,7 +607,7 @@ function CVProfile() {
                 >
                   <IoLocationOutline />
                   <span className="cv-profile__item-text cv-profile__item-text--default">
-                    Địa chỉ hiện tại
+                    {t("cvProfile.addressPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -619,7 +621,7 @@ function CVProfile() {
                 >
                   <RiGlobalLine />
                   <span className="cv-profile__item-text cv-profile__item-text--default">
-                    Link cá nhân
+                    {t("cvProfile.personalLinkPlaceholder")}
                   </span>
                 </Col>
               </Row>
@@ -628,12 +630,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Giới thiệu bản thân</h2>
+            <h2>{t("cvProfile.intro")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Giới thiệu điểm mạnh và số năm kinh nghiệm của bạn
+              {t("cvProfile.introDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={outImg} alt="img" />
@@ -642,12 +644,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Học vấn</h2>
+            <h2>{t("cvProfile.education")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Chia sẻ trình độ học vấn của bạn
+              {t("cvProfile.educationDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={educationImg} alt="img" />
@@ -656,12 +658,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Kinh nghiệm làm việc</h2>
+            <h2>{t("cvProfile.experience")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Thể hiện những thông tin chi tiết về quá trình làm việc
+              {t("cvProfile.experienceDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={expImg} alt="img" />
@@ -670,12 +672,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Kỹ năng</h2>
+            <h2>{t("cvProfile.skills")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Liệt kê các kỹ năng chuyên môn của bạn
+              {t("cvProfile.skillsDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={skillImg} alt="img" />
@@ -684,12 +686,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Ngoại ngữ</h2>
+            <h2>{t("cvProfile.languages")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Liệt kê các ngôn ngữ mà bạn biết
+              {t("cvProfile.languagesDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={outImg} alt="img" />
@@ -698,12 +700,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Dự án nổi bật</h2>
+            <h2>{t("cvProfile.projects")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Giới thiệu dự án nổi bật của bạn
+              {t("cvProfile.projectsDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={projImg} alt="img" />
@@ -712,12 +714,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Chứng chỉ</h2>
+            <h2>{t("cvProfile.certificates")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Bổ sung chứng chỉ liên quan đến kỹ năng của bạn
+              {t("cvProfile.certificatesDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={certificateImg} alt="img" />
@@ -726,12 +728,12 @@ function CVProfile() {
         </div>
         <div className="job-seeker-section job-seeker-section--custom">
           <div className="cv-profile__header cv-profile__header--custom">
-            <h2>Giải thưởng</h2>
+            <h2>{t("cvProfile.awards")}</h2>
             <IoIosAddCircleOutline />
           </div>
           <div className="cv-profile__content-wrapper">
             <div className="cv-profile__description">
-              Thể hiện giải thưởng hoặc thành tích mà bạn đạt được
+              {t("cvProfile.awardsDesc")}
             </div>
             <div className="cv-profile__img-wrapper">
               <img src={awardImg} alt="img" />

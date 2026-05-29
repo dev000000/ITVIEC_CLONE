@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "@/assets/images/logo_nhieuviec4.png";
 import "./Register.scss";
 import { Form, Input } from "antd";
@@ -7,11 +7,10 @@ import { useState } from "react";
 import { LuCircle } from "react-icons/lu";
 import ButtonSubmit from "@/components/Button";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
-import { checkExist, register } from "@/services/UserServices";
 import Swal from "sweetalert2";
-import generateToken from "@/helpers/generateToken";
 import { useNavigate } from "react-router-dom";
-import { createSeekerDetail } from "@/services/SeekerServices";
+import { registerSeekerApi } from "@/services_new/authApi";
+import { useTranslation } from "react-i18next";
 
 interface RegisterFormValues {
   fullName: string;
@@ -27,6 +26,7 @@ interface PasswordRule {
 
 function Register() {
   const navigate = useNavigate();
+  const { t } = useTranslation("auth");
   const [checkedGG, setCheckedGG] = useState(false);
   const [checked, setChecked] = useState(false);
   const [_passWord, _setPassWord] = useState<Record<string, string>>({});
@@ -41,15 +41,15 @@ function Register() {
   };
 
   const passwordRules: PasswordRule[] = [
-    { key: "length", text: "Ít nhất 12 ký tự", regex: /.{12,}/ },
+    { key: "length", text: t("register.passwordRules.length"), regex: /.{12,}/ },
     {
       key: "special",
-      text: "Ít nhất 1 ký tự đặc biệt (! @ # $ ...)",
+      text: t("register.passwordRules.special"),
       regex: /[!@#$%^&*]/,
     },
-    { key: "number", text: "Ít nhất 1 số", regex: /\d/ },
-    { key: "uppercase", text: "Ít nhất 1 chữ viết HOA", regex: /[A-Z]/ },
-    { key: "lowercase", text: "Ít nhất 1 chữ viết thường", regex: /[a-z]/ },
+    { key: "number", text: t("register.passwordRules.number"), regex: /\d/ },
+    { key: "uppercase", text: t("register.passwordRules.uppercase"), regex: /[A-Z]/ },
+    { key: "lowercase", text: t("register.passwordRules.lowercase"), regex: /[a-z]/ },
   ];
 
   const validationPassword = (values: string) => {
@@ -64,54 +64,27 @@ function Register() {
   };
 
   const onFinish = async (values: RegisterFormValues) => {
-    console.log(values);
-    const result = await checkExist(values);
-    if (result.length > 0) {
+    try {
+      await registerSeekerApi({
+        email: values.email,
+        password: values.password,
+        fullName: values.fullName,
+      });
+      Swal.fire({
+        title: t("register.successTitle"),
+        icon: "success",
+        draggable: true,
+      });
+      navigate("/login");
+    } catch (error) {
+      console.log('Lỗi khi đăng ký: ', error);
+      const errorMessage = error.response?.data?.message || t("register.errorTitle");
+      const errorCode = error.response?.data?.code || "unknown_error";
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: "Email đã tồn tại rồi bro!",
+        title: t("register.errorTitle"),
+        text: `${errorMessage} (Mã lỗi: ${errorCode})`,
       });
-    } else {
-      const valueRegister = {
-        email: values.email,
-        userType: "jobSeeker",
-        passwordHash: values.password,
-        createdAt: new Date().toISOString(),
-        token: generateToken(),
-      };
-      const resultRegister = await register(valueRegister);
-      if (resultRegister) {
-        const resultSeeker = await createSeekerDetail({
-          userId: resultRegister.id,
-          fullName: values.fullName,
-          gmail: resultRegister.email,
-          jobTitle: "",
-          phoneNumber: "",
-          skills: [],
-          dateOfBirth: "",
-          gender: "",
-          city: "",
-          address: "",
-          personalLink: "",
-          coverLetter: "",
-          desiredLocations: [],
-        });
-        if (resultSeeker) {
-          Swal.fire({
-            title: "Đăng ký thành công!",
-            icon: "success",
-            draggable: true,
-          });
-        }
-        navigate("/login");
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Đã có lỗi xảy ra trong quá trình đăng kí!",
-        });
-      }
     }
   };
 
@@ -122,22 +95,22 @@ function Register() {
       <div className="register">
         <div className="i-container">
           <div className="welcome">
-            <h3 className="welcome__title">Chào mừng bạn đến với</h3>
+            <h3 className="welcome__title">{t("register.welcome")}</h3>
             <div className="welcome__logo">
               <img src={logo} alt="logo_nhieu_viec"></img>
             </div>
           </div>
-          <h1>Đăng ký tài khoản</h1>
+          <h1>{t("register.titleMain")}</h1>
           <AgreementCheckBox
             id="agreement-registerform-gg"
             onHandleChange={onHandleChange}
           />
           <button className="register__google" disabled={!checkedGG}>
-            <FcGoogle className="register__google-logo" /> Đăng nhập bằng Google
+            <FcGoogle className="register__google-logo" /> {t("register.loginWithGoogle")}
           </button>
           <div className="register__divide">
             <div className="register__divide-line"></div>
-            <div className="register__divide-or"> HOẶC </div>
+            <div className="register__divide-or"> {t("register.or")} </div>
             <div className="register__divide-line"></div>
           </div>
           <div className="register__form">
@@ -149,60 +122,60 @@ function Register() {
               layout="vertical"
             >
               <Form.Item
-                label="Họ và Tên"
+                label={t("register.fullNameLabel")}
                 name="fullName"
                 rules={[
                   {
                     required: true,
-                    message: "Thông tin bắt buộc",
+                    message: t("validation.required"),
                   },
                 ]}
               >
                 <Input
                   className="login__input"
-                  placeholder="Nhập Họ và Tên"
+                  placeholder={t("register.fullNameInputPlaceholder")}
                   size="large"
                 />
               </Form.Item>
               <Form.Item
-                label="Email"
+                label={t("register.emailLabel")}
                 name="email"
                 rules={[
                   {
                     required: true,
-                    message: "Thông tin bắt buộc",
+                    message: t("validation.required"),
                   },
                   {
                     type: "email",
-                    message: "Địa chỉ email không hợp lệ",
+                    message: t("validation.emailFormat"),
                   },
                 ]}
               >
                 <Input
                   className="login__input"
-                  placeholder="Nhập Email"
+                  placeholder={t("register.emailInputPlaceholder")}
                   size="large"
                 />
               </Form.Item>
 
               <Form.Item
-                label="Mật khẩu"
+                label={t("register.passwordLabel")}
                 name="password"
                 rules={[
                   {
                     required: true,
-                    message: "Thông tin bắt buộc",
+                    message: t("validation.required"),
                   },
                   {
                     pattern:
                       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{12,}$/,
-                    message: "Chưa đúng định dạng",
+                    message: t("validation.passwordFormat"),
                   },
                 ]}
               >
                 <Input.Password
                   className="login__input"
-                  placeholder="Nhập Mật khẩu"
+                  placeholder={t("register.passwordInputPlaceholder")}
                   size="large"
                   onChange={(e) => validationPassword(e.target.value)}
                 />
@@ -212,19 +185,19 @@ function Register() {
                   {passwordRules.map((item) => (
                     <li
                       className={`${Object.prototype.hasOwnProperty.call(validate, item.key)
-                          ? validate[item.key]
-                            ? "register__checkpass-li--true"
-                            : "register__checkpass-li--false"
-                          : ""
+                        ? validate[item.key]
+                          ? "register__checkpass-li--true"
+                          : "register__checkpass-li--false"
+                        : ""
                         }`}
                       key={item.key}
                     >
                       <LuCircle
                         className={`register__checkpass-icon ${Object.prototype.hasOwnProperty.call(validate, item.key)
-                            ? validate[item.key]
-                              ? "register__checkpass-icon--true"
-                              : "register__checkpass-icon--false"
-                            : ""
+                          ? validate[item.key]
+                            ? "register__checkpass-icon--true"
+                            : "register__checkpass-icon--false"
+                          : ""
                           }`}
                       />
                       {item.text}
@@ -238,7 +211,7 @@ function Register() {
               />
               <Form.Item label={null}>
                 <ButtonSubmit
-                  text="Đăng ký bằng Email"
+                  text={t("register.loginWithEmail")}
                   disabled={!checked}
                   type="max"
                 />
@@ -246,7 +219,7 @@ function Register() {
             </Form>
           </div>
           <div className="register-login">
-            Bạn đã có tài khoản? <Link to="/login">Đăng nhập ngay</Link>
+            {t("register.hasAccountQuestion")} <Link to="/login">{t("register.loginNowLink")}</Link>
           </div>
         </div>
       </div>

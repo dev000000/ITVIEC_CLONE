@@ -20,6 +20,7 @@ import EmployerDetailRate from '@/pages/Shared/EmployerDetailRate';
 import JobSearch from '@/pages/Shared/JobSearch';
 import RouteDecider from './RouteDecider';
 import JobSearchDetail from '@/pages/Shared/JobSearchDetail';
+import { ROLE } from '@/types/common.types';
 
 /**
  * Main application routes configuration for React Router v6
@@ -61,16 +62,18 @@ export const routes: RouteObject[] = [
           { path: 'danh-gia', element: <EmployerDetailRate /> },
         ],
       },
+      // Public routes: không cần token check
+      PublicRoutes,
+      // Private routes: cần xác thực SEEKER
       {
-        element: <LayoutCheckToken checkRole="jobSeeker" />,
-        children: [PublicRoutes, PrivateRoutes],
+        element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
+        children: [PrivateRoutes],
       },
     ],
   },
   {
-    element: <LayoutCheckToken checkRole="jobSeeker" />,
+    element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
     children: [
-      PublicRoutes,
       {
         element: <PrivateRoute />,
         children: [
@@ -89,8 +92,15 @@ export const routes: RouteObject[] = [
   },
   {
     path: 'customer',
-    element: <LayoutCheckToken checkRole="employer" />,
-    children: [EmployerPublicRoutes, EmployerPrivateRoutes],
+    children: [
+      // Public routes: không cần token check (login, register)
+      EmployerPublicRoutes,
+      // Private routes: cần xác thực EMPLOYER
+      {
+        element: <LayoutCheckToken checkRole={ROLE.EMPLOYER} />,
+        children: [EmployerPrivateRoutes],
+      },
+    ],
   },
   {
     path: '*',

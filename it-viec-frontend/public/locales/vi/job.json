@@ -1,0 +1,63 @@
+{
+  "search": {
+    "title": "Tìm kiếm việc làm IT",
+    "subtitle": "{{count}}+ việc làm IT đang chờ bạn",
+    "placeholder": "Nhập kỹ năng, vị trí, tên công ty...",
+    "cityPlaceholder": "Tất cả thành phố",
+    "button": "Tìm kiếm"
+  },
+  "card": {
+    "salary": "Lương",
+    "negotiable": "Thỏa thuận",
+    "location": "Địa điểm",
+    "deadline": "Hạn nộp",
+    "posted": "Đăng {{time}} trước",
+    "hot": "HOT",
+    "urgent": "Gấp",
+    "applied": "Đã ứng tuyển",
+    "saved": "Đã lưu",
+    "save": "Lưu việc làm",
+    "apply": "Ứng tuyển ngay",
+    "viewDetails": "Xem chi tiết",
+    "created": "Tạo lúc:",
+    "jobType": "Hình thức:",
+    "experienceLevel": "Trình độ:",
+    "postedTime": "Đăng"
+  },
+  "detail": {
+    "jobDescription": "Mô tả công việc",
+    "requirements": "Yêu cầu",
+    "benefits": "Quyền lợi",
+    "workingTime": "Thời gian làm việc",
+    "workingLocation": "Địa điểm làm việc",
+    "skills": "Kỹ năng",
+    "level": "Cấp bậc",
+    "experience": "Kinh nghiệm",
+    "jobType": "Loại công việc",
+    "industry": "Ngành nghề"
+  },
+  "status": {
+    "pending": "Chờ xét duyệt",
+    "approved": "Đã duyệt",
+    "rejected": "Từ chối",
+    "closed": "Đã đóng"
+  },
+  "myJobs": {
+    "title": "Việc làm của tôi",
+    "saved": "Việc làm đã lưu",
+    "applied": "Việc làm đã ứng tuyển",
+    "noSaved": "Bạn chưa lưu việc làm nào",
+    "noApplied": "Bạn chưa ứng tuyển việc làm nào"
+  },
+  "application": {
+    "title": "Đơn ứng tuyển",
+    "coverLetter": "Thư giới thiệu",
+    "submitAt": "Nộp lúc",
+    "status": "Trạng thái"
+  },
+  "loginToSeeSalary": "Đăng nhập để xem mức lương",
+  "topJobsTitle": "{{count}} Việc làm IT cho Developer \"Chất\"",
+  "viewMore": "Xem thêm {{count}} công việc khác",
+  "topEmployers": "Nhà tuyển dụng hàng đầu",
+  "jobCount": "{{count}} Việc làm"
+}

@@ -9,6 +9,7 @@ import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
 import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
+import { useTranslation } from "react-i18next";
 
 interface Company {
   slug?: string;
@@ -39,8 +40,9 @@ const logoMap: Record<string, string> = {
 };
 function CardInforEmployer({ company }: CardInforEmployerProps) {
   company = company || {};
-  if(isObjectEmpty(company)) {
-    return <div> Không có thông tin về công ty..... </div>
+  const { t } = useTranslation("shared");
+  if (isObjectEmpty(company)) {
+    return <div>{t("employerDetailInfo.noInfo")}</div>
   }
   return (
     <div className="card-infor-employer">
@@ -57,34 +59,34 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
       </div>
       <div className="card-infor-employer__body">
         <div className="card-infor-employer__item">
-          <div className="card-infor-employer__item-title">Mô hình công ty</div>
+          <div className="card-infor-employer__item-title">{t("employerDetailInfo.companyModel")}</div>
           <div className="card-infor-employer__item-content">{company.companyModel}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">
-            Lĩnh vực công ty
+            {t("employerDetailInfo.companyField")}
           </div>
           <div className="card-infor-employer__item-content">{company.industry}</div>
         </div>
         <div className="card-infor-employer__item">
-          <div className="card-infor-employer__item-title">Quy mô công ty</div>
+          <div className="card-infor-employer__item-title">{t("employerDetailInfo.companySize")}</div>
           <div className="card-infor-employer__item-content">
             {company.companySize}
           </div>
         </div>
         <div className="card-infor-employer__item">
-          <div className="card-infor-employer__item-title">Quốc gia</div>
+          <div className="card-infor-employer__item-title">{t("employerDetailInfo.country")}</div>
           <div className="card-infor-employer__item-content">{company.country}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">
-            Thời gian làm việc
+            {t("employerDetailInfo.workingHours")}
           </div>
           <div className="card-infor-employer__item-content">{company.workingHours}</div>
         </div>
         <div className="card-infor-employer__item card-infor-employer__item--nodash">
           <div className="card-infor-employer__item-title">
-            Làm việc ngoài giờ
+            {t("employerDetailInfo.overtimePolicy")}
           </div>
           <div className="card-infor-employer__item-content">{company.overtimePolicy}</div>
         </div>

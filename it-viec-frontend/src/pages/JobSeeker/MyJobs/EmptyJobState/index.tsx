@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ImNotification } from "react-icons/im";
 import jobEmptyImg from "../../../../assets/images/job-empty.svg";
 import { Select } from "antd";
+import { useTranslation } from "react-i18next";
 
 interface EmptyJobStateProps {
   notificationText?: string;
@@ -15,10 +16,11 @@ interface EmptyJobStateProps {
 function EmptyJobState({
   notificationText,
   emptyMessage,
-  buttonText = "Tìm việc ngay",
+  buttonText,
   buttonLink = "/",
   showNotification = true,
 }: EmptyJobStateProps) {
+  const { t } = useTranslation("jobseeker");
   return (
     <div className="job-empty-state">
       {showNotification && (
@@ -31,13 +33,13 @@ function EmptyJobState({
               </span>
             </div>
             <div className="job-empty-state__select">
-              <span>Sắp xếp theo: </span>
+              <span>{t("emptyJobState.sortBy")}</span>
               <Select
                 defaultValue="asc"
                 style={{ width: 240 }}
                 options={[
-                  { value: "desc", label: "Ngày ứng tuyển gần nhất" },
-                  { value: "asc", label: "Ngày ứng tuyển xa nhất" },
+                  { value: "desc", label: t("emptyJobState.sortNewest") },
+                  { value: "asc", label: t("emptyJobState.sortOldest") },
                 ]}
               />
             </div>
@@ -50,7 +52,7 @@ function EmptyJobState({
         </div>
         <div className="job-empty-state__no-jobs">{emptyMessage || ""}</div>
         <Link className="button-upload button-upload--custom" to={buttonLink}>
-          {buttonText}
+          {buttonText || t("emptyJobState.findJob")}
         </Link>
       </div>
     </div>

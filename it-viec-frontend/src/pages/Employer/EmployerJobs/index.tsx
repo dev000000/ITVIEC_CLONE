@@ -1,5 +1,6 @@
 import EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   getJobs,
   getSkills,
@@ -39,6 +40,7 @@ interface LegacyRootState {
 }
 
 function EmployerJobs() {
+  const { t } = useTranslation();
   const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
   const [jobs, setJobs] = useState<LegacyJobItem[]>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
@@ -171,7 +173,7 @@ function EmployerJobs() {
         contentLabel="Example Modal"
       >
         <div className="job-form__title-wrap">
-          <div className="job-form__title">Add job</div>
+          <div className="job-form__title">{t("employer:jobs.addTitle")}</div>
           <div className="job-form__close-button" onClick={closeModal}>
             <IoClose />
           </div>
@@ -196,22 +198,22 @@ function EmployerJobs() {
           >
             <Row gutter={[10, 10]}>
               <Col span={24}>
-                <Form.Item label="Tiêu đề" name="title">
+                <Form.Item label={t("employer:jobs.form.title")} name="title">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Địa điểm" name="location">
+                <Form.Item label={t("employer:jobs.form.location")} name="location">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Mức lương" name="salary">
+                <Form.Item label={t("employer:jobs.form.salary")} name="salary">
                   <Input />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Hình thức làm việc" name="jobType">
+                <Form.Item label={t("employer:jobs.form.jobType")} name="jobType">
                   <Select
                     placeholder="Please select a job type"
                     options={jobTypeList}
@@ -219,7 +221,7 @@ function EmployerJobs() {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Trình độ chuyên môn" name="experienceLevel">
+                <Form.Item label={t("employer:jobs.form.experienceLevel")} name="experienceLevel">
                   <Select
                     placeholder="Please select a level"
                     options={experienceLevelList}
@@ -227,17 +229,17 @@ function EmployerJobs() {
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="postedAt" label="Thời gian bắt đầu">
+                <Form.Item name="postedAt" label={t("employer:jobs.form.postedAt")}>
                   <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="expiresAt" label="Thời gian kết thúc">
+                <Form.Item name="expiresAt" label={t("employer:jobs.form.expiresAt")}>
                   <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="Trạng thái" name="status">
+                <Form.Item label={t("employer:jobs.form.status")} name="status">
                   <Select
                     placeholder="Please select status"
                     options={statusList}
@@ -247,7 +249,7 @@ function EmployerJobs() {
               <Col span={24}>
                 <Form.Item
                   name="requiredSkills"
-                  label="Kỹ năng yêu cầu"
+                  label={t("employer:jobs.form.requiredSkills")}
                   rules={[
                     {
                       required: true,
@@ -264,25 +266,25 @@ function EmployerJobs() {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobReason" label="Lý do để gia nhập công ty">
+                <Form.Item name="jobReason" label={t("employer:jobs.form.jobReason")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobDescription" label="Mô tả công việc">
+                <Form.Item name="jobDescription" label={t("employer:jobs.form.jobDescription")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobRequirements" label="Yêu cầu công việc">
+                <Form.Item name="jobRequirements" label={t("employer:jobs.form.jobRequirements")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="whyJoinUs" label="Tại sao bạn nên gia nhập">
+                <Form.Item name="whyJoinUs" label={t("employer:jobs.form.whyJoinUs")}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
@@ -290,7 +292,7 @@ function EmployerJobs() {
               <Col>
                 <Form.Item label={null}>
                   <Button type="primary" htmlType="submit">
-                    Submit
+                    {t("employer:jobs.form.submit")}
                   </Button>
                 </Form.Item>
               </Col>
@@ -299,10 +301,10 @@ function EmployerJobs() {
         </div>
       </Modal>
       <div className="employer-jobs">
-        <EmployerStart content="Jobs" type="search" />
+        <EmployerStart content={t("employer:jobs.title")} type="search" />
         <div className="employer-job__button-wrap">
           <ButtonAction
-            text="Add"
+            text={t("employer:jobs.create")}
             icon={<MdAdd />}
             handle={handleAdd}
           ></ButtonAction>

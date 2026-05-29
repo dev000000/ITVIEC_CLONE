@@ -9,6 +9,7 @@ import imgNoJob from "@/assets/images/robby-oops.svg";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import { VIETNAM_CITIES } from "@/constants";
 import TopJobItemHome from "@/components/TopJobItemHome";
+import { useTranslation } from "react-i18next";
 
 interface JobItem {
   id: number | string;
@@ -36,6 +37,7 @@ function JobSearch({ keyword, city }: JobSearchProps) {
   if (!keyword) {
     keyword = "";
   }
+  const { t } = useTranslation("shared");
   const [searchParams] = useSearchParams();
   const jobSelectedSlug = searchParams.get("job_selected");
   const [listJob, setListJob] = useState<JobItem[]>([]);
@@ -124,7 +126,7 @@ function JobSearch({ keyword, city }: JobSearchProps) {
               >
                 <Form.Item name="keyword">
                   <Input
-                    placeholder="Nhập từ khoá theo kỹ năng, chức vụ, công ty..."
+                    placeholder={t("jobSearch.placeholder")}
                     allowClear
                     size="large"
                     value={keyword}
@@ -146,7 +148,7 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                     htmlType="submit"
                     size="large"
                   >
-                    Tìm kiếm
+                    {t("jobSearch.searchButton")}
                   </Button>
                 </Form.Item>
               </Col>
@@ -184,7 +186,7 @@ function JobSearch({ keyword, city }: JobSearchProps) {
             <>
               <h2 className="job-search__total-jobs">
                 {listJob.length > 0 ? listJob.length : 0} <span>{keyword}</span>{" "}
-                jobs in Vietnam
+                {t("jobSearch.jobsInVietnam")}
               </h2>
               <div className="job-search__filter-wrap"></div>
               <div className="job-search__main-content">
@@ -251,7 +253,7 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                     <img src={imgNoJob} alt="No job found" />
                   </div>
                 </div>
-                <h2>Xin lỗi! Việc làm bạn đang tìm kiếm không tồn tại.</h2>
+                <h2>{t("jobSearch.noResults")}</h2>
               </div>
             </>
           )}

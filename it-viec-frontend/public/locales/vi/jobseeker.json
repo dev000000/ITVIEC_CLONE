@@ -1,0 +1,174 @@
+{
+  "campaign": {
+    "title1": "Khám phá Lời mời công việc",
+    "title2": "Cập nhật CV mới nhất để x2 tốc độ tìm việc"
+  },
+  "profileOverview": {
+    "updateName": "Cập nhật tên",
+    "updateJobTitle": "Cập nhật chức danh",
+    "updateEmail": "Cập nhật email",
+    "updateProfile": "Cập nhật hồ sơ",
+    "attachedCV": "Hồ sơ đính kèm của bạn",
+    "lastUpdated": "Cập nhật lần cuối: 24/05/2025",
+    "manageAttachedCV": "Quản lý hồ sơ đính kèm",
+    "yourActivity": "Hoạt động của bạn",
+    "appliedJobs": "Việc làm đã ứng tuyển",
+    "savedJobs": "Việc làm đã lưu",
+    "jobInvitations": "Lời mời công việc"
+  },
+  "cvManager": {
+    "title": "Quản lý CV",
+    "uploadDesc": "Tải CV của bạn bên dưới để có thể sử dụng xuyên suốt quá trình tìm việc",
+    "yourCV": "CV của bạn",
+    "uploadCV": "Tải CV lên",
+    "supportedFormats": "Hỗ trợ định dạng .doc, .docx hoặc .pdf, dưới 3MB và không chứa mật khẩu bảo vệ",
+    "personalInfo": "Thông tin cá nhân",
+    "fullName": "Họ và Tên",
+    "phoneNumber": "Số điện thoại",
+    "desiredLocations": "Nơi làm việc mong muốn",
+    "notUpdated": "Chưa cập nhật",
+    "locationCount": "{{count}}/{{max}} địa điểm",
+    "generalInfo": "Thông tin chung",
+    "totalExperience": "Tổng số năm kinh nghiệm",
+    "currentLevel": "Cấp bậc hiện tại",
+    "workType": "Hình thức làm việc mong muốn",
+    "addInfo": "Thêm thông tin",
+    "coverLetter": "Thư xin việc",
+    "coverLetterEmpty": "Bạn chưa cập nhật thư xin việc. Hãy cập nhật để nhà tuyển dụng có thể hiểu rõ hơn về bạn!",
+    "coverLetterHint": "Gợi ý: Bắt đầu bằng việc mô tả những gì bạn có thể mang đến cho công việc và tại sao công việc này lại khiến bạn hứng thú",
+    "coverLetterPlaceholder": "Nhập thư xin việc của bạn tại đây...",
+    "charCount": "{{count}}/500 ký tự",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "validation": {
+      "fullNameRequired": "Vui lòng nhập họ và tên!",
+      "phoneRequired": "Vui lòng nhập số điện thoại!",
+      "phoneFormat": "Số điện thoại không hợp lệ!",
+      "locationsRequired": "Vui lòng chọn địa điểm làm việc!"
+    },
+    "success": {
+      "updateProfile": "Cập nhật hồ sơ thành công!",
+      "updateLetter": "Cập nhật thư xin việc thành công!"
+    },
+    "error": {
+      "updateFailed": "Cập nhật thất bại!"
+    }
+  },
+  "cvProfile": {
+    "personalInfo": "Thông tin cá nhân",
+    "fullNamePlaceholder": "Họ tên",
+    "jobTitlePlaceholder": "Cập nhật chức danh",
+    "emailPlaceholder": "Email",
+    "phonePlaceholder": "Số điện thoại",
+    "dobPlaceholder": "Ngày sinh",
+    "genderPlaceholder": "Giới tính",
+    "addressPlaceholder": "Địa chỉ hiện tại",
+    "personalLinkPlaceholder": "Link cá nhân",
+    "fullName": "Họ và Tên",
+    "jobTitle": "Chức danh",
+    "email": "Địa chỉ email",
+    "phone": "Số điện thoại",
+    "dateOfBirth": "Ngày sinh",
+    "gender": "Giới tính",
+    "currentCity": "Tỉnh/Thành phố hiện tại",
+    "currentCityPlaceholder": "Tỉnh/Thành phố hiện tại",
+    "address": "Địa chỉ hiện tại",
+    "addressInput": "Địa chỉ (Tên đường, quận/huyện,...)",
+    "personalLink": "Link cá nhân",
+    "personalLinkInput": "Link cá nhân (Linkedin, porfolio,...)",
+    "editPhoto": "Sửa",
+    "deletePhoto": "Xóa",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "validation": {
+      "fullNameRequired": "Vui lòng nhập họ và tên!",
+      "jobTitleRequired": "Vui lòng nhập chức danh!",
+      "phoneRequired": "Vui lòng nhập số điện thoại!",
+      "dobRequired": "Vui lòng chọn ngày sinh!"
+    },
+    "intro": "Giới thiệu bản thân",
+    "introDesc": "Giới thiệu điểm mạnh và số năm kinh nghiệm của bạn",
+    "education": "Học vấn",
+    "educationDesc": "Chia sẻ trình độ học vấn của bạn",
+    "experience": "Kinh nghiệm làm việc",
+    "experienceDesc": "Thể hiện những thông tin chi tiết về quá trình làm việc",
+    "skills": "Kỹ năng",
+    "skillsDesc": "Liệt kê các kỹ năng chuyên môn của bạn",
+    "languages": "Ngoại ngữ",
+    "languagesDesc": "Liệt kê các ngôn ngữ mà bạn biết",
+    "projects": "Dự án nổi bật",
+    "projectsDesc": "Giới thiệu dự án nổi bật của bạn",
+    "certificates": "Chứng chỉ",
+    "certificatesDesc": "Bổ sung chứng chỉ liên quan đến kỹ năng của bạn",
+    "awards": "Giải thưởng",
+    "awardsDesc": "Thể hiện giải thưởng hoặc thành tích mà bạn đạt được"
+  },
+  "myJobs": {
+    "title": "Việc làm của tôi",
+    "applied": "Đã ứng tuyển",
+    "saved": "Đã lưu",
+    "recentlyViewed": "Đã xem gần đây",
+    "loading": "Đang tải..."
+  },
+  "appliedJobs": {
+    "notification": "Các công việc bạn đã ứng tuyển được lưu trữ trong 12 tháng gần đây.",
+    "emptyMessage": "Bạn chưa ứng tuyển vào công việc nào trong 12 tháng qua.",
+    "sortBy": "Sắp xếp theo: ",
+    "sortNewest": "Ngày ứng tuyển gần nhất",
+    "sortOldest": "Ngày ứng tuyển xa nhất",
+    "findJob": "Tìm việc ngay"
+  },
+  "savedJobs": {
+    "notification": "Bạn có thể lưu tối đa 20 công việc.",
+    "emptyMessage": "Bạn chưa lưu công việc nào.",
+    "findJob": "Tìm việc ngay"
+  },
+  "recentlyViewed": {
+    "notification": "Chỉ hiển thị công việc đã xem trong 3 tháng gần nhất",
+    "emptyMessage": "Bạn chưa xem công việc nào trong 12 tháng qua.",
+    "findJob": "Tìm việc ngay"
+  },
+  "emptyJobState": {
+    "sortBy": "Sắp xếp theo: ",
+    "sortNewest": "Ngày ứng tuyển gần nhất",
+    "sortOldest": "Ngày ứng tuyển xa nhất",
+    "findJob": "Tìm việc ngay"
+  },
+  "jobApplications": {
+    "back": "Quay lại",
+    "invalidJob": "Công việc không hợp lệ",
+    "basicInfo": "Thông tin cơ bản",
+    "fullName": "Họ và Tên",
+    "phoneNumber": "Số điện thoại",
+    "desiredLocations": "Nơi làm việc mong muốn",
+    "locationCount": "địa điểm",
+    "coverLetterTitle": "Thư xin việc (Không bắt buộc)",
+    "coverLetterLabel": "Những kỹ năng, dự án hay thành tựu nào chứng tỏ bạn là một ứng viên tiềm năng cho vị trí ứng tuyển này?",
+    "coverLetterPlaceholder": "Nêu nhiều ví dụ cụ thể để làm hồ sơ ứng tuyển của bạn thuyết phục hơn...",
+    "charsRemaining": "Còn lại {{count}} trong tổng số 500 ký tự",
+    "submitButton": "Gửi CV của tôi",
+    "loading": "Đang tải...",
+    "notFound": "Không tìm thấy công việc với ID này!",
+    "backToHome": "Quay lại trang chủ",
+    "invalidJobId": "Job ID không hợp lệ!",
+    "jobNotFound": "Không tìm thấy công việc với ID này!",
+    "checkJobError": "Có lỗi xảy ra khi kiểm tra công việc!",
+    "loadSeekerError": "Có lỗi xảy ra khi tải thông tin ứng viên!",
+    "invalidJobSubmit": "Không thể gửi đơn ứng tuyển cho công việc không hợp lệ!",
+    "alreadyAppliedTitle": "Đơn ứng tuyển đã tồn tại",
+    "alreadyApplied": "Bạn đã ứng tuyển cho công việc này trước đó!",
+    "successTitle": "Đơn ứng tuyển đã được gửi thành công!",
+    "successText": "Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.",
+    "submitFailed": "Không thể gửi đơn ứng tuyển, vui lòng thử lại sau!",
+    "submitError": "Có lỗi xảy ra khi gửi đơn ứng tuyển!"
+  },
+  "settings": {
+    "title": "Cài đặt"
+  },
+  "jobAlertSignUp": {
+    "title": "Đăng ký nhận thông báo việc làm"
+  },
+  "jobInvitations": {
+    "title": "Lời mời công việc"
+  }
+}

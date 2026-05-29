@@ -15,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLogin } from "@/actions/User";
 import { clearCompanyInfo, setCompanyFullInfo } from "@/actions/Company";
 import { CgProfile } from "react-icons/cg";
+import { useTranslation } from "react-i18next";
 
 interface CompanyState {
   id?: number;
@@ -23,6 +24,7 @@ interface CompanyState {
 }
 
 function LayoutCustomer(): JSX.Element {
+  const { t } = useTranslation("common");
   const company = useSelector((state: any) => state.CompanyReducer) as CompanyState;
   const dispatch = useDispatch();
   const [isLoadingCompany, setIsLoadingCompany] = useState(false);
@@ -48,23 +50,24 @@ function LayoutCustomer(): JSX.Element {
           navigate("/");
         }
       } catch (error) {
-        console.log("Loi khi lay company detail", error);
+        console.error("Failed to load company information", error);
         clearStorage();
         navigate("/");
       }
     };
     getCompanyInfo();
-  }, [userId]);
+  }, [dispatch, navigate, userId]);
 
   console.log("company", company);
 
   const handleLogout = (): void => {
     Swal.fire({
-      title: "Are you sure?",
+      title: t("layout.logoutConfirm"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#d33",
-      confirmButtonText: "Logout",
+      confirmButtonText: t("layout.logoutButton"),
+      cancelButtonText: t("buttons.cancel"),
     }).then((result) => {
       if (result.isConfirmed) {
         dispatch(
@@ -78,7 +81,7 @@ function LayoutCustomer(): JSX.Element {
         clearStorage();
         navigate("/");
         Swal.fire({
-          title: "Logout!",
+          title: t("layout.logoutSuccess"),
           icon: "success",
         });
       }
@@ -91,39 +94,39 @@ function LayoutCustomer(): JSX.Element {
         <div className="layout-customer">
           <div className="layout-customer__siderbar">
             <div className="layout-customer__siderbar-logo">
-              <img src={logo} alt="logoNhieuViec" />
-              <div> Nhà Tuyển Dụng </div>
+              <img src={logo} alt={t("layout.logoAlt")} />
+              <div>{t("layout.employer")}</div>
             </div>
             <div className="layout-customer__siderbar-menu">
               <ul className="layout-customer__siderbar-list">
                 <MenuItem
                   props={{
                     link: "dashboard",
-                    name: "DashBoard",
+                    name: t("menu.dashboard"),
                     icon: <MdOutlineSpaceDashboard />,
                   }}
                 />
                 <MenuItem
                   props={{
                     link: "profile",
-                    name: "Profile",
+                    name: t("menu.profile"),
                     icon: <CgProfile />,
                   }}
                 />
                 <MenuItem
-                  props={{ link: "job", name: "Jobs", icon: <BsBriefcase /> }}
+                  props={{ link: "job", name: t("menu.jobs"), icon: <BsBriefcase /> }}
                 />
                 <MenuItem
                   props={{
                     link: "application",
-                    name: "Applications",
+                    name: t("menu.applications"),
                     icon: <HiOutlineDocument />,
                   }}
                 />
                 <MenuItem
                   props={{
                     link: "report",
-                    name: "Reports",
+                    name: t("menu.reports"),
                     icon: <FiPieChart />,
                   }}
                 />
@@ -132,7 +135,7 @@ function LayoutCustomer(): JSX.Element {
             <div className="layout-customer__siderbar-button">
               <button onClick={handleLogout}>
                 <IoIosLogOut />
-                <span>Log out</span>
+                <span>{t("menu.logout")}</span>
               </button>
             </div>
           </div>
@@ -145,7 +148,7 @@ function LayoutCustomer(): JSX.Element {
           </div>
         </div>
       ) : (
-        <div>Loading.....</div>
+        <div>{t("layout.loading")}</div>
       )}
     </>
   );

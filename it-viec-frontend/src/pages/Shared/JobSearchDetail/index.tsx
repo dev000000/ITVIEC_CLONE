@@ -2,7 +2,6 @@ import "./JobSearchDetail.scss";
 import { Link, useOutletContext } from "react-router-dom";
 import { ImCoinDollar } from "react-icons/im";
 import logo from "@/assets/images/Companylogo.webp";
-import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { MdLocationCity } from "react-icons/md";
@@ -12,6 +11,8 @@ import { Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
+import { useTranslation } from "react-i18next";
+import { useUserStore } from "@/store/userStore";
 
 interface JobSelected {
   requiredSkills: string[];
@@ -36,10 +37,11 @@ interface JobSearchDetailOutletContext {
 
 function JobSearchDetail() {
   const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
+  const { t } = useTranslation("shared");
   const sortedSkills = [...jobSelected.requiredSkills].sort(
     (a, b) => a.length - b.length
   );
-  const isLogin = useSelector((state) => state.UserReducer);
+  const authenticated = useUserStore((state) => state.authenticated);
   const tagListRef = useRef<HTMLDivElement>(null);
   const [visibleTagsCount, setVisibleTagsCount] = useState(
     sortedSkills.length || 0
@@ -94,9 +96,9 @@ function JobSearchDetail() {
             className="card-job-head__button"
           >
             {" "}
-            Ứng tuyển{" "}
+            {t("jobSearchDetail.applyNow")}{" "}
           </Link>
-          {isLogin ? (
+          {authenticated ? (
             <div className="card-job-head__heart">
               <FaHeart />
             </div>
@@ -128,7 +130,7 @@ function JobSearchDetail() {
           </div>
           <div className="divide--dashed--small"></div>
           <div className="job-search-detail__skill-wrap">
-            <div className="job-search-detail__text">Kỹ năng:</div>
+            <div className="job-search-detail__text">{t("jobSearchDetail.skills")}</div>
             <div className="job-search-detail__skills">
               <div className="job__list-tag" ref={tagListRef}>
                 {sortedSkills.slice(0, visibleTagsCount).map((skill, index) => (
@@ -149,33 +151,33 @@ function JobSearchDetail() {
           </div>
           <div className="divide--dashed--large"></div>
           <div className="html-preview">
-            <h2>3 Lý do để gia nhập công ty</h2>
+            <h2>{t("jobSearchDetail.reasonToJoin")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.jobReason),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
-            <h2>Mô tả công việc</h2>
+            <h2>{t("jobSearchDetail.jobDescription")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.jobRequirements),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
-            <h2>Yêu cầu công việc</h2>
+            <h2>{t("jobSearchDetail.jobRequirements")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.whyJoinUs),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
-            <h2>Tại sao bạn sẽ yêu thích làm việc tại đây</h2>
+            <h2>{t("jobSearchDetail.whyJoinUs")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(jobSelected.jobDescription),
-              }} // Làm sạch HTML trước khi hiển thị
+              }}
             />
           </div>
         </div>

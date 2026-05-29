@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 import EmployerPrivateRoute from '@/components/route/EmployerPrivateRoute';
-import LayoutCustomer from '@/Layout/LayoutCustomer';
+import LayoutCustomer from '@/layout/LayoutCustomer';
 import EmployerApplications from '@/pages/Employer/EmployerApplications';
 import EmployerDashBoard from '@/pages/Employer/EmployerDashBoard';
 import EmployerJobDetail from '@/pages/Employer/EmployerJobDetail';

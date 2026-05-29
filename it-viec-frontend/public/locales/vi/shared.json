@@ -1,0 +1,62 @@
+{
+  "jobSearch": {
+    "placeholder": "Nhập từ khoá theo kỹ năng, chức vụ, công ty...",
+    "searchButton": "Tìm kiếm",
+    "totalJobs": "{{count}} <span>{{keyword}}</span> việc làm tại Việt Nam",
+    "jobsInVietnam": "việc làm tại Việt Nam",
+    "noResults": "Xin lỗi! Việc làm bạn đang tìm kiếm không tồn tại.",
+    "suggestions": "Gợi ý cho bạn:",
+    "totalJobsSearch": "{{count}} Việc làm cho Developer \"Chất\""
+  },
+  "jobSearchDetail": {
+    "applyNow": "Ứng tuyển",
+    "skills": "Kỹ năng:",
+    "reasonToJoin": "3 Lý do để gia nhập công ty",
+    "jobDescription": "Mô tả công việc",
+    "jobRequirements": "Yêu cầu công việc",
+    "whyJoinUs": "Tại sao bạn sẽ yêu thích làm việc tại đây",
+    "loginToSeeSalary": "Đăng nhập để xem mức lương",
+    "applied": "Đã ứng tuyển"
+  },
+  "employerDetail": {
+    "intro": "Giới thiệu",
+    "review": "Đánh giá",
+    "blog": "Bài viết",
+    "jobsHiring": "{{count}} việc làm đang tuyển dụng",
+    "writeReview": "Viết đánh giá",
+    "follow": "Theo dõi",
+    "reviews": "đánh giá",
+    "recommendPercent": "Khuyến khích làm việc tại đây"
+  },
+  "employerDetailInfo": {
+    "generalInfo": "Thông tin chung",
+    "companyModel": "Mô hình công ty",
+    "companyField": "Lĩnh vực công ty",
+    "companySize": "Quy mô công ty",
+    "country": "Quốc gia",
+    "workingHours": "Thời gian làm việc",
+    "companyIntro": "Giới thiệu công ty",
+    "ourExpertise": "Chuyên môn của chúng tôi",
+    "keySkills": "Kỹ năng nổi bật",
+    "whyWorkHere": "Tại sao bạn sẽ yêu thích làm việc tại đây?",
+    "overtimePolicy": "Làm việc ngoài giờ",
+    "noInfo": "Không có thông tin về công ty"
+  },
+  "employerDetailBlog": {
+    "noPosts": "Không có bài viết nào"
+  },
+  "employerDetailRate": {
+    "noReviews": "Không có lượt đánh giá nào"
+  },
+  "error404": {
+    "title": "Trang không tìm thấy",
+    "message": "Trang bạn đang tìm kiếm không tồn tại.",
+    "backHome": "Về trang chủ"
+  },
+  "policy": {
+    "title": "Chính sách bảo mật"
+  },
+  "term": {
+    "title": "Điều khoản sử dụng"
+  }
+}

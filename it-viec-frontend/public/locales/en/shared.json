@@ -1,0 +1,62 @@
+{
+  "jobSearch": {
+    "placeholder": "Enter keywords by skill, position, company...",
+    "searchButton": "Search",
+    "totalJobs": "{{count}} <span>{{keyword}}</span> jobs in Vietnam",
+    "jobsInVietnam": "jobs in Vietnam",
+    "noResults": "Sorry! The job you are looking for does not exist.",
+    "suggestions": "Suggested for you:",
+    "totalJobsSearch": "{{count}} IT Jobs for Quality Developers"
+  },
+  "jobSearchDetail": {
+    "applyNow": "Apply Now",
+    "skills": "Skills:",
+    "reasonToJoin": "3 Reasons to Join",
+    "jobDescription": "Job Description",
+    "jobRequirements": "Job Requirements",
+    "whyJoinUs": "Why You'll Love Working Here",
+    "loginToSeeSalary": "Sign in to see salary",
+    "applied": "Applied"
+  },
+  "employerDetail": {
+    "intro": "Overview",
+    "review": "Reviews",
+    "blog": "Posts",
+    "jobsHiring": "{{count}} open positions",
+    "writeReview": "Write a Review",
+    "follow": "Follow",
+    "reviews": "reviews",
+    "recommendPercent": "Recommend working here"
+  },
+  "employerDetailInfo": {
+    "generalInfo": "General Information",
+    "companyModel": "Company Model",
+    "companyField": "Company Field",
+    "companySize": "Company Size",
+    "country": "Country",
+    "workingHours": "Working Hours",
+    "companyIntro": "Company Introduction",
+    "ourExpertise": "Our Expertise",
+    "keySkills": "Our Key Skills",
+    "whyWorkHere": "Why You'll Love Working Here?",
+    "overtimePolicy": "Overtime Policy",
+    "noInfo": "No company information available"
+  },
+  "employerDetailBlog": {
+    "noPosts": "No posts yet"
+  },
+  "employerDetailRate": {
+    "noReviews": "No reviews yet"
+  },
+  "error404": {
+    "title": "Page Not Found",
+    "message": "The page you are looking for does not exist.",
+    "backHome": "Back to Home"
+  },
+  "policy": {
+    "title": "Privacy Policy"
+  },
+  "term": {
+    "title": "Terms of Use"
+  }
+}

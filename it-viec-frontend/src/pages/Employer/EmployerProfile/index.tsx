@@ -1,5 +1,6 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
 import EmployerStart from "@/components/EmployerStart";
+import { useTranslation } from "react-i18next";
 import CardCompanyHead from "@/components/CardCompanyDetail/CardCompanyHead";
 import { NavLink, Outlet } from "react-router-dom";
 import TopJobItem from "@/components/TopJobItemHome";
@@ -93,6 +94,7 @@ const workingHoursOptions = [
   { value: "Remote", label: "Remote" },
 ];
 function EmployerProfile() {
+  const { t } = useTranslation();
   const [form] = Form.useForm<UpdateCompanyFormValues>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const companyInfor = useSelector((state: LegacyRootState) => state.CompanyReducer);
@@ -174,10 +176,10 @@ function EmployerProfile() {
   return (
     <>
       <div className="employer-profile">
-        <EmployerStart content="Profile" type="search" />
+        <EmployerStart content={t("employer:profile.title")} type="search" />
         <div className="employer-job__button-wrap">
           <ButtonAction
-            text="Edit"
+            text={t("employer:profile.edit")}
             icon={<TbEdit />}
             handle={handleEdit}
           ></ButtonAction>
@@ -190,7 +192,7 @@ function EmployerProfile() {
             contentLabel="Example Modal"
           >
             <div className="job-form__title-wrap">
-              <div className="job-form__title">Sửa thông tin</div>
+              <div className="job-form__title">{t("employer:profile.editTitle")}</div>
               <div className="job-form__close-button" onClick={closeModal}>
                 <IoClose />
               </div>
@@ -215,32 +217,32 @@ function EmployerProfile() {
               >
                 <Row gutter={[10, 10]}>
                   <Col span={24}>
-                    <Form.Item label="Tên công ty" name="companyName">
+                    <Form.Item label={t("employer:profile.form.companyName")} name="companyName">
                       <Input />
                     </Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item label="Mô tả" name="description">
+                    <Form.Item label={t("employer:profile.form.description")} name="description">
                       <Input />
                     </Form.Item>
                   </Col>
                   <Col span={24}>
-                    <Form.Item label="Địa chỉ" name="address">
+                    <Form.Item label={t("employer:profile.form.address")} name="address">
                       <Input />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Mô hình công ty" name="companyModel">
+                    <Form.Item label={t("employer:profile.form.companyModel")} name="companyModel">
                       <Input />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Lĩnh vực công ty" name="industry">
+                    <Form.Item label={t("employer:profile.form.industry")} name="industry">
                       <Input />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Quy mô công ty" name="companySize">
+                    <Form.Item label={t("employer:profile.form.companySize")} name="companySize">
                       <Select
                         placeholder="Please select company size"
                         options={companySizeOptions}
@@ -248,12 +250,12 @@ function EmployerProfile() {
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Quốc gia" name="country">
+                    <Form.Item label={t("employer:profile.form.country")} name="country">
                       <Input />
                     </Form.Item>
                   </Col>
                   <Col span={12}>
-                    <Form.Item label="Thời gian làm việc" name="workingHours">
+                    <Form.Item label={t("employer:profile.form.workingHours")} name="workingHours">
                       <Select
                         placeholder="Please select working hours"
                         options={workingHoursOptions}
@@ -262,7 +264,7 @@ function EmployerProfile() {
                   </Col>
                   <Col span={12}>
                     <Form.Item
-                      label="Chính sách làm thêm giờ"
+                      label={t("employer:profile.form.overtimePolicy")}
                       name="overtimePolicy"
                     >
                       <Select
@@ -274,7 +276,7 @@ function EmployerProfile() {
                   <Col span={24}>
                     <Form.Item
                       name="skills"
-                      label="Kỹ năng chính"
+                      label={t("employer:profile.form.skills")}
                       rules={[
                         {
                           required: true,
@@ -293,7 +295,7 @@ function EmployerProfile() {
                   <Col span={24}>
                     <Form.Item
                       name="companyIntroduction"
-                      label="Giới thiệu công ty"
+                      label={t("employer:profile.form.companyIntroduction")}
                     >
                       <SimpleEditor />
                     </Form.Item>
@@ -301,7 +303,7 @@ function EmployerProfile() {
                   <Col span={24}>
                     <Form.Item
                       name="ourExpertise"
-                      label="Chuyên môn của chúng tôi"
+                      label={t("employer:profile.form.ourExpertise")}
                     >
                       <SimpleEditor />
                     </Form.Item>
@@ -309,7 +311,7 @@ function EmployerProfile() {
                   <Col span={24}>
                     <Form.Item
                       name="whyWorkHere"
-                      label="Tại sao bạn sẽ yêu thích làm việc tại đây?"
+                      label={t("employer:profile.form.whyWorkHere")}
                     >
                       <SimpleEditor />
                     </Form.Item>
@@ -317,7 +319,7 @@ function EmployerProfile() {
                   <Col>
                     <Form.Item label={null}>
                       <Button type="primary" htmlType="submit">
-                        Submit
+                        {t("employer:profile.form.submit")}
                       </Button>
                     </Form.Item>
                   </Col>
@@ -343,7 +345,7 @@ function EmployerProfile() {
                           end
                         >
                           <span className="employer-detail__text">
-                            Giới thiệu
+                            {t("employer:profile.tabs.about")}
                           </span>
                         </NavLink>
                       </li>
@@ -357,7 +359,7 @@ function EmployerProfile() {
                           to={`/customer/profile/danh-gia`}
                         >
                           <span className="employer-detail__text">
-                            Đánh giá
+                            {t("employer:profile.tabs.reviews")}
                           </span>
                           <span className="employer-detail__count">80</span>
                         </NavLink>
@@ -372,7 +374,7 @@ function EmployerProfile() {
                           to={`/customer/profile/bai-viet`}
                         >
                           <span className="employer-detail__text">
-                            Bài viết
+                            {t("employer:profile.tabs.articles")}
                           </span>
                           <span className="employer-detail__count">4</span>
                         </NavLink>
@@ -386,7 +388,7 @@ function EmployerProfile() {
                 <Col xxl={8} xl={8} lg={24} md={24} sm={24} xs={24}>
                   <div className="employer-detail__jobs">
                     <h2>
-                      {companyInfor.jobs.length || 0} việc làm đang tuyển dụng
+                      {t("employer:profile.openJobs", { count: companyInfor.jobs.length || 0 })}
                     </h2>
                     <div className="employer-detail__job-wrap">
                       {companyInfor.jobs.map((job) => (

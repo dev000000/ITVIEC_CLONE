@@ -13,6 +13,7 @@ import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { CompanyDetailResponse } from "@/types/response.types";
+import { useTranslation } from "react-i18next";
 
 
 interface CardCompanyHeadProps {
@@ -31,6 +32,7 @@ const logoMap: Record<string, string> = {
   "ssi-securities-corporation": SSI,
 };
 function CardCompanyHead({ companyInfor }: CardCompanyHeadProps) {
+  const { t } = useTranslation("shared");
   return (
     <div className="card-company__head">
       <div className="container">
@@ -49,15 +51,15 @@ function CardCompanyHead({ companyInfor }: CardCompanyHeadProps) {
                   </div>
                   <div className="card-company__head-item card-company__head-jobs">
                     <LuBriefcase />
-                    <Link to={`/nha-tuyen-dung/${companyInfor.slug}`}>{companyInfor.jobs.length} việc làm đang tuyển dụng </Link>
+                    <Link to={`/nha-tuyen-dung/${companyInfor.slug}`}>{t("employerDetail.jobsHiring", { count: companyInfor.jobs.length })}</Link>
                   </div>
                 </div>
                 <div className="card-company__head-button-wrap">
                   <div className="card-company__head-button card-company__head-button--red">
-                    Viết đánh giá
+                    {t("employerDetail.writeReview")}
                   </div>
                   <div className="card-company__head-button card-company__head-button--white">
-                    Theo dõi
+                    {t("employerDetail.follow")}
                   </div>
                 </div>
               </div>
@@ -66,15 +68,15 @@ function CardCompanyHead({ companyInfor }: CardCompanyHeadProps) {
           <Col xxl={8} xl={8} lg={24} md={24} sm={24} xs={24}>
             <div className="card-company__head-right">
               <div className="card-company__head-rate-wrap">
-                <div className="card-company__head-rate">{ 5 }</div>
+                <div className="card-company__head-rate">{5}</div>
                 <div className="card-company__head-star">
-                  <Rate disabled defaultValue={ 5 } className="card-company__head-rate-antd"/>
-                  <div className="card-company__head-count">{ 0 } đánh giá</div>
+                  <Rate disabled defaultValue={5} className="card-company__head-rate-antd" />
+                  <div className="card-company__head-count">{0} {t("employerDetail.reviews")}</div>
                 </div>
               </div>
               <div className="card-company__head-percent-wrap">
-                <div className="card-company__head-percent">{ 100 }<span>%</span></div>
-                <div className="card-company__head-percent-text">Khuyến khích làm việc tại đây</div>
+                <div className="card-company__head-percent">{100}<span>%</span></div>
+                <div className="card-company__head-percent-text">{t("employerDetail.recommendPercent")}</div>
               </div>
             </div>
           </Col>

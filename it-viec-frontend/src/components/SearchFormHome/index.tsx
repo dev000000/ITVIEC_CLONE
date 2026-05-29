@@ -3,6 +3,7 @@ import "./SearchFormHome.scss";
 import { VIETNAM_CITIES } from "@/constants";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface SearchFormValues {
   city?: string;
@@ -15,6 +16,7 @@ interface SearchFormHomeProps {
 
 function SearchFormHome({ jobList }: SearchFormHomeProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation("shared");
   const onFinish = (values: SearchFormValues) => {
     if (values.city === "all") {
       values.city = "";
@@ -36,7 +38,7 @@ function SearchFormHome({ jobList }: SearchFormHomeProps) {
     <>
       <div className="search-form-home">
         <div className="search-form__container">
-          <h1>{jobList.length} Việc làm cho Developer "Chất"</h1>
+          <h1>{t("jobSearch.totalJobsSearch", { count: jobList.length })}</h1>
           <Form
             className="search-form"
             onFinish={onFinish}
@@ -63,7 +65,7 @@ function SearchFormHome({ jobList }: SearchFormHomeProps) {
               >
                 <Form.Item name="keyword">
                   <Input
-                    placeholder="Nhập từ khoá theo kỹ năng, chức vụ, công ty..."
+                    placeholder={t("jobSearch.placeholder")}
                     allowClear
                     size="large"
                   />
@@ -84,14 +86,14 @@ function SearchFormHome({ jobList }: SearchFormHomeProps) {
                     htmlType="submit"
                     size="large"
                   >
-                    Tìm kiếm
+                    {t("jobSearch.searchButton")}
                   </Button>
                 </Form.Item>
               </Col>
             </Row>
           </Form>
           <div className="search-form__suggest">
-            <span> Gợi ý cho bạn: </span>
+            <span>{t("jobSearch.suggestions")}</span>
             <div className="search-form__list-tag">
               <div className="search-form__tag"> ReactJS </div>
               <div className="search-form__tag"> HTML5 </div>

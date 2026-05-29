@@ -4,7 +4,9 @@ import ButtonSubmit from "@/components/Button";
 import { useState } from "react";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 function ContactEmployerForm() {
+  const { t } = useTranslation("employer");
   const [checked, setChecked] = useState(false);
   const listItem = [
     { value: "Tìm kiếm Google", label: "Tìm kiếm Google" },
@@ -32,26 +34,26 @@ function ContactEmployerForm() {
     <>
       <div className="contact-employer-form">
         <Form onFinish={onFinish}>
-          <h3 className="contact-emploter-form__title">Thông tin Quý khách</h3>
+          <h3 className="contact-emploter-form__title">{t("contact.customerTitle")}</h3>
           <Row gutter={20}>
             <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
               <Form.Item
                 name="username"
                 rules={[
-                  { required: true, message: "Vui lòng điền tên của bạn!" },
+                  { required: true, message: t("contact.fullNameError") },
                 ]}
               >
-                <Input size="large" placeholder="Họ và tên" />
+                <Input size="large" placeholder={t("contact.fullNamePlaceholder")} />
               </Form.Item>
             </Col>
             <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
               <Form.Item
                 name="title"
                 rules={[
-                  { required: true, message: "Vui lòng điền chức vụ của bạn!" },
+                  { required: true, message: t("contact.titleError") },
                 ]}
               >
-                <Input size="large" placeholder="Chức vụ " />
+                <Input size="large" placeholder={t("contact.titlePlaceholder")} />
               </Form.Item>
             </Col>
             <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
@@ -60,11 +62,11 @@ function ContactEmployerForm() {
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng cung cấp email công ty của bạn!",
+                    message: t("contact.emailError"),
                   },
                 ]}
               >
-                <Input size="large" placeholder="Email làm việc" />
+                <Input size="large" placeholder={t("contact.emailPlaceholder")} />
               </Form.Item>
             </Col>
             <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
@@ -73,11 +75,11 @@ function ContactEmployerForm() {
                 rules={[
                   {
                     required: true,
-                    message: "Vui lòng cung cấp số điện thoại!",
+                    message: t("contact.phoneError"),
                   },
                 ]}
               >
-                <Input size="large" placeholder="Số điện thoại" />
+                <Input size="large" placeholder={t("contact.phonePlaceholder")} />
               </Form.Item>
             </Col>
             <Col span={24}>
@@ -85,41 +87,41 @@ function ContactEmployerForm() {
                 <Select
                   size="large"
                   options={listItem}
-                  placeholder="Bạn biết đến ITviec từ đâu?"
+                  placeholder={t("contact.sourcePlaceholder")}
                 />
               </Form.Item>
             </Col>
           </Row>
-          <h3 className="contact-emploter-form__title">Thông tin công ty</h3>
+          <h3 className="contact-emploter-form__title">{t("contact.companyTitle")}</h3>
           <Row gutter={20}>
             <Col span={24}>
               <Form.Item
                 name="nameCompany"
                 rules={[
-                  { required: true, message: "Vui lòng điền tên công ty!" },
+                  { required: true, message: t("contact.companyNameError") },
                 ]}
               >
-                <Input size="large" placeholder="Tên công ty" />
+                <Input size="large" placeholder={t("contact.companyNamePlaceholder")} />
               </Form.Item>
             </Col>
             <Col span={24}>
               <Form.Item
                 name="companyAddress"
                 rules={[
-                  { required: true, message: "Vui lòng chọn địa chỉ công ty!" },
+                  { required: true, message: t("contact.companyAddressError") },
                 ]}
               >
                 <Select
                   size="large"
                   options={listItem2}
-                  placeholder="Địa chỉ công ty"
+                  placeholder={t("contact.companyAddressPlaceholder")}
                 />
               </Form.Item>
             </Col>
 
             <Col span={24}>
               <Form.Item name="companyAddressWebsite">
-                <Input size="large" placeholder="Địa chỉ website" />
+                <Input size="large" placeholder={t("contact.websitePlaceholder")} />
                 {/* <span>
                   URL bao gồm đầy đủ giao thức (https), ví dụ:
                   https://itviec.com
@@ -135,8 +137,8 @@ function ContactEmployerForm() {
             <Col xxl={{ span: 12, order: 0 }} xl={{ span: 12, order: 0 }} lg={{ span: 24, order: 1 }} md={{ span: 24, order: 1 }} sm={{ span: 24, order: 1 }} xs={{ span: 24, order: 1 }}>
               <div className="center-item d-flex flex-column">
                 <div className="register-login">
-                  Bạn đã có tài khoản?
-                  <span><Link to="/login">Đăng nhập ngay</Link></span>
+                  {t("contact.hasAccount")}
+                  <span><Link to="/login">{t("contact.loginNow")}</Link></span>
                 </div>
               </div>
             </Col>
@@ -151,7 +153,7 @@ function ContactEmployerForm() {
               <Form.Item label={null}>
                 <div className="center-item">
                   <ButtonSubmit
-                    text="Liên hệ tôi"
+                    text={t("contact.contactBtn")}
                     disabled={!checked}
                     type="max"
                   />

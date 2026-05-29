@@ -1,0 +1,247 @@
+{
+  "dashboard": {
+    "title": "Bảng điều khiển",
+    "welcome": "Xin chào, {{name}}!",
+    "totalJobs": "Tổng việc làm",
+    "totalApplications": "Tổng ứng viên",
+    "newApplications": "Ứng viên mới",
+    "activeJobs": "Việc làm đang tuyển"
+  },
+  "jobs": {
+    "title": "Quản lý việc làm",
+    "create": "Đăng việc làm mới",
+    "edit": "Chỉnh sửa việc làm",
+    "delete": "Xóa việc làm",
+    "noJobs": "Chưa có việc làm nào",
+    "addTitle": "Thêm việc làm",
+    "editTitle": "Chỉnh sửa việc làm",
+    "jobDetail": "Chi tiết việc làm",
+    "status": {
+      "active": "Đang tuyển",
+      "closed": "Đã đóng",
+      "draft": "Nháp",
+      "expired": "Hết hạn"
+    },
+    "form": {
+      "jobId": "Job id",
+      "companyId": "Company id",
+      "title": "Tiêu đề",
+      "location": "Địa điểm",
+      "salary": "Mức lương",
+      "jobType": "Hình thức làm việc",
+      "experienceLevel": "Trình độ chuyên môn",
+      "postedAt": "Thời gian bắt đầu",
+      "expiresAt": "Thời gian kết thúc",
+      "status": "Trạng thái",
+      "requiredSkills": "Kỹ năng yêu cầu",
+      "jobReason": "Lý do để gia nhập công ty",
+      "jobDescription": "Mô tả công việc",
+      "jobRequirements": "Yêu cầu công việc",
+      "whyJoinUs": "Tại sao bạn nên gia nhập",
+      "submit": "Submit"
+    }
+  },
+  "applications": {
+    "title": "Quản lý ứng viên",
+    "viewProfile": "Xem hồ sơ",
+    "download": "Tải CV",
+    "noApplications": "Chưa có ứng viên nào",
+    "viewDetail": "Xem chi tiết",
+    "columns": {
+      "id": "ID",
+      "jobTitle": "Tên công việc",
+      "fullName": "Họ và Tên",
+      "phoneNumber": "Số điện thoại",
+      "resume": "Hồ sơ",
+      "coverLetter": "Thư xin việc",
+      "desiredLocations": "Nơi làm việc mong muốn",
+      "appliedAt": "Thời gian nộp",
+      "status": "Trạng thái",
+      "action": "Hành động"
+    },
+    "statusBadge": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "unknown": "Không xác định"
+    },
+    "detail": {
+      "title": "Chi tiết",
+      "jobTitle": "Tên công việc",
+      "companyName": "Tên Công Ty",
+      "salary": "Mức Lương",
+      "fullName": "Họ Và Tên",
+      "phoneNumber": "Số điện thoại",
+      "resume": "Hồ sơ",
+      "coverLetter": "Thư xin việc",
+      "desiredLocations": "Nơi làm việc mong muốn",
+      "appliedAt": "Thời gian nộp",
+      "status": "Trạng thái",
+      "employerMessage": "Thông báo phỏng vấn",
+      "submit": "Submit"
+    },
+    "status": {
+      "pending": "Chờ xét duyệt",
+      "reviewed": "Đã xem xét",
+      "interview": "Phỏng vấn",
+      "offered": "Đã offer",
+      "rejected": "Từ chối"
+    }
+  },
+  "profile": {
+    "title": "Hồ sơ công ty",
+    "companyName": "Tên công ty",
+    "companySize": "Quy mô công ty",
+    "industry": "Ngành nghề",
+    "website": "Website",
+    "description": "Giới thiệu công ty",
+    "address": "Địa chỉ",
+    "logo": "Logo công ty",
+    "editTitle": "Sửa thông tin",
+    "edit": "Edit",
+    "openJobs": "{{count}} việc làm đang tuyển dụng",
+    "tabs": {
+      "about": "Giới thiệu",
+      "reviews": "Đánh giá",
+      "articles": "Bài viết"
+    },
+    "form": {
+      "companyName": "Tên công ty",
+      "description": "Mô tả",
+      "address": "Địa chỉ",
+      "companyModel": "Mô hình công ty",
+      "industry": "Lĩnh vực công ty",
+      "companySize": "Quy mô công ty",
+      "country": "Quốc gia",
+      "workingHours": "Thời gian làm việc",
+      "overtimePolicy": "Chính sách làm thêm giờ",
+      "skills": "Kỹ năng chính",
+      "companyIntroduction": "Giới thiệu công ty",
+      "ourExpertise": "Chuyên môn của chúng tôi",
+      "whyWorkHere": "Tại sao bạn sẽ yêu thích làm việc tại đây?",
+      "submit": "Submit"
+    }
+  },
+  "login": {
+    "title": "Đăng nhập nhà tuyển dụng",
+    "subtitle": "Quản lý tuyển dụng hiệu quả hơn",
+    "noAccount": "Chưa có tài khoản doanh nghiệp?",
+    "register": "Đăng ký ngay"
+  },
+  "reports": {
+    "title": "Báo cáo"
+  },
+  "activity": {
+    "title": "Hoạt động",
+    "notification": "Gói của bạn sẽ hết hạn trong 3 ngày.",
+    "renewNow": "Gia hạn ngay"
+  },
+  "messages": {
+    "title": "Tin nhắn"
+  },
+  "loginCustomer": {
+    "customerAdminSite": "CUSTOMER ADMIN SITE",
+    "title": "Đăng nhập NHIEUviec Customer",
+    "rememberLogin": "Ghi nhớ đăng nhập",
+    "contactTitle": "Bạn chưa có tài khoản khách hàng? Liên hệ chúng tôi:",
+    "noAccount": "Bạn chưa có tài khoản?"
+  },
+  "contact": {
+    "customerTitle": "Thông tin Quý khách",
+    "companyTitle": "Thông tin công ty",
+    "fullNamePlaceholder": "Họ và tên",
+    "fullNameError": "Vui lòng điền tên của bạn!",
+    "titlePlaceholder": "Chức vụ",
+    "titleError": "Vui lòng điền chức vụ của bạn!",
+    "emailPlaceholder": "Email làm việc",
+    "emailError": "Vui lòng cung cấp email công ty của bạn!",
+    "phonePlaceholder": "Số điện thoại",
+    "phoneError": "Vui lòng cung cấp số điện thoại!",
+    "sourcePlaceholder": "Bạn biết đến ITviec từ đâu?",
+    "companyNamePlaceholder": "Tên công ty",
+    "companyNameError": "Vui lòng điền tên công ty!",
+    "companyAddressPlaceholder": "Địa chỉ công ty",
+    "companyAddressError": "Vui lòng chọn địa chỉ công ty!",
+    "websitePlaceholder": "Địa chỉ website",
+    "hasAccount": "Bạn đã có tài khoản?",
+    "loginNow": "Đăng nhập ngay",
+    "contactBtn": "Liên hệ tôi"
+  },
+  "cardApplication": {
+    "appliedOn": "Ứng tuyển vào {{date}}",
+    "viewDetail": "Xem chi tiết",
+    "detailTitle": "Chi tiết",
+    "noReply": "Chưa có phản hồi từ nhà tuyển dụng.",
+    "openNewTab": "Mở trong tab mới"
+  },
+  "agreement": {
+    "readAndAgree": "Tôi đã đọc và đồng ý với các",
+    "termsLink": "Điều khoản dịch vụ",
+    "and": "và",
+    "privacyLink": "Chính sách quyền riêng tư",
+    "ofSite": "của NHIEUviec liên quan đến thông tin riêng tư của tôi."
+  },
+  "home": {
+    "hero": {
+      "title": "Tuyển dụng Nhân tài IT tại Việt Nam cùng NHIEUviec",
+      "description": "Với hiểu biết sâu sắc về lĩnh vực IT và các kỹ năng chuyên môn, chúng tôi có thể giúp bạn tiếp cận và tuyển dụng những ứng viên IT tốt nhất.",
+      "contactBtn": "Liên hệ ngay",
+      "loginText": "Đăng nhập để đăng tin tuyển dụng",
+      "loginBtn": "Đăng nhập"
+    },
+    "different": {
+      "title": "Điều gì tạo nên sự khác biệt ở NHIEUviec?",
+      "desc": "NHIEUviec là trang tuyển dụng và cơ sở dữ liệu hàng đầu về các chuyên gia IT tại Việt Nam.",
+      "stat1": "Công ty và Doanh nghiệp IT",
+      "stat2": "Hồ sơ đã gửi đến Nhà tuyển dụng",
+      "stat3": "Hồ sơ Ứng viên kinh nghiệm cao"
+    },
+    "services": {
+      "title": "Dịch vụ chất lượng cao dành cho Nhà tuyển dụng IT",
+      "jobPosting": {
+        "title": "Đăng tin tuyển dụng",
+        "desc": "Đăng tuyển vị trí công việc IT, dễ dàng quản lý hồ sơ ứng viên với giao diện trực quan, đội ngũ hỗ trợ, và công cụ mạnh mẽ từ NHIEUviec",
+        "feature1": "Gia tăng cơ hội để tiếp cận ứng viên IT chất lượng từ ITviec",
+        "feature2": "Thu hút ứng viên phù hợp với yêu cầu về kỹ năng IT"
+      },
+      "aiMatch": {
+        "title": "Gợi ý ứng viên AI Match",
+        "desc": "Kết nối với nguồn hồ sơ ứng viên IT đa dạng, hoạt động tích cực. Dễ dàng tiếp cận ứng viên với thao tác đơn giản. Mở khóa để giúp tìm kiếm ứng viên phù hợp.",
+        "feature1": "Các ứng viên phù hợp nhất được lựa chọn dựa trên kỹ năng, kinh nghiệm, nhu cầu công việc và hơn thế nữa",
+        "feature2": "Chỉ kết nối nhà tuyển dụng với những nhân tài IT đang có ý định chuyển việc",
+        "learnMore": "Xem thêm về AI Match"
+      },
+      "branding": {
+        "title": "Thương hiệu tuyển dụng",
+        "desc": "Nâng cao nhận diện thương hiệu của Nhà tuyển dụng, tiếp cận các chuyên gia IT trên NHIEUviec qua các điểm chạm đặc biệt, và kết nối với các ứng viên IT hàng đầu tại Việt Nam",
+        "topEmployer": {
+          "title": "Nhà tuyển dụng hàng đầu",
+          "desc": "Các ứng viên phù hợp nhất được lựa chọn dựa trên kỹ năng, kinh nghiệm, nhu cầu công việc và hơn thế nữa"
+        },
+        "featuredEmployer": {
+          "title": "Nhà tuyển dụng nổi bật",
+          "desc": "Chỉ kết nối nhà tuyển dụng với những nhân tài IT đang có ý định chuyển việc"
+        }
+      },
+      "ctaText": "Trải nghiệm dịch vụ của ITviec ngay hôm nay",
+      "ctaBtn": "Liên hệ ngay"
+    },
+    "topEmployers": {
+      "title": "Top Công ty hàng đầu tại ITviec",
+      "desc": "Nhà tuyển dụng và đối tác của chúng tôi bao gồm các công ty IT hàng đầu, và các công ty khởi nghiệp sáng tạo",
+      "feedback": "Khách hàng nói gì về chúng tôi?"
+    },
+    "contact": {
+      "title": "Tìm kiếm Nhân tài IT phù hợp",
+      "desc": "Để lại thông tin liên hệ để nhận tư vấn từ Phòng Chăm sóc Khách hàng của ITviec.",
+      "hotlineHCM": "Hotline Hồ Chí Minh",
+      "hotlineHN": "Hotline Hà Nội",
+      "workingHours": "Thời gian làm việc",
+      "workingHoursValue": "Thứ 2 - Thứ 6 | 8:30 - 17:00"
+    },
+    "excite": {
+      "title": "Sẵn sàng Hứng Khởi ngành IT tại Việt Nam với Tuyển Dụng \"Chất\"",
+      "desc": "Khởi đầu từ năm 2013, sứ mệnh của ITviec chính là luôn hướng đến tuyển dụng \"chất\" ngành IT. Chúng tôi giúp nhân sự ngành IT thăng tiến sự nghiệp, giúp doanh nghiệp tìm được những ứng viên tuyệt vời. Hãy cùng chúng tôi hứng khởi ngành IT tại Việt Nam với tuyển dụng \"Chất\"!"
+    }
+  }
+}

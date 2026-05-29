@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import "./LayoutJobSeeker.scss";
 import { PiHandWavingFill } from "react-icons/pi";
 import { NavLink, Outlet } from "react-router-dom";
@@ -9,17 +9,12 @@ import { LuBriefcase } from "react-icons/lu";
 import { BsMailbox2Flag } from "react-icons/bs";
 import { MdMailOutline } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
+import { useSeekerStore } from "@/store/seekerStore";
+import { useTranslation } from "react-i18next";
 
-interface SeekerState {
-  fullName?: string;
-  id?: number;
-}
-
-function LayoutJobSeeker(): JSX.Element {
-  const seeker = useSelector((state: any) => state.SeekerReducer) as SeekerState;
-  const dispatch = useDispatch();
-  const [userId, setUserId] = useState(localStorage.getItem("id") || "");
+const LayoutJobSeeker = () => {
+  const { t } = useTranslation("common");
+  const fullName = useSeekerStore((state) => state.fullName);
 
   return (
     <>
@@ -30,10 +25,10 @@ function LayoutJobSeeker(): JSX.Element {
               <div className="layout-jobseeker__sidebar">
                 <div className="layout-jobseeker__hello">
                   <PiHandWavingFill />
-                  <span>Xin chào</span>
+                  <span>{t("layout.hello")}</span>
                 </div>
                 <h3 className="layout-jobseeker__username">
-                  {seeker.fullName || "Tên người dùng"}
+                  {fullName || t("layout.defaultUser")}
                 </h3>
                 <div className="layout-jobseeker__menu">
                   <ul>
@@ -43,7 +38,7 @@ function LayoutJobSeeker(): JSX.Element {
                         className="layout-jobseeker__menu-item"
                       >
                         <RxDashboard />
-                        <span>Tổng quan</span>
+                        <span>{t("menu.overview")}</span>
                       </NavLink>
                     </li>
                     <li>
@@ -52,7 +47,7 @@ function LayoutJobSeeker(): JSX.Element {
                         className="layout-jobseeker__menu-item"
                       >
                         <FaRegFileAlt />
-                        <span>Hồ sơ đính kèm</span>
+                        <span>{t("menu.attachedCv")}</span>
                       </NavLink>
                     </li>
                     <li>
@@ -62,7 +57,7 @@ function LayoutJobSeeker(): JSX.Element {
                         end
                       >
                         <FiUser />
-                        <span>Hồ sơ ITviec</span>
+                        <span>{t("menu.profile")}</span>
                       </NavLink>
                     </li>
                     <li>
@@ -71,7 +66,7 @@ function LayoutJobSeeker(): JSX.Element {
                         className="layout-jobseeker__menu-item"
                       >
                         <LuBriefcase />
-                        <span>Việc làm của tôi</span>
+                        <span>{t("menu.myJobs")}</span>
                       </NavLink>
                     </li>
                     <li>
@@ -80,7 +75,7 @@ function LayoutJobSeeker(): JSX.Element {
                         className="layout-jobseeker__menu-item"
                       >
                         <BsMailbox2Flag />
-                        <span>Lời mời công việc</span>
+                        <span>{t("menu.jobInvitations")}</span>
                       </NavLink>
                     </li>
                     <li>
@@ -89,7 +84,7 @@ function LayoutJobSeeker(): JSX.Element {
                         className="layout-jobseeker__menu-item"
                       >
                         <MdMailOutline />
-                        <span> Đăng ký nhận email </span>
+                        <span>{t("menu.emailSubscription")}</span>
                       </NavLink>
                     </li>
                     <li>
@@ -98,7 +93,7 @@ function LayoutJobSeeker(): JSX.Element {
                         className="layout-jobseeker__menu-item"
                       >
                         <IoMdSettings />
-                        <span> Cài đặt </span>
+                        <span>{t("menu.settings")}</span>
                       </NavLink>
                     </li>
                   </ul>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./MyJobs.scss";
 import { NavLink, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import {
   getApplicationsBySeekerId,
   getApplicationsBySeekerIdWithPagination,
@@ -43,6 +44,7 @@ function MyJobs() {
   const [totalApplications, setTotalApplications] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const seeker = useSelector((state: RootState) => state.SeekerReducer);
+  const { t } = useTranslation("jobseeker");
   const [pagination, setPagination] = useState<PaginationState>({
     current: 1,
     pageSize: 5,
@@ -85,7 +87,7 @@ function MyJobs() {
   return (
     <div className="my-jobs">
       <div className="job-seeker-section job-seeker-section--custom2">
-        <h2 className="my-jobs__main-title">Việc làm của tôi</h2>
+        <h2 className="my-jobs__main-title">{t("myJobs.title")}</h2>
         <ul className="my-jobs__list">
           <li className="my-jobs__item-wrapper">
             <NavLink
@@ -96,7 +98,7 @@ function MyJobs() {
               }
               to="/viec-lam-cua-toi/ung-tuyen"
             >
-              <span className="my-jobs__text">Đã ứng tuyển</span>
+              <span className="my-jobs__text">{t("myJobs.applied")}</span>
               <span className="my-jobs__count">{totalApplications}</span>
             </NavLink>
           </li>
@@ -110,7 +112,7 @@ function MyJobs() {
               to="/viec-lam-cua-toi"
               end
             >
-              <span className="my-jobs__text">Đã lưu</span>
+              <span className="my-jobs__text">{t("myJobs.saved")}</span>
               <span className="my-jobs__count">0</span>
             </NavLink>
           </li>
@@ -123,7 +125,7 @@ function MyJobs() {
               }
               to="/viec-lam-cua-toi/xem-gan-day"
             >
-              <span className="my-jobs__text">Đã xem gần đây</span>
+              <span className="my-jobs__text">{t("myJobs.recentlyViewed")}</span>
               <span className="my-jobs__count">0</span>
             </NavLink>
           </li>
@@ -131,7 +133,7 @@ function MyJobs() {
       </div>
       {isLoading ? (
         <div className="my-jobs__loading">
-          <p>Loading...</p>
+          <p>{t("myJobs.loading")}</p>
         </div>
       ) : (
         <div className="job-seeker-section job-seeker-section--custom4">

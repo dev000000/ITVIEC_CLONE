@@ -1,16 +1,18 @@
 import { useState } from "react";
 import "./RecentlyViewed.scss";
 import EmptyJobState from "../EmptyJobState";
+import { useTranslation } from "react-i18next";
 
 function RecentlyViewed() {
   const [jobList, _setJobList] = useState<unknown[]>([]);
+  const { t } = useTranslation("jobseeker");
 
   return jobList.length === 0 ? (
     <div className="applied-jobs">
       <EmptyJobState
-        notificationText="Chỉ hiển thị công việc đã xem trong 3 tháng gần nhất"
-        emptyMessage="Bạn chưa xem công việc nào trong 12 tháng qua."
-        buttonText="Tìm việc ngay"
+        notificationText={t("recentlyViewed.notification")}
+        emptyMessage={t("recentlyViewed.emptyMessage")}
+        buttonText={t("recentlyViewed.findJob")}
         buttonLink="/"
       />
     </div>

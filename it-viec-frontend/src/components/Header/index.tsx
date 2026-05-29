@@ -13,13 +13,15 @@ import { MdMailOutline } from "react-icons/md";
 import { IoMdSettings } from "react-icons/io";
 import { MdOutlineLogout } from "react-icons/md";
 import Cascader from "../Cascader";
+import LanguageSwitcher from "../LanguageSwitcher";
 import { FaBars } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useUserStore } from "@/store/userStore";
-const jobItems = {
+import { useTranslation } from "react-i18next";
+const jobItemsStatic = {
   header: "Việc làm IT",
   items: [
     {
@@ -316,7 +318,7 @@ const jobItems = {
   ],
   link: "/viec-lam-it",
 };
-const blogItems = {
+const blogItemsStatic = {
   header: "Blog",
   items: [
     {
@@ -370,7 +372,7 @@ const blogItems = {
   ],
   link: "/blog/",
 };
-const companyItems = {
+const companyItemsStatic = {
   header: "Top Công ty IT",
   link: "/cong-ty-it-tot-nhat-vietnam",
   items: [
@@ -437,6 +439,7 @@ const Header = ({ type }: HeaderProps) => {
   const authenticated = useUserStore((state) => state.authenticated);
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const logout = useUserStore((state) => state.logout);
+  const { t } = useTranslation("common");
   const [sidebar, setSidebar] = useState({
     left: false,
     right: false,
@@ -445,22 +448,79 @@ const Header = ({ type }: HeaderProps) => {
     active: false,
     id: null,
   });
+  const jobItems = useMemo(
+    () => ({
+      header: t("nav.jobs"),
+      link: jobItemsStatic.link,
+      items: [
+        { ...jobItemsStatic.items[0], label: t("nav.jobsBySkill") },
+        {
+          ...jobItemsStatic.items[1],
+          label: t("nav.jobsByLevel"),
+          child: jobItemsStatic.items[1].child.map((level, i) => ({
+            ...level,
+            label: (
+              [
+                t("levels.deputyHead"),
+                t("levels.head"),
+                t("levels.projectDirector"),
+                t("levels.seniorManager"),
+                t("levels.ceo"),
+                t("levels.specialist"),
+                t("levels.deputyDirector"),
+                t("levels.divisionHead"),
+                t("levels.deputyDivision"),
+                t("levels.projectManager"),
+              ] as string[]
+            )[i] ?? level.label,
+          })),
+        },
+        { ...jobItemsStatic.items[2], label: t("nav.jobsByCompany") },
+        { ...jobItemsStatic.items[3], label: t("nav.jobsByCity") },
+      ],
+    }),
+    [t]
+  );
+  const blogItems = useMemo(
+    () => ({
+      header: t("nav.blog"),
+      link: blogItemsStatic.link,
+      items: [
+        { ...blogItemsStatic.items[0], label: t("nav.salaryReport") },
+        { ...blogItemsStatic.items[1], label: t("nav.itCareer") },
+        { ...blogItemsStatic.items[2], label: t("nav.applyAndAdvance") },
+        { ...blogItemsStatic.items[3], label: t("nav.itExpertise") },
+      ],
+    }),
+    [t]
+  );
+  const companyItems = useMemo(
+    () => ({
+      header: t("nav.companies"),
+      link: companyItemsStatic.link,
+      items: [
+        { ...companyItemsStatic.items[0], label: t("nav.topCompanies") },
+        { ...companyItemsStatic.items[1], label: t("nav.reviewCompany") },
+      ],
+    }),
+    [t]
+  );
   const handleLogout = () => {
     Swal.fire({
-      title: "Đăng xuất?",
-      text: "Bạn có chắc chắn muốn đăng xuất!",
+      title: t("logout.title"),
+      text: t("logout.confirm"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes!",
+      confirmButtonText: t("buttons.yes"),
     }).then((result) => {
       if (result.isConfirmed) {
         clearSeekerInfo();
         logout();
         Swal.fire({
-          title: "Ok!",
-          text: "Bạn đã đăng xuất thành công",
+          title: t("logout.successTitle"),
+          text: t("logout.success"),
           icon: "success",
         });
       }
@@ -478,16 +538,19 @@ const Header = ({ type }: HeaderProps) => {
             </div>
             <div className="header__nav">
               <div className="header__nav-left">
-                <div className="header__nav-employer"> Nhà tuyển dụng </div>
+                <div className="header__nav-employer">{t("header.employer")}</div>
               </div>
               <ul className="header__nav-right">
+                <li>
+                  <LanguageSwitcher />
+                </li>
                 <li>
                   <a
                     href="/customer/login"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Đăng nhập
+                    {t("buttons.login")}
                   </a>
                 </li>
               </ul>
@@ -516,55 +579,55 @@ const Header = ({ type }: HeaderProps) => {
             onClick={() => setSidebar({ ...sidebar, right: false })}
           >
             {" "}
-            <span>Đóng</span> <IoClose />
+            <span>{t("header.close")}</span> <IoClose />
           </div>
           <ul>
             <li>
               <Link to="tong-quan-ho-so">
                 <RxDashboard />
-                <span>Tổng quan</span>
+                <span>{t("menu.overview")}</span>
               </Link>
             </li>
             <li>
               <Link to="ho-so-cv/quan-ly-cv">
                 <FaRegFileAlt />
-                <span>Hồ sơ đính kèm</span>
+                <span>{t("menu.attachedCv")}</span>
               </Link>
             </li>
             <li>
               <Link to="ho-so-cv">
                 <FiUser />
-                <span>Hồ sơ ITviec</span>
+                <span>{t("menu.profile")}</span>
               </Link>
             </li>
             <li>
               <Link to="viec-lam-cua-toi">
                 <LuBriefcase />
-                <span>Việc làm của tôi</span>
+                <span>{t("menu.myJobs")}</span>
               </Link>
             </li>
             <li>
               <Link to="loi-moi-cong-viec">
                 <BsMailbox2Flag />
-                <span>Lời mời công việc</span>
+                <span>{t("menu.jobInvitations")}</span>
               </Link>
             </li>
             <li>
               <Link to="dang-ky">
                 <MdMailOutline />
-                <span> Đăng ký nhận email </span>
+                <span>{t("menu.emailSubscription")}</span>
               </Link>
             </li>
             <li>
               <Link to="cai-dat">
                 <IoMdSettings />
-                <span> Cài đặt </span>
+                <span>{t("menu.settings")}</span>
               </Link>
             </li>
             <li>
               <Link to={''} onClick={handleLogout}>
                 <MdOutlineLogout />
-                <span> Đăng xuất </span>
+                <span>{t("menu.logout")}</span>
               </Link>
             </li>
           </ul>
@@ -583,7 +646,7 @@ const Header = ({ type }: HeaderProps) => {
                 onClick={() => setSubSidebar({ active: false, id: null })}
               >
                 <MdKeyboardArrowLeft />
-                <span>Quay lại</span>
+                <span>{t("header.back")}</span>
               </div>
             )}
             <div
@@ -591,7 +654,7 @@ const Header = ({ type }: HeaderProps) => {
               onClick={() => setSidebar({ ...sidebar, left: false })}
             >
               {" "}
-              <span>Đóng</span> <IoClose />
+              <span>{t("header.close")}</span> <IoClose />
             </div>
           </div>
           <ul>
@@ -608,7 +671,7 @@ const Header = ({ type }: HeaderProps) => {
                   <>
                     <li key={`${selectedSubmenu.id}-viewmore`} className="header__sidebar-viewmore">
                       <Link to={selectedSubmenu.viewmore.link}>
-                        <span>Xem tất cả</span>
+                        <span>{t("header.viewAll")}</span>
                         <IoIosArrowForward />
                       </Link>
                     </li>
@@ -619,7 +682,7 @@ const Header = ({ type }: HeaderProps) => {
               <>
                 <li>
                   <Link to="/viec-lam-it">
-                    <span>Việc làm IT</span>
+                    <span>{t("nav.jobs")}</span>
                   </Link>
                 </li>
                 {jobItems.items.map((item) => (
@@ -658,7 +721,7 @@ const Header = ({ type }: HeaderProps) => {
                 </li>
                 <li>
                   <Link to="/employer" target="_blank">
-                    <span>Nhà Tuyển dụng </span>
+                    <span>{t("header.employer")}</span>
                   </Link>
                 </li>
               </>
@@ -696,49 +759,49 @@ const Header = ({ type }: HeaderProps) => {
                       <li>
                         <Link to="tong-quan-ho-so">
                           <RxDashboard />
-                          <span>Tổng quan</span>
+                          <span>{t("menu.overview")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="ho-so-cv/quan-ly-cv">
                           <FaRegFileAlt />
-                          <span>Hồ sơ đính kèm</span>
+                          <span>{t("menu.attachedCv")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="ho-so-cv">
                           <FiUser />
-                          <span>Hồ sơ ITviec</span>
+                          <span>{t("menu.profile")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="viec-lam-cua-toi">
                           <LuBriefcase />
-                          <span>Việc làm của tôi</span>
+                          <span>{t("menu.myJobs")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="loi-moi-cong-viec">
                           <BsMailbox2Flag />
-                          <span>Lời mời công việc</span>
+                          <span>{t("menu.jobInvitations")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="dang-ky">
                           <MdMailOutline />
-                          <span> Đăng ký nhận email </span>
+                          <span>{t("menu.emailSubscription")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to="cai-dat">
                           <IoMdSettings />
-                          <span> Cài đặt </span>
+                          <span>{t("menu.settings")}</span>
                         </Link>
                       </li>
                       <li>
                         <Link to={''} onClick={handleLogout}>
                           <MdOutlineLogout />
-                          <span> Đăng xuất </span>
+                          <span>{t("menu.logout")}</span>
                         </Link>
                       </li>
                     </ul>
@@ -746,7 +809,7 @@ const Header = ({ type }: HeaderProps) => {
                 </li>
               ) : (
                 <div className="header__wrap-login">
-                  <Link to="/login">Đăng nhập</Link>
+                  <Link to="/login">{t("buttons.login")}</Link>
                 </div>
               )}
             </div>
@@ -759,8 +822,11 @@ const Header = ({ type }: HeaderProps) => {
               </div>
               <ul className="header__nav-right">
                 <li>
+                  <LanguageSwitcher />
+                </li>
+                <li>
                   <Link to="/employer" target="_blank">
-                    Nhà tuyển dụng
+                    {t("header.employer")}
                   </Link>
                 </li>
                 {authenticated ? (
@@ -770,7 +836,7 @@ const Header = ({ type }: HeaderProps) => {
                     </div>
                     <div className="header__menu-name-wrap">
                       <span className="header__menu-name">
-                        {fullName || "Tên người dùng"}
+                        {fullName || t("header.defaultUser")}
                       </span>
                       <IoIosArrowDown />
                     </div>
@@ -779,49 +845,49 @@ const Header = ({ type }: HeaderProps) => {
                         <li>
                           <Link to="tong-quan-ho-so">
                             <RxDashboard />
-                            <span>Tổng quan</span>
+                            <span>{t("menu.overview")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to="ho-so-cv/quan-ly-cv">
                             <FaRegFileAlt />
-                            <span>Hồ sơ đính kèm</span>
+                            <span>{t("menu.attachedCv")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to="ho-so-cv">
                             <FiUser />
-                            <span>Hồ sơ ITviec</span>
+                            <span>{t("menu.profile")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to="viec-lam-cua-toi">
                             <LuBriefcase />
-                            <span>Việc làm của tôi</span>
+                            <span>{t("menu.myJobs")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to="loi-moi-cong-viec">
                             <BsMailbox2Flag />
-                            <span>Lời mời công việc</span>
+                            <span>{t("menu.jobInvitations")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to="dang-ky">
                             <MdMailOutline />
-                            <span> Đăng ký nhận email </span>
+                            <span>{t("menu.emailSubscription")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to="cai-dat">
                             <IoMdSettings />
-                            <span> Cài đặt </span>
+                            <span>{t("menu.settings")}</span>
                           </Link>
                         </li>
                         <li>
                           <Link to={''} onClick={handleLogout}>
                             <MdOutlineLogout />
-                            <span> Đăng xuất </span>
+                            <span>{t("menu.logout")}</span>
                           </Link>
                         </li>
                       </ul>
@@ -829,7 +895,7 @@ const Header = ({ type }: HeaderProps) => {
                   </li>
                 ) : (
                   <li>
-                    <Link to="/login">Đăng nhập / Đăng ký</Link>
+                    <Link to="/login">{t("buttons.login")}</Link>
                   </li>
                 )}
               </ul>

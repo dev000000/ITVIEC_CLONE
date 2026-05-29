@@ -6,7 +6,6 @@ import { CiLocationOn } from "react-icons/ci";
 import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import TagStatus from "@/components/TagStatus";
 import MB from "@/assets/images/mb-bank.webp";
@@ -19,6 +18,8 @@ import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { JobCardResponse } from "@/types/response.types";
+import { useTranslation } from "react-i18next";
+import { useUserStore } from "@/store/userStore";
 
 const logoMap: Record<string, string> = {
   "mb-bank": MB,
@@ -34,23 +35,14 @@ const logoMap: Record<string, string> = {
 
 type JobStatusLabel = "Active" | "Closed" | "Expired" | "Draft";
 
-
-interface LegacyUserState {
-  ok: boolean;
-  id: string | null;
-  userType: string;
-}
-
 interface TopJobItemProps {
   job?: JobCardResponse;
 }
 
 function TopJobItemEmployer({ job }: TopJobItemProps) {
   const navigate = useNavigate();
-
-  const isLogin = useSelector(
-    (state: { UserReducer: LegacyUserState }) => state.UserReducer
-  );
+  const { t } = useTranslation("job");
+  const authenticated = useUserStore((state) => state.authenticated);
 
   const handleClick = () => {
     navigate(`${job!.id}`);
@@ -87,58 +79,58 @@ function TopJobItemEmployer({ job }: TopJobItemProps) {
   }, [sortedSkills.length]);
 
 
-    return (
-      <div className="job__item">
-        <div className="job__label job__label--hot">
-          <span>HOT</span>
-        </div>
-        <div className="job__time">{getRelativeTime(job.postedAt)}</div>
-        {/* <TagStatus status={job.jobStatus!} /> */}
-        <div className="job__name">{job.title}</div>
-        <div
-          className={
-            isLogin.ok === true
-              ? "job__salary job__salary--visible"
-              : "job__salary"
-          }
-        >
-          <ImCoinDollar />{" "}
-          <span>
-            {isLogin.ok === true ? job.salary : "Đăng nhập để xem mức lương"}{" "}
-          </span>
-        </div>
-        <div className="job__location">
-          <MdLocationCity className="job__location-icon" />
-          <span>{job.jobType}</span>
-        </div>
-        <div className="job__city">
-          <CiLocationOn className="job__city-icon" />
-          <span>{job.city?.cityName}</span>
-        </div>
-        <div className="job__list-tag job__list-tag--employer" ref={tagListRef}>
-          {sortedSkills.slice(0, visibleTagsCount).map((skill) => (
-            <TagSkill key={skill.id} text={skill.skillName} />
-          ))}
-          {sortedSkills.length > visibleTagsCount && (
-            <Tooltip
-              title={sortedSkills
-                .slice(visibleTagsCount)
-                .map((skill) => skill.skillName)
-                .join(", ")}
-              placement="top"
-            >
-              <span className="job__more-tags">
-                +{sortedSkills.length - visibleTagsCount}
-              </span>
-            </Tooltip>
-          )}
-        </div>
-        <div className="job__button">
-          <button onClick={handleClick}>View details</button>
-        </div>
+  return (
+    <div className="job__item">
+      <div className="job__label job__label--hot">
+        <span>HOT</span>
       </div>
-    );
-  
+      <div className="job__time">{getRelativeTime(job.postedAt)}</div>
+      {/* <TagStatus status={job.jobStatus!} /> */}
+      <div className="job__name">{job.title}</div>
+      <div
+        className={
+          authenticated
+            ? "job__salary job__salary--visible"
+            : "job__salary"
+        }
+      >
+        <ImCoinDollar />{" "}
+        <span>
+          {authenticated ? job.salary : t("loginToSeeSalary")}{" "}
+        </span>
+      </div>
+      <div className="job__location">
+        <MdLocationCity className="job__location-icon" />
+        <span>{job.jobType}</span>
+      </div>
+      <div className="job__city">
+        <CiLocationOn className="job__city-icon" />
+        <span>{job.city?.cityName}</span>
+      </div>
+      <div className="job__list-tag job__list-tag--employer" ref={tagListRef}>
+        {sortedSkills.slice(0, visibleTagsCount).map((skill) => (
+          <TagSkill key={skill.id} text={skill.skillName} />
+        ))}
+        {sortedSkills.length > visibleTagsCount && (
+          <Tooltip
+            title={sortedSkills
+              .slice(visibleTagsCount)
+              .map((skill) => skill.skillName)
+              .join(", ")}
+            placement="top"
+          >
+            <span className="job__more-tags">
+              +{sortedSkills.length - visibleTagsCount}
+            </span>
+          </Tooltip>
+        )}
+      </div>
+      <div className="job__button">
+        <button onClick={handleClick}>{t("card.viewDetails")}</button>
+      </div>
+    </div>
+  );
+
 
 }
 

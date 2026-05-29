@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import type { JobCardResponse } from "@/types/response.types";
 import TopJobItemHome from "@/components/TopJobItemHome";
+import { useTranslation } from "react-i18next";
 
 interface TopJobProps {
   jobList: JobCardResponse[];
@@ -11,6 +12,7 @@ interface TopJobProps {
 }
 
 function TopJob({ jobList, totalJobs }: TopJobProps) {
+  const { t } = useTranslation("job");
   console.log("jobList in TopJob component:", jobList);
   console.log("totalJobs in TopJob component:", totalJobs);
   return (
@@ -19,7 +21,7 @@ function TopJob({ jobList, totalJobs }: TopJobProps) {
         <div className="top-job">
           <div className="container">
             <h1 className="top-job__title">
-              {totalJobs} Việc làm IT cho Developer "Chất"
+              {t("topJobsTitle", { count: totalJobs })}
             </h1>
             <div className="top-job__list">
               <Row gutter={[20, 20]}>
@@ -42,7 +44,7 @@ function TopJob({ jobList, totalJobs }: TopJobProps) {
             </div>
             <div className="top-job__button-more">
               <Link to="/viec-lam-it">
-                <span>Xem thêm {totalJobs - 8} công việc khác</span>
+                <span>{t("viewMore", { count: totalJobs - 8 })}</span>
                 <MdKeyboardArrowRight />
               </Link>
             </div>

@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "jobs": "IT Jobs",
+    "companies": "Top IT Companies",
+    "blog": "Blog",
+    "employer": "For Employers",
+    "jobsBySkill": "IT Jobs by Skill",
+    "jobsByLevel": "IT Jobs by Level",
+    "jobsByCompany": "IT Jobs by Company",
+    "jobsByCity": "IT Jobs by City",
+    "topCompanies": "Best IT Companies",
+    "reviewCompany": "Company Reviews",
+    "salaryReport": "IT Salary Report",
+    "itCareer": "IT Career",
+    "applyAndAdvance": "Apply & Advance",
+    "itExpertise": "IT Expertise"
+  },
+  "levels": {
+    "deputyHead": "Deputy Head",
+    "head": "Head of Department",
+    "projectDirector": "Project Director",
+    "seniorManager": "Senior Manager",
+    "ceo": "CEO",
+    "specialist": "Specialist",
+    "deputyDirector": "Deputy Director",
+    "divisionHead": "Division Head",
+    "deputyDivision": "Deputy Division Head",
+    "projectManager": "Project Manager"
+  },
+  "cities": {
+    "hochiminh": "Ho Chi Minh City",
+    "hanoi": "Hanoi",
+    "danang": "Da Nang",
+    "other": "Other"
+  },
+  "buttons": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out",
+    "close": "Close",
+    "back": "Back",
+    "viewAll": "View all",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "search": "Search",
+    "apply": "Apply",
+    "upload": "Upload",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "menu": {
+    "overview": "Overview",
+    "attachedCv": "Attached CV",
+    "profile": "ITviec Profile",
+    "myJobs": "My Jobs",
+    "jobInvitations": "Job Invitations",
+    "emailSubscription": "Email Subscription",
+    "dashboard": "Dashboard",
+    "jobs": "Jobs",
+    "applications": "Applications",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "Sign Out"
+  },
+  "layout": {
+    "hello": "Hello",
+    "defaultUser": "User",
+    "loading": "Loading...",
+    "loadCompanyError": "Unable to load company information",
+    "tokenCheckError": "Failed to verify session",
+    "logoutConfirm": "Are you sure you want to sign out?",
+    "logoutSuccess": "Signed out successfully",
+    "logoutButton": "Sign Out",
+    "employer": "Employer",
+    "logoAlt": "Nhieu Viec logo"
+  },
+  "logout": {
+    "title": "Sign Out?",
+    "confirm": "Are you sure you want to sign out?",
+    "success": "You have been signed out successfully",
+    "successTitle": "Done!"
+  },
+  "language": {
+    "vi": "Ti\u1ebfng Vi\u1ec7t",
+    "en": "English"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "serverError": "Server error",
+    "unauthorized": "You are not authorized to access this page"
+  },
+  "pagination": {
+    "showing": "Showing {{from}}-{{to}} of {{total}} results"
+  },
+  "footer": {
+    "slogan": "More but less",
+    "aboutTitle": "About ITviec",
+    "home": "Home",
+    "about": "About NHIEUviec.com",
+    "candidateSuggestion": "Candidate Suggestion Service",
+    "contact": "Contact Us",
+    "itJobs": "IT Jobs",
+    "faq": "FAQ",
+    "programTitle": "Programs",
+    "itStory": "IT Stories",
+    "writingContest": "Writing Contest",
+    "featuredJobs": "Featured IT Jobs",
+    "annualSurvey": "Annual Survey",
+    "termsTitle": "Terms & Policies",
+    "privacyPolicy": "Privacy Policy",
+    "operatingReg": "Operating Regulations",
+    "complaintPolicy": "Complaint Resolution",
+    "termsOfUse": "Terms of Use",
+    "pressRelease": "Press Release",
+    "contactTitle": "Contact us to post a job at:",
+    "sendContact": "Send contact information",
+    "copyright": "Copyright \u00a9 NHIEU VIEC JSC"
+  },
+  "header": {
+    "employer": "For Employers",
+    "login": "Sign In",
+    "defaultUser": "User Name",
+    "back": "Back",
+    "close": "Close",
+    "viewAll": "View all"
+  }
+}

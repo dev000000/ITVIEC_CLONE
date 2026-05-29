@@ -1,0 +1,130 @@
+{
+  "nav": {
+    "jobs": "Việc làm IT",
+    "companies": "Top Công ty IT",
+    "blog": "Blog",
+    "employer": "Nhà Tuyển dụng",
+    "jobsBySkill": "Việc làm IT theo kỹ năng",
+    "jobsByLevel": "Việc làm IT theo cấp bậc",
+    "jobsByCompany": "Việc làm IT theo công ty",
+    "jobsByCity": "Việc làm IT theo thành phố",
+    "topCompanies": "Công Ty IT tốt nhất",
+    "reviewCompany": "Review Công Ty",
+    "salaryReport": "Báo Cáo Lương IT",
+    "itCareer": "Sự Nghiệp IT",
+    "applyAndAdvance": "Ứng tuyển & Thăng Tiến",
+    "itExpertise": "Chuyên Môn IT"
+  },
+  "levels": {
+    "deputyHead": "Phó phòng",
+    "head": "Trưởng phòng",
+    "projectDirector": "Giám đốc dự án",
+    "seniorManager": "Quản lý cấp cao",
+    "ceo": "Giám đốc điều hành",
+    "specialist": "Chuyên viên",
+    "deputyDirector": "Phó giám đốc",
+    "divisionHead": "Trưởng ban",
+    "deputyDivision": "Phó ban",
+    "projectManager": "Quản lý dự án"
+  },
+  "cities": {
+    "hochiminh": "Hồ Chí Minh",
+    "hanoi": "Hà Nội",
+    "danang": "Đà Nẵng",
+    "other": "Khác"
+  },
+  "buttons": {
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "close": "Đóng",
+    "back": "Quay lại",
+    "viewAll": "Xem tất cả",
+    "submit": "Xác nhận",
+    "cancel": "Hủy",
+    "save": "Lưu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "search": "Tìm kiếm",
+    "apply": "Ứng tuyển",
+    "upload": "Tải lên",
+    "yes": "Có",
+    "no": "Không"
+  },
+  "menu": {
+    "overview": "Tổng quan",
+    "attachedCv": "Hồ sơ đính kèm",
+    "profile": "Hồ sơ ITviec",
+    "myJobs": "Việc làm của tôi",
+    "jobInvitations": "Lời mời công việc",
+    "emailSubscription": "Đăng ký nhận email",
+    "dashboard": "Bảng điều khiển",
+    "jobs": "Việc làm",
+    "applications": "Ứng viên",
+    "reports": "Báo cáo",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất"
+  },
+  "layout": {
+    "hello": "Xin chào",
+    "defaultUser": "Người dùng",
+    "loading": "Đang tải...",
+    "loadCompanyError": "Không thể tải thông tin công ty",
+    "tokenCheckError": "Kiểm tra phiên đăng nhập thất bại",
+    "logoutConfirm": "Bạn có chắc chắn muốn đăng xuất?",
+    "logoutSuccess": "Đăng xuất thành công",
+    "logoutButton": "Đăng xuất",
+    "employer": "Nhà tuyển dụng",
+    "logoAlt": "Logo Nhiều Việc"
+  },
+  "logout": {
+    "title": "Đăng xuất?",
+    "confirm": "Bạn có chắc chắn muốn đăng xuất!",
+    "success": "Bạn đã đăng xuất thành công",
+    "successTitle": "Ok!"
+  },
+  "language": {
+    "vi": "Tiếng Việt",
+    "en": "English"
+  },
+  "errors": {
+    "notFound": "Trang không tồn tại",
+    "serverError": "Lỗi máy chủ",
+    "unauthorized": "Bạn không có quyền truy cập"
+  },
+  "pagination": {
+    "showing": "Hiển thị {{from}}-{{to}} trong {{total}} kết quả"
+  },
+  "footer": {
+    "slogan": "Nhiều nhưng mà ít",
+    "aboutTitle": "Về ITviec",
+    "home": "Trang Chủ",
+    "about": "Về NHIEUviec.com",
+    "candidateSuggestion": "Dịch vụ gợi ý ứng viên",
+    "contact": "Liên Hệ",
+    "itJobs": "Việc Làm IT",
+    "faq": "Câu hỏi thường gặp",
+    "programTitle": "Chương trình",
+    "itStory": "Chuyện IT",
+    "writingContest": "Cuộc thi viết",
+    "featuredJobs": "Việc làm IT nổi bật",
+    "annualSurvey": "Khảo sát thường niên",
+    "termsTitle": "Điều khoản chung",
+    "privacyPolicy": "Quy định bảo mật",
+    "operatingReg": "Quy chế hoạt động",
+    "complaintPolicy": "Giải quyết khiếu nại",
+    "termsOfUse": "Thoả thuận sử dụng",
+    "pressRelease": "Thông cáo báo chí",
+    "contactTitle": "Liên hệ để đăng tin tuyển dụng tại:",
+    "sendContact": "Gửi thông tin liên hệ",
+    "copyright": "Copyright © NHIEU VIEC JSC"
+  },
+  "header": {
+    "employer": "Nhà Tuyển dụng",
+    "login": "Đăng nhập",
+    "defaultUser": "Tên người dùng",
+    "back": "Quay lại",
+    "close": "Đóng",
+    "viewAll": "Xem tất cả"
+  }
+}

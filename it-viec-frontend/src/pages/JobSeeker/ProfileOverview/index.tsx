@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./ProfileOverview.scss";
 import { MdMailOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -10,21 +9,15 @@ import { Col, Row } from "antd";
 import paperplaneImg from "@/assets/images/paper-plane.svg";
 import heathcareImg from "@/assets/images/healthcare.svg";
 import mailImg from "@/assets/images/mail.svg";
-import { useSelector } from "react-redux";
-
-interface LegacySeekerState {
-  fullName: string;
-  jobTitle: string;
-  gmail: string;
-}
-
-interface RootState {
-  SeekerReducer: LegacySeekerState;
-}
+import { useTranslation } from "react-i18next";
+import { useSeekerStore } from "@/store/seekerStore";
+import { useUserStore } from "@/store/userStore";
 
 function ProfileOverview() {
-  const [_userId, _setUserId] = useState(localStorage.getItem("id") || "");
-  const seeker = useSelector((state: RootState) => state.SeekerReducer);
+  const fullName = useSeekerStore((state) => state.fullName);
+  const jobTitle = useSeekerStore((state) => state.jobTitle);
+  const email = useUserStore((state) => state.email);
+  const { t } = useTranslation("jobseeker");
 
   return (
     <div className="profile-overview">
@@ -35,35 +28,35 @@ function ProfileOverview() {
           </div>
           <div className="profile-overview__details">
             <h1 className="profile-overview__name">
-              {seeker.fullName || "Cập nhật tên"}
+              {fullName || t("profileOverview.updateName")}
             </h1>
             <div className="profile-overview__job-title">
               <LuBriefcase />
               <span
                 className={
-                  seeker.jobTitle
+                  jobTitle
                     ? "profile-overview__text"
                     : "profile-overview__text profile-overview__text--default"
                 }
               >
-                {seeker.jobTitle || "Cập nhật chức danh"}
+                {jobTitle || t("profileOverview.updateJobTitle")}
               </span>
             </div>
             <div className="profile-overview__email">
               <MdMailOutline />
               <div
                 className={
-                  seeker.gmail
+                  email
                     ? "profile-overview__text"
                     : "profile-overview__text profile-overview__text--default"
                 }
               >
-                {seeker.gmail || "Cập nhật email"}
+                {email || t("profileOverview.updateEmail")}
               </div>
             </div>
             <div className="profile-overview__update-link">
               <Link to="/ho-so-cv">
-                <span>Cập nhật hồ sơ</span>
+                <span>{t("profileOverview.updateProfile")}</span>
                 <MdKeyboardArrowRight />
               </Link>
             </div>
@@ -72,7 +65,7 @@ function ProfileOverview() {
       </div>
       <div className="job-seeker-section">
         <div className="profile-overview__cv-attachment">
-          <h2 className="profile-overview__title">Hồ sơ đính kèm của bạn</h2>
+          <h2 className="profile-overview__title">{t("profileOverview.attachedCV")}</h2>
           <div className="update-cv">
             <img
               src={uploadImg}
@@ -84,11 +77,11 @@ function ProfileOverview() {
                 CV.docx
               </Link>
               <div className="update-cv__file-date">
-                Cập nhật lần cuối: 24/05/2025
+                {t("profileOverview.lastUpdated")}
               </div>
               <div className="update-cv__link">
                 <Link to="/ho-so-cv/quan-ly-cv">
-                  <span>Quản lý hồ sơ đính kèm</span>
+                  <span>{t("profileOverview.manageAttachedCV")}</span>
                   <MdKeyboardArrowRight />
                 </Link>
               </div>
@@ -97,7 +90,7 @@ function ProfileOverview() {
         </div>
       </div>
       <div className="job-seeker-section">
-        <h2 className="profile-overview__title">Hoạt động của bạn</h2>
+        <h2 className="profile-overview__title">{t("profileOverview.yourActivity")}</h2>
         <div className="profile-overview__activity">
           <Row gutter={[16, 16]}>
             <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
@@ -106,7 +99,7 @@ function ProfileOverview() {
                 className="profile-overview__activity-item"
               >
                 <h3 className="profile-overview__activity-title">
-                  Việc làm đã ứng tuyển
+                  {t("profileOverview.appliedJobs")}
                 </h3>
                 <div className="profile-overview__activity-content">
                   <p className="profile-overview__activity-count">0</p>
@@ -124,7 +117,7 @@ function ProfileOverview() {
                 className="profile-overview__activity-item profile-overview__activity-item--red"
               >
                 <h3 className="profile-overview__activity-title">
-                  Việc làm đã lưu
+                  {t("profileOverview.savedJobs")}
                 </h3>
                 <div className="profile-overview__activity-content profile-overview__activity-content--red">
                   <p className="profile-overview__activity-count">0</p>
@@ -139,7 +132,7 @@ function ProfileOverview() {
             <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
               <Link className="profile-overview__activity-item profile-overview__activity-item--green">
                 <h3 className="profile-overview__activity-title">
-                  Lời mời công việc
+                  {t("profileOverview.jobInvitations")}
                 </h3>
                 <div className="profile-overview__activity-content profile-overview__activity-content--green">
                   <p className="profile-overview__activity-count">0</p>

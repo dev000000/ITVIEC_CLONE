@@ -6,6 +6,7 @@ import { useOutletContext } from "react-router-dom";
 import { Pagination } from "antd";
 import { ImNotification } from "react-icons/im";
 import type { MyJobsOutletContext } from "../index";
+import { useTranslation } from "react-i18next";
 
 function AppliedJobs() {
   const {
@@ -16,13 +17,14 @@ function AppliedJobs() {
     pagination,
     sort,
   } = useOutletContext<MyJobsOutletContext>();
+  const { t } = useTranslation("jobseeker");
 
   return totalApplications === 0 ? (
     <div className="applied-jobs">
       <EmptyJobState
-        notificationText="Các công việc bạn đã ứng tuyển được lưu trữ trong 12 tháng gần đây."
-        emptyMessage="Bạn chưa ứng tuyển vào công việc nào trong 12 tháng qua."
-        buttonText="Tìm việc ngay"
+        notificationText={t("appliedJobs.notification")}
+        emptyMessage={t("appliedJobs.emptyMessage")}
+        buttonText={t("appliedJobs.findJob")}
         buttonLink="/"
       />
     </div>
@@ -33,19 +35,18 @@ function AppliedJobs() {
           <div className="job-empty-state__notification">
             <ImNotification className="job-empty-state__icon" />
             <span className="job-empty-state__text">
-              Các công việc bạn đã ứng tuyển được lưu trữ trong 12 tháng gần
-              đây.
+              {t("appliedJobs.notification")}
             </span>
           </div>
           <div className="job-empty-state__select">
-            <span>Sắp xếp theo: </span>
+            <span>{t("appliedJobs.sortBy")}</span>
             <Select
               defaultValue="desc"
               value={sort}
               style={{ width: 240 }}
               options={[
-                { value: "desc", label: "Ngày ứng tuyển gần nhất" },
-                { value: "asc", label: "Ngày ứng tuyển xa nhất" },
+                { value: "desc", label: t("appliedJobs.sortNewest") },
+                { value: "asc", label: t("appliedJobs.sortOldest") },
               ]}
               onChange={(value) => {
                 setSort(value);
