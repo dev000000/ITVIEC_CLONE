@@ -6,7 +6,6 @@ import { CiLocationOn } from "react-icons/ci";
 import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useEffect, useRef, useState } from "react";
 import TagStatus from "@/components/TagStatus";
 import MB from "@/assets/images/mb-bank.webp";
@@ -20,6 +19,7 @@ import BOSCH from "@/assets/images/bosch-global-software-technologies-company-li
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
+import { useUserStore } from "@/store/userStore";
 
 const logoMap: Record<string, string> = {
   "mb-bank": MB,
@@ -35,13 +35,6 @@ const logoMap: Record<string, string> = {
 
 type JobStatusLabel = "Active" | "Closed" | "Expired" | "Draft";
 
-
-interface LegacyUserState {
-  ok: boolean;
-  id: string | null;
-  userType: string;
-}
-
 interface TopJobItemProps {
   job?: JobCardResponse;
 }
@@ -49,10 +42,7 @@ interface TopJobItemProps {
 function TopJobItemEmployer({ job }: TopJobItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation("job");
-
-  const isLogin = useSelector(
-    (state: { UserReducer: LegacyUserState }) => state.UserReducer
-  );
+  const authenticated = useUserStore((state) => state.authenticated);
 
   const handleClick = () => {
     navigate(`${job!.id}`);
@@ -99,14 +89,14 @@ function TopJobItemEmployer({ job }: TopJobItemProps) {
       <div className="job__name">{job.title}</div>
       <div
         className={
-          isLogin.ok === true
+          authenticated
             ? "job__salary job__salary--visible"
             : "job__salary"
         }
       >
         <ImCoinDollar />{" "}
         <span>
-          {isLogin.ok === true ? job.salary : t("loginToSeeSalary")}{" "}
+          {authenticated ? job.salary : t("loginToSeeSalary")}{" "}
         </span>
       </div>
       <div className="job__location">

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./ProfileOverview.scss";
 import { MdMailOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -10,22 +9,14 @@ import { Col, Row } from "antd";
 import paperplaneImg from "@/assets/images/paper-plane.svg";
 import heathcareImg from "@/assets/images/healthcare.svg";
 import mailImg from "@/assets/images/mail.svg";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-
-interface LegacySeekerState {
-  fullName: string;
-  jobTitle: string;
-  gmail: string;
-}
-
-interface RootState {
-  SeekerReducer: LegacySeekerState;
-}
+import { useSeekerStore } from "@/store/seekerStore";
+import { useUserStore } from "@/store/userStore";
 
 function ProfileOverview() {
-  const [_userId, _setUserId] = useState(localStorage.getItem("id") || "");
-  const seeker = useSelector((state: RootState) => state.SeekerReducer);
+  const fullName = useSeekerStore((state) => state.fullName);
+  const jobTitle = useSeekerStore((state) => state.jobTitle);
+  const email = useUserStore((state) => state.email);
   const { t } = useTranslation("jobseeker");
 
   return (
@@ -37,30 +28,30 @@ function ProfileOverview() {
           </div>
           <div className="profile-overview__details">
             <h1 className="profile-overview__name">
-              {seeker.fullName || t("profileOverview.updateName")}
+              {fullName || t("profileOverview.updateName")}
             </h1>
             <div className="profile-overview__job-title">
               <LuBriefcase />
               <span
                 className={
-                  seeker.jobTitle
+                  jobTitle
                     ? "profile-overview__text"
                     : "profile-overview__text profile-overview__text--default"
                 }
               >
-                {seeker.jobTitle || t("profileOverview.updateJobTitle")}
+                {jobTitle || t("profileOverview.updateJobTitle")}
               </span>
             </div>
             <div className="profile-overview__email">
               <MdMailOutline />
               <div
                 className={
-                  seeker.gmail
+                  email
                     ? "profile-overview__text"
                     : "profile-overview__text profile-overview__text--default"
                 }
               >
-                {seeker.gmail || t("profileOverview.updateEmail")}
+                {email || t("profileOverview.updateEmail")}
               </div>
             </div>
             <div className="profile-overview__update-link">

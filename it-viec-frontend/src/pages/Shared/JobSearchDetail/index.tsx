@@ -2,7 +2,6 @@ import "./JobSearchDetail.scss";
 import { Link, useOutletContext } from "react-router-dom";
 import { ImCoinDollar } from "react-icons/im";
 import logo from "@/assets/images/Companylogo.webp";
-import { useSelector } from "react-redux";
 import { FaHeart } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { MdLocationCity } from "react-icons/md";
@@ -13,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
+import { useUserStore } from "@/store/userStore";
 
 interface JobSelected {
   requiredSkills: string[];
@@ -41,7 +41,7 @@ function JobSearchDetail() {
   const sortedSkills = [...jobSelected.requiredSkills].sort(
     (a, b) => a.length - b.length
   );
-  const isLogin = useSelector((state) => state.UserReducer);
+  const authenticated = useUserStore((state) => state.authenticated);
   const tagListRef = useRef<HTMLDivElement>(null);
   const [visibleTagsCount, setVisibleTagsCount] = useState(
     sortedSkills.length || 0
@@ -98,7 +98,7 @@ function JobSearchDetail() {
             {" "}
             {t("jobSearchDetail.applyNow")}{" "}
           </Link>
-          {isLogin ? (
+          {authenticated ? (
             <div className="card-job-head__heart">
               <FaHeart />
             </div>
