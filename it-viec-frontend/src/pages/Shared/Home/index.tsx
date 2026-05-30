@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import CampaignHighLight from "@/components/CampaignHighLight";
 import TopJob from "@/components/TopJob";
 import SearchFormHome from "@/components/SearchFormHome";
-import { getAllJobsApi } from "@/services_new/jobApi";
-import { getAllCompaniesApi } from "@/services_new/companyApi";
+import { getAllJobsApi } from "@/services/jobApi";
+import { getAllCompaniesApi } from "@/services/companyApi";
 import type { CompanyCardResponse, JobCardResponse } from "@/types/response.types";
 import TopCompanies from "@/components/TopCompanies";
 
@@ -32,7 +32,7 @@ function Home() {
     <>
       <SearchFormHome jobList={jobList} />
       <CampaignHighLight />
-      <TopCompanies companyList={companyList}/>
+      <TopCompanies companyList={companyList} />
       <TopJob jobList={jobList} totalJobs={totalJobs} />
     </>
   );

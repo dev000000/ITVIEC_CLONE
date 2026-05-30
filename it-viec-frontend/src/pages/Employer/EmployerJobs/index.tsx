@@ -1,9 +1,10 @@
-import EmployerStart from "@/components/EmployerStart";
+// Trang quản lý danh sách Jobs của Employer
+// Hiển thị toàn bộ job của công ty và cho phép tạo job mới qua modal formimport EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { createJobApi, getMyJobsApi } from "@/services_new/jobApi";
-import { getAllSkillsApi } from "@/services_new/skillApi";
-import { getAllCitiesApi } from "@/services_new/cityApi";
+import { createJobApi, getMyJobsApi } from "@/services/jobApi";
+import { getAllSkillsApi } from "@/services/skillApi";
+import { getAllCitiesApi } from "@/services/cityApi";
 import "./EmployerJobs.scss";
 import ButtonAction from "@/components/ButtonAction";
 import { MdAdd } from "react-icons/md";
@@ -31,12 +32,17 @@ import type {
 
 function EmployerJobs() {
   const { t } = useTranslation();
+  // companyId từ Zustand store, đính kèm vào payload khi tạo job mới
   const companyId = useCompanyStore((state) => state.id);
+  // Danh sách job của công ty hiển thị trên trang
   const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
+  // Trạng thái mở/đóng modal form tạo job mới
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
+  // Danh sách skills và cities từ API, dùng cho Select dropdown trong form tạo job
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
+  // Các tùy chọn cho Select dropdown trong form tạo job
   const jobTypeList = [
     { value: "Tại văn phòng", label: <span>Tại văn phòng</span> },
     { value: "Làm Từ Xa", label: <span>Làm Từ Xa</span> },
@@ -79,6 +85,7 @@ function EmployerJobs() {
       ),
     },
   ];
+  // Chuyển đổi skills và cities từ API sang định dạng Select options của Ant Design
   const skillList = skills.map((skill) => ({
     value: skill.id,
     label: <span>{skill.skillName}</span>,
@@ -99,6 +106,7 @@ function EmployerJobs() {
       overflow: "hidden",
     },
   };
+  // Fetch song song skills, cities và danh sách job của công ty khi component mount
   useEffect(() => {
     const getCompany = async () => {
       try {
@@ -133,6 +141,8 @@ function EmployerJobs() {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+  // Xử lý submit form tạo job mới
+  // Map giá trị form → định dạng API, gọi API tạo job, sau đó refresh lại danh sách
   const onFinish = async (values: Record<string, unknown>) => {
     const formattedValues = {
       companyId: String(companyId ?? ""),

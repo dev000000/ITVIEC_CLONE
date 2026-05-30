@@ -5,7 +5,7 @@ import CardJobHead from "@/components/CardJobDetail/CardJobHead";
 import CardJobShowInfor from "@/components/CardJobDetail/CardJobShowInfor";
 import CardJobContent from "@/components/CardJobDetail/CardJobContent";
 import CardInforEmployer from "@/components/CardInforEmployer";
-import { getJobBySlugApi } from "@/services_new/jobApi";
+import { getJobBySlugApi } from "@/services/jobApi";
 import type { JobDetailResponse } from "@/types/response.types";
 
 interface JobDetailProps {

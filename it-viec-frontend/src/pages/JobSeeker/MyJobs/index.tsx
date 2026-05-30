@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from "react";
 import "./MyJobs.scss";
 import { NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { getMyApplicationsApi } from "@/services_new/applicationApi";
+import { getMyApplicationsApi } from "@/services/applicationApi";
 import type { ApplicationResponse, JobDetailResponse } from "@/types/response.types";
 
 interface ApplicationItem {

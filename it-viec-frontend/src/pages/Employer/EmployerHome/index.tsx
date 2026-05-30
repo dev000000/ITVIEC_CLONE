@@ -1,3 +1,6 @@
+// Trang landing page của Employer (trang chủ dành cho nhà tuyển dụng)
+// Các section: Hero, Số liệu nổi bật, Dịch vụ (Job Posting / AI Match / Employer Branding),
+// Top Employers, Form liên hệ tư vấn, Video giới thiệu
 import { Col, Row } from "antd";
 import "./EmployerHome.scss";
 import { useTranslation } from "react-i18next";
@@ -32,11 +35,14 @@ interface LogoItem {
 
 function Employer() {
   const { t } = useTranslation();
+  // Ref trọi tới form liên hệ ở cuối trang, dùng để scroll tới khi nhấn nút CTA
   const formRef = useRef<HTMLDivElement>(null);
+  // Scroll mượt xuống form liên hệ khi người dùng nhấn nút “Liên hệ ngay”
   const focusForm = () => {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  // Lắng nghe sự kiện resize window để cập nhật isMobile (breakpoint 1200px) — ảnh hưởng kiểu nút CTA
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 1200);
@@ -48,6 +54,7 @@ function Employer() {
     };
   }, []);
 
+  // Danh sách logo công ty đối tác hiển thị trong section Top Employers
   const dataLogo: LogoItem[] = [
     {
       id: 1,
@@ -133,6 +140,7 @@ function Employer() {
 
   return (
     <>
+      {/* === Section 1: Hero === Tiêu đề chính, mô tả dịch vụ và nút CTA */}
       <div className="hire-it">
         <div className="container">
           <Row>
@@ -179,6 +187,7 @@ function Employer() {
           </Row>
         </div>
       </div>
+      {/* === Section 2: Số liệu nổi bật === 10,000+ IT jobs, 1.5M+ IT professionals, 300,000+ placements */}
       <div className="itviec-different">
         <div className="container">
           <div className="itviec-different__content">
@@ -229,6 +238,7 @@ function Employer() {
           </div>
         </div>
       </div>
+      {/* === Section 3: Dịch vụ cao cấp === Job Posting, AI Matching, Employer Branding */}
       <div className="high-services">
         <div className="container">
           <div className="high-services__title">
@@ -434,6 +444,7 @@ function Employer() {
           />
         </div>
       </div>
+      {/* === Section 4: Top Employers === Logo công ty đối tác + testimonial (SwiperFeedback) */}
       <div className="top-employers">
         <div className="container">
           <div className="top-employers__title">
@@ -459,6 +470,7 @@ function Employer() {
           <SwiperFeedback />
         </div>
       </div>
+      {/* === Section 5: Liên hệ === Form tư vấn + số hotline HCM/HN + giờ làm việc */}
       <div className="contact-employers">
         <div className="container">
           <div className="contact-employers__title" ref={formRef}>
@@ -505,6 +517,7 @@ function Employer() {
           </Row>
         </div>
       </div>
+      {/* === Section 6: Video === Embedded YouTube video giới thiệu ITviec cho nhà tuyển dụng */}
       <div className="excite-it">
         <div className="container">
           <Row>

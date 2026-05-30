@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import JobDetail from '@/pages/Shared/JobDetail';
 import JobSearch from '@/pages/Shared/JobSearch';
-import { getJobBySlugApi } from '@/services_new/jobApi';
+import { getJobBySlugApi } from '@/services/jobApi';
 
 /**
  * RouteDecider - Dynamic route resolver

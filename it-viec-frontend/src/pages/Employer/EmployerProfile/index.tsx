@@ -1,3 +1,6 @@
+// Trang hồ sơ công ty của Employer (Company Profile)
+// Hiển thị thông tin công ty với 3 tabs: About / Reviews / Articles
+// Cột phải hiển thị danh sách job đang mở; Employer có thể chỉnh sửa thông tin công ty qua modal
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import EmployerStart from "@/components/EmployerStart";
 import { useTranslation } from "react-i18next";
@@ -10,9 +13,9 @@ import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import { updateMyCompanyApi } from "@/services_new/companyApi";
-import { getAllSkillsApi } from "@/services_new/skillApi";
-import { getAllCountriesApi } from "@/services_new/countryApi";
+import { updateMyCompanyApi } from "@/services/companyApi";
+import { getAllSkillsApi } from "@/services/skillApi";
+import { getAllCountriesApi } from "@/services/countryApi";
 import Swal from "sweetalert2";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import type { CountryResponse, SkillResponse } from "@/types/response.types";
@@ -27,6 +30,7 @@ import {
   toWorkingHours,
 } from "@/utils/apiPayloadMappers";
 
+// Kiểu dữ liệu cho form chỉnh sửa thông tin công ty
 interface UpdateCompanyFormValues {
   companyName: string;
   description: string;
@@ -55,6 +59,7 @@ const customStyles = {
     overflow: "hidden",
   },
 };
+// Các tùy chọn cho Select dropdown trong form chỉnh sửa thông tin công ty
 const companySizeOptions = [
   { value: "1-10", label: "1-10" },
   { value: "11-50", label: "11-50" },
@@ -80,18 +85,24 @@ const workingHoursOptions = [
 ];
 function EmployerProfile() {
   const { t } = useTranslation();
+  // Trạng thái mở/đóng modal form chỉnh sửa thông tin công ty
   const [form] = Form.useForm<UpdateCompanyFormValues>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  // Thông tin công ty đầy đủ từ Zustand companyStore
   const companyInfor = useCompanyStore();
+  // Hàm cập nhật toàn bộ thông tin công ty trong Zustand store
   const setCompanyFullInfo = useCompanyStore((state) => state.setCompanyFullInfo);
+  // Danh sách skills và countries từ API, dùng cho Select dropdown trong form
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [countries, setCountries] = useState<CountryResponse[]>([]);
   const skillList = skills.map((skill) => {
     return { value: skill.id, label: <span>{skill.skillName}</span> };
   });
+  // Kích hoạt modal chỉnh sửa khi người dùng nhấn nút Edit
   const handleEdit = () => {
     openModal();
   };
+  // Mở modal và điền sẵn thông tin công ty hiện tại vào tất cả các trường form
   const openModal = () => {
     setIsOpen(true);
     form.setFieldsValue({
@@ -113,6 +124,8 @@ function EmployerProfile() {
   const closeModal = () => {
     setIsOpen(false);
   };
+  // Xử lý submit form cập nhật thông tin công ty
+  // Map giá trị form → định dạng API, sau khi thành công thì cập nhật Zustand store
   const onFinish = async (values: UpdateCompanyFormValues) => {
     const formattedValues = {
       companyName: values.companyName || "",
@@ -162,6 +175,7 @@ function EmployerProfile() {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+  // Fetch song song danh sách skills và countries khi mount, cần thiết cho Select dropdown trong modal
   useEffect(() => {
     const fetchData = async () => {
       try {

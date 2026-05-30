@@ -1,10 +1,12 @@
+// Trang xem chi tiết một Job cụ thể của Employer
+// Cho phép xem đầy đủ thông tin job, chỉnh sửa (Edit) và xóa (Delete) job đó
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./EmployerJobDetail.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteJobApi, getMyJobsApi, updateJobApi } from "@/services_new/jobApi";
-import { getAllSkillsApi } from "@/services_new/skillApi";
-import { getAllCitiesApi } from "@/services_new/cityApi";
+import { deleteJobApi, getMyJobsApi, updateJobApi } from "@/services/jobApi";
+import { getAllSkillsApi } from "@/services/skillApi";
+import { getAllCitiesApi } from "@/services/cityApi";
 import EmployerStart from "@/components/EmployerStart";
 import { Col, DatePicker, Row, Select } from "antd";
 import CardInforEmployer from "@/components/CardInforEmployer";
@@ -39,12 +41,17 @@ import type {
 
 function EmployerJobDetail() {
   const { t } = useTranslation();
+  // Thông tin công ty từ Zustand store, hiển thị trong CardInforEmployer
   const company = useCompanyStore();
   const logout = useUserStore((state) => state.logout);
   const [form] = Form.useForm();
+  // Trạng thái mở/đóng modal form chỉnh sửa job
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  // ID của job lấy từ URL params (route: /employer/jobs/:id)
   const { id } = useParams<{ id: string }>();
+  // Thông tin đầy đủ của job hiện tại
   const [job, setJob] = useState<Partial<JobDetailResponse>>({});
+  // Danh sách skills và cities lấy từ API, dùng cho Select dropdown trong form
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
   const navigate = useNavigate();
@@ -60,6 +67,7 @@ function EmployerJobDetail() {
       overflow: "hidden",
     },
   };
+  // Các tùy chọn cho Select dropdown trong form chỉnh sửa job
   const jobTypeList = [
     { value: "Tại văn phòng", label: <span>Tại văn phòng</span> },
     { value: "Làm Từ Xa", label: <span>Làm Từ Xa</span> },
@@ -94,6 +102,7 @@ function EmployerJobDetail() {
       label: <span style={{ color: "#AD3D35" }}>Closed</span>,
     },
   ];
+  // Chuyển đổi skills và cities từ API sang định dạng Select options của Ant Design
   const skillList = skills.map((skill) => {
     return {
       value: skill.id,
@@ -107,6 +116,8 @@ function EmployerJobDetail() {
   const handleBack = () => {
     navigate(-1);
   };
+  // Fetch song song: skills, cities và danh sách job của công ty
+  // Lọc job theo id từ URL và điền vào form; nếu không tìm thấy thì logout và redirect về "/"
   useEffect(() => {
     const fetchJob = async () => {
       try {
@@ -157,6 +168,7 @@ function EmployerJobDetail() {
     };
     fetchJob();
   }, [company.id, id, logout, navigate]);
+  // Hiện confirm dialog trước khi xóa job; sau khi xóa thành công thì navigate về trang trước
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -187,12 +199,15 @@ function EmployerJobDetail() {
       }
     });
   };
+  // Mở modal form chỉnh sửa job
   const handleEdit = () => {
     openModal();
   };
   function openModal() {
     setIsOpen(true);
   }
+  // Xử lý submit form cập nhật job
+  // Map giá trị form → định dạng API, cập nhật state job sau khi thành công
   const onFinish = async (values: Record<string, unknown>) => {
     const formattedValues = {
       title: String(values.title ?? ""),

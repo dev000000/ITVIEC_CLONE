@@ -4,7 +4,7 @@ import "./LayoutDefault.scss";
 import Header from "@/components/Header";
 import FooterComp from "@/components/Footer";
 import { useEffect, useState } from "react";
-import { getMeApi, logoutApi } from "@/services_new/authApi";
+import { getMeApi, logoutApi } from "@/services/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useTranslation } from "react-i18next";

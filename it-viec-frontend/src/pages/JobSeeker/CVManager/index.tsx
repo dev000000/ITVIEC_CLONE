@@ -11,8 +11,8 @@ import { Form, Input } from "antd";
 import { Col, Row, Select } from "antd";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
-import { updateMyProfileApi } from "@/services_new/seekerApi";
-import { getAllCitiesApi } from "@/services_new/cityApi";
+import { updateMyProfileApi } from "@/services/seekerApi";
+import { getAllCitiesApi } from "@/services/cityApi";
 import { useSeekerStore } from "@/store/seekerStore";
 import {
   findCityRef,
@@ -117,8 +117,8 @@ function CVManager() {
       .filter((skill): skill is { id: number | string } => Boolean(skill)),
     desiredLocations: findCityRefs(
       values.desiredLocations ??
-        seeker.desiredLocations?.map((city) => city.cityName) ??
-        [],
+      seeker.desiredLocations?.map((city) => city.cityName) ??
+      [],
       cities,
     ),
   });

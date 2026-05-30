@@ -9,7 +9,7 @@ import ButtonSubmit from "@/components/Button";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { registerSeekerApi } from "@/services_new/authApi";
+import { registerSeekerApi } from "@/services/authApi";
 import { useTranslation } from "react-i18next";
 
 interface RegisterFormValues {

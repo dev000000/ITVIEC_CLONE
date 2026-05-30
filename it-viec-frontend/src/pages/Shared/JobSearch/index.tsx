@@ -3,7 +3,7 @@ import { Button, Col, Form, Input, Row, Select } from "antd";
 import "./JobSearch.scss";
 import { FiSearch } from "react-icons/fi";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
-import { getAllJobsApi } from "@/services_new/jobApi";
+import { getAllJobsApi } from "@/services/jobApi";
 import imgNoJob from "@/assets/images/robby-oops.svg";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import { VIETNAM_CITIES } from "@/constants";

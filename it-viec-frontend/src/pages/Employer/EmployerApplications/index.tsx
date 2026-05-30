@@ -1,3 +1,6 @@
+// Trang quản lý đơn ứng tuyển (CV) của công ty Employer
+// Hiển thị danh sách ứng viên đã apply vào các job của công ty dưới dạng bảng
+// Cho phép xem chi tiết đơn và cập nhật trạng thái (PENDING / ACCEPTED / REJECTED)
 import {
   Table,
   Tooltip,
@@ -16,7 +19,7 @@ import { useTranslation } from "react-i18next";
 import {
   getMyCompanyApplicationsApi,
   updateApplicationStatusApi,
-} from "@/services_new/applicationApi";
+} from "@/services/applicationApi";
 import { Link } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import Modal from "react-modal";
@@ -30,6 +33,7 @@ import type { TableColumnsType } from "antd";
 import { toApplicationStatus } from "@/utils/apiPayloadMappers";
 import type { ApplicationResponse, JobDetailResponse } from "@/types/response.types";
 
+// Kiểu dữ liệu cho mỗi dòng trong bảng danh sách đơn ứng tuyển
 interface ApplicationRecord {
   id: string;
   job?: { id?: string | number; title?: string };
@@ -52,6 +56,7 @@ type ApplicationWithRelations = ApplicationResponse & {
   job?: Pick<JobDetailResponse, "id" | "title">;
 };
 
+// Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
     top: "50%",
@@ -64,6 +69,7 @@ const customStyles = {
     overflow: "hidden",
   },
 };
+// Danh sách trạng thái đơn ứng tuyển dùng cho Select dropdown trong modal
 const statusList = [
   {
     value: "PENDING",
@@ -80,13 +86,20 @@ const statusList = [
 ];
 function EmployerApplications() {
   const { t } = useTranslation();
+  // Dữ liệu hiển thị trên bảng (phân trang phía client)
   const [datasource, setDatasource] = useState<ApplicationRecord[]>([]);
+  // Trạng thái phân trang: trang hiện tại và số dòng mỗi trang
   const [Pagination, setPagination] = useState<PaginationState>({ current: 1, pageSize: 10 });
+  // Tổng số đơn ứng tuyển (dùng để tính số trang)
   const [total, setTotal] = useState<number>(0);
+  // Kiểm tra màn hình nhỏ để tắt fixed column khi responsive
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  // Trạng thái mở/đóng modal xem chi tiết đơn
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
+  // Cờ toggle để trigger re-fetch sau khi cập nhật trạng thái thành công
   const [update, setUpdate] = useState<boolean>(false);
+  // Cấu hình các cột cho bảng Ant Design Table
   const columns: TableColumnsType<ApplicationRecord> = [
     {
       title: t("employer:applications.columns.id"),
@@ -194,6 +207,7 @@ function EmployerApplications() {
     },
   ];
 
+  // Xử lý submit form modal: cập nhật trạng thái và tin nhắn phản hồi cho đơn ứng tuyển
   const onFinish = async (values: Record<string, unknown>) => {
     const updatedValues = {
       status: values.status,
@@ -221,6 +235,7 @@ function EmployerApplications() {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+  // Mở modal và điền sẵn thông tin của đơn ứng tuyển được chọn vào form
   const openModal = (record: ApplicationRecord) => {
     form.setFieldsValue({
       id: record.id,
@@ -239,6 +254,8 @@ function EmployerApplications() {
   const closeModal = () => {
     setIsOpen(false);
   };
+  // Lắng nghe sự kiện resize window để cập nhật isMobile (breakpoint 1200px)
+  // isMobile ảnh hưởng việc “fixed” các cột đầu/cuối bảng khi responsive
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 1200);
@@ -250,6 +267,7 @@ function EmployerApplications() {
     };
   }, [isMobile]);
 
+  // Lấy tổng số đơn ứng tuyển khi component mount (dùng để tính phân trang phía client)
   useEffect(() => {
     const getApplication = async () => {
       const response = await getMyCompanyApplicationsApi();
@@ -259,6 +277,7 @@ function EmployerApplications() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Lấy danh sách đơn theo trang hiện tại; re-fetch khi Pagination hoặc update thay đổi
   useEffect(() => {
     const getApplication = async () => {
       const response = await getMyCompanyApplicationsApi();

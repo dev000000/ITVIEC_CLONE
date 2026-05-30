@@ -8,7 +8,7 @@ import AgreementCheckBox from "@/components/AgreementCheckbox";
 import { LiaPhoneVolumeSolid } from "react-icons/lia";
 import { RxEnvelopeClosed } from "react-icons/rx";
 import type { AuthenticationRequest } from "@/types/request.types";
-import { loginApi } from "@/services_new/authApi";
+import { loginApi } from "@/services/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useTranslation } from "react-i18next";
 

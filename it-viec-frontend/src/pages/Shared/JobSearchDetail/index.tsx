@@ -13,7 +13,7 @@ import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
-import { getJobBySlugApi } from "@/services_new/jobApi";
+import { getJobBySlugApi } from "@/services/jobApi";
 import type { JobCardResponse, JobDetailResponse } from "@/types/response.types";
 
 type JobSelected = Partial<JobCardResponse & JobDetailResponse> & {
