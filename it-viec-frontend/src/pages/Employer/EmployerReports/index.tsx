@@ -1,6 +1,4 @@
-import { Col, Row } from "antd";
 import EmployerStart from "@/components/EmployerStart";
-import Card from "@/components/Card";
 import { useTranslation } from "react-i18next";
 
 function EmployerReports() {

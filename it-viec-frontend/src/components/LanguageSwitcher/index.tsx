@@ -1,9 +1,7 @@
-import { useTranslation } from 'react-i18next';
 import { useLocale } from '@/hooks/useLocale';
 import './LanguageSwitcher.scss';
 
 const LanguageSwitcher = () => {
-  const { t } = useTranslation();
   const { currentLang, changeLanguage } = useLocale();
 
   return (

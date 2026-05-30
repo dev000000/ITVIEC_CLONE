@@ -1,10 +1,8 @@
-import { Button, Col, DatePicker, Form, Input, Row, Select } from "antd";
+import { Button, Col, Form, Input, Row, Select } from "antd";
 import EmployerStart from "@/components/EmployerStart";
 import { useTranslation } from "react-i18next";
 import CardCompanyHead from "@/components/CardCompanyDetail/CardCompanyHead";
 import { NavLink, Outlet } from "react-router-dom";
-import TopJobItem from "@/components/TopJobItemHome";
-import { useDispatch, useSelector } from "react-redux";
 import { TbEdit } from "react-icons/tb";
 import ButtonAction from "@/components/ButtonAction";
 import "./EmployerProfile.scss";
@@ -12,35 +10,22 @@ import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import { getSkills, updateCompany } from "@/services/EmployerServices";
+import { updateMyCompanyApi } from "@/services_new/companyApi";
+import { getAllSkillsApi } from "@/services_new/skillApi";
+import { getAllCountriesApi } from "@/services_new/countryApi";
 import Swal from "sweetalert2";
-import { setCompanyFullInfo } from "@/actions/Company";
 import { isObjectEmpty } from "@/helpers/checkObject";
-import type { SkillResponse, JobCardResponse } from "@/types/response.types";
+import type { CountryResponse, SkillResponse } from "@/types/response.types";
 import TopJobItemHome from "@/components/TopJobItemHome";
-
-interface LegacyCompanyState {
-  id: string | number;
-  companyName: string;
-  description: string;
-  address: string;
-  companyModel: string;
-  industry: string;
-  companySize: string;
-  country: string;
-  workingHours: string;
-  overtimePolicy: string;
-  companyIntroduction: string;
-  ourExpertise: string;
-  whyWorkHere: string;
-  slug: string;
-  skills: string[];
-  jobs: JobCardResponse[];
-}
-
-interface LegacyRootState {
-  CompanyReducer: LegacyCompanyState;
-}
+import { useCompanyStore } from "@/store/companyStore";
+import {
+  findCountryRef,
+  findSkillRefs,
+  toCompanyModel,
+  toCompanySize,
+  toOvertimePolicy,
+  toWorkingHours,
+} from "@/utils/apiPayloadMappers";
 
 interface UpdateCompanyFormValues {
   companyName: string;
@@ -97,11 +82,12 @@ function EmployerProfile() {
   const { t } = useTranslation();
   const [form] = Form.useForm<UpdateCompanyFormValues>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
-  const companyInfor = useSelector((state: LegacyRootState) => state.CompanyReducer);
+  const companyInfor = useCompanyStore();
+  const setCompanyFullInfo = useCompanyStore((state) => state.setCompanyFullInfo);
   const [skills, setSkills] = useState<SkillResponse[]>([]);
-  const dispatch = useDispatch();
+  const [countries, setCountries] = useState<CountryResponse[]>([]);
   const skillList = skills.map((skill) => {
-    return { value: skill.skillName, label: <span>{skill.skillName}</span> };
+    return { value: skill.id, label: <span>{skill.skillName}</span> };
   });
   const handleEdit = () => {
     openModal();
@@ -115,10 +101,10 @@ function EmployerProfile() {
       companyModel: companyInfor.companyModel,
       industry: companyInfor.industry,
       companySize: companyInfor.companySize,
-      country: companyInfor.country,
+      country: companyInfor.country?.countryName,
       workingHours: companyInfor.workingHours,
       overtimePolicy: companyInfor.overtimePolicy,
-      skills: companyInfor.skills,
+      skills: companyInfor.companySkills.map((skill) => String(skill.id)),
       companyIntroduction: companyInfor.companyIntroduction,
       ourExpertise: companyInfor.ourExpertise,
       whyWorkHere: companyInfor.whyWorkHere,
@@ -128,15 +114,34 @@ function EmployerProfile() {
     setIsOpen(false);
   };
   const onFinish = async (values: UpdateCompanyFormValues) => {
+    const formattedValues = {
+      companyName: values.companyName || "",
+      description: values.description || "",
+      website: companyInfor.website || "",
+      logoUrl: companyInfor.logoUrl || "",
+      address: values.address || "",
+      companyModel: toCompanyModel(values.companyModel),
+      industry: values.industry || "",
+      companySize: toCompanySize(values.companySize),
+      country: findCountryRef(values.country, countries, companyInfor.country) ?? { id: 0 },
+      workingHours: toWorkingHours(values.workingHours),
+      overtimePolicy: toOvertimePolicy(values.overtimePolicy),
+      companyIntroduction: values.companyIntroduction || "",
+      ourExpertise: values.ourExpertise || "",
+      whyWorkHere: values.whyWorkHere || "",
+      companySkills: findSkillRefs(values.skills, skills),
+    };
+
     try {
-      const result = await updateCompany(companyInfor.id, values);
+      const response = await updateMyCompanyApi(formattedValues);
+      const result = response.data.result;
       if (!isObjectEmpty(result)) {
         Swal.fire({
           title: "Update Success!",
           icon: "success",
           draggable: true,
         });
-        dispatch(setCompanyFullInfo(result));
+        setCompanyFullInfo(result);
         closeModal();
       } else {
         Swal.fire({
@@ -160,8 +165,12 @@ function EmployerProfile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getSkills();
-        setSkills(result || []);
+        const [skillsResponse, countriesResponse] = await Promise.all([
+          getAllSkillsApi(),
+          getAllCountriesApi(),
+        ]);
+        setSkills(skillsResponse.data.result || []);
+        setCountries(countriesResponse.data.result || []);
       } catch (error) {
         console.error("Error fetching data:", error);
         Swal.fire({
@@ -297,6 +306,7 @@ function EmployerProfile() {
                       name="companyIntroduction"
                       label={t("employer:profile.form.companyIntroduction")}
                     >
+                      {/* @ts-expect-error - value/onChange injected by Form.Item */}
                       <SimpleEditor />
                     </Form.Item>
                   </Col>
@@ -305,6 +315,7 @@ function EmployerProfile() {
                       name="ourExpertise"
                       label={t("employer:profile.form.ourExpertise")}
                     >
+                      {/* @ts-expect-error - value/onChange injected by Form.Item */}
                       <SimpleEditor />
                     </Form.Item>
                   </Col>
@@ -313,6 +324,7 @@ function EmployerProfile() {
                       name="whyWorkHere"
                       label={t("employer:profile.form.whyWorkHere")}
                     >
+                      {/* @ts-expect-error - value/onChange injected by Form.Item */}
                       <SimpleEditor />
                     </Form.Item>
                   </Col>

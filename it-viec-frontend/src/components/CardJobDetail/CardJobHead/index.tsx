@@ -1,86 +1,48 @@
-import { useEffect, useState } from "react";
 import "./CardJobHead.scss";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { checkApplication } from "@/services/Shared";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
-import dayjs from "dayjs";
 import { useTranslation } from "react-i18next";
+import { useCompanyStore } from "@/store/companyStore";
+import { useUserStore } from "@/store/userStore";
 
 interface Job {
-  id: number;
-  title: string;
-  salary: string;
+  id?: number;
+  title?: string;
+  salary?: string;
+  company?: {
+    companyName?: string;
+  };
 }
 
 interface CardJobHeadProps {
   job: Job;
 }
 
-interface UserState {
-  ok: boolean;
-  id: string | null;
-  userType: string;
-}
-
-interface CompanyState {
-  companyName: string;
-}
-
-interface SeekerState {
-  id: number;
-}
-
-interface RootState {
-  CompanyReducer: CompanyState;
-  UserReducer: UserState;
-  SeekerReducer: SeekerState;
-}
-
-interface ApplicationCheckResult {
-  appliedAt: string;
-}
-
 function CardJobHead({ job }: CardJobHeadProps) {
-  console.log(job);
-  const company = useSelector((state: RootState) => state.CompanyReducer);
-  const isLogin = useSelector((state: RootState) => state.UserReducer);
-  const seeker = useSelector((state: RootState) => state.SeekerReducer);
+  const companyName = useCompanyStore((state) => state.companyName);
+  const authenticated = useUserStore((state) => state.authenticated);
+  const role = useUserStore((state) => state.role);
   const { t } = useTranslation("shared");
-  const [type, setType] = useState({
+  const type = {
     applied: false,
     appliedAt: "",
-  });
-  useEffect(() => {
-    const check = async () => {
-      try {
-        if (job.id) {
-          const result = await checkApplication({
-            jobId: job.id,
-            seekerId: seeker.id,
-          }) as ApplicationCheckResult[];
-          if (result && result.length > 0) {
-            const appliedAt = dayjs(result[0].appliedAt).format("DD/MM/YYYY");
-            setType({ applied: true, appliedAt: appliedAt });
-          } else {
-            setType({ applied: false, appliedAt: "" });
-          }
-        }
-      } catch (error) {
-        console.error("Error checking application:", error);
-      }
-    };
-    check();
-  }, [job.id]);
+  };
+
+  // TODO(service-new-migration): Chua co service_new thay the cho legacy API `checkApplication`.
+  // Legacy call: GET `applications?seekerId=...&jobId=...`.
+  // Muc dich: kiem tra seeker da ung tuyen job nay chua de doi nut Apply thanh Applied.
+  // Tam thoi fallback la chua applied de khong phu thuoc `src/services`.
 
   return (
     <>
       <div className="card-job-head">
         <h1 className="card-job-head__job-name">{job.title}</h1>
-        <div className="card-job-head__employer-name">{company.companyName}</div>
-        {isLogin.ok ? (
+        <div className="card-job-head__employer-name">
+          {job.company?.companyName || companyName}
+        </div>
+        {authenticated ? (
           <>
             <div className="card-job-head__salary">
               <AiOutlineDollarCircle />
@@ -104,7 +66,7 @@ function CardJobHead({ job }: CardJobHeadProps) {
                 {" "}
                 {t("jobSearchDetail.applyNow")}{" "}
               </Link>
-              {isLogin.ok && isLogin.userType === "jobSeeker" ? (
+              {authenticated && role === "SEEKER" ? (
                 <div className="card-job-head__heart">
                   <FaHeart />
                 </div>

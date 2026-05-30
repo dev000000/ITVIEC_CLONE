@@ -1,11 +1,9 @@
 import EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  getJobs,
-  getSkills,
-  postJob,
-} from "@/services/EmployerServices";
+import { createJobApi, getMyJobsApi } from "@/services_new/jobApi";
+import { getAllSkillsApi } from "@/services_new/skillApi";
+import { getAllCitiesApi } from "@/services_new/cityApi";
 import "./EmployerJobs.scss";
 import ButtonAction from "@/components/ButtonAction";
 import { MdAdd } from "react-icons/md";
@@ -15,37 +13,30 @@ import { Col, DatePicker, Row, Select } from "antd";
 import { Button, Form, Input } from "antd";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import dayjs from "dayjs";
-import { isObjectEmpty } from "@/helpers/checkObject";
 import Swal from "sweetalert2";
-import { useSelector } from "react-redux";
-import TopJobItem from "@/components/TopJobItemHome";
 import TopJobItemEmployer from "@/components/TopJobItemEmployer";
-
-interface LegacySkill {
-  id: number;
-  skillName: string;
-}
-
-interface LegacyJobItem {
-  id?: number;
-  [key: string]: unknown;
-}
-
-interface LegacyCompanyState {
-  id: string | number;
-}
-
-interface LegacyRootState {
-  CompanyReducer: LegacyCompanyState;
-}
+import { useCompanyStore } from "@/store/companyStore";
+import {
+  findCityRef,
+  findSkillRefs,
+  toExperienceLevel,
+  toJobStatus,
+  toJobType,
+} from "@/utils/apiPayloadMappers";
+import type {
+  CityResponse,
+  JobDetailResponse,
+  SkillResponse,
+} from "@/types/response.types";
 
 function EmployerJobs() {
   const { t } = useTranslation();
-  const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
-  const [jobs, setJobs] = useState<LegacyJobItem[]>([]);
+  const companyId = useCompanyStore((state) => state.id);
+  const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
-  const [skills, setSkills] = useState<LegacySkill[]>([]);
+  const [skills, setSkills] = useState<SkillResponse[]>([]);
+  const [cities, setCities] = useState<CityResponse[]>([]);
   const jobTypeList = [
     { value: "Tại văn phòng", label: <span>Tại văn phòng</span> },
     { value: "Làm Từ Xa", label: <span>Làm Từ Xa</span> },
@@ -88,9 +79,14 @@ function EmployerJobs() {
       ),
     },
   ];
-  const skillList = skills.map((skill: LegacySkill) => {
-    return { value: skill.skillName, label: <span>{skill.skillName}</span> };
-  });
+  const skillList = skills.map((skill) => ({
+    value: skill.id,
+    label: <span>{skill.skillName}</span>,
+  }));
+  const cityList = cities.map((city) => ({
+    value: city.id,
+    label: <span>{city.cityName}</span>,
+  }));
   const customStyles = {
     content: {
       top: "50%",
@@ -106,10 +102,14 @@ function EmployerJobs() {
   useEffect(() => {
     const getCompany = async () => {
       try {
-        const result = await getSkills();
-        const jobList = await getJobs(company.id);
-        setSkills(result || []);
-        setJobs((jobList as LegacyJobItem[]) || []);
+        const [skillsResponse, citiesResponse, jobsResponse] = await Promise.all([
+          getAllSkillsApi(),
+          getAllCitiesApi(),
+          getMyJobsApi(),
+        ]);
+        setSkills(skillsResponse.data.result || []);
+        setCities(citiesResponse.data.result || []);
+        setJobs(jobsResponse.data.result || []);
       } catch (error) {
         console.error("Error fetching company or job data:", error);
         Swal.fire({
@@ -135,25 +135,36 @@ function EmployerJobs() {
   };
   const onFinish = async (values: Record<string, unknown>) => {
     const formattedValues = {
-      ...values,
-      companyId: company.id,
-      postedAt: values.postedAt ? dayjs(values.postedAt).toISOString() : null,
+      companyId: String(companyId ?? ""),
+      title: String(values.title ?? ""),
+      jobReason: String(values.jobReason ?? ""),
+      jobDescription: String(values.jobDescription ?? ""),
+      jobRequirements: String(values.jobRequirements ?? ""),
+      whyJoinUs: String(values.whyJoinUs ?? ""),
+      location: String(values.location ?? ""),
+      city: findCityRef(values.city, cities, cities[0]) ?? { id: 0 },
+      salary: String(values.salary ?? ""),
+      jobType: toJobType(values.jobType),
+      experienceLevel: toExperienceLevel(values.experienceLevel),
+      postedAt: values.postedAt
+        ? dayjs(values.postedAt as string).toISOString()
+        : dayjs().toISOString(),
       expiresAt: values.expiresAt
-        ? dayjs(values.expiresAt).toISOString()
-        : null,
+        ? dayjs(values.expiresAt as string).toISOString()
+        : dayjs().add(30, "day").toISOString(),
+      status: toJobStatus(values.status),
+      skills: findSkillRefs(values.skills, skills),
     };
     try {
-      const resultAdd = await postJob(formattedValues);
-      if (!isObjectEmpty(resultAdd)) {
-        Swal.fire({
-          title: "Add job Success!",
-          icon: "success",
-          draggable: true,
-        });
-        setIsOpen(false);
-        const jobList = await getJobs(company.id);
-        setJobs((jobList as LegacyJobItem[]) || []);
-      }
+      await createJobApi(formattedValues);
+      Swal.fire({
+        title: "Add job Success!",
+        icon: "success",
+        draggable: true,
+      });
+      setIsOpen(false);
+      const jobList = await getMyJobsApi();
+      setJobs(jobList.data.result || []);
     } catch (error) {
       console.error("Error adding job:", error);
       setJobs([]);
@@ -208,6 +219,14 @@ function EmployerJobs() {
                 </Form.Item>
               </Col>
               <Col span={24}>
+                <Form.Item label="City" name="city">
+                  <Select
+                    placeholder="Please select a city"
+                    options={cityList}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
                 <Form.Item label={t("employer:jobs.form.salary")} name="salary">
                   <Input />
                 </Form.Item>
@@ -248,7 +267,7 @@ function EmployerJobs() {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="requiredSkills"
+                  name="skills"
                   label={t("employer:jobs.form.requiredSkills")}
                   rules={[
                     {

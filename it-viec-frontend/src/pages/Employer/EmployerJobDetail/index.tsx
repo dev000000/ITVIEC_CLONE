@@ -2,12 +2,9 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./EmployerJobDetail.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  deleteJob,
-  getJobWithCompany,
-  getSkills,
-  updateJob,
-} from "@/services/EmployerServices";
+import { deleteJobApi, getMyJobsApi, updateJobApi } from "@/services_new/jobApi";
+import { getAllSkillsApi } from "@/services_new/skillApi";
+import { getAllCitiesApi } from "@/services_new/cityApi";
 import EmployerStart from "@/components/EmployerStart";
 import { Col, DatePicker, Row, Select } from "antd";
 import CardInforEmployer from "@/components/CardInforEmployer";
@@ -24,51 +21,33 @@ import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
 import { clearStorage } from "@/helpers/localStorage";
-import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "@/actions/User";
+import { useCompanyStore } from "@/store/companyStore";
+import { useUserStore } from "@/store/userStore";
 import ButtonAction from "@/components/ButtonAction";
-
-interface LegacySkill {
-  id: number;
-  skillName: string;
-}
-
-interface LegacyJobDetail {
-  id?: number;
-  companyId?: string | number;
-  title?: string;
-  location?: string;
-  salary?: string;
-  jobType?: string;
-  experienceLevel?: string;
-  postedAt?: string;
-  expiresAt?: string;
-  status?: string;
-  requiredSkills?: string[];
-  jobReason?: string;
-  jobDescription?: string;
-  jobRequirements?: string;
-  whyJoinUs?: string;
-}
-
-interface LegacyCompanyState {
-  id: string | number;
-}
-
-interface LegacyRootState {
-  CompanyReducer: LegacyCompanyState;
-}
+import {
+  findCityRef,
+  findSkillRefs,
+  toExperienceLevel,
+  toJobStatus,
+  toJobType,
+} from "@/utils/apiPayloadMappers";
+import type {
+  CityResponse,
+  JobDetailResponse,
+  SkillResponse,
+} from "@/types/response.types";
 
 function EmployerJobDetail() {
   const { t } = useTranslation();
-  const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
+  const company = useCompanyStore();
+  const logout = useUserStore((state) => state.logout);
   const [form] = Form.useForm();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const { id } = useParams<{ id: string }>();
-  const [job, setJob] = useState<LegacyJobDetail>({});
-  const [skills, setSkills] = useState<LegacySkill[]>([]);
+  const [job, setJob] = useState<Partial<JobDetailResponse>>({});
+  const [skills, setSkills] = useState<SkillResponse[]>([]);
+  const [cities, setCities] = useState<CityResponse[]>([]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const customStyles = {
     content: {
       top: "50%",
@@ -115,38 +94,44 @@ function EmployerJobDetail() {
       label: <span style={{ color: "#AD3D35" }}>Closed</span>,
     },
   ];
-  const skillList = skills.map((skill: LegacySkill) => {
+  const skillList = skills.map((skill) => {
     return {
-      value: { id: skill.id, skillName: skill.skillName },
+      value: skill.id,
       label: <span>{skill.skillName}</span>,
     };
   });
+  const cityList = cities.map((city) => ({
+    value: city.id,
+    label: <span>{city.cityName}</span>,
+  }));
   const handleBack = () => {
     navigate(-1);
   };
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const skillList = await getSkills();
-        setSkills(skillList || []);
-        const jobInfo = await getJobWithCompany(id) as LegacyJobDetail;
+        const [skillsResponse, citiesResponse, jobsResponse] = await Promise.all([
+          getAllSkillsApi(),
+          getAllCitiesApi(),
+          getMyJobsApi(),
+        ]);
+        setSkills(skillsResponse.data.result || []);
+        setCities(citiesResponse.data.result || []);
+        const jobInfo = jobsResponse.data.result.find(
+          (item) => String(item.id) === String(id),
+        );
         console.log("jobInfo", jobInfo);
-        if (jobInfo.companyId != company.id) {
+        if (!jobInfo) {
           clearStorage();
-          dispatch(
-            setLogin({
-              id: 0,
-              ok: false,
-              role: "none",
-            }),
-          );
+          logout();
           navigate("/");
+          return;
         }
         if (!isObjectEmpty(jobInfo)) {
           setJob(jobInfo);
           form.setFieldsValue({
             id: jobInfo.id,
-            companyId: jobInfo.companyId,
+            companyId: company.id,
             title: jobInfo.title,
             location: jobInfo.location,
             salary: jobInfo.salary,
@@ -155,7 +140,8 @@ function EmployerJobDetail() {
             postedAt: jobInfo.postedAt ? dayjs(jobInfo.postedAt) : null,
             expiresAt: jobInfo.expiresAt ? dayjs(jobInfo.expiresAt) : null,
             status: jobInfo.status,
-            requiredSkills: jobInfo.requiredSkills,
+            city: jobInfo.city?.id,
+            skills: jobInfo.skills?.map((skill) => skill.id) || [],
             jobReason: jobInfo.jobReason || "",
             jobDescription: jobInfo.jobDescription || "",
             jobRequirements: jobInfo.jobRequirements || "",
@@ -170,7 +156,7 @@ function EmployerJobDetail() {
       }
     };
     fetchJob();
-  }, [id]);
+  }, [company.id, id, logout, navigate]);
   const handleDelete = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -183,7 +169,7 @@ function EmployerJobDetail() {
     }).then(async (result) => {
       try {
         if (result.isConfirmed) {
-          await deleteJob(id);
+          await deleteJobApi(id || "");
           Swal.fire({
             title: "Deleted!",
             text: "Your job has been deleted.",
@@ -208,8 +194,30 @@ function EmployerJobDetail() {
     setIsOpen(true);
   }
   const onFinish = async (values: Record<string, unknown>) => {
+    const formattedValues = {
+      title: String(values.title ?? ""),
+      jobReason: String(values.jobReason ?? ""),
+      jobDescription: String(values.jobDescription ?? ""),
+      jobRequirements: String(values.jobRequirements ?? ""),
+      whyJoinUs: String(values.whyJoinUs ?? ""),
+      location: String(values.location ?? ""),
+      city: findCityRef(values.city, cities, job.city) ?? { id: 0 },
+      salary: String(values.salary ?? ""),
+      jobType: toJobType(values.jobType),
+      experienceLevel: toExperienceLevel(values.experienceLevel),
+      postedAt: values.postedAt
+        ? dayjs(values.postedAt as string).toISOString()
+        : dayjs().toISOString(),
+      expiresAt: values.expiresAt
+        ? dayjs(values.expiresAt as string).toISOString()
+        : dayjs().add(30, "day").toISOString(),
+      status: toJobStatus(values.status),
+      skills: findSkillRefs(values.skills, skills),
+    };
+
     try {
-      const result = await updateJob(values.id, values);
+      const response = await updateJobApi(String(values.id), formattedValues);
+      const result = response.data.result;
       if (!isObjectEmpty(result)) {
         Swal.fire({
           title: "Update Success!",
@@ -297,6 +305,14 @@ function EmployerJobDetail() {
                 </Form.Item>
               </Col>
               <Col span={24}>
+                <Form.Item label="City" name="city">
+                  <Select
+                    placeholder="Please select a city"
+                    options={cityList}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
                 <Form.Item label={t("employer:jobs.form.salary")} name="salary">
                   <Input />
                 </Form.Item>
@@ -337,7 +353,7 @@ function EmployerJobDetail() {
               </Col>
               <Col span={24}>
                 <Form.Item
-                  name="requiredSkills"
+                  name="skills"
                   label={t("employer:jobs.form.requiredSkills")}
                   rules={[
                     {

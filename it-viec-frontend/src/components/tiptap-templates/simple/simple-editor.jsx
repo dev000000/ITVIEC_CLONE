@@ -157,7 +157,6 @@ export function SimpleEditor({ value, onChange }) {
   const windowSize = useWindowSize();
   const [mobileView, setMobileView] = React.useState("main");
   const toolbarRef = React.useRef(null);
-  const content = "";
 
   const editor = useEditor({
     immediatelyRender: false,

@@ -18,7 +18,7 @@ interface Company {
   companyModel?: string;
   industry?: string;
   companySize?: string;
-  country?: string;
+  country?: string | { countryName?: string };
   workingHours?: string;
   overtimePolicy?: string;
 }
@@ -41,6 +41,10 @@ const logoMap: Record<string, string> = {
 function CardInforEmployer({ company }: CardInforEmployerProps) {
   company = company || {};
   const { t } = useTranslation("shared");
+  const countryName =
+    typeof company.country === "string"
+      ? company.country
+      : company.country?.countryName;
   if (isObjectEmpty(company)) {
     return <div>{t("employerDetailInfo.noInfo")}</div>
   }
@@ -76,7 +80,7 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.country")}</div>
-          <div className="card-infor-employer__item-content">{company.country}</div>
+          <div className="card-infor-employer__item-content">{countryName}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">

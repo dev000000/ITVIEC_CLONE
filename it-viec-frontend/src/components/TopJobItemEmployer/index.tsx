@@ -7,33 +7,9 @@ import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import TagStatus from "@/components/TagStatus";
-import MB from "@/assets/images/mb-bank.webp";
-import SCANDINAVIAN from "@/assets/images/scandinavian-software-park.webp";
-import OTSV from "@/assets/images/one-tech-stop-vietnam-company-ltd.webp";
-import MCREDIT from "@/assets/images/mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei.webp";
-import TYMEX from "@/assets/images/tymex.webp";
-import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
-import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
-import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
-import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
-
-const logoMap: Record<string, string> = {
-  "mb-bank": MB,
-  "scandinavian-software-park": SCANDINAVIAN,
-  "one-tech-stop-vietnam-company-ltd": OTSV,
-  "mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei": MCREDIT,
-  tymex: TYMEX,
-  "andpad-vietnam-co-ltd": ANDPAD,
-  "employment-hero": EMPLOYMENTHERO,
-  "bosch-global-software-technologies-company-limited": BOSCH,
-  "ssi-securities-corporation": SSI,
-};
-
-type JobStatusLabel = "Active" | "Closed" | "Expired" | "Draft";
 
 interface TopJobItemProps {
   job?: JobCardResponse;

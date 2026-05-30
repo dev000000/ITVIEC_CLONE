@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Layout } from "antd";
 import "./LayoutDefault.scss";
 import Header from "@/components/Header";
@@ -15,8 +15,8 @@ const { Content } = Layout;
 const LayoutDefault = () => {
   const { t } = useTranslation("common");
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
-  const setLogin = useUserStore((state) => state.setLogin);
   const logout = useUserStore((state) => state.logout);
+  const setLogin = useUserStore((state) => state.setLogin);
 
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
@@ -24,8 +24,8 @@ const LayoutDefault = () => {
     const checkAuth = async (): Promise<void> => {
       try {
         const response = await getMeApi();
-        console.log("response me", response);
-      } catch (error) {
+        setLogin(response.data.result);
+      } catch {
         // Gọi API logout để clear token ở cookies
         await logoutApi();
         // Clear thông tin user trong store
@@ -38,7 +38,7 @@ const LayoutDefault = () => {
     }
     checkAuth();
 
-  }, []);
+  }, [clearSeekerInfo, logout, setLogin]);
 
   return (
     <>

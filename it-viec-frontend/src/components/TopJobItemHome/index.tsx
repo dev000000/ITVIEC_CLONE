@@ -34,9 +34,13 @@ const logoMap: Record<string, string> = {
 
 interface TopJobItemProps {
   job: JobCardResponse;
+  companyInfoAdd?: {
+    companyName?: string;
+    slug?: string;
+  };
 }
 
-function TopJobItemHome({ job }: TopJobItemProps) {
+function TopJobItemHome({ job, companyInfoAdd }: TopJobItemProps) {
   const authenticated = useUserStore((state) => state.authenticated);
   const role = useUserStore((state) => state.role);
   const isSeekerLoggedIn = authenticated && role === "SEEKER";
@@ -87,10 +91,10 @@ function TopJobItemHome({ job }: TopJobItemProps) {
       <div className="job__name">{job.title}</div>
       <div className="job__companies">
         <div className="job__companies-logo">
-          <img src={logoMap[job.company?.slug || ""]} alt="logo_companies" />
+          <img src={logoMap[job.company?.slug || companyInfoAdd?.slug || ""]} alt="logo_companies" />
         </div>
         <div className="job__companies-name">
-          {job.company?.companyName || ""}
+          {job.company?.companyName || companyInfoAdd?.companyName || ""}
 
         </div>
       </div>

@@ -130,7 +130,10 @@ function ProfileOverview() {
               </Link>
             </Col>
             <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
-              <Link className="profile-overview__activity-item profile-overview__activity-item--green">
+              <Link
+                to="/loi-moi-viec-lam"
+                className="profile-overview__activity-item profile-overview__activity-item--green"
+              >
                 <h3 className="profile-overview__activity-title">
                   {t("profileOverview.jobInvitations")}
                 </h3>

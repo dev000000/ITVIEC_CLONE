@@ -1,7 +1,7 @@
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
 function SimpleEditorTipTap() {
-  return <SimpleEditor />;
+  return <SimpleEditor value="" onChange={() => {}} />;
 }
 
 export default SimpleEditorTipTap;

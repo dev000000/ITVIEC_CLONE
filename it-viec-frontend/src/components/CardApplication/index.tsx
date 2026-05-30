@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./CardApplication.scss";
 import { AiOutlineDollarCircle } from "react-icons/ai";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import MB from "@/assets/images/mb-bank.webp";
 import SCANDINAVIAN from "@/assets/images/scandinavian-software-park.webp";
@@ -93,7 +93,6 @@ function CardApplication({ application }: CardApplicationProps) {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm();
   const date = dayjs(application.appliedAt).format("DD/MM/YYYY");
-  const _navigate = useNavigate();
   const handleNavigate = () => {
     if (!application.job?.slug) {
       return;
@@ -102,10 +101,13 @@ function CardApplication({ application }: CardApplicationProps) {
   };
   const status = () => {
     switch (application.status) {
+      case "REJECTED":
       case "Rejected":
         return <Badge status="error" text={t("applications.statusBadge.rejected")} />;
+      case "ACCEPTED":
       case "Accepted":
         return <Badge status="success" text={t("applications.statusBadge.accepted")} />;
+      case "PENDING":
       case "Pending":
         return <Badge status="processing" text={t("applications.statusBadge.pending")} />;
       default:
@@ -263,7 +265,7 @@ function CardApplication({ application }: CardApplicationProps) {
                 <LuSquareArrowOutUpRight onClick={handleNavigate} />
               </Popover>
             </h4>
-            <Link className="card-application__company">
+            <Link to="#" className="card-application__company">
               {application.company?.companyName || "???"}
             </Link>
             <div className="card-application__salary">

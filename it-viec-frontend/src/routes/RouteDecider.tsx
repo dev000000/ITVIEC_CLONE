@@ -1,22 +1,16 @@
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
-import type { useParams as UseParamsType } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import JobDetail from '@/pages/Shared/JobDetail';
 import JobSearch from '@/pages/Shared/JobSearch';
-// import { getJobBySlugApi } from '@/services/jobApi';
-
-interface RouteDeciderParams {
-  param1?: string;
-  param2?: string;
-}
+import { getJobBySlugApi } from '@/services_new/jobApi';
 
 /**
  * RouteDecider - Dynamic route resolver
  * Checks if param1 is a job slug or a search keyword
  */
 const RouteDecider: FC = () => {
-  const { param1, param2 } = useParams<RouteDeciderParams>();
+  const { param1, param2 } = useParams<"param1" | "param2">();
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const [isSlug, setIsSlug] = useState<boolean>(false);
 
@@ -28,9 +22,8 @@ const RouteDecider: FC = () => {
       }
 
       try {
-//         const result = await getJobBySlugApi(param1);
-        if (result?.data) {
-          console.log('Slug exists:', result);
+        const result = await getJobBySlugApi(param1);
+        if (result.data.result) {
           setIsSlug(true);
         } else {
           setIsSlug(false);
