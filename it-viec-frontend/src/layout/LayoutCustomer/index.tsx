@@ -16,6 +16,7 @@ import { useUserStore } from "@/store/userStore";
 import { useCompanyStore } from "@/store/companyStore";
 import { CgProfile } from "react-icons/cg";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 function LayoutCustomer() {
   const { t } = useTranslation("common");
@@ -110,6 +111,7 @@ function LayoutCustomer() {
               </ul>
             </div>
             <div className="layout-customer__siderbar-button">
+              <LanguageSwitcher />
               <button onClick={handleLogout}>
                 <IoIosLogOut />
                 <span>{t("menu.logout")}</span>
