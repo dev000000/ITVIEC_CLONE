@@ -23,7 +23,7 @@ public class JobController {
 
     private final JobService jobService;
 
-    // 1.API trả về toàn bộ job đang active có phân trang, để hiển thị ở trang chủ và trang tìm kiếm
+    // 1.API trả về toàn bộ job đang active có phân trang, để hiển thị ở trang chủ và trang tìm kiếm (PUBLIC)
     @GetMapping("/jobs")
     public ApiResponse<PageResponse<JobCardResponse>> getAllJobs(
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -33,7 +33,7 @@ public class JobController {
                 .build();
     }
 
-    // 2.API trả về thông tin chi tiết của job theo slug, công việc phải được active
+    // 2.API trả về thông tin chi tiết của job theo slug, công việc phải được active (PUBLIC)
     @GetMapping("/jobs/slug/{slug}")
     public ApiResponse<JobDetailResponse> getJobBySlug(@PathVariable String slug) {
         return ApiResponse.<JobDetailResponse>builder()
@@ -42,7 +42,7 @@ public class JobController {
                 .build();
     }
 
-    // 3.API cho phép công ty hiện tại lấy toàn bộ công việc của công ty đó (bất kể trạng thái nào)
+    // 3.API cho phép công ty hiện tại lấy toàn bộ công việc của công ty đó (bất kể trạng thái nào) (PRIVATE)
     @GetMapping("/companies/me/jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<List<JobDetailResponse>> getMyJobs() {
@@ -53,7 +53,7 @@ public class JobController {
     }
 
     // 4.API cho phép công ty hiện tại tạo mới công việc
-    // ( *chỉ công ty đó mới được tạo cv của họ, không công ty nào khác được phép tạo cv của công ty khác* )
+    // ( *chỉ công ty đó mới được tạo cv của họ, không công ty nào khác được phép tạo cv của công ty khác* ) (PRIVATE)
     @PostMapping("/jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<JobDetailResponse> createJob(@RequestBody JobCreateRequest request) {
@@ -63,7 +63,7 @@ public class JobController {
                 .build();
     }
 
-    // 5.API cho phép công ty hiện tại chỉnh sửa công việc
+    // 5.API cho phép công ty hiện tại chỉnh sửa công việc (PRIVATE)
     // ( *chỉ công ty đó mới được chỉnh sửa job của họ, không công ty nào khác được phép chỉnh sửa job của công ty khác*
     // )
     @PutMapping("/companies/me/jobs/{id}")
@@ -77,7 +77,7 @@ public class JobController {
                 .build();
     }
 
-    // 6.API cho phép công ty hiện tại xóa công việc của họ -- Sẽ xử lí xóa mềm (soft delete)
+    // 6.API cho phép công ty hiện tại xóa công việc của họ -- Sẽ xử lí xóa mềm (soft delete) (PRIVATE)
     @DeleteMapping("/companies/me/jobs/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<Void> deleteJob(@PathVariable String id) {

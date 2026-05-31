@@ -22,7 +22,7 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    // 1.API cho phép nộp đơn ứng tuyển (seeker nộp) theo job cụ thể
+    // 1.API cho phép nộp đơn ứng tuyển (seeker nộp) theo job cụ thể (PRIVATE)
     @PostMapping("/jobs/{jobId}/applications")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<ApplicationCreateResponse> applyToJob(
@@ -34,7 +34,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 2.API cho phép người xin việc (seeker) xem danh sách đơn ứng tuyển của mình
+    // 2.API cho phép người xin việc (seeker) xem danh sách đơn ứng tuyển của mình (PRIVATE)
     @GetMapping("/seekers/me/applications")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<List<ApplicationResponse>> getMyApplications() {
@@ -44,7 +44,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ
+    // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ (PRIVATE)
     @GetMapping("/companies/me/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<List<ApplicationResponse>> getMyCompanyApplications() {
@@ -54,7 +54,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 4.API cho phép công ty cập nhật trạng thái đơn ứng tuyển của họ
+    // 4.API cho phép công ty cập nhật trạng thái đơn ứng tuyển của họ (PRIVATE)
     @PatchMapping("/companies/me/applications/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<ApplicationResponse> updateApplicationStatus(
@@ -65,7 +65,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 5.API cho phép công ty xem chi tiết 1 đơn ứng tuyển
+    // 5.API cho phép công ty xem chi tiết 1 đơn ứng tuyển (PRIVATE)
     @GetMapping("/companies/me/applications/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<ApplicationResponse> getApplicationById(@PathVariable String id) {
@@ -75,7 +75,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 6.API cho phép admin xem toàn bộ đơn ứng tuyển
+    // 6.API cho phép admin xem toàn bộ đơn ứng tuyển (PRIVATE)
     @GetMapping("/applications")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<ApplicationResponse>> getAllApplications() {
@@ -85,7 +85,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 7.API cho phép người xin việc xem chi tiết 1 đơn ứng tuyển của họ
+    // 7.API cho phép người xin việc xem chi tiết 1 đơn ứng tuyển của họ (PRIVATE)
     @GetMapping("/seekers/me/applications/{id}")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<ApplicationResponse> getMyApplicationById(@PathVariable String id) {
@@ -95,7 +95,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 8.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể
+    // 8.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể (PRIVATE)
     @GetMapping("/companies/me/jobs/{id}/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<List<ApplicationResponse>> getApplicationsByJobId(@PathVariable Long id) {

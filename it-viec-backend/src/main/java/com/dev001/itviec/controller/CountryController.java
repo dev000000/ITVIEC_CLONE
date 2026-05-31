@@ -21,7 +21,7 @@ import java.util.List;
 public class CountryController {
     CountryService countryService;
 
-    // 1.API trả về toàn bộ country có trong hệ thống, để hiển thị trong select box
+    // 1.API trả về toàn bộ country có trong hệ thống, để hiển thị trong select box (PUBLIC)
     @GetMapping("/countries")
     public ApiResponse<List<CountryResponse>> getAllCountries() {
 

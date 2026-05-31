@@ -22,7 +22,7 @@ import java.util.List;
 public class EmployerController {
     EmployerService employerService;
 
-    // 1.API này trả về cho employer profile của bản thân
+    // 1.API này trả về cho employer profile của bản thân (PRIVATE)
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<EmployerResponse> getMyProfile() {
@@ -32,7 +32,7 @@ public class EmployerController {
                 .build();
     }
 
-    // 2.API này cho phép employer cập nhật profile của bản thân
+    // 2.API này cho phép employer cập nhật profile của bản thân (PRIVATE)
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<EmployerResponse> updateMyProfile(@RequestBody @Valid EmployerUpdateRequest request) {
@@ -42,7 +42,7 @@ public class EmployerController {
                 .build();
     }
 
-    // 3.API này cho phép admin xem danh sách employer
+    // 3.API này cho phép admin xem danh sách employer (PRIVATE)
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<EmployerResponse>> getAllEmployers() {
@@ -52,7 +52,7 @@ public class EmployerController {
                 .build();
     }
 
-    // 4.API này cho phép admin xem chi tiết của employer
+    // 4.API này cho phép admin xem chi tiết của employer (PRIVATE)
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<EmployerResponse> getEmployerById(@PathVariable String id) {

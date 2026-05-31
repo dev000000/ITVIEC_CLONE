@@ -19,7 +19,7 @@ public class UserController {
 
     private final UserService userService;
 
-    // 1.API trả về toàn bộ user có trong hệ thống, chỉ admin mới được phép truy cập
+    // 1.API trả về toàn bộ user có trong hệ thống, chỉ admin mới được phép truy cập (PRIVATE)
     @GetMapping("/users")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<UserResponse>> getUsers() {
@@ -29,7 +29,7 @@ public class UserController {
                 .build();
     }
 
-    // 2.API trả về thông tin chi tiết của 1 user, chỉ admin mới được phép truy cập
+    // 2.API trả về thông tin chi tiết của 1 user, chỉ admin mới được phép truy cập (PRIVATE)
     @GetMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> getUser(@PathVariable String id) {
@@ -39,7 +39,7 @@ public class UserController {
                 .build();
     }
 
-    // 3.API cho phép admin cập nhật status của 1 user, để khóa/mở khóa tài khoản của user đó
+    // 3.API cho phép admin cập nhật status của 1 user, để khóa/mở khóa tài khoản của user đó (PRIVATE)
     @PatchMapping("/users/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<UserResponse> updateUserStatus(@PathVariable String id, @RequestBody UserUpdateRequest request) {

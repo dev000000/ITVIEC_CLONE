@@ -21,7 +21,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    // 1.API login bằng form đăng nhập
+    // 1.API login bằng form đăng nhập (PUBLIC)
     @PostMapping("/auth/login")
     public ApiResponse<AuthenticationResponse> login(
             @RequestBody AuthenticationRequest request, HttpServletResponse response) {
@@ -32,7 +32,7 @@ public class AuthenticationController {
                 .build();
     }
 
-    // 2.API trả về thông tin user hiện tại ( trong trường hợp refresh F5 website )
+    // 2.API trả về thông tin user hiện tại ( trong trường hợp refresh F5 website ) (PUBLIC)
     @GetMapping("/auth/me")
     public ApiResponse<AuthenticationResponse> me() {
         AuthenticationResponse authResponse = authenticationService.getCurrentUser();
@@ -42,7 +42,7 @@ public class AuthenticationController {
                 .build();
     }
 
-    // 3.API đăng ký một tài khoản cho người tìm việc (seeker)
+    // 3.API đăng ký một tài khoản cho người tìm việc (seeker) (PUBLIC)
     @PostMapping("/auth/register/seekers")
     public ApiResponse<Void> register(
             @RequestBody @Valid RegisterUserSeekerRequest request, HttpServletResponse response) {
@@ -50,7 +50,7 @@ public class AuthenticationController {
         return ApiResponse.<Void>builder().code(1000).build();
     }
 
-    // 4.API refresh token khi access token hết hạn
+    // 4.API refresh token khi access token hết hạn (PUBLIC)
     @PostMapping("/auth/refresh-token")
     public ApiResponse<Void> refreshToken(HttpServletRequest request, HttpServletResponse response) {
         authenticationService.refreshToken(request, response);

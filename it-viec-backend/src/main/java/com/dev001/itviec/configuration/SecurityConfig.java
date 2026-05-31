@@ -26,8 +26,16 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final String[] PUBLIC_URLS = {
-            "/api/v1/cities", "/api/v1/skills", "/api/v1/countries", "/api/v1/companies/slug/*", "/api/v1/companies", "api/v1/jobs", "/api/v1/companies/slug/*", "/api/v1/jobs/slug/*",
+    private final String[] PUBLIC_URLS_GET = {
+            "/api/v1/cities",
+            "/api/v1/skills",
+            "/api/v1/countries",
+            "/api/v1/companies",
+            "/api/v1/companies/slug/*",
+            "/api/v1/companies/*/logo",
+            "/api/v1/jobs",
+            "/api/v1/jobs/slug/*",
+            "/api/v1/auth/me",
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -53,7 +61,7 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/seekers")
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, PUBLIC_URLS)
+                        .requestMatchers(HttpMethod.GET, PUBLIC_URLS_GET)
                         .permitAll()
 
                         // 3. Các endpoints còn lại thì authentication

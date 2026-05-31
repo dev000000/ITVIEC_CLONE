@@ -23,7 +23,7 @@ public class CityController {
 
     private final CityService cityService;
 
-    // 1.API trả về toàn bộ city có trong hệ thống, để hiển thị trong select box
+    // 1.API trả về toàn bộ city có trong hệ thống, để hiển thị trong select box (PUBLIC)
     @GetMapping
     public ApiResponse<List<CityResponse>> getAllCities() {
         return ApiResponse.<List<CityResponse>>builder()
@@ -32,7 +32,7 @@ public class CityController {
                 .build();
     }
 
-    // 2.API cho phép admin thêm city mới vào hệ thống
+    // 2.API cho phép admin thêm city mới vào hệ thống (PRIVATE)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<CityResponse> createCity(@RequestBody @Valid CityCreateRequest request) {

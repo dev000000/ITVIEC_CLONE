@@ -20,7 +20,7 @@ public class SeekerController {
 
     private final SeekerService seekerService;
 
-    // 1.API riêng cho admin, trả về toàn bộ seeker có trong hệ thống, để admin quản lý seeker
+    // 1.API riêng cho admin, trả về toàn bộ seeker có trong hệ thống, để admin quản lý seeker (PRIVATE)
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<SeekerResponse>> getAllSeekers() {
@@ -31,7 +31,7 @@ public class SeekerController {
     }
 
     // 2.API riêng cho seeker, trả về thông tin của seeker hiện tại dựa vào cookie, để hiển thị ở trang profile của
-    // seeker
+    // seeker (PRIVATE)
     @GetMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerResponse> getMyProfile() {
@@ -41,7 +41,7 @@ public class SeekerController {
                 .build();
     }
 
-    // 3.API cho phép seeker cập nhật profile của họ
+    // 3.API cho phép seeker cập nhật profile của họ (PRIVATE)
     @PutMapping("/me")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerResponse> updateMyProfile(@RequestBody @Valid SeekerUpdateRequest request) {
@@ -51,7 +51,7 @@ public class SeekerController {
                 .build();
     }
 
-    // 4.API cho phép admin xem profile của 1 seeker
+    // 4.API cho phép admin xem profile của 1 seeker (PRIVATE)
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<SeekerResponse> getSeekerById(@PathVariable String id) {

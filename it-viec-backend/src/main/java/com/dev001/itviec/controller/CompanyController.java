@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CompanyController {
     CompanyService companyService;
 
-    // 1. API trả về toàn bộ company có kèm số lượng job đang active, để hiển thị ở
+    // 1. API trả về toàn bộ company có kèm số lượng job đang active, để hiển thị ở (PUBLIC)
     // trang chủ
     @GetMapping
     public ApiResponse<List<CompanyCardResponse>> getAllCompanies() {
@@ -47,7 +47,7 @@ public class CompanyController {
                 .build();
     }
 
-    // 2. API trả về company theo slug kèm theo toàn bộ job đang active của company
+    // 2. API trả về company theo slug kèm theo toàn bộ job đang active của company (PUBLIC)
     // đó, để hiển thị ở trang chi tiết company
     @GetMapping("/slug/{slug}")
     public ApiResponse<CompanyDetailResponse> getCompanyBySlug(@PathVariable String slug) {
@@ -57,6 +57,7 @@ public class CompanyController {
                 .build();
     }
 
+    // (PUBLIC)
     @GetMapping("/{id}/logo")
     public ResponseEntity<byte[]> getCompanyLogo(@PathVariable String id) {
         CompanyLogoContent logoContent = companyService.getCompanyLogo(id);
@@ -72,7 +73,7 @@ public class CompanyController {
                 .body(logoContent.getData());
     }
 
-    // 3. API cho phép employer cập nhật thông tin company của mình
+    // 3. API cho phép employer cập nhật thông tin company của mình (PRIVATE)
     @PutMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> updateMyCompany(@RequestBody @Valid CompanyUpdateRequest request) {
@@ -83,6 +84,7 @@ public class CompanyController {
                 .build();
     }
 
+    // (PRIVATE)
     @PutMapping(value = "/me/logo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> uploadMyCompanyLogo(@RequestParam("file") MultipartFile file) {
@@ -92,6 +94,7 @@ public class CompanyController {
                 .build();
     }
 
+    // (PRIVATE)
     @DeleteMapping("/me/logo")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> deleteMyCompanyLogo() {
@@ -101,7 +104,7 @@ public class CompanyController {
                 .build();
     }
 
-    // 4. API cho phép employer xem thông tin company mình
+    // 4. API cho phép employer xem thông tin company mình (PRIVATE)
     @GetMapping("/me")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<CompanyDetailResponse> getMyCompany() {

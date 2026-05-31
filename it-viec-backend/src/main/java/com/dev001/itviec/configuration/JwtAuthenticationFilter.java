@@ -38,17 +38,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         var uri = request.getRequestURI();
         var method = request.getMethod();
 
+        boolean isPublicCompanyGet = method.equals("GET")
+                && (uri.equals("/api/v1/companies")
+                        || uri.startsWith("/api/v1/companies/slug/")
+                        || uri.matches("/api/v1/companies/[^/]+/logo"));
+
+        boolean isPublicJobGet = method.equals("GET")
+                && (uri.equals("/api/v1/jobs")
+                        || uri.startsWith("/api/v1/jobs/slug/"));
+
+        boolean isPublicAuthGet = method.equals("GET") && uri.equals("/api/v1/auth/me");
+
         return (uri.contains("/api/v1/cities") && method.equals("GET"))
-                || uri.contains("/api/v1/skills") && method.equals("GET")
-                || uri.contains("/api/v1/countries") && method.equals("GET")
-                || uri.startsWith("/api/v1/companies/slug/") && method.equals("GET")
+                || (uri.contains("/api/v1/skills") && method.equals("GET"))
+                || (uri.contains("/api/v1/countries") && method.equals("GET"))
                 || uri.contains("/register/seekers")
                 || uri.contains("/refresh-token")
                 || uri.contains("/login")
-                || uri.contains("/api/v1/companies") && method.equals("GET")
-                || uri.contains("/api/v1/jobs") && method.equals("GET")
-                || uri.contains("/api/v1/companies/slug/*") && method.equals("GET")
-                || uri.contains("/api/v1/jobs/slug/*") && method.equals("GET");
+                || isPublicCompanyGet
+                || isPublicJobGet
+                || isPublicAuthGet;
     }
 
     @Override
