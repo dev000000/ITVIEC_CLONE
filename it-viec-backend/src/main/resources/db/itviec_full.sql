@@ -207,6 +207,18 @@ CREATE TABLE job_skills (
   CONSTRAINT fk_job_skills_job FOREIGN KEY (job_id) REFERENCES jobs(id),
   CONSTRAINT fk_job_skills_skill FOREIGN KEY (skill_id) REFERENCES skills(id)
 );
+-- Bảng logo công ty
+CREATE TABLE company_logos (
+  id VARCHAR(255) PRIMARY KEY,
+  company_id VARCHAR(255) NOT NULL UNIQUE,
+  file_name VARCHAR(255) NOT NULL,
+  content_type VARCHAR(100) NOT NULL,
+  size BIGINT NOT NULL,
+  logo_data LONGBLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_company_logos_company FOREIGN KEY (company_id) REFERENCES companies(id)
+);
 -- Chọn schema để làm việc
 USE itviec_db;
 INSERT INTO skills (skill_name)

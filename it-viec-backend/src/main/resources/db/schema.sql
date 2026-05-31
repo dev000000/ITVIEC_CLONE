@@ -120,6 +120,18 @@ CREATE TABLE companies (
   CONSTRAINT fk_companies_employer FOREIGN KEY (employer_id) REFERENCES employers(id),
   CONSTRAINT fk_companies_country FOREIGN KEY (country_id) REFERENCES countries(id)
 );
+-- Bảng logo công ty
+CREATE TABLE company_logos (
+  id VARCHAR(255) PRIMARY KEY,
+  company_id VARCHAR(255) NOT NULL UNIQUE,
+  file_name VARCHAR(255) NOT NULL,
+  content_type VARCHAR(100) NOT NULL,
+  size BIGINT NOT NULL,
+  logo_data LONGBLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_company_logos_company FOREIGN KEY (company_id) REFERENCES companies(id)
+);
 -- Bảng job
 CREATE TABLE jobs (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
