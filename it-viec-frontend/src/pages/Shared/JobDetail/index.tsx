@@ -5,32 +5,30 @@ import CardJobHead from "@/components/CardJobDetail/CardJobHead";
 import CardJobShowInfor from "@/components/CardJobDetail/CardJobShowInfor";
 import CardJobContent from "@/components/CardJobDetail/CardJobContent";
 import CardInforEmployer from "@/components/CardInforEmployer";
-import { getJobDetailByID } from "@/services/Shared";
+import { getJobBySlugApi } from "@/services/jobApi";
+import type { JobDetailResponse } from "@/types/response.types";
 
 interface JobDetailProps {
   slug: string;
 }
 
 function JobDetail({ slug }: JobDetailProps) {
-  console.log("JobDetail");
-  const [job, setJob] = useState<Record<string, unknown>>({});
-  const parts = slug.split("-");
-  const id = parts[parts.length - 1];
+  const [job, setJob] = useState<Partial<JobDetailResponse>>({});
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
     const getData = async () => {
       try {
-        const listJobwithCompany = await getJobDetailByID(id);
-        setJob(listJobwithCompany || {});
+        const response = await getJobBySlugApi(slug);
+        setJob(response.data.result || {});
       } catch (error) {
         console.error("Error fetching job details:", error);
         setJob({});
       }
     };
     getData();
-  }, [id]);
+  }, [slug]);
   return (
     <div className="job-detail">
       <div className="background-gradient"></div>

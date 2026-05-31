@@ -1,4 +1,9 @@
-import { useState } from "react";
+// Trang hồ sơ CV đầy đủ của Job Seeker
+// Hiển thị: avatar, tên, chức danh, liên hệ (email, SDD, ngày sinh, giới tính, địa chỉ, link cá nhân)
+// Các section có thể thêm (chưa triển khai): Giới thiệu, Học vấn, Kinh nghiệm, Kỹ năng, Dự án, Chứng chỉ, Giải thưởng
+// Chỉnh sửa thông tin cá nhân qua Modal (Ant Design Form + DatePicker)
+// Dữ liệu từ Zustand: useSeekerStore (thông tin seeker) + useUserStore (email)
+import { useEffect, useState } from "react";
 import "./CVProfile.scss";
 import { FaRegEdit } from "react-icons/fa";
 import avatar from "@/assets/images/unnamed.jpg";
@@ -21,37 +26,23 @@ import { Col, DatePicker, Row, Select } from "antd";
 import { Form, Input } from "antd";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
-import { updateSeekerInfor } from "@/services/SeekerServices";
+import { updateMyProfileApi } from "@/services/seekerApi";
+import { getAllCitiesApi } from "@/services/cityApi";
 import { GENDER_OPTIONS, VIETNAM_CITIES } from "@/constants";
-import { isObjectEmpty } from "@/helpers/checkObject";
 import dayjs from "dayjs";
-import { clearStorage } from "@/helpers/localStorage";
-import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
+import { useSeekerStore } from "@/store/seekerStore";
+import { useUserStore } from "@/store/userStore";
+import {
+  findCityRef,
+  findCityRefs,
+  toEntityRef,
+  toGender,
+} from "@/utils/apiPayloadMappers";
 import { useTranslation } from "react-i18next";
+import type { CityResponse } from "@/types/response.types";
 
-interface LegacySeekerState {
-  id: number;
-  userId: number;
-  fullName: string;
-  jobTitle: string;
-  phoneNumber: string;
-  dateOfBirth: string;
-  gender: string;
-  city: string;
-  address: string;
-  personalLink: string;
-  gmail: string;
-  coverLetter: string;
-  isLoaded: boolean;
-}
-
-interface LegacyRootState {
-  SeekerReducer: LegacySeekerState;
-}
-
+// Kiểu dữ liệu form chỉnh sửa thông tin cá nhân trong modal
 interface CVProfileFormValues {
   fullName: string;
   jobTitle: string;
@@ -64,7 +55,9 @@ interface CVProfileFormValues {
   personalLink: string;
 }
 
+// Định dạng ngày tháng hiển thị trong DatePicker
 const dateFormat = "DD/MM/YYYY";
+// Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
     top: "50%",
@@ -78,69 +71,84 @@ const customStyles = {
   },
 };
 function CVProfile() {
-  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
+  const seeker = useSeekerStore();
+  const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
+  const email = useUserStore((state) => state.email);
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [cities, setCities] = useState<CityResponse[]>([]);
   const [form] = Form.useForm();
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { t } = useTranslation("jobseeker");
 
+  // Tải danh sách tất cả thành phố khi component mount
+  // Dùng cho Select dropdown "Địa điểm hiện tại" và map id khi gọi API cập nhật
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const response = await getAllCitiesApi();
+        setCities(response.data.result ?? []);
+      } catch (error) {
+        console.error("Error fetching city options:", error);
+      }
+    };
+
+    loadCities();
+  }, []);
+
+  // Mở modal và điền sẵn toàn bộ dữ liệu seeker hiện tại vào form
   const openModal = () => {
     setIsOpen(true);
     form.setFieldsValue({
       fullName: seeker.fullName || "",
       jobTitle: seeker.jobTitle || "",
-      gmail: seeker.gmail || "",
+      gmail: email || "",
       phoneNumber: seeker.phoneNumber || "",
       dateOfBirth: seeker.dateOfBirth
         ? dayjs(seeker.dateOfBirth)
         : dayjs("1999-01-11"),
       gender: seeker.gender || null,
-      city: seeker.city || null,
+      city: seeker.city?.cityName || null,
       address: seeker.address || "",
       personalLink: seeker.personalLink || "",
     });
   };
+  // Đóng modal
   const closeModal = () => {
     setIsOpen(false);
   };
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+  // Submit form thông tin cá nhân: xây dựng payload đầy đủ,
+  // gọi API cập nhật → lưu kết quả mới vào store và hiển thị thông báo
   const onFinish = async (values: CVProfileFormValues) => {
-    const currentUserId = localStorage.getItem("id");
-    console.log("Current User ID:", currentUserId);
-    console.log("Seeker User ID:", seeker.userId);
-    if (currentUserId != seeker.userId) {
-      clearStorage();
-      navigate("/login");
-      return;
-    }
     const updatedSeekerInfor = {
-      ...values,
+      fullName: values.fullName,
+      jobTitle: values.jobTitle,
+      phoneNumber: values.phoneNumber,
       dateOfBirth: values.dateOfBirth
         ? dayjs(values.dateOfBirth).format("YYYY-MM-DD")
-        : "",
-      gender: values.gender || "",
-      city: values.city || "",
+        : seeker.dateOfBirth || "1999-01-01",
+      gender: toGender(values.gender),
+      city: findCityRef(values.city, cities, seeker.city),
+      address: values.address || "",
+      personalLink: values.personalLink || "",
+      coverLetter: seeker.coverLetter || "",
+      skills: seeker.skills
+        .map((skill) => toEntityRef(skill.id))
+        .filter((skill): skill is { id: number | string } => Boolean(skill)),
+      desiredLocations: findCityRefs(
+        seeker.desiredLocations?.map((city) => city.cityName) ?? [],
+        cities,
+      ),
     };
     try {
-      const result = await updateSeekerInfor(seeker.id, updatedSeekerInfor);
-      if (isObjectEmpty(result)) {
-        dispatch(clearSeekerInfo());
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "Update Profile Fail!",
-        });
-      } else {
-        dispatch(setSeekerFullInfo(result));
-        Swal.fire({
-          title: "Update Profile Success!",
-          icon: "success",
-          draggable: true,
-        });
-      }
+      const response = await updateMyProfileApi(updatedSeekerInfor);
+      setSeekerFullInfo(response.data.result);
+      Swal.fire({
+        title: "Update Profile Success!",
+        icon: "success",
+        draggable: true,
+      });
       form.resetFields();
       closeModal();
     } catch (error) {
@@ -419,12 +427,12 @@ function CVProfile() {
                   <MdOutlineMailOutline />
                   <span
                     className={
-                      seeker.gmail
+                      email
                         ? "cv-profile__item-text"
                         : "cv-profile__item-text cv-profile__item-text--default"
                     }
                   >
-                    {seeker.gmail || t("cvProfile.emailPlaceholder")}
+                    {email || t("cvProfile.emailPlaceholder")}
                   </span>
                 </Col>
                 <Col
@@ -557,7 +565,7 @@ function CVProfile() {
                   xs={24}
                   className="cv-profile__item"
                 >
-                  <FiphoneNumber />
+                  <FiPhone />
                   <span className="cv-profile__item-text cv-profile__item-text--default">
                     {t("cvProfile.phonePlaceholder")}
                   </span>

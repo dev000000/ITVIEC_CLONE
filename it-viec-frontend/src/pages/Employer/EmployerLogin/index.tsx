@@ -1,4 +1,6 @@
 
+// Trang đăng nhập dành cho Employer
+// Layout chia 2 cột: bên trái hiển thị ảnh branding, bên phải là form đăng nhập (EmployerLoginForm)
 import EmployerLoginForm from "@/components/EmployerLoginForm";
 import "./EmployerLogin.scss"
 function EmployerLogin() {

@@ -86,7 +86,12 @@ public enum ErrorCode {
     EXPIRES_AT_REQUIRED(1069, "Expires at must not be blank", HttpStatus.BAD_REQUEST),
     INVALID_JOB_TYPE(1070, "Invalid job type", HttpStatus.BAD_REQUEST),
     INVALID_EXPERIENCE_LEVEL(1071, "Invalid experience level", HttpStatus.BAD_REQUEST),
-    INVALID_JOB_STATUS(1072, "Invalid job status", HttpStatus.BAD_REQUEST);
+    INVALID_JOB_STATUS(1072, "Invalid job status", HttpStatus.BAD_REQUEST),
+    COMPANY_LOGO_REQUIRED(1073, "Company logo file is required", HttpStatus.BAD_REQUEST),
+    COMPANY_LOGO_INVALID_TYPE(1074, "Company logo must be a PNG, JPEG, or WEBP image", HttpStatus.BAD_REQUEST),
+    COMPANY_LOGO_TOO_LARGE(1075, "Company logo must not exceed 2 MB", HttpStatus.BAD_REQUEST),
+    COMPANY_LOGO_NOT_FOUND(1076, "Company logo not found", HttpStatus.NOT_FOUND),
+    COMPANY_LOGO_UPLOAD_FAILED(1077, "Failed to upload company logo", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private int code;
     private String message;

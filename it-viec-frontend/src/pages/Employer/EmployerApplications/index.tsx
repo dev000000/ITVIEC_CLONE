@@ -1,3 +1,6 @@
+// Trang quản lý đơn ứng tuyển (CV) của công ty Employer
+// Hiển thị danh sách ứng viên đã apply vào các job của công ty dưới dạng bảng
+// Cho phép xem chi tiết đơn và cập nhật trạng thái (PENDING / ACCEPTED / REJECTED)
 import {
   Table,
   Tooltip,
@@ -14,11 +17,9 @@ import EmployerStart from "@/components/EmployerStart";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  getApplicationsWithJob,
-  getApplicationsWithJobPagination,
-  updateApplication,
-} from "@/services/EmployerServices";
-import { useSelector } from "react-redux";
+  getMyCompanyApplicationsApi,
+  updateApplicationStatusApi,
+} from "@/services/applicationApi";
 import { Link } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
 import Modal from "react-modal";
@@ -29,10 +30,13 @@ import { VIETNAM_CITIES } from "@/constants/index";
 import Swal from "sweetalert2";
 import TextArea from "antd/es/input/TextArea";
 import type { TableColumnsType } from "antd";
+import { toApplicationStatus } from "@/utils/apiPayloadMappers";
+import type { ApplicationResponse, JobDetailResponse } from "@/types/response.types";
 
+// Kiểu dữ liệu cho mỗi dòng trong bảng danh sách đơn ứng tuyển
 interface ApplicationRecord {
   id: string;
-  job: { id: string; title: string };
+  job?: { id?: string | number; title?: string };
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
@@ -48,14 +52,11 @@ interface PaginationState {
   pageSize: number;
 }
 
-interface LegacyCompanyState {
-  id: string | number;
-}
+type ApplicationWithRelations = ApplicationResponse & {
+  job?: Pick<JobDetailResponse, "id" | "title">;
+};
 
-interface LegacyRootState {
-  CompanyReducer: LegacyCompanyState;
-}
-
+// Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
     top: "50%",
@@ -68,30 +69,37 @@ const customStyles = {
     overflow: "hidden",
   },
 };
+// Danh sách trạng thái đơn ứng tuyển dùng cho Select dropdown trong modal
 const statusList = [
   {
-    value: "Pending",
+    value: "PENDING",
     label: <Badge status="processing" text="Pending" />,
   },
   {
-    value: "Accepted",
+    value: "ACCEPTED",
     label: <Badge status="success" text="Accepted" />,
   },
   {
-    value: "Rejected",
+    value: "REJECTED",
     label: <Badge status="error" text="Rejected" />,
   },
 ];
 function EmployerApplications() {
   const { t } = useTranslation();
-  const company = useSelector((state: LegacyRootState) => state.CompanyReducer);
+  // Dữ liệu hiển thị trên bảng (phân trang phía client)
   const [datasource, setDatasource] = useState<ApplicationRecord[]>([]);
+  // Trạng thái phân trang: trang hiện tại và số dòng mỗi trang
   const [Pagination, setPagination] = useState<PaginationState>({ current: 1, pageSize: 10 });
+  // Tổng số đơn ứng tuyển (dùng để tính số trang)
   const [total, setTotal] = useState<number>(0);
+  // Kiểm tra màn hình nhỏ để tắt fixed column khi responsive
   const [isMobile, setIsMobile] = useState<boolean>(false);
+  // Trạng thái mở/đóng modal xem chi tiết đơn
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
   const [form] = Form.useForm();
+  // Cờ toggle để trigger re-fetch sau khi cập nhật trạng thái thành công
   const [update, setUpdate] = useState<boolean>(false);
+  // Cấu hình các cột cho bảng Ant Design Table
   const columns: TableColumnsType<ApplicationRecord> = [
     {
       title: t("employer:applications.columns.id"),
@@ -103,7 +111,7 @@ function EmployerApplications() {
       dataIndex: "job",
       key: "job",
       render: (job: ApplicationRecord["job"]) => (
-        <Link to={`/customer/job/${job.id}`}> {job?.title || "N/A"} </Link>
+        <Link to={`/customer/job/${job?.id || ""}`}> {job?.title || "N/A"} </Link>
       ),
       fixed: isMobile ? undefined : "left",
     },
@@ -173,10 +181,13 @@ function EmployerApplications() {
       key: "status",
       render: (status: string) => {
         switch (status) {
+          case "REJECTED":
           case "Rejected":
             return <Badge status="error" text={t("employer:applications.statusBadge.rejected")} />;
+          case "ACCEPTED":
           case "Accepted":
             return <Badge status="success" text={t("employer:applications.statusBadge.accepted")} />;
+          case "PENDING":
           case "Pending":
             return <Badge status="processing" text={t("employer:applications.statusBadge.pending")} />;
           default:
@@ -196,6 +207,7 @@ function EmployerApplications() {
     },
   ];
 
+  // Xử lý submit form modal: cập nhật trạng thái và tin nhắn phản hồi cho đơn ứng tuyển
   const onFinish = async (values: Record<string, unknown>) => {
     const updatedValues = {
       status: values.status,
@@ -204,24 +216,17 @@ function EmployerApplications() {
     console.log("valuesid", values.id);
 
     try {
-      const result = await updateApplication(values.id, updatedValues);
-      if (result) {
-        Swal.fire({
-          title: "Update Application Success!",
-          icon: "success",
-          draggable: true,
-        });
-        setUpdate(!update);
-        closeModal();
-      } else {
-        Swal.fire({
-          title: "Update Application Failed!",
-          text: "Please try again later.",
-          icon: "error",
-        });
-
-        closeModal();
-      }
+      await updateApplicationStatusApi(String(values.id), {
+        status: toApplicationStatus(updatedValues.status),
+        employerMessage: String(updatedValues.employerMessage || ""),
+      });
+      Swal.fire({
+        title: "Update Application Success!",
+        icon: "success",
+        draggable: true,
+      });
+      setUpdate(!update);
+      closeModal();
     } catch (error) {
       console.error("Error updating application:", error);
       return;
@@ -230,6 +235,7 @@ function EmployerApplications() {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+  // Mở modal và điền sẵn thông tin của đơn ứng tuyển được chọn vào form
   const openModal = (record: ApplicationRecord) => {
     form.setFieldsValue({
       id: record.id,
@@ -248,6 +254,8 @@ function EmployerApplications() {
   const closeModal = () => {
     setIsOpen(false);
   };
+  // Lắng nghe sự kiện resize window để cập nhật isMobile (breakpoint 1200px)
+  // isMobile ảnh hưởng việc “fixed” các cột đầu/cuối bảng khi responsive
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 1200);
@@ -259,25 +267,43 @@ function EmployerApplications() {
     };
   }, [isMobile]);
 
+  // Lấy tổng số đơn ứng tuyển khi component mount (dùng để tính phân trang phía client)
   useEffect(() => {
     const getApplication = async () => {
-      const applicationList = await getApplicationsWithJob(company.id);
-      console.log(applicationList);
-      setTotal(applicationList.length);
+      const response = await getMyCompanyApplicationsApi();
+      setTotal(response.data.result?.length || 0);
     };
     getApplication();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Lấy danh sách đơn theo trang hiện tại; re-fetch khi Pagination hoặc update thay đổi
   useEffect(() => {
     const getApplication = async () => {
-      const applicationList = await getApplicationsWithJobPagination(
-        company.id,
-        (Pagination.current - 1) * Pagination.pageSize,
-        Pagination.pageSize,
+      const response = await getMyCompanyApplicationsApi();
+      const applicationList = ((response.data.result ?? []) as ApplicationWithRelations[]).map(
+        (application) => ({
+          id: application.id,
+          // TODO(service-new-migration): ApplicationResponse hien tai co the chua tra relation `job`.
+          // Legacy call: GET `applications?companyId=...&_expand=job`.
+          // Muc dich: hien thi job title va link job trong bang Employer Applications.
+          // Tam thoi map relation neu backend tra ve, nguoc lai UI hien thi `N/A`.
+          job: application.job,
+          fullName: application.fullName,
+          phoneNumber: application.phoneNumber,
+          resumeUrl: application.resumeUrl,
+          coverLetter: application.coverLetter,
+          desiredLocations:
+            application.desiredLocations?.map((city) => city.cityName) ?? [],
+          appliedAt: application.createdAt || application.updatedAt,
+          status: application.status,
+          employerMessage: application.employerMessage,
+        }),
       );
-      console.log(applicationList);
-      setDatasource(applicationList || []);
+      const start = (Pagination.current - 1) * Pagination.pageSize;
+      const end = start + Pagination.pageSize;
+      setTotal(applicationList.length);
+      setDatasource(applicationList.slice(start, end));
     };
     getApplication();
     // eslint-disable-next-line react-hooks/exhaustive-deps

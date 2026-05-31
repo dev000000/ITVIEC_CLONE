@@ -13,23 +13,13 @@ import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
+import { getJobBySlugApi } from "@/services/jobApi";
+import type { JobCardResponse, JobDetailResponse } from "@/types/response.types";
 
-interface JobSelected {
-  requiredSkills: string[];
+type JobSelected = Partial<JobCardResponse & JobDetailResponse> & {
+  requiredSkills?: string[];
   slug: string;
-  title: string;
-  company?: {
-    companyName: string;
-  };
-  salary: string;
-  location: string;
-  jobType: string;
-  postedAt: string;
-  jobReason: string;
-  jobRequirements: string;
-  whyJoinUs: string;
-  jobDescription: string;
-}
+};
 
 interface JobSearchDetailOutletContext {
   jobSelected: JobSelected;
@@ -38,14 +28,38 @@ interface JobSearchDetailOutletContext {
 function JobSearchDetail() {
   const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
   const { t } = useTranslation("shared");
-  const sortedSkills = [...jobSelected.requiredSkills].sort(
-    (a, b) => a.length - b.length
-  );
+  const [jobDetail, setJobDetail] = useState<JobSelected | null>(null);
+  const currentJob = jobDetail || jobSelected;
+  const rawSkills =
+    currentJob.skills?.map((skill) => skill.skillName) ||
+    currentJob.requiredSkills ||
+    [];
+  const sortedSkills = [...rawSkills].sort((a, b) => a.length - b.length);
   const authenticated = useUserStore((state) => state.authenticated);
   const tagListRef = useRef<HTMLDivElement>(null);
   const [visibleTagsCount, setVisibleTagsCount] = useState(
     sortedSkills.length || 0
   );
+
+  useEffect(() => {
+    const fetchJobDetail = async () => {
+      try {
+        if (!jobSelected.slug) {
+          setJobDetail(null);
+          return;
+        }
+
+        const response = await getJobBySlugApi(jobSelected.slug);
+        setJobDetail(response.data.result);
+      } catch (error) {
+        console.error("Error fetching job detail for search panel:", error);
+        setJobDetail(null);
+      }
+    };
+
+    fetchJobDetail();
+  }, [jobSelected.slug]);
+
   useEffect(() => {
     const handleTagOverflow = () => {
       const tagList = tagListRef.current;
@@ -78,20 +92,20 @@ function JobSearchDetail() {
           </div>
           <div className="job-search-detail__head-right">
             <h2 className="job-search-detail__head-name">
-              <a href={`/viec-lam-it/${jobSelected.slug}`} rel="noopener noreferrer" target="_blank">{jobSelected.title || "???"}</a>
+              <a href={`/viec-lam-it/${currentJob.slug}`} rel="noopener noreferrer" target="_blank">{currentJob.title || "???"}</a>
             </h2>
             <Link to="#" className="job-search-detail__head-company">
-              {jobSelected.company?.companyName || "???"}
+              {currentJob.company?.companyName || "???"}
             </Link>
             <div className="job-search-detail__head-salary">
               <ImCoinDollar />
-              <span>{jobSelected.salary || "???"}</span>
+              <span>{currentJob.salary || "???"}</span>
             </div>
           </div>
         </div>
         <div className="card-job-head__wrap-button">
           <Link
-            to={`/viec-lam-it/${jobSelected.slug}/job_applications/new`}
+            to={`/viec-lam-it/${currentJob.slug}/job_applications/new`}
             // target="_blank"
             className="card-job-head__button"
           >
@@ -117,15 +131,15 @@ function JobSearchDetail() {
           <div className="job-search-detail__list-item">
             <div className="job-search-detail__item">
               <IoLocationOutline />
-              <span>{jobSelected.location || "???"}</span>
+              <span>{currentJob.location || "???"}</span>
             </div>
             <div className="job-search-detail__item">
               <MdLocationCity />
-              <span>{jobSelected.jobType || "???"}</span>
+              <span>{currentJob.jobType || "???"}</span>
             </div>
             <div className="job-search-detail__item">
               <GoClock />
-              <span> {getRelativeTime(jobSelected.postedAt)} </span>
+              <span> {getRelativeTime(currentJob.postedAt)} </span>
             </div>
           </div>
           <div className="divide--dashed--small"></div>
@@ -155,28 +169,28 @@ function JobSearchDetail() {
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(jobSelected.jobReason),
+                __html: DOMPurify.sanitize(currentJob.jobReason),
               }}
             />
             <h2>{t("jobSearchDetail.jobDescription")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(jobSelected.jobRequirements),
+                __html: DOMPurify.sanitize(currentJob.jobRequirements),
               }}
             />
             <h2>{t("jobSearchDetail.jobRequirements")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(jobSelected.whyJoinUs),
+                __html: DOMPurify.sanitize(currentJob.whyJoinUs),
               }}
             />
             <h2>{t("jobSearchDetail.whyJoinUs")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(jobSelected.jobDescription),
+                __html: DOMPurify.sanitize(currentJob.jobDescription),
               }}
             />
           </div>

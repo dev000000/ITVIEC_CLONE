@@ -27,7 +27,7 @@ public class SkillController {
 
     private final SkillService skillService;
 
-    // 1.API trả về toàn bộ skill có trong hệ thống, để hiển thị trong select box
+    // 1.API trả về toàn bộ skill có trong hệ thống, để hiển thị trong select box (PUBLIC)
     @GetMapping
     public ApiResponse<List<SkillResponse>> getAllSkills() {
         return ApiResponse.<List<SkillResponse>>builder()
@@ -36,14 +36,7 @@ public class SkillController {
                 .build();
     }
 
-    /**
-     * 2. API cho phép admin thêm skill mới vào hệ thống.
-     * - Chỉ ROLE_ADMIN mới có quyền gọi.
-     * - Validate request body bằng @Valid.
-     *
-     * @param request thông tin skill cần tạo (skillName bắt buộc)
-     * @return ApiResponse chứa SkillResponse vừa tạo
-     */
+    // 2.API cho phép admin tạo mới một skill (PRIVATE)
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<SkillResponse> createSkill(@RequestBody @Valid SkillCreateRequest request) {

@@ -1,5 +1,5 @@
 import type { CompanyModel, CompanySize, Gender, OvertimePolicy, Role, UserStatus, WorkingHours } from "./common.types";
-import type { AuthenticationResponse, CityResponse, CountryResponse, JobCardResponse, SkillResponse } from "./response.types";
+import type { CityResponse, CountryResponse, JobCardResponse, SkillResponse } from "./response.types";
 
 export interface UserState {
   authenticated: boolean;

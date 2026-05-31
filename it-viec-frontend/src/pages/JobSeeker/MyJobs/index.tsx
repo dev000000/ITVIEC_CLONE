@@ -1,13 +1,16 @@
+// Trang quản lý việc làm của Job Seeker
+// Hiển thị 3 tab điều hướng: Đã ứng tuyển / Đã lưu / Xem gần đây
+// Tải toàn bộ đơn ứng tuyển từ API, phân trang và sắp xếp theo ngày ở phía client
+// Truyền dữ liệu xuống tab con qua React Router Outlet context (MyJobsOutletContext)
 import { useEffect, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import "./MyJobs.scss";
 import { NavLink, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import {
-  getApplicationsBySeekerId,
-  getApplicationsBySeekerIdWithPagination,
-} from "@/services/SeekerServices";
+import { getMyApplicationsApi } from "@/services/applicationApi";
+import type { ApplicationResponse, JobDetailResponse } from "@/types/response.types";
 
+// Kiểu dữ liệu cho một đơn ứng tuyển sau khi đã map từ API response
 interface ApplicationItem {
   appliedAt: string;
   job?: { slug?: string; title?: string; salary?: string };
@@ -21,19 +24,23 @@ interface ApplicationItem {
   employerMessage?: string;
 }
 
+// Trạng thái phân trang: trang hiện tại và số item trên mỗi trang
 interface PaginationState {
   current: number;
   pageSize: number;
 }
 
-interface RootState {
-  SeekerReducer: { id: number | string };
-}
+// Mở rộng ApplicationResponse để bao gồm thông tin job liên kết (nếu backend trả về)
+type ApplicationWithRelations = ApplicationResponse & {
+  job?: Pick<JobDetailResponse, "slug" | "title" | "salary" | "company">;
+};
 
+// Context được truyền xuống các Outlet con (AppliedJobs, SavedJobs, RecentlyViewed)
+// thông qua React Router — dùng useOutletContext<MyJobsOutletContext>() để đọc
 export interface MyJobsOutletContext {
   applicationList: ApplicationItem[];
-  setPagination: React.Dispatch<React.SetStateAction<PaginationState>>;
-  setSort: React.Dispatch<React.SetStateAction<string>>;
+  setPagination: Dispatch<SetStateAction<PaginationState>>;
+  setSort: Dispatch<SetStateAction<string>>;
   totalApplications: number;
   pagination: PaginationState;
   sort: string;
@@ -43,7 +50,6 @@ function MyJobs() {
   const [applicationList, setApplicationList] = useState<ApplicationItem[]>([]);
   const [totalApplications, setTotalApplications] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const seeker = useSelector((state: RootState) => state.SeekerReducer);
   const { t } = useTranslation("jobseeker");
   const [pagination, setPagination] = useState<PaginationState>({
     current: 1,
@@ -51,30 +57,41 @@ function MyJobs() {
   });
   const [sort, setSort] = useState("desc");
 
+  // Tải lại danh sách đơn ứng tuyển mỗi khi trang, kích thước trang, hoặc thứ tự sắp xếp thay đổi
+  // Map dữ liệu từ API → ApplicationItem, sắp xếp theo ngày, sau đó cắt theo trang hiện tại
   useEffect(() => {
     const fetchApplications = async () => {
       try {
-        const result = await getApplicationsBySeekerId(seeker.id);
-        setTotalApplications(result.length || 0);
-        console.log("Applications fetched successfully:", result);
-      } catch (error) {
-        console.error("Error fetching applications:", error);
-      }
-    };
-    fetchApplications();
-  }, [seeker.id]);
+        const response = await getMyApplicationsApi();
+        const result = (response.data.result ?? []) as ApplicationWithRelations[];
+        const mappedApplications = result.map((application) => ({
+          appliedAt: application.createdAt || application.updatedAt,
+          // TODO(service-new-migration): ApplicationResponse hien tai co the chua tra relation `job/company`.
+          // Legacy call: GET `applications?seekerId=...&_expand=job&_expand=company`.
+          // Muc dich: hien thi job title, salary, company name trong tab My Jobs.
+          // Tam thoi map relation neu backend tra ve, nguoc lai UI hien thi fallback `???`.
+          job: application.job,
+          company: application.job?.company,
+          fullName: application.fullName,
+          phoneNumber: application.phoneNumber,
+          resumeUrl: application.resumeUrl,
+          coverLetter: application.coverLetter,
+          desiredLocations:
+            application.desiredLocations?.map((city) => city.cityName) ?? [],
+          status: application.status,
+          employerMessage: application.employerMessage,
+        }));
 
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        const result = await getApplicationsBySeekerIdWithPagination({
-          id: seeker.id,
-          start: (pagination.current - 1) * pagination.pageSize,
-          limit: pagination.pageSize,
-          sort: sort,
+        mappedApplications.sort((a, b) => {
+          const timeA = new Date(a.appliedAt).getTime();
+          const timeB = new Date(b.appliedAt).getTime();
+          return sort === "asc" ? timeA - timeB : timeB - timeA;
         });
-        setApplicationList(result || []);
-        console.log("Applications fetched successfully:", result);
+
+        const start = (pagination.current - 1) * pagination.pageSize;
+        const end = start + pagination.pageSize;
+        setTotalApplications(mappedApplications.length);
+        setApplicationList(mappedApplications.slice(start, end));
       } catch (error) {
         console.error("Error fetching applications:", error);
       } finally {
@@ -82,7 +99,7 @@ function MyJobs() {
       }
     };
     fetchApplications();
-  }, [seeker.id, pagination.current, pagination.pageSize, sort]);
+  }, [pagination.current, pagination.pageSize, sort]);
 
   return (
     <div className="my-jobs">

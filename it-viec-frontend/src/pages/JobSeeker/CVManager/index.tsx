@@ -1,4 +1,9 @@
-import { useRef, useState } from "react";
+// Trang quản lý CV của Job Seeker
+// Gồm 2 phần chính:
+//   1. Upload CV file (PDF/Word) và chỉnh sửa thông tin cơ bản (tên, SĐT, địa điểm mong muốn) qua Modal
+//   2. Thông tin chung (cover letter, kỹ năng) — inline-edit trực tiếp cho cover letter
+// Dữ liệu đọc từ Zustand seekerStore; sau khi cập nhật thành công → gọi setSeekerFullInfo
+import { useEffect, useRef, useState } from "react";
 import React from "react";
 import "./CVManager.scss";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,34 +16,30 @@ import { Form, Input } from "antd";
 import { Col, Row, Select } from "antd";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-import { clearSeekerInfo, setSeekerFullInfo } from "@/actions/Seeker";
-import { updateSeekerInfor } from "@/services/SeekerServices";
-import { isObjectEmpty } from "@/helpers/checkObject";
+import { updateMyProfileApi } from "@/services/seekerApi";
+import { getAllCitiesApi } from "@/services/cityApi";
+import { useSeekerStore } from "@/store/seekerStore";
+import {
+  findCityRef,
+  findCityRefs,
+  toEntityRef,
+} from "@/utils/apiPayloadMappers";
 import { clearStorage } from "@/helpers/localStorage";
 import { useTranslation } from "react-i18next";
+import type { CityResponse } from "@/types/response.types";
 
-interface LegacySeekerState {
-  id: number;
-  fullName: string;
-  phoneNumber: string;
-  coverLetter: string;
-  desiredLocations: string[];
-}
-
-interface LegacyRootState {
-  SeekerReducer: LegacySeekerState;
-}
-
+// Kiểu dữ liệu form thông tin cá nhân trong modal chỉnh sửa
 interface CVManagerFormValues {
   fullName: string;
   phoneNumber: string;
   desiredLocations: string[];
 }
 
+// Kiểu dữ liệu form chỉnh sửa cover letter (giới thiệu bản thân)
 interface CoverLetterFormValues {
   coverLetter: string;
 }
+// Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
     top: "50%",
@@ -51,6 +52,7 @@ const customStyles = {
     overflow: "hidden",
   },
 };
+// Số lượng tối đa địa điểm mong muốn mà seeker có thể chọn
 const maxCountCity = 3;
 function CVManager() {
   const [form] = Form.useForm();
@@ -58,14 +60,20 @@ function CVManager() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [userId] = useState(localStorage.getItem("id") || "");
   const [isEditing, setIsEditing] = useState(false);
-  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
+  const seeker = useSeekerStore();
+  const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
+  const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const [coverLetter, setCoverLetter] = useState(seeker.coverLetter || "");
-  const [value, setValue] = useState<string[]>(seeker.desiredLocations || []);
+  const [value, setValue] = useState<string[]>(
+    seeker.desiredLocations?.map((city) => city.cityName) || [],
+  );
+  const [cities, setCities] = useState<CityResponse[]>([]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const { t } = useTranslation("jobseeker");
 
   const originalCoverLetter = useRef("");
+  // Toggle chế độ chỉnh sửa cover letter
+  // Khi bắt đầu chỉnh sửa → lưu giá trị gốc vào ref để có thể khôi phục khi huỷ
   const handleEditCoverLetter = () => {
     if (!isEditing) {
       originalCoverLetter.current = seeker.coverLetter || "";
@@ -76,6 +84,7 @@ function CVManager() {
     }
     setIsEditing(!isEditing);
   };
+  // Huỷ chỉnh sửa cover letter → khôi phục lại giá trị gốc đã lưu trước đó
   const handleCancelCoverLetter = () => {
     setCoverLetter(originalCoverLetter.current);
     coverLetterForm.setFieldsValue({
@@ -84,15 +93,18 @@ function CVManager() {
     setIsEditing(false);
   };
 
+  // Đóng modal chỉnh sửa thông tin cá nhân
   const closeModal = () => {
     setIsOpen(false);
   };
+  // Mở modal và điền sẵn dữ liệu seeker hiện tại vào form
   const openModal = () => {
     setIsOpen(true);
     form.setFieldsValue({
       fullName: seeker.fullName || "",
       phoneNumber: seeker.phoneNumber || "",
-      desiredLocations: seeker.desiredLocations || [],
+      desiredLocations:
+        seeker.desiredLocations?.map((city) => city.cityName) || [],
     });
   };
   const onClick = () => {
@@ -101,17 +113,62 @@ function CVManager() {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+
+  // Tạo payload chuẩn để gọi updateMyProfileApi
+  // Merge giá trị từ form (values) với dữ liệu seeker hiện có trong store (fallback)
+  const buildSeekerUpdatePayload = (
+    values: Partial<CVManagerFormValues & CoverLetterFormValues>,
+  ) => ({
+    fullName: values.fullName ?? seeker.fullName ?? "",
+    jobTitle: seeker.jobTitle ?? "",
+    phoneNumber: values.phoneNumber ?? seeker.phoneNumber ?? "",
+    dateOfBirth: seeker.dateOfBirth ?? "1999-01-01",
+    gender: seeker.gender ?? "OTHERS",
+    city: findCityRef(seeker.city?.id, cities, seeker.city),
+    address: seeker.address ?? "",
+    personalLink: seeker.personalLink ?? "",
+    coverLetter: values.coverLetter ?? seeker.coverLetter ?? "",
+    skills: seeker.skills
+      .map((skill) => toEntityRef(skill.id))
+      .filter((skill): skill is { id: number | string } => Boolean(skill)),
+    desiredLocations: findCityRefs(
+      values.desiredLocations ??
+      seeker.desiredLocations?.map((city) => city.cityName) ??
+      [],
+      cities,
+    ),
+  });
+
+  // Tải danh sách tất cả thành phố khi component mount
+  // Dùng để map tên thành phố → id khi gọi API cập nhật
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const response = await getAllCitiesApi();
+        setCities(response.data.result ?? []);
+      } catch (error) {
+        console.error("Error fetching city options:", error);
+      }
+    };
+
+    loadCities();
+  }, []);
+
+  // Submit form thông tin cá nhân (tên, SĐT, địa điểm mong muốn)
+  // Kiểm tra xem user có thay đổi tài khoản không → nếu có thì logout và chuyển về login
+  // Gọi API cập nhật → cập nhật store, hiển thị thông báo, đóng modal
   const onFinish = async (values: CVManagerFormValues) => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
       clearStorage();
-      dispatch(clearSeekerInfo());
+      clearSeekerInfo();
       navigate("/login");
       return;
     }
     try {
-      const result = await updateSeekerInfor(seeker.id, values);
-      dispatch(setSeekerFullInfo(result));
+      const response = await updateMyProfileApi(buildSeekerUpdatePayload(values));
+      const result = response.data.result;
+      setSeekerFullInfo(result);
       setCoverLetter(result.coverLetter || "");
       Swal.fire({
         title: t("cvManager.success.updateProfile"),
@@ -129,26 +186,26 @@ function CVManager() {
       });
     }
   };
+  // Submit form cover letter — tương tự onFinish nhưng chỉ cập nhật trường coverLetter
   const onFinish2 = async (values: CoverLetterFormValues) => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
       clearStorage();
-      dispatch(clearSeekerInfo());
+      clearSeekerInfo();
       navigate("/login");
       return;
     }
     try {
-      const result = await updateSeekerInfor(seeker.id, values);
+      const response = await updateMyProfileApi(buildSeekerUpdatePayload(values));
+      const result = response.data.result;
       console.log("Update cover letter result:", result);
-      dispatch(setSeekerFullInfo(result));
+      setSeekerFullInfo(result);
       setCoverLetter(result.coverLetter || "");
-      if (!isObjectEmpty(result)) {
-        Swal.fire({
-          title: t("cvManager.success.updateLetter"),
-          icon: "success",
-          draggable: true,
-        });
-      }
+      Swal.fire({
+        title: t("cvManager.success.updateLetter"),
+        icon: "success",
+        draggable: true,
+      });
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating cover letter:", error);
@@ -159,6 +216,8 @@ function CVManager() {
       });
     }
   };
+  // Trả về class CSS phù hợp:
+  // Nếu đã có dữ liệu → class bình thường; chưa điền → class mờ (--default)
   const getFieldsClassName = (value: unknown) => {
     return value
       ? `cv-manager__content`
@@ -349,7 +408,7 @@ function CVManager() {
                   span={16}
                 >
                   {seeker.desiredLocations && seeker.desiredLocations.length > 0
-                    ? seeker.desiredLocations.join(", ")
+                    ? seeker.desiredLocations.map((city) => city.cityName).join(", ")
                     : t("cvManager.notUpdated")}
                 </Col>
               </Row>

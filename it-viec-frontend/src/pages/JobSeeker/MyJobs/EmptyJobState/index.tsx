@@ -1,3 +1,5 @@
+// Component dùng chung để hiển thị trạng thái trống cho các tab trong MyJobs
+// (AppliedJobs, SavedJobs, RecentlyViewed)
 import "./EmptyJobState.scss";
 import { Link } from "react-router-dom";
 import { ImNotification } from "react-icons/im";
@@ -5,6 +7,12 @@ import jobEmptyImg from "../../../../assets/images/job-empty.svg";
 import { Select } from "antd";
 import { useTranslation } from "react-i18next";
 
+// Props:
+//   notificationText  — dòng thông báo nhỏ phía trên (ví dụ: "Đơn đã nộp không thể rút lại")
+//   emptyMessage      — dòng chữ khi không có dữ liệu
+//   buttonText        — nhãn nút CTA (ví dụ: "Tìm việc ngay")
+//   buttonLink        — đường dẫn nút CTA (mặc định "/")
+//   showNotification  — true = hiện phần thông báo + dropdown sắp xếp (mặc định true)
 interface EmptyJobStateProps {
   notificationText?: string;
   emptyMessage?: string;

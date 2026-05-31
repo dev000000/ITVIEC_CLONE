@@ -1,3 +1,8 @@
+// Trang đăng ký tài khoản mới cho Job Seeker
+// Gồm: form họ tên / email / mật khẩu, kiểm tra độ mạnh mật khẩu real-time,
+// checkbox đồng ý điều khoản, nút đăng ký Google (UI chưa kết nối),
+// link chuyển sang trang đăng nhập
+// Sau khi đăng ký thành công → chuyển về trang đăng nhập
 import { Link } from "react-router-dom";
 import logo from "@/assets/images/logo_nhieuviec4.png";
 import "./Register.scss";
@@ -9,15 +14,17 @@ import ButtonSubmit from "@/components/Button";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import { registerSeekerApi } from "@/services_new/authApi";
+import { registerSeekerApi } from "@/services/authApi";
 import { useTranslation } from "react-i18next";
 
+// Kiểu dữ liệu form đăng ký tài khoản
 interface RegisterFormValues {
   fullName: string;
   email: string;
   password: string;
 }
 
+// Kiểu dữ liệu cho một quy tắc kiểm tra mật khẩu
 interface PasswordRule {
   key: string;
   text: string;
@@ -40,6 +47,8 @@ function Register() {
     }
   };
 
+  // Danh sách 5 quy tắc kiểm tra độ mạnh mật khẩu
+  // Mỗi quy tắc có: key (định danh), text (nội dung hiển thị), regex (pattern kiểm tra)
   const passwordRules: PasswordRule[] = [
     { key: "length", text: t("register.passwordRules.length"), regex: /.{12,}/ },
     {
@@ -52,6 +61,8 @@ function Register() {
     { key: "lowercase", text: t("register.passwordRules.lowercase"), regex: /[a-z]/ },
   ];
 
+  // Kiểm tra mật khẩu real-time theo từng quy tắc
+  // Cập nhật state `validate` → UI hiển thị tick xanh/đỏ cho từng điều kiện
   const validationPassword = (values: string) => {
     const newValidate = passwordRules.reduce<Record<string, boolean>>(
       (acc, rule) => {
@@ -63,6 +74,9 @@ function Register() {
     setValidate(newValidate);
   };
 
+  // Xử lý submit form đăng ký:
+  // Gọi registerSeekerApi → hiển thị thông báo thành công → chuyển về trang đăng nhập
+  // Thất bại → lấy message + code lỗi từ response rồi hiển thị Swal
   const onFinish = async (values: RegisterFormValues) => {
     try {
       await registerSeekerApi({

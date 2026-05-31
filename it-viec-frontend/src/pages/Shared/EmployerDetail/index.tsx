@@ -5,7 +5,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import TopJobItemHome from "@/components/TopJobItemHome";
-import { getCompanyBySlugApi } from "@/services_new/companyApi";
+import { getCompanyBySlugApi } from "@/services/companyApi";
 import type { CompanyDetailResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 

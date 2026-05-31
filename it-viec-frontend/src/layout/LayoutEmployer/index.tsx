@@ -6,7 +6,7 @@ import FooterComp from "@/components/Footer";
 
 const { Content } = Layout;
 
-function LayoutEmployer(): JSX.Element {
+function LayoutEmployer() {
   return (
     <>
       <Layout className="layout-default">

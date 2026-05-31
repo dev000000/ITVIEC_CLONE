@@ -1,3 +1,5 @@
+// Trang Dashboard tổng quan của Employer
+// Hiện tại chỉ hiển thị tiêu đề chào mừng, chưa có widget hay số liệu thống kê
 import "./EmpoyerDashBoard.scss";
 import EmployerStart from "@/components/EmployerStart";
 import { useTranslation } from "react-i18next";

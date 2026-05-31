@@ -2,7 +2,8 @@ import { Outlet, useNavigate } from "react-router-dom";
 import "./LayoutCustomer.scss";
 import { useEffect, useState } from "react";
 import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
-import { getCompanyWithJobsByUserID } from "@/services/EmployerServices";
+import { logoutApi } from "@/services/authApi";
+import { getMyCompanyApi } from "@/services/companyApi";
 import MenuItem from "@/components/SiderBar/MenuItem";
 import { FiPieChart } from "react-icons/fi";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
@@ -11,54 +12,36 @@ import { HiOutlineDocument } from "react-icons/hi2";
 import { IoIosLogOut } from "react-icons/io";
 import { clearStorage } from "@/helpers/localStorage";
 import Swal from "sweetalert2";
-import { useDispatch, useSelector } from "react-redux";
-import { setLogin } from "@/actions/User";
-import { clearCompanyInfo, setCompanyFullInfo } from "@/actions/Company";
+import { useUserStore } from "@/store/userStore";
+import { useCompanyStore } from "@/store/companyStore";
 import { CgProfile } from "react-icons/cg";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-interface CompanyState {
-  id?: number;
-  userId?: string;
-  name?: string;
-}
-
-function LayoutCustomer(): JSX.Element {
+function LayoutCustomer() {
   const { t } = useTranslation("common");
-  const company = useSelector((state: any) => state.CompanyReducer) as CompanyState;
-  const dispatch = useDispatch();
+  const logout = useUserStore((state) => state.logout);
+  const setCompanyFullInfo = useCompanyStore((state) => state.setCompanyFullInfo);
+  const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
   const [isLoadingCompany, setIsLoadingCompany] = useState(false);
-  const userId = localStorage.getItem("id");
   const navigate = useNavigate();
 
   useEffect(() => {
     const getCompanyInfo = async (): Promise<void> => {
       try {
-        const companyInfor = await getCompanyWithJobsByUserID(userId);
-        if (companyInfor.length > 0 && companyInfor[0].userId === userId) {
-          dispatch(setCompanyFullInfo(companyInfor[0]));
-          setIsLoadingCompany(true);
-        } else {
-          dispatch(
-            setLogin({
-              id: 0,
-              ok: false,
-              userType: "none",
-            })
-          );
-          clearStorage();
-          navigate("/");
-        }
+        const response = await getMyCompanyApi();
+        setCompanyFullInfo(response.data.result);
+        setIsLoadingCompany(true);
       } catch (error) {
         console.error("Failed to load company information", error);
+        logout();
+        clearCompanyInfo();
         clearStorage();
         navigate("/");
       }
     };
     getCompanyInfo();
-  }, [dispatch, navigate, userId]);
-
-  console.log("company", company);
+  }, [clearCompanyInfo, logout, navigate, setCompanyFullInfo]);
 
   const handleLogout = (): void => {
     Swal.fire({
@@ -68,16 +51,11 @@ function LayoutCustomer(): JSX.Element {
       confirmButtonColor: "#d33",
       confirmButtonText: t("layout.logoutButton"),
       cancelButtonText: t("buttons.cancel"),
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
-        dispatch(
-          setLogin({
-            id: 0,
-            ok: false,
-            userType: "none",
-          })
-        );
-        dispatch(clearCompanyInfo());
+        await logoutApi();
+        logout();
+        clearCompanyInfo();
         clearStorage();
         navigate("/");
         Swal.fire({
@@ -133,6 +111,7 @@ function LayoutCustomer(): JSX.Element {
               </ul>
             </div>
             <div className="layout-customer__siderbar-button">
+              <LanguageSwitcher />
               <button onClick={handleLogout}>
                 <IoIosLogOut />
                 <span>{t("menu.logout")}</span>

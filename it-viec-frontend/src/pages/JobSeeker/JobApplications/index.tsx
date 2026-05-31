@@ -1,3 +1,10 @@
+// Trang form ứng tuyển việc làm
+// Flow:
+//   1. Đọc slug từ URL → gọi API kiểm tra job có tồn tại không
+//   2. Nếu seeker chưa được load → gọi API lấy profile seeker
+//   3. Pre-fill form bằng dữ liệu seeker (tên, SĐT, địa điểm, cover letter)
+//   4. Submit → gọi applyToJobApi, hiển thị thông báo thành công rồi redirect về trang chủ
+// Nếu job không hợp lệ hoặc slug không tìm thấy → redirect về "/"
 import { useEffect, useState } from "react";
 import "./JobApplications.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -6,66 +13,61 @@ import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
 import { Form, Input, Select } from "antd";
 import ButtonSubmit from "@/components/Button";
 import { VIETNAM_CITIES } from "@/constants";
-import { useSelector } from "react-redux";
-import {
-  checkApplicationExist,
-  getJobDetailBySlug,
-  getSeekerInforByUserId,
-  postApplication,
-} from "@/services/SeekerServices";
+import { getJobBySlugApi } from "@/services/jobApi";
+import { getMyProfileApi } from "@/services/seekerApi";
+import { applyToJobApi } from "@/services/applicationApi";
+import { getAllCitiesApi } from "@/services/cityApi";
 import Swal from "sweetalert2";
-import { setSeekerFullInfo } from "@/actions/Seeker";
-import { useDispatch } from "react-redux";
-import dayjs from "dayjs";
-import { isObjectEmpty } from "@/helpers/checkObject";
+import { useSeekerStore } from "@/store/seekerStore";
+import { useUserStore } from "@/store/userStore";
+import { findCityRefs } from "@/utils/apiPayloadMappers";
+import type { CityResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 
-interface LegacySeekerState {
-  id: number;
-  userId: number;
-  fullName: string;
-  phoneNumber: string;
-  coverLetter: string;
-  desiredLocations: string[];
-  resumeUrl: string;
-  isLoaded: boolean;
-}
-
-interface LegacyUserState {
-  id: number | null;
-  ok: boolean;
-  userType: string;
-}
-
-interface LegacyRootState {
-  SeekerReducer: LegacySeekerState;
-  UserReducer: LegacyUserState;
-}
-
+// Kiểu dữ liệu form ứng tuyển việc làm
 interface JobApplicationFormValues {
   fullName: string;
   phoneNumber: string;
   desiredLocations: string[];
   coverLetter: string;
 }
+// Số lượng tối đa địa điểm mong muốn có thể chọn
 const maxCountCity = 3;
 function JobApplications() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { slug } = useParams();
-  const seeker = useSelector((state: LegacyRootState) => state.SeekerReducer);
-  const isLogin = useSelector((state: LegacyRootState) => state.UserReducer);
-  const dispatch = useDispatch();
+  const seeker = useSeekerStore();
+  const authenticated = useUserStore((state) => state.authenticated);
+  const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
   const { t } = useTranslation("jobseeker");
   const [desiredLocations, setDesiredLocations] = useState<string[]>(
-    seeker.desiredLocations || [],
+    seeker.desiredLocations?.map((city) => city.cityName) || [],
   );
   const [coverLetter, setCoverLetter] = useState<string>(seeker.coverLetter || "");
   const [jobId, setJobId] = useState<number | null>(null);
   const [jobTitle, setJobTitle] = useState<string>("");
-  const [companyId, setCompanyId] = useState<number>(0);
   const [isValidJob, setIsValidJob] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [cities, setCities] = useState<CityResponse[]>([]);
+
+  // Tải danh sách tất cả thành phố khi component mount
+  // Dùng để map tên thành phố → id khi gọi applyToJobApi
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const response = await getAllCitiesApi();
+        setCities(response.data.result ?? []);
+      } catch (error) {
+        console.error("Error fetching city options:", error);
+      }
+    };
+
+    loadCities();
+  }, []);
+
+  // Kiểm tra job slug có hợp lệ không ngay khi trang load
+  // Nếu job không tồn tại → hiển thị lỗi và redirect về trang chủ
   useEffect(() => {
     const validateJobSlug = async () => {
       try {
@@ -73,24 +75,12 @@ function JobApplications() {
           navigate("/");
           return;
         }
-        const slugParts = slug.split("-");
-        const extractedJobId = slugParts[slugParts.length - 1];
-        if (!extractedJobId || isNaN(extractedJobId)) {
-          Swal.fire({
-            icon: "error",
-            title: "Invalid Job",
-            text: t("jobApplications.invalidJobId"),
-          });
-          navigate("/");
-          return;
-        }
-        const jobDetails = await getJobDetailBySlug(slug);
-        console.log("Job Details:", jobDetails);
-        if (jobDetails && jobDetails.length > 0) {
-          setJobId(parseInt(extractedJobId));
-          setJobTitle(jobDetails[0].title || "");
+        const response = await getJobBySlugApi(slug);
+        const jobDetails = response.data.result;
+        if (jobDetails?.id) {
+          setJobId(jobDetails.id);
+          setJobTitle(jobDetails.title || "");
           setIsValidJob(true);
-          setCompanyId(jobDetails[0].companyId || 0);
         } else {
           Swal.fire({
             icon: "error",
@@ -113,15 +103,16 @@ function JobApplications() {
       }
     };
     validateJobSlug();
-  }, [slug, navigate]);
+  }, [slug, navigate, t]);
+
+  // Tải thông tin seeker từ API nếu chưa có trong store (isLoaded = false)
+  // Chỉ chạy sau khi đã xác nhận job hợp lệ (isLoading = false) và user đã đăng nhập
   useEffect(() => {
     const loadSeekerInfo = async () => {
-      if (!seeker.isLoaded || seeker.userId != isLogin.id) {
+      if (!seeker.isLoaded) {
         try {
-          const seekerInfo = await getSeekerInforByUserId(isLogin.id);
-          if (seekerInfo && seekerInfo.length > 0) {
-            dispatch(setSeekerFullInfo(seekerInfo[0]));
-          }
+          const response = await getMyProfileApi();
+          setSeekerFullInfo(response.data.result);
         } catch (error) {
           console.error("Error fetching seeker info:", error);
           Swal.fire({
@@ -132,27 +123,36 @@ function JobApplications() {
         }
       }
     };
-    if (isLogin.id && !isLoading) {
+    if (authenticated && !isLoading) {
       loadSeekerInfo();
     }
-  }, [isLogin.id, isLoading, dispatch]);
+  }, [authenticated, isLoading, seeker.isLoaded, setSeekerFullInfo, t]);
+
+  // Khi seeker đã load xong → điền sẵn dữ liệu cá nhân vào form ứng tuyển
   useEffect(() => {
     if (seeker.isLoaded) {
       const formData = {
         fullName: seeker.fullName || "",
         phoneNumber: seeker.phoneNumber || "",
-        desiredLocations: seeker.desiredLocations || [],
+        desiredLocations:
+          seeker.desiredLocations?.map((city) => city.cityName) || [],
         coverLetter: seeker.coverLetter || "",
       };
 
       form.setFieldsValue(formData);
-      setDesiredLocations(seeker.desiredLocations || []);
+      setDesiredLocations(
+        seeker.desiredLocations?.map((city) => city.cityName) || [],
+      );
       setCoverLetter(seeker.coverLetter || "");
     }
-  }, [seeker.isLoaded, form]);
+  }, [seeker, form]);
   const onFinishFailed = () => {
     console.log("Failed");
   };
+  // Submit đơn ứng tuyển:
+  // Kiểm tra jobId hợp lệ → gọi applyToJobApi với dữ liệu form
+  // Thành công → hiển thị thông báo và redirect về trang chủ
+  // Thất bại → hiển thị lỗi Swal
   const onFinish = async (values: JobApplicationFormValues) => {
     if (!jobId || !isValidJob) {
       Swal.fire({
@@ -163,50 +163,25 @@ function JobApplications() {
       return;
     }
     try {
-      const checkApplication = await checkApplicationExist({
-        seekerId: seeker.id,
-        jobId: jobId,
-      });
-      if (checkApplication && checkApplication.length > 0) {
-        Swal.fire({
-          icon: "warning",
-          title: t("jobApplications.alreadyAppliedTitle"),
-          text: t("jobApplications.alreadyApplied"),
-        });
-        return;
-      }
+      // TODO(service-new-migration): Chua co service_new thay the cho legacy API `checkApplicationExist`.
+      // Legacy call: GET `applications?jobId=...&seekerId=...`.
+      // Muc dich: chan seeker nop trung don ung tuyen cho cung mot job.
+      // Tam thoi bo qua pre-check va de backend xu ly trung lap neu co rule tuong ung.
       const applicationData = {
-        seekerId: seeker.id,
-        jobId: jobId,
-        companyId: companyId || 0,
         fullName: values.fullName,
         phoneNumber: values.phoneNumber,
-        resumeUrl: seeker.resumeUrl || "",
         coverLetter: values.coverLetter || "",
-        desiredLocations: values.desiredLocations || [],
-        appliedAt: dayjs().toISOString(),
-        status: "Pending",
-        employerMessage: "",
+        desiredLocations: findCityRefs(values.desiredLocations, cities),
       };
-      const applicationResult = await postApplication(applicationData);
-      console.log("Application Result:", applicationResult);
-      if (!isObjectEmpty(applicationResult)) {
-        Swal.fire({
-          title: t("jobApplications.successTitle"),
-          text: t("jobApplications.successText"),
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-          navigate("/");
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: t("jobApplications.submitFailed"),
-        });
-        return;
-      }
+      await applyToJobApi(jobId, applicationData);
+      Swal.fire({
+        title: t("jobApplications.successTitle"),
+        text: t("jobApplications.successText"),
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        navigate("/");
+      });
     } catch (error) {
       console.error("Error submitting application:", error);
       Swal.fire({
@@ -236,6 +211,7 @@ function JobApplications() {
           <div className="icontainer-sm">
             <div className="job-applications__header">
               <Link
+                to="#"
                 className="job-applications__header-back"
                 onClick={() => {
                   navigate(-1);
@@ -272,7 +248,6 @@ function JobApplications() {
                     {
                       required: true,
                       message: "Please input yourname!",
-                      valueType: "text",
                     },
                   ]}
                 >
@@ -290,12 +265,10 @@ function JobApplications() {
                     {
                       required: true,
                       message: "Please input phonenumber!",
-                      valueType: "number",
                       pattern: /^[0-9]+$/,
                     },
                     {
                       message: "Please input number!",
-                      valueType: "number",
                       pattern: /^[0-9]+$/,
                     },
                   ]}

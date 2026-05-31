@@ -35,8 +35,15 @@
       position: absolute;
       bottom: 20px;
       display: flex;
-      justify-content: center;
-      button {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      .language-switcher__btn {
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+      > button {
         cursor: pointer;
         padding: 5px 12px;
         border-radius: 5px;
@@ -54,7 +61,7 @@
     }
   }
   &__maincontent {
-    background-color: #F9FAFB;
+    background-color: #f9fafb;
     flex: 1;
     min-height: 100vh;
     overflow-y: scroll;
@@ -89,7 +96,6 @@
       }
     }
     &__maincontent {
-
     }
   }
   @media (width <= 1024px) {

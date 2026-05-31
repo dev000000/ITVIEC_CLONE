@@ -1,9 +1,12 @@
+// Tab "Việc đã xem gần đây" trong trang MyJobs
+// Hiện tại jobList luôn rỗng (chưa có API theo dõi lịch sử xem) → luôn hiển thị EmptyJobState
 import { useState } from "react";
 import "./RecentlyViewed.scss";
 import EmptyJobState from "../EmptyJobState";
 import { useTranslation } from "react-i18next";
 
 function RecentlyViewed() {
+  // jobList: danh sách việc làm đã xem — hiện luôn rỗng, chờ tích hợp API tracking lịch sử
   const [jobList, _setJobList] = useState<unknown[]>([]);
   const { t } = useTranslation("jobseeker");
 

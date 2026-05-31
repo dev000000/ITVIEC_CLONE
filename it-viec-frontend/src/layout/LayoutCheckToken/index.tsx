@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import "./LayoutCheckToken.scss";
 import type { Role } from "@/types/common.types";
-import { getMeApi } from "@/services_new/authApi";
+import { getMeApi } from "@/services/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useTranslation } from "react-i18next";
 

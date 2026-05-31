@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 interface Job {
   postedAt?: string;
   requiredSkills?: string[];
+  skills?: { id?: number | string; skillName: string }[];
   location?: string;
   jobType?: string;
 }
@@ -22,7 +23,8 @@ interface CardJobShowInforProps {
 function CardJobShowInfor({ job }: CardJobShowInforProps) {
   job = job || {};
   const postedTime = getRelativeTime(job.postedAt);
-  const skillList = job.requiredSkills || [];
+  const skillList =
+    job.skills?.map((skill) => skill.skillName) || job.requiredSkills || [];
   const { t } = useTranslation("shared");
   return (
     <div className="card-job-showinfor">

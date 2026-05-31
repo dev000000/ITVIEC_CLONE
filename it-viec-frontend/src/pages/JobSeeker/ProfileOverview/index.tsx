@@ -1,3 +1,7 @@
+// Trang tổng quan hồ sơ của Job Seeker
+// Hiển thị: avatar, họ tên, chức danh, email, CV đính kèm,
+// và 3 ô thống kê hoạt động (Đã ứng tuyển / Đã lưu / Lời mời việc làm)
+// Dữ liệu đọc từ Zustand store — không gọi API trực tiếp tại trang này
 import "./ProfileOverview.scss";
 import { MdMailOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
@@ -130,7 +134,10 @@ function ProfileOverview() {
               </Link>
             </Col>
             <Col xxl={8} xl={8} lg={8} md={8} sm={24} xs={24}>
-              <Link className="profile-overview__activity-item profile-overview__activity-item--green">
+              <Link
+                to="/loi-moi-viec-lam"
+                className="profile-overview__activity-item profile-overview__activity-item--green"
+              >
                 <h3 className="profile-overview__activity-title">
                   {t("profileOverview.jobInvitations")}
                 </h3>

@@ -3,22 +3,13 @@ import { Button, Col, Form, Input, Row, Select } from "antd";
 import "./JobSearch.scss";
 import { FiSearch } from "react-icons/fi";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
-import { getJobsSearch } from "@/services/Shared";
-import TopJobItem from "@/components/TopJobItemHome";
+import { getAllJobsApi } from "@/services/jobApi";
 import imgNoJob from "@/assets/images/robby-oops.svg";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import { VIETNAM_CITIES } from "@/constants";
 import TopJobItemHome from "@/components/TopJobItemHome";
 import { useTranslation } from "react-i18next";
-
-interface JobItem {
-  id: number | string;
-  slug: string;
-  company: {
-    companyName: string;
-    slug: string;
-  };
-}
+import type { JobCardResponse } from "@/types/response.types";
 
 interface JobSearchProps {
   keyword?: string;
@@ -40,8 +31,8 @@ function JobSearch({ keyword, city }: JobSearchProps) {
   const { t } = useTranslation("shared");
   const [searchParams] = useSearchParams();
   const jobSelectedSlug = searchParams.get("job_selected");
-  const [listJob, setListJob] = useState<JobItem[]>([]);
-  const [jobSelected, setJobSelected] = useState<JobItem | Record<string, never>>({});
+  const [listJob, setListJob] = useState<JobCardResponse[]>([]);
+  const [jobSelected, setJobSelected] = useState<JobCardResponse | Record<string, never>>({});
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 1199;
   const [form] = Form.useForm();
@@ -52,8 +43,26 @@ function JobSearch({ keyword, city }: JobSearchProps) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result: JobItem[] = await getJobsSearch({ keyword: keyword, city: city });
-        console.log(result);
+        // TODO(service-new-migration): Chua co service_new thay the cho legacy API `getJobsSearch`.
+        // Legacy call: GET `jobs?status=Active&_expand=company&title_like=...&city_like=...`.
+        // Muc dich: tim job active theo keyword/city cho trang JobSearch.
+        // Tam thoi lay danh sach job active tu service_new roi filter client-side de khong phu thuoc `src/services`.
+        const response = await getAllJobsApi(0, 100);
+        const jobs = response.data.result.data ?? [];
+        const normalizedKeyword = keyword.trim().toLowerCase();
+        const normalizedCity = (city || "").trim().toLowerCase();
+        const result = jobs.filter((job) => {
+          const matchKeyword =
+            !normalizedKeyword ||
+            job.title.toLowerCase().includes(normalizedKeyword);
+          const matchCity =
+            !normalizedCity ||
+            normalizedCity === "all" ||
+            job.city?.cityName.toLowerCase().includes(normalizedCity);
+
+          return matchKeyword && matchCity;
+        });
+
         setListJob(result || []);
         if (result && result.length > 0) {
           const selectedJob = result.find(
@@ -199,10 +208,6 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                             <TopJobItemHome
                               job={job}
                               key={job.id}
-                              companyInfoAdd={{
-                                companyName: job.company.companyName,
-                                slug: job.company.slug,
-                              }}
                             />
                           ) : (
                             <div
@@ -219,10 +224,6 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                             >
                               <TopJobItemHome
                                 job={job}
-                                companyInfoAdd={{
-                                  companyName: job.company.companyName,
-                                  slug: job.company.slug,
-                                }}
                               />
                             </div>
                           ),
