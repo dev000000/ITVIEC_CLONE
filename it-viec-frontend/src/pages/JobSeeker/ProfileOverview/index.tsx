@@ -1,3 +1,7 @@
+// Trang tổng quan hồ sơ của Job Seeker
+// Hiển thị: avatar, họ tên, chức danh, email, CV đính kèm,
+// và 3 ô thống kê hoạt động (Đã ứng tuyển / Đã lưu / Lời mời việc làm)
+// Dữ liệu đọc từ Zustand store — không gọi API trực tiếp tại trang này
 import "./ProfileOverview.scss";
 import { MdMailOutline } from "react-icons/md";
 import { Link } from "react-router-dom";

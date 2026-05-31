@@ -1,3 +1,7 @@
+// Trang đăng nhập dành cho Job Seeker
+// Gồm: form email/mật khẩu, nút đăng nhập Google (UI chưa kết nối),
+// link sang trang đăng ký, và danh sách lợi ích khi tạo tài khoản
+// Sau khi đăng nhập thành công → lưu thông tin user+seeker vào Zustand store, chuyển về trang chủ
 import { Col, Form, Row, Input } from "antd";
 import { IoMdCheckmark } from "react-icons/io";
 import "./Login.scss";
@@ -21,6 +25,10 @@ function Login() {
   const setLogin = useUserStore((state) => state.setLogin);
   const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
 
+  // Xử lý submit form đăng nhập:
+  // 1. Gọi loginApi → lưu thông tin user (role, email, id...) vào userStore
+  // 2. Gọi getMyProfileApi → lưu đầy đủ hồ sơ seeker vào seekerStore
+  // 3. Hiển thị thông báo thành công → redirect về trang chủ
   const onFinish = async (values: AuthenticationRequest) => {
     try {
       const { data: apiData } = await loginApi(values);

@@ -1,3 +1,6 @@
+// Trang cài đặt tài khoản Job Seeker
+// Cho phép thay đổi mật khẩu, tuỳ chỉnh cài đặt thông báo, v.v.
+// Hiện tại là placeholder — chưa triển khai nội dung
 import "./Settings.scss";
 import { useTranslation } from "react-i18next";
 

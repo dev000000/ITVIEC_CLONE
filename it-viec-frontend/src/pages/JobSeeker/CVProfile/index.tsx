@@ -1,3 +1,8 @@
+// Trang hồ sơ CV đầy đủ của Job Seeker
+// Hiển thị: avatar, tên, chức danh, liên hệ (email, SDD, ngày sinh, giới tính, địa chỉ, link cá nhân)
+// Các section có thể thêm (chưa triển khai): Giới thiệu, Học vấn, Kinh nghiệm, Kỹ năng, Dự án, Chứng chỉ, Giải thưởng
+// Chỉnh sửa thông tin cá nhân qua Modal (Ant Design Form + DatePicker)
+// Dữ liệu từ Zustand: useSeekerStore (thông tin seeker) + useUserStore (email)
 import { useEffect, useState } from "react";
 import "./CVProfile.scss";
 import { FaRegEdit } from "react-icons/fa";
@@ -37,6 +42,7 @@ import {
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
 
+// Kiểu dữ liệu form chỉnh sửa thông tin cá nhân trong modal
 interface CVProfileFormValues {
   fullName: string;
   jobTitle: string;
@@ -49,7 +55,9 @@ interface CVProfileFormValues {
   personalLink: string;
 }
 
+// Định dạng ngày tháng hiển thị trong DatePicker
 const dateFormat = "DD/MM/YYYY";
+// Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
     top: "50%",
@@ -71,6 +79,8 @@ function CVProfile() {
   const [form] = Form.useForm();
   const { t } = useTranslation("jobseeker");
 
+  // Tải danh sách tất cả thành phố khi component mount
+  // Dùng cho Select dropdown "Địa điểm hiện tại" và map id khi gọi API cập nhật
   useEffect(() => {
     const loadCities = async () => {
       try {
@@ -84,6 +94,7 @@ function CVProfile() {
     loadCities();
   }, []);
 
+  // Mở modal và điền sẵn toàn bộ dữ liệu seeker hiện tại vào form
   const openModal = () => {
     setIsOpen(true);
     form.setFieldsValue({
@@ -100,12 +111,15 @@ function CVProfile() {
       personalLink: seeker.personalLink || "",
     });
   };
+  // Đóng modal
   const closeModal = () => {
     setIsOpen(false);
   };
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+  // Submit form thông tin cá nhân: xây dựng payload đầy đủ,
+  // gọi API cập nhật → lưu kết quả mới vào store và hiển thị thông báo
   const onFinish = async (values: CVProfileFormValues) => {
     const updatedSeekerInfor = {
       fullName: values.fullName,

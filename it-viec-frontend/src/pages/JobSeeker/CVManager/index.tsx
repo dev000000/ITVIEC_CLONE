@@ -1,3 +1,8 @@
+// Trang quản lý CV của Job Seeker
+// Gồm 2 phần chính:
+//   1. Upload CV file (PDF/Word) và chỉnh sửa thông tin cơ bản (tên, SĐT, địa điểm mong muốn) qua Modal
+//   2. Thông tin chung (cover letter, kỹ năng) — inline-edit trực tiếp cho cover letter
+// Dữ liệu đọc từ Zustand seekerStore; sau khi cập nhật thành công → gọi setSeekerFullInfo
 import { useEffect, useRef, useState } from "react";
 import React from "react";
 import "./CVManager.scss";
@@ -23,15 +28,18 @@ import { clearStorage } from "@/helpers/localStorage";
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
 
+// Kiểu dữ liệu form thông tin cá nhân trong modal chỉnh sửa
 interface CVManagerFormValues {
   fullName: string;
   phoneNumber: string;
   desiredLocations: string[];
 }
 
+// Kiểu dữ liệu form chỉnh sửa cover letter (giới thiệu bản thân)
 interface CoverLetterFormValues {
   coverLetter: string;
 }
+// Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
     top: "50%",
@@ -44,6 +52,7 @@ const customStyles = {
     overflow: "hidden",
   },
 };
+// Số lượng tối đa địa điểm mong muốn mà seeker có thể chọn
 const maxCountCity = 3;
 function CVManager() {
   const [form] = Form.useForm();
@@ -63,6 +72,8 @@ function CVManager() {
   const { t } = useTranslation("jobseeker");
 
   const originalCoverLetter = useRef("");
+  // Toggle chế độ chỉnh sửa cover letter
+  // Khi bắt đầu chỉnh sửa → lưu giá trị gốc vào ref để có thể khôi phục khi huỷ
   const handleEditCoverLetter = () => {
     if (!isEditing) {
       originalCoverLetter.current = seeker.coverLetter || "";
@@ -73,6 +84,7 @@ function CVManager() {
     }
     setIsEditing(!isEditing);
   };
+  // Huỷ chỉnh sửa cover letter → khôi phục lại giá trị gốc đã lưu trước đó
   const handleCancelCoverLetter = () => {
     setCoverLetter(originalCoverLetter.current);
     coverLetterForm.setFieldsValue({
@@ -81,9 +93,11 @@ function CVManager() {
     setIsEditing(false);
   };
 
+  // Đóng modal chỉnh sửa thông tin cá nhân
   const closeModal = () => {
     setIsOpen(false);
   };
+  // Mở modal và điền sẵn dữ liệu seeker hiện tại vào form
   const openModal = () => {
     setIsOpen(true);
     form.setFieldsValue({
@@ -100,6 +114,8 @@ function CVManager() {
     console.log("Failed:", errorInfo);
   };
 
+  // Tạo payload chuẩn để gọi updateMyProfileApi
+  // Merge giá trị từ form (values) với dữ liệu seeker hiện có trong store (fallback)
   const buildSeekerUpdatePayload = (
     values: Partial<CVManagerFormValues & CoverLetterFormValues>,
   ) => ({
@@ -123,6 +139,8 @@ function CVManager() {
     ),
   });
 
+  // Tải danh sách tất cả thành phố khi component mount
+  // Dùng để map tên thành phố → id khi gọi API cập nhật
   useEffect(() => {
     const loadCities = async () => {
       try {
@@ -136,6 +154,9 @@ function CVManager() {
     loadCities();
   }, []);
 
+  // Submit form thông tin cá nhân (tên, SĐT, địa điểm mong muốn)
+  // Kiểm tra xem user có thay đổi tài khoản không → nếu có thì logout và chuyển về login
+  // Gọi API cập nhật → cập nhật store, hiển thị thông báo, đóng modal
   const onFinish = async (values: CVManagerFormValues) => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
@@ -165,6 +186,7 @@ function CVManager() {
       });
     }
   };
+  // Submit form cover letter — tương tự onFinish nhưng chỉ cập nhật trường coverLetter
   const onFinish2 = async (values: CoverLetterFormValues) => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
@@ -194,6 +216,8 @@ function CVManager() {
       });
     }
   };
+  // Trả về class CSS phù hợp:
+  // Nếu đã có dữ liệu → class bình thường; chưa điền → class mờ (--default)
   const getFieldsClassName = (value: unknown) => {
     return value
       ? `cv-manager__content`

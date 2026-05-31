@@ -1,3 +1,10 @@
+// Trang form ứng tuyển việc làm
+// Flow:
+//   1. Đọc slug từ URL → gọi API kiểm tra job có tồn tại không
+//   2. Nếu seeker chưa được load → gọi API lấy profile seeker
+//   3. Pre-fill form bằng dữ liệu seeker (tên, SĐT, địa điểm, cover letter)
+//   4. Submit → gọi applyToJobApi, hiển thị thông báo thành công rồi redirect về trang chủ
+// Nếu job không hợp lệ hoặc slug không tìm thấy → redirect về "/"
 import { useEffect, useState } from "react";
 import "./JobApplications.scss";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -17,12 +24,14 @@ import { findCityRefs } from "@/utils/apiPayloadMappers";
 import type { CityResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 
+// Kiểu dữ liệu form ứng tuyển việc làm
 interface JobApplicationFormValues {
   fullName: string;
   phoneNumber: string;
   desiredLocations: string[];
   coverLetter: string;
 }
+// Số lượng tối đa địa điểm mong muốn có thể chọn
 const maxCountCity = 3;
 function JobApplications() {
   const [form] = Form.useForm();
@@ -42,6 +51,8 @@ function JobApplications() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [cities, setCities] = useState<CityResponse[]>([]);
 
+  // Tải danh sách tất cả thành phố khi component mount
+  // Dùng để map tên thành phố → id khi gọi applyToJobApi
   useEffect(() => {
     const loadCities = async () => {
       try {
@@ -55,6 +66,8 @@ function JobApplications() {
     loadCities();
   }, []);
 
+  // Kiểm tra job slug có hợp lệ không ngay khi trang load
+  // Nếu job không tồn tại → hiển thị lỗi và redirect về trang chủ
   useEffect(() => {
     const validateJobSlug = async () => {
       try {
@@ -92,6 +105,8 @@ function JobApplications() {
     validateJobSlug();
   }, [slug, navigate, t]);
 
+  // Tải thông tin seeker từ API nếu chưa có trong store (isLoaded = false)
+  // Chỉ chạy sau khi đã xác nhận job hợp lệ (isLoading = false) và user đã đăng nhập
   useEffect(() => {
     const loadSeekerInfo = async () => {
       if (!seeker.isLoaded) {
@@ -113,6 +128,7 @@ function JobApplications() {
     }
   }, [authenticated, isLoading, seeker.isLoaded, setSeekerFullInfo, t]);
 
+  // Khi seeker đã load xong → điền sẵn dữ liệu cá nhân vào form ứng tuyển
   useEffect(() => {
     if (seeker.isLoaded) {
       const formData = {
@@ -133,6 +149,10 @@ function JobApplications() {
   const onFinishFailed = () => {
     console.log("Failed");
   };
+  // Submit đơn ứng tuyển:
+  // Kiểm tra jobId hợp lệ → gọi applyToJobApi với dữ liệu form
+  // Thành công → hiển thị thông báo và redirect về trang chủ
+  // Thất bại → hiển thị lỗi Swal
   const onFinish = async (values: JobApplicationFormValues) => {
     if (!jobId || !isValidJob) {
       Swal.fire({

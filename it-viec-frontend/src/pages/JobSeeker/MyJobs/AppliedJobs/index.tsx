@@ -1,3 +1,8 @@
+// Tab "Đã ứng tuyển" trong trang MyJobs
+// Nhận dữ liệu (applicationList, pagination, sort...) từ component cha MyJobs
+// thông qua React Router Outlet context (useOutletContext)
+// Nếu không có đơn nào → hiển thị EmptyJobState với nút "Tìm việc"
+// Nếu có đơn → hiển thị danh sách CardApplication kèm phân trang và lựa chọn sắp xếp
 import "./AppliedJobs.scss";
 import EmptyJobState from "../EmptyJobState";
 import CardApplication from "@/components/CardApplication";

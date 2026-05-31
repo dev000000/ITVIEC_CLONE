@@ -1,3 +1,7 @@
+// Trang quản lý việc làm của Job Seeker
+// Hiển thị 3 tab điều hướng: Đã ứng tuyển / Đã lưu / Xem gần đây
+// Tải toàn bộ đơn ứng tuyển từ API, phân trang và sắp xếp theo ngày ở phía client
+// Truyền dữ liệu xuống tab con qua React Router Outlet context (MyJobsOutletContext)
 import { useEffect, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import "./MyJobs.scss";
@@ -6,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { getMyApplicationsApi } from "@/services/applicationApi";
 import type { ApplicationResponse, JobDetailResponse } from "@/types/response.types";
 
+// Kiểu dữ liệu cho một đơn ứng tuyển sau khi đã map từ API response
 interface ApplicationItem {
   appliedAt: string;
   job?: { slug?: string; title?: string; salary?: string };
@@ -19,15 +24,19 @@ interface ApplicationItem {
   employerMessage?: string;
 }
 
+// Trạng thái phân trang: trang hiện tại và số item trên mỗi trang
 interface PaginationState {
   current: number;
   pageSize: number;
 }
 
+// Mở rộng ApplicationResponse để bao gồm thông tin job liên kết (nếu backend trả về)
 type ApplicationWithRelations = ApplicationResponse & {
   job?: Pick<JobDetailResponse, "slug" | "title" | "salary" | "company">;
 };
 
+// Context được truyền xuống các Outlet con (AppliedJobs, SavedJobs, RecentlyViewed)
+// thông qua React Router — dùng useOutletContext<MyJobsOutletContext>() để đọc
 export interface MyJobsOutletContext {
   applicationList: ApplicationItem[];
   setPagination: Dispatch<SetStateAction<PaginationState>>;
@@ -48,6 +57,8 @@ function MyJobs() {
   });
   const [sort, setSort] = useState("desc");
 
+  // Tải lại danh sách đơn ứng tuyển mỗi khi trang, kích thước trang, hoặc thứ tự sắp xếp thay đổi
+  // Map dữ liệu từ API → ApplicationItem, sắp xếp theo ngày, sau đó cắt theo trang hiện tại
   useEffect(() => {
     const fetchApplications = async () => {
       try {
