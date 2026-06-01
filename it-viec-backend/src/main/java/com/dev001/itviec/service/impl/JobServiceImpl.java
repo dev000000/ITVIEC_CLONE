@@ -9,6 +9,8 @@ import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.enums.JobStatus;
+import com.dev001.itviec.enums.JobType;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.JobMapper;
@@ -17,17 +19,20 @@ import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.JobService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -63,8 +68,14 @@ public class JobServiceImpl implements JobService {
     @Override
     public JobDetailResponse createJob(JobCreateRequest request) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        String companyId = authentication.getName();
-        Company company = companyRepository.findById(companyId).orElseThrow(() -> new AppException(COMPANY_NOT_FOUND));
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Employer employer =
+                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
         // 1. build job
         Job job = Job.builder()
                 .company(company)
@@ -78,9 +89,9 @@ public class JobServiceImpl implements JobService {
                 .salary(request.getSalary())
                 .jobType(request.getJobType())
                 .experienceLevel(request.getExperienceLevel())
-                .postedAt(LocalDateTime.now())
+                .postedAt(request.getPostedAt() == null ? LocalDateTime.now() : request.getPostedAt())
                 .expiresAt(request.getExpiresAt())
-                .status(ACTIVE)
+                .status(request.getStatus())
                 .skills(request.getSkills() == null ? new HashSet<>() : new HashSet<>(request.getSkills()))
                 .build();
 
@@ -98,27 +109,51 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobDetailResponse> getJobsByCurrentEmployer() {
-        // 1. lấy email từ SecurityContext
+    public List<JobDetailResponse> getJobsByCurrentEmployer(String title, JobStatus status, JobType jobType, Long cityId) {
+        // 1. Lấy email từ SecurityContext
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         String email = authentication.getName();
-        // 2. lấy user từ email
+
+        // 2. Lấy user → employer → company
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Employer employer = employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
-        // 3. lấy employer từ user
-        Employer employer =
-                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+        // 3. Build Specification với các filter tùy chọn
+        Specification<Job> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-        // 4. lấy company từ employer
-        Company company = companyRepository
-                .findByEmployer(employer)
-                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+            // Bắt buộc: chỉ lấy job của company hiện tại
+            predicates.add(cb.equal(root.get("company"), company));
 
-        // 5. lấy toàn bộ job từ company
-        return jobMapper.toJobDetailResponse(jobRepository.findByCompany(company));
+            // Filter theo title (contains, case-insensitive)
+            if (title != null && !title.isBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase(Locale.ROOT) + "%"));
+            }
+
+            // Filter theo status
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            // Filter theo jobType
+            if (jobType != null) {
+                predicates.add(cb.equal(root.get("jobType"), jobType));
+            }
+
+            // Filter theo cityId
+            if (cityId != null) {
+                predicates.add(cb.equal(root.get("city").get("id"), cityId));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        // 4. Query và map
+        return jobMapper.toJobDetailResponse(jobRepository.findAll(spec));
     }
 
     @Transactional(readOnly = true)

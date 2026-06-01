@@ -6,6 +6,8 @@ import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.JobCardResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.enums.JobStatus;
+import com.dev001.itviec.enums.JobType;
 import com.dev001.itviec.service.JobService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,12 +45,17 @@ public class JobController {
     }
 
     // 3.API cho phép công ty hiện tại lấy toàn bộ công việc của công ty đó (bất kể trạng thái nào) (PRIVATE)
+    // Hỗ trợ filter theo: title, status, jobType, cityId
     @GetMapping("/companies/me/jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<List<JobDetailResponse>> getMyJobs() {
+    public ApiResponse<List<JobDetailResponse>> getMyJobs(
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) JobStatus status,
+            @RequestParam(required = false) JobType jobType,
+            @RequestParam(required = false) Long cityId) {
         return ApiResponse.<List<JobDetailResponse>>builder()
                 .code(1000)
-                .result(jobService.getJobsByCurrentEmployer())
+                .result(jobService.getJobsByCurrentEmployer(title, status, jobType, cityId))
                 .build();
     }
 
@@ -56,7 +63,7 @@ public class JobController {
     // ( *chỉ công ty đó mới được tạo cv của họ, không công ty nào khác được phép tạo cv của công ty khác* ) (PRIVATE)
     @PostMapping("/jobs")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<JobDetailResponse> createJob(@RequestBody JobCreateRequest request) {
+    public ApiResponse<JobDetailResponse> createJob(@RequestBody @Valid JobCreateRequest request) {
         return ApiResponse.<JobDetailResponse>builder()
                 .code(1000)
                 .result(jobService.createJob(request))

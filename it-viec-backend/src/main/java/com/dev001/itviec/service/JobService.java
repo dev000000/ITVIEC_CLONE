@@ -5,6 +5,8 @@ import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.enums.JobStatus;
+import com.dev001.itviec.enums.JobType;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface JobService {
 
     JobDetailResponse createJob(JobCreateRequest jobCreateRequest);
 
-    List<JobDetailResponse> getJobsByCurrentEmployer();
+    List<JobDetailResponse> getJobsByCurrentEmployer(String title, JobStatus status, JobType jobType, Long cityId);
 
     PageResponse<JobCardResponse> getJobCards(int page, int size);
 
