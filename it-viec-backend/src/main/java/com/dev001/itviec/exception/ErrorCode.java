@@ -91,7 +91,12 @@ public enum ErrorCode {
     COMPANY_LOGO_INVALID_TYPE(1074, "Company logo must be a PNG, JPEG, or WEBP image", HttpStatus.BAD_REQUEST),
     COMPANY_LOGO_TOO_LARGE(1075, "Company logo must not exceed 2 MB", HttpStatus.BAD_REQUEST),
     COMPANY_LOGO_NOT_FOUND(1076, "Company logo not found", HttpStatus.NOT_FOUND),
-    COMPANY_LOGO_UPLOAD_FAILED(1077, "Failed to upload company logo", HttpStatus.INTERNAL_SERVER_ERROR);
+    COMPANY_LOGO_UPLOAD_FAILED(1077, "Failed to upload company logo", HttpStatus.INTERNAL_SERVER_ERROR),
+    SEEKER_CV_REQUIRED(1078, "CV file is required", HttpStatus.BAD_REQUEST),
+    SEEKER_CV_INVALID_TYPE(1079, "CV must be a PDF, DOC, or DOCX file", HttpStatus.BAD_REQUEST),
+    SEEKER_CV_TOO_LARGE(1080, "CV file must not exceed 5 MB", HttpStatus.BAD_REQUEST),
+    SEEKER_CV_NOT_FOUND(1081, "CV not found", HttpStatus.NOT_FOUND),
+    SEEKER_CV_UPLOAD_FAILED(1082, "Failed to upload CV", HttpStatus.INTERNAL_SERVER_ERROR);
 
     private int code;
     private String message;

@@ -19,6 +19,7 @@ public class ApplicationCreateResponse {
     String fullName;
     String phoneNumber;
     String resumeUrl;
+    String resumePreviewUrl;
     String coverLetter;
     ApplicationStatus status;
     LocalDateTime createdAt;

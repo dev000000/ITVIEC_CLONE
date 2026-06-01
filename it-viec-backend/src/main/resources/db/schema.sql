@@ -51,6 +51,7 @@ CREATE TABLE seekers (
   address VARCHAR(255),
   personal_link VARCHAR(255),
   cover_letter VARCHAR(500),
+  cv_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_seekers_user FOREIGN KEY (user_id) REFERENCES users(id),
@@ -132,6 +133,18 @@ CREATE TABLE company_logos (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_company_logos_company FOREIGN KEY (company_id) REFERENCES companies(id)
 );
+-- Bảng CV của ứng viên (lưu file binary)
+CREATE TABLE seeker_cvs (
+  id VARCHAR(255) PRIMARY KEY,
+  seeker_id VARCHAR(255) NOT NULL UNIQUE,
+  file_name VARCHAR(255) NOT NULL,
+  content_type VARCHAR(100) NOT NULL,
+  size BIGINT NOT NULL,
+  cv_data LONGBLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_seeker_cvs_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+);
 -- Bảng job
 CREATE TABLE jobs (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -187,6 +200,7 @@ CREATE TABLE application_cities (
   CONSTRAINT fk_app_cities_application FOREIGN KEY (application_id) REFERENCES applications(id),
   CONSTRAINT fk_app_cities_city FOREIGN KEY (city_id) REFERENCES cities(id)
 );
+
 -- Bảng seeker vs city ( địa điểm làm việc mong muốn của ứng viên )
 CREATE TABLE seeker_cities (
   seeker_id VARCHAR(255) NOT NULL,

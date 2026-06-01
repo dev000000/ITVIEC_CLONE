@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Transactional
     @Override
-    public ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request) {
+    public ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request, MultipartFile cvFile) {
 
         // 1. Kiểm tra job đó còn ACTIVE không
         Job job = jobRepository
@@ -59,27 +60,36 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 3. Kiểm tra người dùng đã ứng tuyển vào công việc đó chưa
         boolean isApplicationExited = applicationRepository.existsBySeekerAndJob(seeker, job);
-
         if (isApplicationExited) {
             throw new AppException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
-        // 4. Nếu job còn ACTIVE và người dùng chưa ứng tuyển thì tạo mới đơn ứng tuyển
+        // 4. Xác định resumeUrl:
+        //    - Nếu người dùng gửi CV mới → upload CV mới, cập nhật seeker.cvUrl, dùng URL đó
+        //    - Nếu không → dùng CV hiện tại của seeker
+        String resumeUrl;
+        if (cvFile != null && !cvFile.isEmpty()) {
+            // Upload CV mới, đồng bộ seeker.cvUrl, reload để lấy cvUrl mới
+            seekerService.uploadMyCv(cvFile);
+            seeker = seekerService.getSeekerByCookie();
+            resumeUrl = seeker.getCvUrl();
+        } else {
+            resumeUrl = seeker.getCvUrl();
+        }
+
+        // 5. Tạo mới đơn ứng tuyển
         Application application = Application.builder()
                 .seeker(seeker)
                 .job(job)
                 .fullName(request.getFullName())
                 .phoneNumber(request.getPhoneNumber())
+                .resumeUrl(resumeUrl)
                 .coverLetter(request.getCoverLetter())
                 .status(ApplicationStatus.PENDING)
                 .desiredLocations(request.getDesiredLocations())
                 .build();
 
-        Application savedApplication = applicationRepository.save(application);
-
-        // 5. Nếu apply job thành công, đồng bộ lại thông tin seeker (thông tin xin việc) // chưa triển khai
-
-        return applicationMapper.toApplicationCreateResponse(savedApplication);
+        return applicationMapper.toApplicationCreateResponse(applicationRepository.save(application));
     }
 
     @Override

@@ -14,10 +14,12 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ApplicationResponse {
     String id;
-    //    JobDetailResponse job;
+    JobCardResponse job;
+    SeekerBasicResponse seeker;
     String fullName;
     String phoneNumber;
     String resumeUrl;
+    String resumePreviewUrl;
     String coverLetter;
     ApplicationStatus status;
     String employerMessage;
