@@ -5,3 +5,54 @@
     padding: 0;
   }
 }
+
+.employer-job__button-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.employer-job__filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.employer-jobs__list {
+  position: relative;
+  z-index: 1;
+  border-radius: 8px;
+  min-height: calc(100vh - 220px);
+  padding: 24px;
+
+  &:has(.employer-jobs__empty) {
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.employer-jobs__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    opacity: 0.7;
+  }
+
+  p {
+    color: #a6a6a6;
+    font-size: 16px;
+    margin: 0;
+  }
+}

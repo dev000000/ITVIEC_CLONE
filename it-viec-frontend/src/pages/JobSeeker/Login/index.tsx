@@ -17,6 +17,7 @@ import { getMyProfileApi } from "@/services/seekerApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useTranslation } from "react-i18next";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 
 function Login() {
@@ -72,7 +73,7 @@ function Login() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: t("login.errorTitle"),
+        text: getApiErrorMessage(error, t),
       });
     }
   };

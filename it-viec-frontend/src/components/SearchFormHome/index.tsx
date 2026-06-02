@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Col, Row, Select, Form, Input, Button } from "antd";
 import "./SearchFormHome.scss";
-import { VIETNAM_CITIES } from "@/constants";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getAllCitiesApi } from "@/services/cityApi";
+import type { CityResponse } from "@/types/response.types";
 
 interface SearchFormValues {
   city?: string;
@@ -17,6 +19,18 @@ interface SearchFormHomeProps {
 function SearchFormHome({ jobList }: SearchFormHomeProps) {
   const navigate = useNavigate();
   const { t } = useTranslation("shared");
+  const [cities, setCities] = useState<CityResponse[]>([]);
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const response = await getAllCitiesApi();
+        setCities(response.data.result ?? []);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+    loadCities();
+  }, []);
   const onFinish = (values: SearchFormValues) => {
     if (values.city === "all") {
       values.city = "";
@@ -46,12 +60,15 @@ function SearchFormHome({ jobList }: SearchFormHomeProps) {
           >
             <Row gutter={[{ xxl: 16, xl: 16, lg: 0, md: 0, sm: 0, xs: 0 }, 10]}>
               <Col xxl={5} xl={5} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item name="city" initialValue={VIETNAM_CITIES[0].value}>
+                <Form.Item name="city" initialValue="all">
                   <Select
                     showSearch
                     optionFilterProp="label"
                     size="large"
-                    options={VIETNAM_CITIES}
+                    options={[
+                      { value: "all", label: "Tất cả thành phố" },
+                      ...cities.map((c) => ({ value: c.cityName, label: c.cityName })),
+                    ]}
                   />
                 </Form.Item>
               </Col>

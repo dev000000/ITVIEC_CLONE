@@ -16,6 +16,13 @@
     "addTitle": "Thêm việc làm",
     "editTitle": "Chỉnh sửa việc làm",
     "jobDetail": "Chi tiết việc làm",
+    "filter": {
+      "titlePlaceholder": "Tìm theo tiêu đề...",
+      "statusPlaceholder": "Lọc trạng thái",
+      "jobTypePlaceholder": "Lọc hình thức",
+      "cityPlaceholder": "Lọc thành phố",
+      "searchButton": "Tìm kiếm"
+    },
     "status": {
       "active": "Đang tuyển",
       "closed": "Đã đóng",
@@ -26,19 +33,55 @@
       "jobId": "Job id",
       "companyId": "Company id",
       "title": "Tiêu đề",
+      "titlePlaceholder": "Nhập tiêu đề công việc",
       "location": "Địa điểm",
+      "locationPlaceholder": "Nhập địa điểm làm việc",
       "salary": "Mức lương",
+      "salaryPlaceholder": "Nhập mức lương",
+      "selectCityPlaceholder": "Chọn thành phố",
+      "selectJobTypePlaceholder": "Chọn hình thức làm việc",
+      "selectLevelPlaceholder": "Chọn trình độ",
+      "selectStatusPlaceholder": "Chọn trạng thái",
+      "selectSkillsPlaceholder": "Chọn kỹ năng yêu cầu",
+      "selectSkillsRequired": "Vui lòng chọn kỹ năng yêu cầu",
+      "titleRequired": "Vui lòng nhập tiêu đề công việc",
+      "locationRequired": "Vui lòng nhập địa điểm làm việc",
+      "cityRequired": "Vui lòng chọn thành phố",
+      "salaryRequired": "Vui lòng nhập mức lương",
+      "jobTypeRequired": "Vui lòng chọn hình thức làm việc",
+      "levelRequired": "Vui lòng chọn trình độ chuyên môn",
+      "statusRequired": "Vui lòng chọn trạng thái",
+      "postedAtRequired": "Vui lòng chọn thời gian bắt đầu",
+      "expiresAtRequired": "Vui lòng chọn thời gian kết thúc",
+      "skillsMinRequired": "Vui lòng chọn ít nhất 3 kỹ năng",
+      "dateNotPast": "Ngày không được ở quá khứ",
+      "expiresBeforePosted": "Thời gian kết thúc không được trước thời gian bắt đầu",
+      "datePickerPlaceholder": "Chọn ngày",
       "jobType": "Hình thức làm việc",
       "experienceLevel": "Trình độ chuyên môn",
       "postedAt": "Thời gian bắt đầu",
       "expiresAt": "Thời gian kết thúc",
       "status": "Trạng thái",
       "requiredSkills": "Kỹ năng yêu cầu",
+      "city": "Thành phố",
       "jobReason": "Lý do để gia nhập công ty",
       "jobDescription": "Mô tả công việc",
       "jobRequirements": "Yêu cầu công việc",
       "whyJoinUs": "Tại sao bạn nên gia nhập",
       "submit": "Submit"
+    },
+    "notifications": {
+      "addSuccess": "Đăng việc làm thành công!",
+      "addFail": "Đăng việc làm thất bại!",
+      "updateSuccess": "Cập nhật việc làm thành công!",
+      "updateFail": "Cập nhật việc làm thất bại!",
+      "deleteConfirmTitle": "Bạn có chắc không?",
+      "deleteConfirmText": "Bạn sẽ không thể hoàn tác thao tác này!",
+      "deleteConfirmButton": "Xóa!",
+      "deleteSuccess": "Đã xóa!",
+      "deleteSuccessText": "Việc làm đã được xóa.",
+      "loadError": "Không thể tải dữ liệu!",
+      "oops": "Ôi!"
     }
   },
   "applications": {
@@ -47,8 +90,13 @@
     "download": "Tải CV",
     "noApplications": "Chưa có ứng viên nào",
     "viewDetail": "Xem chi tiết",
+    "filter": {
+      "jobTitlePlaceholder": "Tìm theo tên công việc...",
+      "statusPlaceholder": "Lọc trạng thái",
+      "searchButton": "Tìm kiếm"
+    },
     "columns": {
-      "id": "ID",
+      "stt": "STT",
       "jobTitle": "Tên công việc",
       "fullName": "Họ và Tên",
       "phoneNumber": "Số điện thoại",
@@ -73,11 +121,8 @@
       "fullName": "Họ Và Tên",
       "phoneNumber": "Số điện thoại",
       "resume": "Hồ sơ",
+      "seekerCv": "CV hồ sơ ứng viên",
       "coverLetter": "Thư xin việc",
-      "desiredLocations": "Nơi làm việc mong muốn",
-      "appliedAt": "Thời gian nộp",
-      "status": "Trạng thái",
-      "employerMessage": "Thông báo phỏng vấn",
       "submit": "Submit"
     },
     "status": {
@@ -86,6 +131,12 @@
       "interview": "Phỏng vấn",
       "offered": "Đã offer",
       "rejected": "Từ chối"
+    },
+    "notifications": {
+      "updateSuccess": "Cập nhật trạng thái đơn ứng tuyển thành công!",
+      "updateFail": "Cập nhật trạng thái đơn ứng tuyển thất bại!",
+      "loadError": "Không thể tải dữ liệu!",
+      "oops": "Ôi!"
     }
   },
   "profile": {
@@ -98,8 +149,18 @@
     "address": "Địa chỉ",
     "logo": "Logo công ty",
     "editTitle": "Sửa thông tin",
-    "edit": "Edit",
+    "edit": "Chỉnh sửa",
     "openJobs": "{{count}} việc làm đang tuyển dụng",
+    "notifications": {
+      "updateSuccess": "Cập nhật thành công!",
+      "updateFail": "Cập nhật thất bại!",
+      "loadError": "Không thể tải dữ liệu công ty!",
+      "oops": "Ôi!",
+      "logoUploadSuccess": "Tải lên logo thành công!",
+      "logoUploadFail": "Tải lên logo thất bại!",
+      "logoDeleteSuccess": "Xóa logo thành công!",
+      "logoDeleteFail": "Xóa logo thất bại!"
+    },
     "tabs": {
       "about": "Giới thiệu",
       "reviews": "Đánh giá",
@@ -119,7 +180,14 @@
       "companyIntroduction": "Giới thiệu công ty",
       "ourExpertise": "Chuyên môn của chúng tôi",
       "whyWorkHere": "Tại sao bạn sẽ yêu thích làm việc tại đây?",
-      "submit": "Submit"
+      "submit": "Submit",
+      "logo": "Logo công ty",
+      "uploadLogo": "Tải lên logo",
+      "changeLogo": "Thay đổi logo",
+      "deleteLogo": "Xóa logo",
+      "confirmDeleteLogo": "Bạn có chắc muốn xóa logo công ty?",
+      "confirmDeleteLogoOk": "Xóa",
+      "confirmDeleteLogoCancel": "Hủy"
     }
   },
   "login": {

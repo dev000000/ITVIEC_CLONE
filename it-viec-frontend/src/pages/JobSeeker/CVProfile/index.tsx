@@ -28,7 +28,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
 import { updateMyProfileApi } from "@/services/seekerApi";
 import { getAllCitiesApi } from "@/services/cityApi";
-import { GENDER_OPTIONS, VIETNAM_CITIES } from "@/constants";
+import { getGenderOptions } from "@/constants";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { useSeekerStore } from "@/store/seekerStore";
@@ -41,6 +41,7 @@ import {
 } from "@/utils/apiPayloadMappers";
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 // Kiểu dữ liệu form chỉnh sửa thông tin cá nhân trong modal
 interface CVProfileFormValues {
@@ -156,7 +157,7 @@ function CVProfile() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: "Update Profile Fail!",
+        text: getApiErrorMessage(error, t),
       });
     }
   };
@@ -294,7 +295,7 @@ function CVProfile() {
                         <label className="cv-form__label">{t("cvProfile.gender")}</label>
                       }
                     >
-                      <Select options={GENDER_OPTIONS} size="large"></Select>
+                      <Select options={getGenderOptions(t)} size="large"></Select>
                     </Form.Item>
                   </Col>
                   <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
@@ -308,7 +309,7 @@ function CVProfile() {
                     >
                       <Select
                         placeholder={t("cvProfile.currentCityPlaceholder")}
-                        options={VIETNAM_CITIES}
+                        options={cities.map((c) => ({ value: c.cityName, label: c.cityName }))}
                         size="large"
                       ></Select>
                     </Form.Item>

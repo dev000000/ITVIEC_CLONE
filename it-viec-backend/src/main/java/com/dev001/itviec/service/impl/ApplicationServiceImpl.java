@@ -4,6 +4,7 @@ import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
+import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.application.Application;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.employer.Employer;
@@ -21,12 +22,21 @@ import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.service.ApplicationService;
 import com.dev001.itviec.service.EmployerService;
 import com.dev001.itviec.service.SeekerService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -47,7 +57,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
     @Transactional
     @Override
-    public ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request) {
+    public ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request, MultipartFile cvFile) {
 
         // 1. Kiểm tra job đó còn ACTIVE không
         Job job = jobRepository
@@ -59,27 +69,36 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 3. Kiểm tra người dùng đã ứng tuyển vào công việc đó chưa
         boolean isApplicationExited = applicationRepository.existsBySeekerAndJob(seeker, job);
-
         if (isApplicationExited) {
             throw new AppException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
-        // 4. Nếu job còn ACTIVE và người dùng chưa ứng tuyển thì tạo mới đơn ứng tuyển
+        // 4. Xác định resumeUrl:
+        //    - Nếu người dùng gửi CV mới → upload CV mới, cập nhật seeker.cvUrl, dùng URL đó
+        //    - Nếu không → dùng CV hiện tại của seeker
+        String resumeUrl;
+        if (cvFile != null && !cvFile.isEmpty()) {
+            // Upload CV mới, đồng bộ seeker.cvUrl, reload để lấy cvUrl mới
+            seekerService.uploadMyCv(cvFile);
+            seeker = seekerService.getSeekerByCookie();
+            resumeUrl = seeker.getCvUrl();
+        } else {
+            resumeUrl = seeker.getCvUrl();
+        }
+
+        // 5. Tạo mới đơn ứng tuyển
         Application application = Application.builder()
                 .seeker(seeker)
                 .job(job)
                 .fullName(request.getFullName())
                 .phoneNumber(request.getPhoneNumber())
+                .resumeUrl(resumeUrl)
                 .coverLetter(request.getCoverLetter())
                 .status(ApplicationStatus.PENDING)
                 .desiredLocations(request.getDesiredLocations())
                 .build();
 
-        Application savedApplication = applicationRepository.save(application);
-
-        // 5. Nếu apply job thành công, đồng bộ lại thông tin seeker (thông tin xin việc) // chưa triển khai
-
-        return applicationMapper.toApplicationCreateResponse(savedApplication);
+        return applicationMapper.toApplicationCreateResponse(applicationRepository.save(application));
     }
 
     @Override
@@ -92,7 +111,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<ApplicationResponse> getMyCompanyApplications() {
+    public PageResponse<ApplicationResponse> getMyCompanyApplications(
+            int page, int size, ApplicationStatus status, String jobTitle) {
 
         // 1. Kiểm tra nhà tuyển dụng đó có tồn tại hay không
         Employer employer = employerService.getEmployerByCookie();
@@ -103,7 +123,39 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
         // 3. Tìm tất cả đơn ứng tuyển của nhà tuyển dụng đó (công ty đó)
-        return applicationMapper.toApplicationResponse(applicationRepository.findByCompany(company));
+        Specification<Application> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            var jobJoin = root.join("job");
+
+            predicates.add(cb.equal(jobJoin.get("company"), company));
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            if (jobTitle != null && !jobTitle.isBlank()) {
+                predicates.add(cb.like(
+                        cb.lower(jobJoin.get("title")),
+                        "%" + jobTitle.trim().toLowerCase(Locale.ROOT) + "%"));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Application> applicationPage = applicationRepository.findAll(spec, pageable);
+        List<ApplicationResponse> applicationResponses =
+                applicationMapper.toApplicationResponse(applicationPage.getContent());
+
+        return PageResponse.<ApplicationResponse>builder()
+                .data(applicationResponses)
+                .page(applicationPage.getNumber())
+                .size(applicationResponses.size())
+                .totalElements(applicationPage.getTotalElements())
+                .totalPages(applicationPage.getTotalPages())
+                .isFirst(applicationPage.isFirst())
+                .isLast(applicationPage.isLast())
+                .build();
     }
 
     @Override

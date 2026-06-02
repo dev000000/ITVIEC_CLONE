@@ -47,9 +47,35 @@ export const getMyCompanyApi = () => {
   return apiClient.get<APIResponse<CompanyDetailResponse>>(url);
 };
 
+/**
+ * Tải lên logo công ty của nhà tuyển dụng hiện tại.
+ * Gửi file ảnh dưới dạng `multipart/form-data` với field name `file`.
+ * @param file - File ảnh logo cần upload
+ * @returns Promise giải quyết thành `APIResponse<CompanyDetailResponse>` với thông tin công ty đã cập nhật logo
+ */
+export const uploadMyCompanyLogoApi = (file: File) => {
+  const url = `${API_PATH}/me/logo`;
+  const formData = new FormData();
+  formData.append("file", file);
+  return apiClient.put<APIResponse<CompanyDetailResponse>>(url, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
+
+/**
+ * Xóa logo công ty của nhà tuyển dụng hiện tại.
+ * @returns Promise giải quyết thành `APIResponse<CompanyDetailResponse>` với thông tin công ty sau khi xóa logo
+ */
+export const deleteMyCompanyLogoApi = () => {
+  const url = `${API_PATH}/me/logo`;
+  return apiClient.delete<APIResponse<CompanyDetailResponse>>(url);
+};
+
 export default {
   getAllCompaniesApi,
   getCompanyBySlugApi,
   updateMyCompanyApi,
   getMyCompanyApi,
+  uploadMyCompanyLogoApi,
+  deleteMyCompanyLogoApi,
 };

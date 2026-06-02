@@ -3,6 +3,7 @@ package com.dev001.itviec.dto.response;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
 
 import lombok.AccessLevel;
@@ -20,6 +21,7 @@ public class JobCardResponse {
     CityResponse city;
     String salary;
     JobType jobType;
+    JobStatus status;
     LocalDateTime postedAt;
     Set<SkillResponse> skills;
     CompanyBaseResponse company;

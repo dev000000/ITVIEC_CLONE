@@ -38,11 +38,17 @@ export const getJobBySlugApi = (slug: string) => {
 
 /**
  * Lấy toàn bộ công việc của công ty hiện tại (bất kể trạng thái).
+ * Hỗ trợ filter theo: title, status, jobType, cityId
  * @returns Promise giải quyết thành `APIResponse<JobDetailResponse[]>`
  */
-export const getMyJobsApi = () => {
+export const getMyJobsApi = (params?: {
+  title?: string;
+  status?: string;
+  jobType?: string;
+  cityId?: number;
+}) => {
   const url = `${API_PATH}/companies/me/jobs`;
-  return apiClient.get<APIResponse<JobDetailResponse[]>>(url);
+  return apiClient.get<APIResponse<JobDetailResponse[]>>(url, { params });
 };
 
 /**

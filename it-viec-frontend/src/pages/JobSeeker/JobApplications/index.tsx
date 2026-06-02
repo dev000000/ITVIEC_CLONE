@@ -12,7 +12,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
 import { Form, Input, Select } from "antd";
 import ButtonSubmit from "@/components/Button";
-import { VIETNAM_CITIES } from "@/constants";
+
 import { getJobBySlugApi } from "@/services/jobApi";
 import { getMyProfileApi } from "@/services/seekerApi";
 import { applyToJobApi } from "@/services/applicationApi";
@@ -23,6 +23,7 @@ import { useUserStore } from "@/store/userStore";
 import { findCityRefs } from "@/utils/apiPayloadMappers";
 import type { CityResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 // Kiểu dữ liệu form ứng tuyển việc làm
 interface JobApplicationFormValues {
@@ -95,7 +96,7 @@ function JobApplications() {
         Swal.fire({
           icon: "error",
           title: "Error",
-          text: t("jobApplications.checkJobError"),
+          text: getApiErrorMessage(error, t),
         });
         navigate("/");
       } finally {
@@ -118,7 +119,7 @@ function JobApplications() {
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: t("jobApplications.loadSeekerError"),
+            text: getApiErrorMessage(error, t),
           });
         }
       }
@@ -187,7 +188,7 @@ function JobApplications() {
       Swal.fire({
         icon: "error",
         title: "Error",
-        text: "Có lỗi xảy ra khi gửi đơn ứng tuyển!",
+        text: getApiErrorMessage(error, t),
       });
       return;
     }
@@ -296,7 +297,7 @@ function JobApplications() {
                     placeholder="Please select city"
                     value={desiredLocations}
                     onChange={setDesiredLocations}
-                    options={VIETNAM_CITIES}
+                    options={cities.map((c) => ({ value: c.cityName, label: c.cityName }))}
                     maxCount={3}
                     size="large"
                   ></Select>

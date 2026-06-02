@@ -1,22 +1,27 @@
 // Trang quản lý CV của Job Seeker
 // Gồm 2 phần chính:
-//   1. Upload CV file (PDF/Word) và chỉnh sửa thông tin cơ bản (tên, SĐT, địa điểm mong muốn) qua Modal
-//   2. Thông tin chung (cover letter, kỹ năng) — inline-edit trực tiếp cho cover letter
+//   1. Upload CV file (PDF/Word) — kết nối API thật, hiển thị metadata, preview, xóa
+//   2. Thông tin chung (cover letter, kỹ năng) — inline-edit trực tiếp
 // Dữ liệu đọc từ Zustand seekerStore; sau khi cập nhật thành công → gọi setSeekerFullInfo
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import "./CVManager.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import uploadImg from "@/assets/images/uploaded-resume.svg";
 import ButtonUpload from "@/components/ButtonUpload";
-import { FaRegEdit } from "react-icons/fa";
-import { VIETNAM_CITIES } from "@/constants";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import Modal from "react-modal";
-import { Form, Input } from "antd";
+import { Form, Input, Spin } from "antd";
 import { Col, Row, Select } from "antd";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
 import { updateMyProfileApi } from "@/services/seekerApi";
+import {
+  deleteMyCvApi,
+  getMyCvMetadataApi,
+  getMyCvPreviewUrl,
+  uploadMyCvApi,
+} from "@/services/seekerCvApi";
 import { getAllCitiesApi } from "@/services/cityApi";
 import { useSeekerStore } from "@/store/seekerStore";
 import {
@@ -27,6 +32,9 @@ import {
 import { clearStorage } from "@/helpers/localStorage";
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
+import type { SeekerCvMetadataResponse } from "@/types/seekerCv.types";
+import type { SeekerUpdateRequest } from "@/types/request.types";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 // Kiểu dữ liệu form thông tin cá nhân trong modal chỉnh sửa
 interface CVManagerFormValues {
@@ -39,6 +47,16 @@ interface CVManagerFormValues {
 interface CoverLetterFormValues {
   coverLetter: string;
 }
+
+// Loại file CV được chấp nhận
+const ACCEPTED_CV_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+const MAX_CV_SIZE_MB = 5;
+const MAX_CV_SIZE_BYTES = MAX_CV_SIZE_MB * 1024 * 1024;
+
 // Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
@@ -54,6 +72,7 @@ const customStyles = {
 };
 // Số lượng tối đa địa điểm mong muốn mà seeker có thể chọn
 const maxCountCity = 3;
+
 function CVManager() {
   const [form] = Form.useForm();
   const [coverLetterForm] = Form.useForm();
@@ -69,11 +88,50 @@ function CVManager() {
   );
   const [cities, setCities] = useState<CityResponse[]>([]);
   const navigate = useNavigate();
-  const { t } = useTranslation("jobseeker");
+  const { t, i18n } = useTranslation("jobseeker");
+
+  // CV state
+  const [cvMetadata, setCvMetadata] = useState<SeekerCvMetadataResponse | null>(null);
+  const [isCvLoading, setIsCvLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const originalCoverLetter = useRef("");
+
+  // Fetch CV metadata on mount
+  const fetchCvMetadata = useCallback(async () => {
+    setIsCvLoading(true);
+    try {
+      const data = await getMyCvMetadataApi();
+      setCvMetadata(data.result);
+    } catch (error) {
+      if ((error as { response?: { status?: number } })?.response?.status === 404) {
+        setCvMetadata(null);
+      } else {
+        console.error("Failed to load CV metadata:", error);
+      }
+    } finally {
+      setIsCvLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCvMetadata();
+  }, [fetchCvMetadata]);
+
+  // Format ngày cập nhật CV
+  const formatUpdatedAt = (updatedAt: string) => {
+    const locale = i18n.language?.startsWith("vi") ? "vi-VN" : "en-US";
+    return new Intl.DateTimeFormat(locale, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(new Date(updatedAt));
+  };
+
   // Toggle chế độ chỉnh sửa cover letter
-  // Khi bắt đầu chỉnh sửa → lưu giá trị gốc vào ref để có thể khôi phục khi huỷ
   const handleEditCoverLetter = () => {
     if (!isEditing) {
       originalCoverLetter.current = seeker.coverLetter || "";
@@ -84,7 +142,8 @@ function CVManager() {
     }
     setIsEditing(!isEditing);
   };
-  // Huỷ chỉnh sửa cover letter → khôi phục lại giá trị gốc đã lưu trước đó
+
+  // Huỷ chỉnh sửa cover letter
   const handleCancelCoverLetter = () => {
     setCoverLetter(originalCoverLetter.current);
     coverLetterForm.setFieldsValue({
@@ -93,11 +152,8 @@ function CVManager() {
     setIsEditing(false);
   };
 
-  // Đóng modal chỉnh sửa thông tin cá nhân
-  const closeModal = () => {
-    setIsOpen(false);
-  };
-  // Mở modal và điền sẵn dữ liệu seeker hiện tại vào form
+  const closeModal = () => setIsOpen(false);
+
   const openModal = () => {
     setIsOpen(true);
     form.setFieldsValue({
@@ -107,40 +163,37 @@ function CVManager() {
         seeker.desiredLocations?.map((city) => city.cityName) || [],
     });
   };
-  const onClick = () => {
-    console.log("upload");
-  };
+
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
 
   // Tạo payload chuẩn để gọi updateMyProfileApi
-  // Merge giá trị từ form (values) với dữ liệu seeker hiện có trong store (fallback)
+  // Cast về SeekerUpdateRequest: findCityRef/findCityRefs trả EntityRef ({id}) — backend chỉ cần id
   const buildSeekerUpdatePayload = (
     values: Partial<CVManagerFormValues & CoverLetterFormValues>,
-  ) => ({
+  ): SeekerUpdateRequest => ({
     fullName: values.fullName ?? seeker.fullName ?? "",
     jobTitle: seeker.jobTitle ?? "",
     phoneNumber: values.phoneNumber ?? seeker.phoneNumber ?? "",
     dateOfBirth: seeker.dateOfBirth ?? "1999-01-01",
     gender: seeker.gender ?? "OTHERS",
-    city: findCityRef(seeker.city?.id, cities, seeker.city),
+    city: findCityRef(seeker.city?.id, cities, seeker.city) as unknown as CityResponse,
     address: seeker.address ?? "",
     personalLink: seeker.personalLink ?? "",
     coverLetter: values.coverLetter ?? seeker.coverLetter ?? "",
     skills: seeker.skills
       .map((skill) => toEntityRef(skill.id))
-      .filter((skill): skill is { id: number | string } => Boolean(skill)),
+      .filter((skill): skill is { id: number | string } => Boolean(skill)) as unknown as CityResponse[],
     desiredLocations: findCityRefs(
       values.desiredLocations ??
       seeker.desiredLocations?.map((city) => city.cityName) ??
       [],
       cities,
-    ),
+    ) as unknown as CityResponse[],
   });
 
-  // Tải danh sách tất cả thành phố khi component mount
-  // Dùng để map tên thành phố → id khi gọi API cập nhật
+  // Tải danh sách thành phố khi component mount
   useEffect(() => {
     const loadCities = async () => {
       try {
@@ -150,21 +203,24 @@ function CVManager() {
         console.error("Error fetching city options:", error);
       }
     };
-
     loadCities();
   }, []);
 
-  // Submit form thông tin cá nhân (tên, SĐT, địa điểm mong muốn)
-  // Kiểm tra xem user có thay đổi tài khoản không → nếu có thì logout và chuyển về login
-  // Gọi API cập nhật → cập nhật store, hiển thị thông báo, đóng modal
-  const onFinish = async (values: CVManagerFormValues) => {
+  // Kiểm tra user hiện tại còn đúng không (tránh trường hợp đổi tài khoản)
+  const checkUserSession = () => {
     const currentUserId = localStorage.getItem("id");
     if (currentUserId !== userId && currentUserId) {
       clearStorage();
       clearSeekerInfo();
       navigate("/login");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  // Submit form thông tin cá nhân
+  const onFinish = async (values: CVManagerFormValues) => {
+    if (!checkUserSession()) return;
     try {
       const response = await updateMyProfileApi(buildSeekerUpdatePayload(values));
       const result = response.data.result;
@@ -182,23 +238,17 @@ function CVManager() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: t("cvManager.error.updateFailed"),
+        text: getApiErrorMessage(error, t),
       });
     }
   };
-  // Submit form cover letter — tương tự onFinish nhưng chỉ cập nhật trường coverLetter
+
+  // Submit form cover letter
   const onFinish2 = async (values: CoverLetterFormValues) => {
-    const currentUserId = localStorage.getItem("id");
-    if (currentUserId !== userId && currentUserId) {
-      clearStorage();
-      clearSeekerInfo();
-      navigate("/login");
-      return;
-    }
+    if (!checkUserSession()) return;
     try {
       const response = await updateMyProfileApi(buildSeekerUpdatePayload(values));
       const result = response.data.result;
-      console.log("Update cover letter result:", result);
       setSeekerFullInfo(result);
       setCoverLetter(result.coverLetter || "");
       Swal.fire({
@@ -212,19 +262,137 @@ function CVManager() {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: t("cvManager.error.updateFailed"),
+        text: getApiErrorMessage(error, t),
       });
     }
   };
-  // Trả về class CSS phù hợp:
-  // Nếu đã có dữ liệu → class bình thường; chưa điền → class mờ (--default)
-  const getFieldsClassName = (value: unknown) => {
-    return value
+
+  // ================== CV HANDLERS ==================
+
+  // Kích hoạt file input ẩn khi bấm nút Upload
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Helper: lấy extension của file (lowercase, không có dấu chấm)
+  const getFileExtension = (fileName: string) =>
+    fileName.split(".").pop()?.toLowerCase() ?? "";
+
+  // Validate file CV theo MIME type và extension (fallback cho Windows DOCX trả type rỗng)
+  const isValidCvFile = (file: File): boolean => {
+    if (ACCEPTED_CV_TYPES.includes(file.type)) return true;
+    // Fallback khi Windows không detect được MIME type
+    const ext = getFileExtension(file.name);
+    return ["pdf", "doc", "docx"].includes(ext);
+  };
+
+  // Xử lý khi user chọn file
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Capture file trước, reset input sau để có thể chọn lại cùng 1 file
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset sau khi đã capture file reference
+    e.target.value = "";
+
+    // Validate client-side
+    if (!isValidCvFile(file)) {
+      Swal.fire({
+        icon: "error",
+        title: t("cvManager.error.invalidFileType"),
+      });
+      return;
+    }
+    if (file.size > MAX_CV_SIZE_BYTES) {
+      Swal.fire({
+        icon: "error",
+        title: t("cvManager.error.fileTooLarge"),
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      const result = await uploadMyCvApi(file);
+      if (result.result) {
+        setSeekerFullInfo(result.result);
+      }
+      await fetchCvMetadata();
+      Swal.fire({
+        title: t("cvManager.success.uploadCV"),
+        icon: "success",
+        draggable: true,
+      });
+    } catch (error) {
+      console.error("CV upload error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: getApiErrorMessage(error, t) || t("cvManager.error.uploadFailed"),
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // Xem preview CV (mở tab mới)
+  const handlePreviewCv = () => {
+    if (!cvMetadata) return;
+    const previewUrl = getMyCvPreviewUrl();
+    window.open(previewUrl, "_blank", "noopener,noreferrer");
+  };
+
+  // Xóa CV
+  const handleDeleteCv = async () => {
+    const result = await Swal.fire({
+      title: t("cvManager.deleteConfirm"),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#aaa",
+      confirmButtonText: t("cvManager.deleteCV"),
+      cancelButtonText: t("cvManager.cancel"),
+    });
+    if (!result.isConfirmed) return;
+
+    try {
+      const response = await deleteMyCvApi();
+      if (response.result) {
+        setSeekerFullInfo(response.result);
+      }
+      setCvMetadata(null);
+      Swal.fire({
+        title: t("cvManager.success.deleteCV"),
+        icon: "success",
+        draggable: true,
+      });
+    } catch (error) {
+      console.error("CV delete error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: getApiErrorMessage(error, t) || t("cvManager.error.deleteFailed"),
+      });
+    }
+  };
+
+  // ================== CSS helpers ==================
+  const getFieldsClassName = (val: unknown) =>
+    val
       ? `cv-manager__content`
       : `cv-manager__content cv-manager__content--default`;
-  };
+
   return (
     <>
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        style={{ display: "none" }}
+        onChange={handleFileChange}
+      />
+
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -305,7 +473,7 @@ function CVManager() {
                   ]}
                 >
                   <Select
-                    options={VIETNAM_CITIES}
+                    options={cities.map((c) => ({ value: c.cityName, label: c.cityName }))}
                     size="large"
                     mode="multiple"
                     maxCount={3}
@@ -346,7 +514,9 @@ function CVManager() {
           </Row>
         </div>
       </Modal>
+
       <div className="cv-manager">
+        {/* ============ PHẦN 1: CV FILE ============ */}
         <div className="job-seeker-section">
           <h2 className="cv-manager__main-title--custom">{t("cvManager.title")}</h2>
           <p className="cv-manager__text">
@@ -354,6 +524,8 @@ function CVManager() {
           </p>
           <div className="cv-manager__block">
             <h3 className="cv-manager__main-title">{t("cvManager.yourCV")}</h3>
+
+            {/* Khu vực hiển thị CV hiện tại */}
             <div className="update-cv update-cv--2">
               <img
                 src={uploadImg}
@@ -361,22 +533,64 @@ function CVManager() {
                 className="update-cv__img update-cv__img--2"
               />
               <div className="update-cv__main-content">
-                <Link
-                  to="/"
-                  className="update-cv__link-file update-cv__link-file--2"
-                >
-                  CV.docx
-                </Link>
-                <div className="update-cv__file-date">
-                  {t("cvManager.yourCV")}
-                </div>
+                {isCvLoading ? (
+                  <div className="cv-manager__cv-loading">
+                    <Spin size="small" />
+                    <span>{t("cvManager.uploading")}</span>
+                  </div>
+                ) : cvMetadata ? (
+                  <>
+                    {/* Tên file — click để preview */}
+                    <button
+                      className="update-cv__link-file update-cv__link-file--2 update-cv__link-file--clickable"
+                      onClick={handlePreviewCv}
+                      title={t("cvManager.previewCV")}
+                      type="button"
+                    >
+                      {cvMetadata.fileName}
+                    </button>
+                    {/* Ngày cập nhật cuối */}
+                    <div className="update-cv__file-date">
+                      {`${t("cvManager.lastUpdated")}: ${formatUpdatedAt(cvMetadata.updatedAt)}`}
+                    </div>
+                    {/* Nút xóa CV */}
+                    <button
+                      className="cv-manager__delete-btn"
+                      onClick={handleDeleteCv}
+                      type="button"
+                      title={t("cvManager.deleteCV")}
+                    >
+                      <FaRegTrashAlt />
+                      <span>{t("cvManager.deleteCV")}</span>
+                    </button>
+                  </>
+                ) : (
+                  <div className="update-cv__file-date update-cv__file-date--empty">
+                    {t("cvManager.noCV")}
+                  </div>
+                )}
               </div>
             </div>
-            <ButtonUpload text={t("cvManager.uploadCV")} handleUpload={onClick} />
+
+            {/* Nút upload — hiển thị spinner khi đang tải */}
+            {isUploading ? (
+              <div className="cv-manager__uploading">
+                <Spin size="small" />
+                <span>{t("cvManager.uploading")}</span>
+              </div>
+            ) : (
+              <ButtonUpload
+                text={t("cvManager.uploadCV")}
+                handleUpload={handleUploadClick}
+              />
+            )}
+
             <p className="cv-manager__text cv-manager__text--small">
               {t("cvManager.supportedFormats")}
             </p>
           </div>
+
+          {/* ============ PHẦN 1b: THÔNG TIN CÁ NHÂN ============ */}
           <div className="cv-manager__block">
             <div className="cv-manager__header">
               <h3 className="cv-manager__main-title">{t("cvManager.personalInfo")}</h3>
@@ -415,6 +629,8 @@ function CVManager() {
             </div>
           </div>
         </div>
+
+        {/* ============ PHẦN 2: THÔNG TIN CHUNG ============ */}
         <div className="job-seeker-section">
           <div className="cv-manager__block cv-manager__block--main">
             <div className="cv-manager__header">
@@ -456,6 +672,8 @@ function CVManager() {
             </div>
           </div>
         </div>
+
+        {/* ============ PHẦN 3: THƯ XIN VIỆC ============ */}
         <div className="job-seeker-section">
           <div className="cv-manager__block cv-manager__block--main">
             <div className="cv-manager__header">

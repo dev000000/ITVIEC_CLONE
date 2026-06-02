@@ -62,6 +62,9 @@ public class Seeker extends BaseEntity {
     @Column(name = "cover_letter", columnDefinition = "VARCHAR(500)")
     String coverLetter;
 
+    @Column(name = "cv_url", columnDefinition = "VARCHAR(500)")
+    String cvUrl;
+
     @ManyToMany
     @JoinTable(
             name = "seeker_skills",

@@ -6,10 +6,10 @@ import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
 import { getAllJobsApi } from "@/services/jobApi";
 import imgNoJob from "@/assets/images/robby-oops.svg";
 import { isObjectEmpty } from "@/helpers/checkObject";
-import { VIETNAM_CITIES } from "@/constants";
+import { getAllCitiesApi } from "@/services/cityApi";
 import TopJobItemHome from "@/components/TopJobItemHome";
 import { useTranslation } from "react-i18next";
-import type { JobCardResponse } from "@/types/response.types";
+import type { JobCardResponse, CityResponse } from "@/types/response.types";
 
 interface JobSearchProps {
   keyword?: string;
@@ -19,7 +19,7 @@ interface JobSearchProps {
 function JobSearch({ keyword, city }: JobSearchProps) {
   if (!city) {
     const decodedKeyword = decodeURIComponent(keyword || "");
-    const result = VIETNAM_CITIES.find((item) => item.value === decodedKeyword);
+    const result = cities.some((c) => c.cityName === decodedKeyword);
     if (result) {
       city = decodedKeyword;
       keyword = "";
@@ -33,12 +33,13 @@ function JobSearch({ keyword, city }: JobSearchProps) {
   const jobSelectedSlug = searchParams.get("job_selected");
   const [listJob, setListJob] = useState<JobCardResponse[]>([]);
   const [jobSelected, setJobSelected] = useState<JobCardResponse | Record<string, never>>({});
+  const [cities, setCities] = useState<CityResponse[]>([]);
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 1199;
   const [form] = Form.useForm();
   form.setFieldsValue({
     keyword: keyword,
-    city: city || VIETNAM_CITIES[0].value,
+    city: city || "all",
   });
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +86,19 @@ function JobSearch({ keyword, city }: JobSearchProps) {
     };
     fetchData();
   }, [keyword, city]);
+
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const response = await getAllCitiesApi();
+        setCities(response.data.result ?? []);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+    loadCities();
+  }, []);
+
   const handleFinish = (values: { keyword?: string; city?: string }) => {
     if (values.city === "all") {
       values.city = "";
@@ -120,7 +134,10 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                     showSearch
                     optionFilterProp="label"
                     size="large"
-                    options={VIETNAM_CITIES}
+                    options={[
+                      { value: "all", label: "Tất cả thành phố" },
+                      ...cities.map((c) => ({ value: c.cityName, label: c.cityName })),
+                    ]}
                     value={city}
                   />
                 </Form.Item>

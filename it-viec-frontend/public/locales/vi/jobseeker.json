@@ -9,7 +9,9 @@
     "updateEmail": "Cập nhật email",
     "updateProfile": "Cập nhật hồ sơ",
     "attachedCV": "Hồ sơ đính kèm của bạn",
-    "lastUpdated": "Cập nhật lần cuối: 24/05/2025",
+    "lastUpdated": "Cập nhật lần cuối",
+    "noAttachedCV": "Bạn chưa tải CV lên",
+    "loadingAttachedCV": "Đang tải CV...",
     "manageAttachedCV": "Quản lý hồ sơ đính kèm",
     "yourActivity": "Hoạt động của bạn",
     "appliedJobs": "Việc làm đã ứng tuyển",
@@ -46,12 +48,25 @@
       "phoneFormat": "Số điện thoại không hợp lệ!",
       "locationsRequired": "Vui lòng chọn địa điểm làm việc!"
     },
+    "noCV": "Bạn chưa tải CV lên",
+    "lastUpdated": "Cập nhật lần cuối",
+    "deleteCV": "Xóa CV",
+    "deleteConfirm": "Bạn có chắc muốn xóa CV không?",
+    "uploading": "Đang tải lên...",
+    "previewCV": "Xem trước CV",
+    "previewNotAvailable": "Chỉ hỗ trợ xem trước file PDF. File DOCX sẽ được tải về.",
     "success": {
       "updateProfile": "Cập nhật hồ sơ thành công!",
-      "updateLetter": "Cập nhật thư xin việc thành công!"
+      "updateLetter": "Cập nhật thư xin việc thành công!",
+      "uploadCV": "Tải CV lên thành công!",
+      "deleteCV": "Xóa CV thành công!"
     },
     "error": {
-      "updateFailed": "Cập nhật thất bại!"
+      "updateFailed": "Cập nhật thất bại!",
+      "uploadFailed": "Tải CV thất bại. Vui lòng thử lại.",
+      "fileTooLarge": "Kích thước file không được vượt quá 5MB.",
+      "invalidFileType": "Chỉ hỗ trợ file PDF (.pdf) và Word (.docx, .doc).",
+      "deleteFailed": "Xóa CV thất bại. Vui lòng thử lại."
     }
   },
   "cvProfile": {

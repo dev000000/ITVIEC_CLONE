@@ -22,10 +22,10 @@ interface CardJobShowInforProps {
 
 function CardJobShowInfor({ job }: CardJobShowInforProps) {
   job = job || {};
-  const postedTime = getRelativeTime(job.postedAt);
+  const { t } = useTranslation("shared");
+  const postedTime = getRelativeTime(job.postedAt, t);
   const skillList =
     job.skills?.map((skill) => skill.skillName) || job.requiredSkills || [];
-  const { t } = useTranslation("shared");
   return (
     <div className="card-job-showinfor">
       <div className="card-job-showinfor__list-image">

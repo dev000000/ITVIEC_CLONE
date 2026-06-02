@@ -5,12 +5,16 @@ import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
+import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.enums.ApplicationStatus;
 import com.dev001.itviec.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,15 +26,16 @@ public class ApplicationController {
 
     private final ApplicationService applicationService;
 
-    // 1.API cho phép nộp đơn ứng tuyển (seeker nộp) theo job cụ thể (PRIVATE)
-    @PostMapping("/jobs/{jobId}/applications")
+    // 1.API cho phép nộp đơn ứng tuyển theo job cụ thể (multipart: form data + optional CV mới) (PRIVATE)
+    @PostMapping(value = "/jobs/{jobId}/applications", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<ApplicationCreateResponse> applyToJob(
-            @PathVariable Long jobId, @RequestBody @Valid ApplicationRequest request) {
-        ApplicationCreateResponse response = applicationService.applyToJob(jobId, request);
+            @PathVariable Long jobId,
+            @RequestPart("request") @Valid ApplicationRequest request,
+            @RequestPart(value = "cvFile", required = false) MultipartFile cvFile) {
         return ApiResponse.<ApplicationCreateResponse>builder()
                 .code(1000)
-                .result(response)
+                .result(applicationService.applyToJob(jobId, request, cvFile))
                 .build();
     }
 
@@ -47,10 +52,14 @@ public class ApplicationController {
     // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ (PRIVATE)
     @GetMapping("/companies/me/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<List<ApplicationResponse>> getMyCompanyApplications() {
-        return ApiResponse.<List<ApplicationResponse>>builder()
+    public ApiResponse<PageResponse<ApplicationResponse>> getMyCompanyApplications(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) ApplicationStatus status,
+            @RequestParam(required = false) String jobTitle) {
+        return ApiResponse.<PageResponse<ApplicationResponse>>builder()
                 .code(1000)
-                .result(applicationService.getMyCompanyApplications())
+                .result(applicationService.getMyCompanyApplications(page, size, status, jobTitle))
                 .build();
     }
 
@@ -105,3 +114,4 @@ public class ApplicationController {
                 .build();
     }
 }
+

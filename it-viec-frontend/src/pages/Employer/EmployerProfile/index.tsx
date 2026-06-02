@@ -1,7 +1,8 @@
 // Trang hồ sơ công ty của Employer (Company Profile)
 // Hiển thị thông tin công ty với 3 tabs: About / Reviews / Articles
 // Cột phải hiển thị danh sách job đang mở; Employer có thể chỉnh sửa thông tin công ty qua modal
-import { Button, Col, Form, Input, Row, Select } from "antd";
+import { Button, Col, Form, Image, Input, Popconfirm, Row, Select, Upload } from "antd";
+import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import EmployerStart from "@/components/EmployerStart";
 import { useTranslation } from "react-i18next";
 import CardCompanyHead from "@/components/CardCompanyDetail/CardCompanyHead";
@@ -13,7 +14,7 @@ import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import { updateMyCompanyApi } from "@/services/companyApi";
+import { deleteMyCompanyLogoApi, updateMyCompanyApi, uploadMyCompanyLogoApi } from "@/services/companyApi";
 import { getAllSkillsApi } from "@/services/skillApi";
 import { getAllCountriesApi } from "@/services/countryApi";
 import Swal from "sweetalert2";
@@ -22,30 +23,19 @@ import type { CountryResponse, SkillResponse } from "@/types/response.types";
 import TopJobItemHome from "@/components/TopJobItemHome";
 import { useCompanyStore } from "@/store/companyStore";
 import {
-  findCountryRef,
-  findSkillRefs,
-  toCompanyModel,
-  toCompanySize,
-  toOvertimePolicy,
-  toWorkingHours,
-} from "@/utils/apiPayloadMappers";
+  getCompanyModelOptions,
+  getCompanySizeOptions,
+  getWorkingHoursOptions,
+  getOvertimePolicyOptions,
+} from "@/constants";
+import type { CompanyUpdateRequest } from "@/types/request.types";
+import { getApiErrorMessage } from "@/utils/apiError";
 
-// Kiểu dữ liệu cho form chỉnh sửa thông tin công ty
-interface UpdateCompanyFormValues {
-  companyName: string;
-  description: string;
-  address: string;
-  companyModel: string;
-  industry: string;
-  companySize: string;
-  country: string;
-  workingHours: string;
-  overtimePolicy: string;
-  skills: string[];
-  companyIntroduction: string;
-  ourExpertise: string;
-  whyWorkHere: string;
+interface CompanyFormValues extends Omit<CompanyUpdateRequest, "country" | "companySkills"> {
+  country: number;
+  companySkills: number[];
 }
+
 
 const customStyles = {
   content: {
@@ -59,45 +49,71 @@ const customStyles = {
     overflow: "hidden",
   },
 };
-// Các tùy chọn cho Select dropdown trong form chỉnh sửa thông tin công ty
-const companySizeOptions = [
-  { value: "1-10", label: "1-10" },
-  { value: "11-50", label: "11-50" },
-  { value: "51-100", label: "51-100" },
-  { value: "101-500", label: "101-500" },
-  { value: "501-1000", label: "501-1000" },
-  { value: "1001+", label: "1001+" },
-];
-const overTimePolicyOptions = [
-  { value: "Optional", label: "Optional" },
-  { value: "No OT", label: "No OT" },
-  { value: "Extra salary for OT", label: "Extra salary for OT" },
-  { value: "OT", label: "OT" },
-];
-const workingHoursOptions = [
-  { value: "Thứ 2 - Thứ 6", label: "Thứ 2 - Thứ 6" },
-  { value: "Thứ 2 - Thứ 7", label: "Thứ 2 - Thứ 7" },
-  { value: "Thứ 2 - CN", label: "Thứ 2 - CN" },
-  { value: "Shift", label: "Shift" },
-  { value: "Weekend", label: "Weekend" },
-  { value: "Flexible", label: "Flexible" },
-  { value: "Remote", label: "Remote" },
-];
-function EmployerProfile() {
+
+const MockData = {
+  reviewCount: 80,
+  articleCount: 4,
+}
+
+const EmployerProfile = () => {
   const { t } = useTranslation();
   // Trạng thái mở/đóng modal form chỉnh sửa thông tin công ty
-  const [form] = Form.useForm<UpdateCompanyFormValues>();
+  const [form] = Form.useForm<CompanyFormValues>();
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
   // Thông tin công ty đầy đủ từ Zustand companyStore
   const companyInfor = useCompanyStore();
+
   // Hàm cập nhật toàn bộ thông tin công ty trong Zustand store
   const setCompanyFullInfo = useCompanyStore((state) => state.setCompanyFullInfo);
+  const updateCompanyField = useCompanyStore((state) => state.updateCompanyField);
+
   // Danh sách skills và countries từ API, dùng cho Select dropdown trong form
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [countries, setCountries] = useState<CountryResponse[]>([]);
+
+  // Logo pending: file mới chờ upload, flag xóa, và preview URL tạm thời
+  const [pendingLogoFile, setPendingLogoFile] = useState<File | null>(null);
+  const [pendingLogoDelete, setPendingLogoDelete] = useState<boolean>(false);
+  const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
+
+  // URL logo hiển thị trong preview: ưu tiên file mới chọn → nếu đánh dấu xóa thì dùng cỗi rỗng → logo hiện tại
+  const displayLogoUrl = pendingLogoFile
+    ? logoPreviewUrl
+    : pendingLogoDelete
+      ? ""
+      : (companyInfor.logoUrl ?? null);
+
+  const handleLogoSelect = (file: File) => {
+    setPendingLogoFile(file);
+    setPendingLogoDelete(false);
+    setLogoPreviewUrl(URL.createObjectURL(file));
+  };
+
+  const handleLogoMarkDelete = () => {
+    setPendingLogoFile(null);
+    setPendingLogoDelete(true);
+    if (logoPreviewUrl) {
+      URL.revokeObjectURL(logoPreviewUrl);
+      setLogoPreviewUrl(null);
+    }
+  };
+
+  const resetPendingLogo = () => {
+    if (logoPreviewUrl) URL.revokeObjectURL(logoPreviewUrl);
+    setPendingLogoFile(null);
+    setPendingLogoDelete(false);
+    setLogoPreviewUrl(null);
+  };
+
   const skillList = skills.map((skill) => {
     return { value: skill.id, label: <span>{skill.skillName}</span> };
   });
+
+  const countryOptions = countries.map((country) => {
+    return { value: country.id, label: <span>{country.countryName}</span> };
+  });
+
   // Kích hoạt modal chỉnh sửa khi người dùng nhấn nút Edit
   const handleEdit = () => {
     openModal();
@@ -112,63 +128,71 @@ function EmployerProfile() {
       companyModel: companyInfor.companyModel,
       industry: companyInfor.industry,
       companySize: companyInfor.companySize,
-      country: companyInfor.country?.countryName,
+      country: companyInfor.country?.id,
       workingHours: companyInfor.workingHours,
       overtimePolicy: companyInfor.overtimePolicy,
-      skills: companyInfor.companySkills.map((skill) => String(skill.id)),
+      companySkills: companyInfor.companySkills?.map((s) => s.id),
       companyIntroduction: companyInfor.companyIntroduction,
       ourExpertise: companyInfor.ourExpertise,
       whyWorkHere: companyInfor.whyWorkHere,
     });
   };
   const closeModal = () => {
+    resetPendingLogo();
     setIsOpen(false);
   };
   // Xử lý submit form cập nhật thông tin công ty
-  // Map giá trị form → định dạng API, sau khi thành công thì cập nhật Zustand store
-  const onFinish = async (values: UpdateCompanyFormValues) => {
-    const formattedValues = {
-      companyName: values.companyName || "",
-      description: values.description || "",
-      website: companyInfor.website || "",
-      logoUrl: companyInfor.logoUrl || "",
-      address: values.address || "",
-      companyModel: toCompanyModel(values.companyModel),
-      industry: values.industry || "",
-      companySize: toCompanySize(values.companySize),
-      country: findCountryRef(values.country, countries, companyInfor.country) ?? { id: 0 },
-      workingHours: toWorkingHours(values.workingHours),
-      overtimePolicy: toOvertimePolicy(values.overtimePolicy),
-      companyIntroduction: values.companyIntroduction || "",
-      ourExpertise: values.ourExpertise || "",
-      whyWorkHere: values.whyWorkHere || "",
-      companySkills: findSkillRefs(values.skills, skills),
-    };
-
+  // 1. Nếu có file logo mới → upload trước
+  // 2. Nếu đánh dấu xóa logo → xóa trước
+  // 3. Gọi updateMyCompany với toàn bộ thông tin
+  const onFinish = async (values: CompanyFormValues) => {
     try {
-      const response = await updateMyCompanyApi(formattedValues);
-      const result = response.data.result;
-      if (!isObjectEmpty(result)) {
+      // Xử lý logo pending trước khi update
+      if (pendingLogoFile) {
+        await uploadMyCompanyLogoApi(pendingLogoFile);
+
+      } else if (pendingLogoDelete) {
+        await deleteMyCompanyLogoApi();
+      }
+
+      const fullCountry = countries.find((c) => c.id === values.country);
+      const fullSkills = (values.companySkills ?? []).map((id) => skills.find((s) => s.id === id)).filter((s): s is SkillResponse => s !== undefined);
+      const requestData: CompanyUpdateRequest = {
+        ...values,
+        country: fullCountry!,
+        companySkills: fullSkills,
+      };
+      const { data: companyData } = await updateMyCompanyApi(requestData);
+      const company = companyData.result;
+      if (!isObjectEmpty(company)) {
         Swal.fire({
-          title: "Update Success!",
+          title: t("employer:profile.notifications.updateSuccess"),
           icon: "success",
           draggable: true,
         });
-        setCompanyFullInfo(result);
+        setCompanyFullInfo(company);
+        // Bust browser cache nếu có thao tác logo: URL logo không đổi nên browser sẽ dùng cache cũ
+        // → append timestamp để force React re-render và browser fetch lại ảnh mới
+        if (pendingLogoFile && company.logoUrl) {
+          updateCompanyField("logoUrl", `${company.logoUrl}?t=${Date.now()}`);
+        } else if (pendingLogoDelete) {
+          updateCompanyField("logoUrl", "");
+        }
+        resetPendingLogo();
         closeModal();
       } else {
         Swal.fire({
           icon: "error",
-          title: "Oops...",
-          text: "Update Fail!",
+          title: t("employer:profile.notifications.oops"),
+          text: t("employer:profile.notifications.updateFail"),
         });
       }
     } catch (error) {
       console.error("Loi cap nhat update company", error);
       Swal.fire({
         icon: "error",
-        title: "Oops...",
-        text: "Update Fail!",
+        title: t("employer:profile.notifications.oops"),
+        text: getApiErrorMessage(error, t),
       });
     }
   };
@@ -189,8 +213,8 @@ function EmployerProfile() {
         console.error("Error fetching data:", error);
         Swal.fire({
           icon: "error",
-          title: "Oops...",
-          text: "Failed to load company or job data!",
+          title: t("employer:profile.notifications.oops"),
+          text: getApiErrorMessage(error, t),
         });
       }
     };
@@ -199,6 +223,7 @@ function EmployerProfile() {
   return (
     <>
       <div className="employer-profile">
+        {/* Phần header với title và nút Edit */}
         <EmployerStart content={t("employer:profile.title")} type="search" />
         <div className="employer-job__button-wrap">
           <ButtonAction
@@ -207,7 +232,9 @@ function EmployerProfile() {
             handle={handleEdit}
           ></ButtonAction>
         </div>
+        {/*  */}
         <div className="employer-profile__preview">
+          {/* Modal edit company infor */}
           <Modal
             isOpen={modalIsOpen}
             onRequestClose={closeModal}
@@ -240,6 +267,47 @@ function EmployerProfile() {
               >
                 <Row gutter={[10, 10]}>
                   <Col span={24}>
+                    <Form.Item label={t("employer:profile.form.logo")}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                        {(displayLogoUrl !== null) && (
+                          <Image
+                            width={72}
+                            height={72}
+                            src={displayLogoUrl ?? ""}
+                            style={{ objectFit: "contain", border: "1px solid #d9d9d9", borderRadius: 6 }}
+                          />
+                        )}
+                        <Upload
+                          showUploadList={false}
+                          accept="image/*"
+                          beforeUpload={(file) => {
+                            handleLogoSelect(file);
+                            return false;
+                          }}
+                        >
+                          <Button icon={<UploadOutlined />}>
+                            {displayLogoUrl
+                              ? t("employer:profile.form.changeLogo")
+                              : t("employer:profile.form.uploadLogo")}
+                          </Button>
+                        </Upload>
+                        {displayLogoUrl && (
+                          <Popconfirm
+                            title={t("employer:profile.form.confirmDeleteLogo")}
+                            onConfirm={handleLogoMarkDelete}
+                            okText={t("employer:profile.form.confirmDeleteLogoOk")}
+                            cancelText={t("employer:profile.form.confirmDeleteLogoCancel")}
+                            okButtonProps={{ danger: true }}
+                          >
+                            <Button danger icon={<DeleteOutlined />}>
+                              {t("employer:profile.form.deleteLogo")}
+                            </Button>
+                          </Popconfirm>
+                        )}
+                      </div>
+                    </Form.Item>
+                  </Col>
+                  <Col span={24}>
                     <Form.Item label={t("employer:profile.form.companyName")} name="companyName">
                       <Input />
                     </Form.Item>
@@ -256,7 +324,10 @@ function EmployerProfile() {
                   </Col>
                   <Col span={12}>
                     <Form.Item label={t("employer:profile.form.companyModel")} name="companyModel">
-                      <Input />
+                      <Select
+                        placeholder="Please select company model"
+                        options={getCompanyModelOptions(t)}
+                      ></Select>
                     </Form.Item>
                   </Col>
                   <Col span={12}>
@@ -268,20 +339,23 @@ function EmployerProfile() {
                     <Form.Item label={t("employer:profile.form.companySize")} name="companySize">
                       <Select
                         placeholder="Please select company size"
-                        options={companySizeOptions}
+                        options={getCompanySizeOptions(t)}
                       ></Select>
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item label={t("employer:profile.form.country")} name="country">
-                      <Input />
+                      <Select
+                        placeholder="Please select country"
+                        options={countryOptions}
+                      ></Select>
                     </Form.Item>
                   </Col>
                   <Col span={12}>
                     <Form.Item label={t("employer:profile.form.workingHours")} name="workingHours">
                       <Select
                         placeholder="Please select working hours"
-                        options={workingHoursOptions}
+                        options={getWorkingHoursOptions(t)}
                       ></Select>
                     </Form.Item>
                   </Col>
@@ -292,13 +366,13 @@ function EmployerProfile() {
                     >
                       <Select
                         placeholder="Please select overtime policy"
-                        options={overTimePolicyOptions}
+                        options={getOvertimePolicyOptions(t)}
                       ></Select>
                     </Form.Item>
                   </Col>
                   <Col span={24}>
                     <Form.Item
-                      name="skills"
+                      name="companySkills"
                       label={t("employer:profile.form.skills")}
                       rules={[
                         {
@@ -353,6 +427,7 @@ function EmployerProfile() {
               </Form>
             </div>
           </Modal>
+          {/* Phần xem review hiển thị */}
           <div className="employer-detail">
             <CardCompanyHead companyInfor={companyInfor} />
             <div className="container">
@@ -387,7 +462,7 @@ function EmployerProfile() {
                           <span className="employer-detail__text">
                             {t("employer:profile.tabs.reviews")}
                           </span>
-                          <span className="employer-detail__count">80</span>
+                          <span className="employer-detail__count">{MockData.reviewCount}</span>
                         </NavLink>
                       </li>
                       <li className="employer-detail__item-wrapper">
@@ -402,7 +477,7 @@ function EmployerProfile() {
                           <span className="employer-detail__text">
                             {t("employer:profile.tabs.articles")}
                           </span>
-                          <span className="employer-detail__count">4</span>
+                          <span className="employer-detail__count">{MockData.articleCount}</span>
                         </NavLink>
                       </li>
                     </ul>
@@ -421,10 +496,6 @@ function EmployerProfile() {
                         <div className="employer-detail__job" key={job.id}>
                           <TopJobItemHome
                             job={job}
-                            companyInfoAdd={{
-                              companyName: companyInfor.companyName,
-                              slug: companyInfor.slug,
-                            }}
                           />
                         </div>
                       ))}
