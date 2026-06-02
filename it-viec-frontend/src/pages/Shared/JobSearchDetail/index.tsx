@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
 import { getJobBySlugApi } from "@/services/jobApi";
 import type { JobCardResponse, JobDetailResponse } from "@/types/response.types";
+import { getJobTypeOptions } from "@/constants";
 
 type JobSelected = Partial<JobCardResponse & JobDetailResponse> & {
   requiredSkills?: string[];
@@ -30,6 +31,10 @@ function JobSearchDetail() {
   const { t } = useTranslation("shared");
   const [jobDetail, setJobDetail] = useState<JobSelected | null>(null);
   const currentJob = jobDetail || jobSelected;
+
+  // Translated enum label
+  const jobTypeOptions = getJobTypeOptions(t);
+  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === currentJob.jobType)?.label || currentJob.jobType;
   const rawSkills =
     currentJob.skills?.map((skill) => skill.skillName) ||
     currentJob.requiredSkills ||
@@ -135,11 +140,11 @@ function JobSearchDetail() {
             </div>
             <div className="job-search-detail__item">
               <MdLocationCity />
-              <span>{currentJob.jobType || "???"}</span>
+              <span>{jobTypeLabel || "???"}</span>
             </div>
             <div className="job-search-detail__item">
               <GoClock />
-              <span> {getRelativeTime(currentJob.postedAt)} </span>
+              <span> {getRelativeTime(currentJob.postedAt, t)} </span>
             </div>
           </div>
           <div className="divide--dashed--small"></div>

@@ -5,13 +5,14 @@ import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.seeker.Seeker;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ApplicationRepository extends JpaRepository<Application, String> {
+public interface ApplicationRepository extends JpaRepository<Application, String>, JpaSpecificationExecutor<Application> {
 
     Optional<Application> findBySeekerAndJob(Seeker seeker, Job job);
 

@@ -4,6 +4,7 @@ import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
+import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.application.Application;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.employer.Employer;
@@ -21,13 +22,21 @@ import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.service.ApplicationService;
 import com.dev001.itviec.service.EmployerService;
 import com.dev001.itviec.service.SeekerService;
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Slf4j
 @Service
@@ -102,7 +111,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public List<ApplicationResponse> getMyCompanyApplications() {
+    public PageResponse<ApplicationResponse> getMyCompanyApplications(
+            int page, int size, ApplicationStatus status, String jobTitle) {
 
         // 1. Kiểm tra nhà tuyển dụng đó có tồn tại hay không
         Employer employer = employerService.getEmployerByCookie();
@@ -113,7 +123,39 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
         // 3. Tìm tất cả đơn ứng tuyển của nhà tuyển dụng đó (công ty đó)
-        return applicationMapper.toApplicationResponse(applicationRepository.findByCompany(company));
+        Specification<Application> spec = (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            var jobJoin = root.join("job");
+
+            predicates.add(cb.equal(jobJoin.get("company"), company));
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            if (jobTitle != null && !jobTitle.isBlank()) {
+                predicates.add(cb.like(
+                        cb.lower(jobJoin.get("title")),
+                        "%" + jobTitle.trim().toLowerCase(Locale.ROOT) + "%"));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<Application> applicationPage = applicationRepository.findAll(spec, pageable);
+        List<ApplicationResponse> applicationResponses =
+                applicationMapper.toApplicationResponse(applicationPage.getContent());
+
+        return PageResponse.<ApplicationResponse>builder()
+                .data(applicationResponses)
+                .page(applicationPage.getNumber())
+                .size(applicationResponses.size())
+                .totalElements(applicationPage.getTotalElements())
+                .totalPages(applicationPage.getTotalPages())
+                .isFirst(applicationPage.isFirst())
+                .isLast(applicationPage.isLast())
+                .build();
     }
 
     @Override

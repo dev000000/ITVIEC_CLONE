@@ -5,8 +5,9 @@ type SupportedLanguage = "vi" | "en";
 export const useLocale = () => {
   const { i18n } = useTranslation();
 
-  const changeLanguage = (lang: SupportedLanguage) => {
-    void i18n.changeLanguage(lang);
+  const changeLanguage = async (lang: SupportedLanguage) => {
+    await i18n.reloadResources(lang);
+    await i18n.changeLanguage(lang);
   };
 
   return {

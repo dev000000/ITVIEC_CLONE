@@ -10,6 +10,12 @@ import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
 import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
 import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import { useTranslation } from "react-i18next";
+import {
+  getCompanyModelOptions,
+  getCompanySizeOptions,
+  getWorkingHoursOptions,
+  getOvertimePolicyOptions,
+} from "@/constants";
 
 interface Company {
   slug?: string;
@@ -45,6 +51,17 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
     typeof company.country === "string"
       ? company.country
       : company.country?.countryName;
+
+  // Translated enum labels
+  const companyModelOptions = getCompanyModelOptions(t);
+  const companySizeOptions = getCompanySizeOptions(t);
+  const workingHoursOptions = getWorkingHoursOptions(t);
+  const overtimePolicyOptions = getOvertimePolicyOptions(t);
+
+  const companyModelLabel = companyModelOptions.find((opt) => opt.value === company.companyModel)?.label || company.companyModel;
+  const companySizeLabel = companySizeOptions.find((opt) => opt.value === company.companySize)?.label || company.companySize;
+  const workingHoursLabel = workingHoursOptions.find((opt) => opt.value === company.workingHours)?.label || company.workingHours;
+  const overtimePolicyLabel = overtimePolicyOptions.find((opt) => opt.value === company.overtimePolicy)?.label || company.overtimePolicy;
   if (isObjectEmpty(company)) {
     return <div>{t("employerDetailInfo.noInfo")}</div>
   }
@@ -64,7 +81,7 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
       <div className="card-infor-employer__body">
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.companyModel")}</div>
-          <div className="card-infor-employer__item-content">{company.companyModel}</div>
+          <div className="card-infor-employer__item-content">{companyModelLabel}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">
@@ -75,7 +92,7 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.companySize")}</div>
           <div className="card-infor-employer__item-content">
-            {company.companySize}
+            {companySizeLabel}
           </div>
         </div>
         <div className="card-infor-employer__item">
@@ -86,13 +103,13 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
           <div className="card-infor-employer__item-title">
             {t("employerDetailInfo.workingHours")}
           </div>
-          <div className="card-infor-employer__item-content">{company.workingHours}</div>
+          <div className="card-infor-employer__item-content">{workingHoursLabel}</div>
         </div>
         <div className="card-infor-employer__item card-infor-employer__item--nodash">
           <div className="card-infor-employer__item-title">
             {t("employerDetailInfo.overtimePolicy")}
           </div>
-          <div className="card-infor-employer__item-content">{company.overtimePolicy}</div>
+          <div className="card-infor-employer__item-content">{overtimePolicyLabel}</div>
         </div>
       </div>
     </div>

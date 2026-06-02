@@ -67,11 +67,55 @@
     color: #A6A6A6;
     margin: 20px 0;
     font-style: italic;
-
   }
   &__edit-form {
     &--close {
       display: none;
+    }
+  }
+
+  // Loading state khi đang fetch metadata CV
+  &__cv-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #A6A6A6;
+    padding: 4px 0;
+  }
+
+  // Spinner + text khi đang upload
+  &__uploading {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #A6A6A6;
+    margin: 12px 0 4px;
+  }
+
+  // Nút xóa CV
+  &__delete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border: 1px solid #ff4d4f;
+    border-radius: 4px;
+    background: transparent;
+    color: #ff4d4f;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: #ff4d4f;
+      color: #fff;
+    }
+
+    svg {
+      font-size: 13px;
     }
   }
 }
@@ -81,4 +125,27 @@
   border-top: 1px solid #ddd;
 }
 
+// Tên file CV — có thể click để preview
+.update-cv__link-file--clickable {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+  color: #ed1b2f;
+  font-weight: 600;
+  text-decoration: underline dotted;
+  transition: color 0.2s;
 
+  &:hover {
+    color: #b5121f;
+    text-decoration: underline solid;
+  }
+}
+
+// Text khi chưa có CV
+.update-cv__file-date--empty {
+  color: #A6A6A6;
+  font-style: italic;
+}

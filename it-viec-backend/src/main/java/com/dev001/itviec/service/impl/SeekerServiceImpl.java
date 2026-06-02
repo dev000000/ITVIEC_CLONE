@@ -2,6 +2,7 @@ package com.dev001.itviec.service.impl;
 
 import com.dev001.itviec.dto.request.SeekerUpdateRequest;
 import com.dev001.itviec.dto.response.SeekerCvContent;
+import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.seeker.SeekerCv;
@@ -34,8 +35,7 @@ public class SeekerServiceImpl implements SeekerService {
     private static final Set<String> ALLOWED_CV_TYPES = Set.of(
             "application/pdf",
             "application/msword",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-    );
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
     private final SeekerMapper seekerMapper;
     private final SeekerRepository seekerRepository;
@@ -144,6 +144,20 @@ public class SeekerServiceImpl implements SeekerService {
         return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public SeekerCvMetadataResponse getMyCvMetadata() {
+        Seeker seeker = getSeekerByCookie();
+        SeekerCv cv = seekerCvRepository.findBySeekerId(seeker.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
+        return SeekerCvMetadataResponse.builder()
+                .fileName(cv.getFileName())
+                .contentType(cv.getContentType())
+                .size(cv.getSize())
+                .updatedAt(cv.getUpdatedAt())
+                .build();
+    }
+
     // ===================== Helpers =====================
 
     private void validateCvFile(MultipartFile file) {
@@ -183,4 +197,3 @@ public class SeekerServiceImpl implements SeekerService {
         }
     }
 }
-

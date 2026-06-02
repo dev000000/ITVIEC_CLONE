@@ -1,92 +1,134 @@
-import React from "react";
+import type { TFunction } from "i18next";
 
-interface CityOption {
-  value: string;
-  label: string;
-}
-
-interface SelectOption {
-  value: string;
-  label: React.ReactNode;
-}
 
 interface CompanyImageItem {
   name: string;
   url: string;
 }
 
-export const VIETNAM_CITIES: CityOption[] = [
-    { value: "all", label: "Tất cả thành phố" },
-    { value: "Hà Nội", label: "Hà Nội" },
-    { value: "Hồ Chí Minh", label: "Hồ Chí Minh" },
-    { value: "Đà Nẵng", label: "Đà Nẵng" },
-    { value: "Cần Thơ", label: "Cần Thơ" },
-    { value: "Hải Phòng", label: "Hải Phòng" },
-    { value: "An Giang", label: "An Giang" },
-    { value: "Bà Rịa-Vũng Tàu", label: "Bà Rịa-Vũng Tàu" },
-    { value: "Bắc Giang", label: "Bắc Giang" },
-    { value: "Bắc Kạn", label: "Bắc Kạn" },
-    { value: "Bạc Liêu", label: "Bạc Liêu" },
-    { value: "Bến Tre", label: "Bến Tre" },
-    { value: "Bình Dương", label: "Bình Dương" },
-    { value: "Bình Định", label: "Bình Định" },
-    { value: "Bình Phước", label: "Bình Phước" },
-    { value: "Bình Thuận", label: "Bình Thuận" },
-    { value: "Cao Bằng", label: "Cao Bằng" },
-    { value: "Cà Mau", label: "Cà Mau" },
-    { value: "Đắk Lắk", label: "Đắk Lắk" },
-    { value: "Đắk Nông", label: "Đắk Nông" },
-    { value: "Điện Biên", label: "Điện Biên" },
-    { value: "Đồng Nai", label: "Đồng Nai" },
-    { value: "Đồng Tháp", label: "Đồng Tháp" },
-    { value: "Gia Lai", label: "Gia Lai" },
-    { value: "Hà Giang", label: "Hà Giang" },
-    { value: "Hà Nam", label: "Hà Nam" },
-    { value: "Hà Tĩnh", label: "Hà Tĩnh" },
-    { value: "Hải Dương", label: "Hải Dương" },
-    { value: "Hòa Bình", label: "Hòa Bình" },
-    { value: "Hưng Yên", label: "Hưng Yên" },
-    { value: "Khánh Hòa", label: "Khánh Hòa" },
-    { value: "Kiên Giang", label: "Kiên Giang" },
-    { value: "Kon Tum", label: "Kon Tum" },
-    { value: "Lai Châu", label: "Lai Châu" },
-    { value: "Lâm Đồng", label: "Lâm Đồng" },
-    { value: "Lạng Sơn", label: "Lạng Sơn" },
-    { value: "Lào Cai", label: "Lào Cai" },
-    { value: "Long An", label: "Long An" },
-    { value: "Nam Định", label: "Nam Định" },
-    { value: "Nghệ An", label: "Nghệ An" },
-    { value: "Ninh Bình", label: "Ninh Bình" },
-    { value: "Ninh Thuận", label: "Ninh Thuận" },
-    { value: "Phú Thọ", label: "Phú Thọ" },
-    { value: "Phú Yên", label: "Phú Yên" },
-    { value: "Quảng Bình", label: "Quảng Bình" },
-    { value: "Quảng Nam", label: "Quảng Nam" },
-    { value: "Quảng Ngãi", label: "Quảng Ngãi" },
-    { value: "Quảng Ninh", label: "Quảng Ninh" },
-    { value: "Quảng Trị", label: "Quảng Trị" },
-    { value: "Sóc Trăng", label: "Sóc Trăng" },
-    { value: "Sơn La", label: "Sơn La" },
-    { value: "Tây Ninh", label: "Tây Ninh" },
-    { value: "Thái Bình", label: "Thái Bình" },
-    { value: "Thái Nguyên", label: "Thái Nguyên" },
-    { value: "Thanh Hóa", label: "Thanh Hóa" },
-    { value: "Thừa Thiên-Huế", label: "Thừa Thiên-Huế" },
-    { value: "Tiền Giang", label: "Tiền Giang" },
-    { value: "Trà Vinh", label: "Trà Vinh" },
-    { value: "Tuyên Quang", label: "Tuyên Quang" },
-    { value: "Vĩnh Long", label: "Vĩnh Long" },
-    { value: "Vĩnh Phúc", label: "Vĩnh Phúc" },
-    { value: "Yên Bái", label: "Yên Bái" },
-    { value: "Khác", label: "others" },
-    { value: "Quốc tế", label: "Quốc tế" },
-    
-  ];
-export const GENDER_OPTIONS: SelectOption[] = [
-    { value: "Nam", label: <span>Nam</span> },
-    { value: "Nữ", label: <span>Nữ</span> },
-    { value: "Khác", label: <span>Khác</span> },
+export const getGenderOptions = (t: TFunction) => [
+  { value: "MALE", label: t("common:gender.male") },
+  { value: "FEMALE", label: t("common:gender.female") },
+  { value: "OTHERS", label: t("common:gender.others") },
 ];
+
+export const getApplicationStatusOptions = (t: TFunction) => [
+  { value: "PENDING", label: t("common:applicationStatus.pending") },
+  { value: "ACCEPTED", label: t("common:applicationStatus.accepted") },
+  { value: "REJECTED", label: t("common:applicationStatus.rejected") },
+];
+
+export const getCompanyModelOptions = (t: TFunction) => [
+  { value: "PRODUCT", label: t("common:companyModel.product") },
+  { value: "OUTSOURCING", label: t("common:companyModel.outsourcing") },
+  { value: "CONSULTING_SOLUTION", label: t("common:companyModel.consultingSolution") },
+  { value: "STARTUP", label: t("common:companyModel.startup") },
+  { value: "CLOUD_PLATFORM", label: t("common:companyModel.cloudPlatform") },
+  { value: "RESEARCH_LAB", label: t("common:companyModel.researchLab") },
+];
+
+export const getCompanySizeOptions = (t: TFunction) => [
+  { value: "SIZE_1_10", label: t("common:companySize.size1_10") },
+  { value: "SIZE_11_50", label: t("common:companySize.size11_50") },
+  { value: "SIZE_51_150", label: t("common:companySize.size51_150") },
+  { value: "SIZE_151_300", label: t("common:companySize.size151_300") },
+  { value: "SIZE_301_500", label: t("common:companySize.size301_500") },
+  { value: "SIZE_501_1000", label: t("common:companySize.size501_1000") },
+  { value: "SIZE_1000_PLUS", label: t("common:companySize.size1000Plus") },
+];
+
+export const getExperienceLevelOptions = (t: TFunction) => [
+  { value: "INTERN", label: t("common:experienceLevel.intern") },
+  { value: "FRESHER", label: t("common:experienceLevel.fresher") },
+  { value: "JUNIOR", label: t("common:experienceLevel.junior") },
+  { value: "MID", label: t("common:experienceLevel.mid") },
+  { value: "SENIOR", label: t("common:experienceLevel.senior") },
+  { value: "LEAD", label: t("common:experienceLevel.lead") },
+  { value: "MANAGER", label: t("common:experienceLevel.manager") },
+];
+
+export const getJobStatusOptions = (t: TFunction) => [
+  { value: "ACTIVE", label: t("common:jobStatus.active") },
+  { value: "CLOSED", label: t("common:jobStatus.closed") },
+  { value: "DRAFT", label: t("common:jobStatus.draft") },
+  { value: "EXPIRED", label: t("common:jobStatus.expired") },
+];
+
+export const getJobTypeOptions = (t: TFunction) => [
+  { value: "ONSITE", label: t("common:jobType.onsite") },
+  { value: "HYBRID", label: t("common:jobType.hybrid") },
+  { value: "REMOTE", label: t("common:jobType.remote") },
+  { value: "FLEXIBLE", label: t("common:jobType.flexible") },
+];
+
+export const getOvertimePolicyOptions = (t: TFunction) => [
+  { value: "NO_OVERTIME", label: t("common:overtimePolicy.noOvertime") },
+  { value: "OPTIONAL", label: t("common:overtimePolicy.optional") },
+  { value: "OCCASIONAL", label: t("common:overtimePolicy.occasional") },
+  { value: "PAID_OT", label: t("common:overtimePolicy.paidOt") },
+  { value: "FREQUENT", label: t("common:overtimePolicy.frequent") },
+];
+
+export const getUserStatusOptions = (t: TFunction) => [
+  { value: "PENDING_ACTIVATION", label: t("common:userStatus.pendingActivation") },
+  { value: "ACTIVE", label: t("common:userStatus.active") },
+  { value: "DISABLED", label: t("common:userStatus.disabled") },
+];
+
+export const getWorkingHoursOptions = (t: TFunction) => [
+  { value: "MON_FRI", label: t("common:workingHours.monFri") },
+  { value: "MON_SAT_HALF", label: t("common:workingHours.monSatHalf") },
+  { value: "MON_SAT", label: t("common:workingHours.monSat") },
+  { value: "FLEXIBLE", label: t("common:workingHours.flexible") },
+  { value: "HYBRID", label: t("common:workingHours.hybrid") },
+  { value: "FULL_REMOTE", label: t("common:workingHours.fullRemote") },
+];
+
+// City name to i18n key mapping
+const cityNameToKeyMap: Record<string, string> = {
+  "Tuyên Quang": "tuyenquang",
+  "Lào Cai": "laocai",
+  "Thái Nguyên": "thainguyen",
+  "Phú Thọ": "phutho",
+  "Bắc Ninh": "bacninh",
+  "Hưng Yên": "hungyen",
+  "Hải Phòng": "haiphong",
+  "Ninh Bình": "ninhbinh",
+  "Quảng Trị": "quangtri",
+  "Đà Nẵng": "danang",
+  "Quảng Ngãi": "quangngai",
+  "Gia Lai": "gialai",
+  "Khánh Hòa": "khanhoa",
+  "Lâm Đồng": "lamdong",
+  "Đắk Lắk": "daklak",
+  "Hồ Chí Minh": "hochiminh",
+  "Đồng Nai": "dongnai",
+  "Tây Ninh": "tayninh",
+  "Cần Thơ": "cantho",
+  "Vĩnh Long": "vinhlong",
+  "Đồng Tháp": "dongthaap",
+  "Cà Mau": "camau",
+  "An Giang": "angiang",
+  "Hà Nội": "hanoi",
+  "Huế": "hue",
+  "Lai Châu": "laichau",
+  "Điện Biên": "dienbien",
+  "Sơn La": "sonla",
+  "Lạng Sơn": "langson",
+  "Quảng Ninh": "quangninh",
+  "Thanh Hóa": "thanhhoa",
+  "Nghệ An": "nghean",
+  "Hà Tĩnh": "hatinh",
+  "Cao Bằng": "caobang",
+  "Others": "others",
+};
+
+export const getCityLabel = (cityName: string | undefined, t: TFunction): string => {
+  if (!cityName) return "";
+  const key = cityNameToKeyMap[cityName] || "others";
+  return t(`common:cities.${key}`, { defaultValue: cityName });
+};
+
 export const COMPANY_IMAGE_URL: CompanyImageItem[] = [
   { name: "mb-bank", url: "MBLOGO.webp" },
   { name: "scandinavian-software-park", url: "ScandinavianLOGO.webp" },

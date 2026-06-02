@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./CardApplication.scss";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
@@ -17,7 +17,8 @@ import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { Input, Select, DatePicker, Row, Col } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { VIETNAM_CITIES } from "@/constants";
+import { getAllCitiesApi } from "@/services/cityApi";
+import type { CityResponse } from "@/types/response.types";
 import DOMPurify from "dompurify";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
@@ -92,7 +93,19 @@ function CardApplication({ application }: CardApplicationProps) {
   const content = <div>{t("cardApplication.openNewTab")}</div>;
   const [modalIsOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm();
+  const [cities, setCities] = useState<CityResponse[]>([]);
   const date = dayjs(application.appliedAt).format("DD/MM/YYYY");
+  useEffect(() => {
+    const loadCities = async () => {
+      try {
+        const response = await getAllCitiesApi();
+        setCities(response.data.result ?? []);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+      }
+    };
+    loadCities();
+  }, []);
   const handleNavigate = () => {
     if (!application.job?.slug) {
       return;
@@ -216,7 +229,7 @@ function CardApplication({ application }: CardApplicationProps) {
                   <Select
                     mode="multiple"
                     placeholder="Please select desired locations"
-                    options={VIETNAM_CITIES}
+                    options={cities.map((c) => ({ value: c.cityName, label: c.cityName }))}
                   ></Select>
                 </Form.Item>
               </Col>

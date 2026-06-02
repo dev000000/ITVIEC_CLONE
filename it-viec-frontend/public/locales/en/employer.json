@@ -16,6 +16,13 @@
     "addTitle": "Add Job",
     "editTitle": "Edit Job",
     "jobDetail": "Job Detail",
+    "filter": {
+      "titlePlaceholder": "Search by title...",
+      "statusPlaceholder": "Filter status",
+      "jobTypePlaceholder": "Filter job type",
+      "cityPlaceholder": "Filter city",
+      "searchButton": "Search"
+    },
     "status": {
       "active": "Active",
       "closed": "Closed",
@@ -26,19 +33,55 @@
       "jobId": "Job id",
       "companyId": "Company id",
       "title": "Title",
+      "titlePlaceholder": "Enter job title",
       "location": "Location",
+      "locationPlaceholder": "Enter work location",
       "salary": "Salary",
+      "salaryPlaceholder": "Enter salary range",
+      "selectCityPlaceholder": "Please select a city",
+      "selectJobTypePlaceholder": "Please select a job type",
+      "selectLevelPlaceholder": "Please select a level",
+      "selectStatusPlaceholder": "Please select status",
+      "selectSkillsPlaceholder": "Please select required skills",
+      "selectSkillsRequired": "Please select required skills",
+      "titleRequired": "Please enter job title",
+      "locationRequired": "Please enter work location",
+      "cityRequired": "Please select a city",
+      "salaryRequired": "Please enter salary",
+      "jobTypeRequired": "Please select job type",
+      "levelRequired": "Please select experience level",
+      "statusRequired": "Please select status",
+      "postedAtRequired": "Please select start date",
+      "expiresAtRequired": "Please select end date",
+      "skillsMinRequired": "Please select at least 3 skills",
+      "dateNotPast": "Date cannot be in the past",
+      "expiresBeforePosted": "End date cannot be before start date",
+      "datePickerPlaceholder": "Select date",
       "jobType": "Job Type",
       "experienceLevel": "Experience Level",
       "postedAt": "Start Date",
       "expiresAt": "End Date",
       "status": "Status",
       "requiredSkills": "Required Skills",
+      "city": "City",
       "jobReason": "Reason to Join",
       "jobDescription": "Job Description",
       "jobRequirements": "Job Requirements",
       "whyJoinUs": "Why You Should Join",
       "submit": "Submit"
+    },
+    "notifications": {
+      "addSuccess": "Job posted successfully!",
+      "addFail": "Failed to post job!",
+      "updateSuccess": "Job updated successfully!",
+      "updateFail": "Failed to update job!",
+      "deleteConfirmTitle": "Are you sure?",
+      "deleteConfirmText": "You won't be able to revert this!",
+      "deleteConfirmButton": "Yes, delete it!",
+      "deleteSuccess": "Deleted!",
+      "deleteSuccessText": "Your job has been deleted.",
+      "loadError": "Failed to load data!",
+      "oops": "Oops!"
     }
   },
   "applications": {
@@ -47,8 +90,13 @@
     "download": "Download CV",
     "noApplications": "No applications yet",
     "viewDetail": "View Detail",
+    "filter": {
+      "jobTitlePlaceholder": "Search by job title...",
+      "statusPlaceholder": "Filter status",
+      "searchButton": "Search"
+    },
     "columns": {
-      "id": "ID",
+      "stt": "No.",
       "jobTitle": "Job Title",
       "fullName": "Full Name",
       "phoneNumber": "Phone Number",
@@ -67,15 +115,14 @@
     },
     "detail": {
       "title": "Detail",
-      "jobTitle": "Job Title",      "companyName": "Company Name",
-      "salary": "Salary",      "fullName": "Full Name",
+      "jobTitle": "Job Title",
+      "companyName": "Company Name",
+      "salary": "Salary",
+      "fullName": "Full Name",
       "phoneNumber": "Phone Number",
       "resume": "Resume",
+      "seekerCv": "Seeker Profile CV",
       "coverLetter": "Cover Letter",
-      "desiredLocations": "Desired Locations",
-      "appliedAt": "Applied At",
-      "status": "Status",
-      "employerMessage": "Interview Message",
       "submit": "Submit"
     },
     "status": {
@@ -84,6 +131,12 @@
       "interview": "Interview",
       "offered": "Offered",
       "rejected": "Rejected"
+    },
+    "notifications": {
+      "updateSuccess": "Application status updated successfully!",
+      "updateFail": "Failed to update application status!",
+      "loadError": "Failed to load data!",
+      "oops": "Oops!"
     }
   },
   "profile": {
@@ -98,6 +151,16 @@
     "editTitle": "Edit Information",
     "edit": "Edit",
     "openJobs": "{{count}} open positions",
+    "notifications": {
+      "updateSuccess": "Update successful!",
+      "updateFail": "Update failed!",
+      "loadError": "Failed to load company data!",
+      "oops": "Oops...",
+      "logoUploadSuccess": "Logo uploaded successfully!",
+      "logoUploadFail": "Failed to upload logo!",
+      "logoDeleteSuccess": "Logo deleted successfully!",
+      "logoDeleteFail": "Failed to delete logo!"
+    },
     "tabs": {
       "about": "About",
       "reviews": "Reviews",
@@ -117,7 +180,14 @@
       "companyIntroduction": "Company Introduction",
       "ourExpertise": "Our Expertise",
       "whyWorkHere": "Why You'll Love Working Here?",
-      "submit": "Submit"
+      "submit": "Submit",
+      "logo": "Company Logo",
+      "uploadLogo": "Upload Logo",
+      "changeLogo": "Change Logo",
+      "deleteLogo": "Delete Logo",
+      "confirmDeleteLogo": "Are you sure you want to delete the company logo?",
+      "confirmDeleteLogoOk": "Delete",
+      "confirmDeleteLogoCancel": "Cancel"
     }
   },
   "login": {

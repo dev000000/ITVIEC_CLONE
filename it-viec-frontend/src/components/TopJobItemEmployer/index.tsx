@@ -5,11 +5,13 @@ import { MdLocationCity } from "react-icons/md";
 import { CiLocationOn } from "react-icons/ci";
 import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
+import { getJobTypeOptions, getCityLabel } from "@/constants";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
+import TagStatus from "../TagStatus";
 
 interface TopJobItemProps {
   job?: JobCardResponse;
@@ -19,6 +21,9 @@ function TopJobItemEmployer({ job }: TopJobItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation("job");
   const authenticated = useUserStore((state) => state.authenticated);
+  const jobTypeOptions = getJobTypeOptions(t);
+  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === job.jobType)?.label || job.jobType;
+  const cityLabel = getCityLabel(job.city?.cityName, t);
 
   const handleClick = () => {
     navigate(`${job!.id}`);
@@ -54,14 +59,13 @@ function TopJobItemEmployer({ job }: TopJobItemProps) {
     handleTagOverflow();
   }, [sortedSkills.length]);
 
-
   return (
     <div className="job__item">
       <div className="job__label job__label--hot">
         <span>HOT</span>
       </div>
-      <div className="job__time">{getRelativeTime(job.postedAt)}</div>
-      {/* <TagStatus status={job.jobStatus!} /> */}
+      <div className="job__time">{getRelativeTime(job.postedAt, t)}</div>
+      <TagStatus status={job.status} />
       <div className="job__name">{job.title}</div>
       <div
         className={
@@ -77,11 +81,11 @@ function TopJobItemEmployer({ job }: TopJobItemProps) {
       </div>
       <div className="job__location">
         <MdLocationCity className="job__location-icon" />
-        <span>{job.jobType}</span>
+        <span>{jobTypeLabel}</span>
       </div>
       <div className="job__city">
         <CiLocationOn className="job__city-icon" />
-        <span>{job.city?.cityName}</span>
+        <span>{cityLabel}</span>
       </div>
       <div className="job__list-tag job__list-tag--employer" ref={tagListRef}>
         {sortedSkills.slice(0, visibleTagsCount).map((skill) => (

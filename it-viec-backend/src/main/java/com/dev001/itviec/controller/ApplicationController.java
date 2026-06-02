@@ -5,6 +5,8 @@ import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
+import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.enums.ApplicationStatus;
 import com.dev001.itviec.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -50,10 +52,14 @@ public class ApplicationController {
     // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ (PRIVATE)
     @GetMapping("/companies/me/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
-    public ApiResponse<List<ApplicationResponse>> getMyCompanyApplications() {
-        return ApiResponse.<List<ApplicationResponse>>builder()
+    public ApiResponse<PageResponse<ApplicationResponse>> getMyCompanyApplications(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) ApplicationStatus status,
+            @RequestParam(required = false) String jobTitle) {
+        return ApiResponse.<PageResponse<ApplicationResponse>>builder()
                 .code(1000)
-                .result(applicationService.getMyCompanyApplications())
+                .result(applicationService.getMyCompanyApplications(page, size, status, jobTitle))
                 .build();
     }
 

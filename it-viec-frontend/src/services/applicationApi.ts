@@ -3,11 +3,13 @@ import apiClient from "./apiClient";
 import {
   type ApplicationRequest,
   type ApplicationUpdateRequest,
+  type GetMyCompanyApplicationsParams,
 } from "@/types/request.types";
 import {
   type ApplicationCreateResponse,
   type ApplicationResponse,
   type APIResponse,
+  type PageResponse,
 } from "@/types/response.types";
 
 const API_PATH = Configs.API_ENDPOINT + "/api/v1";
@@ -36,9 +38,13 @@ export const getMyApplicationsApi = () => {
  * Lấy danh sách tất cả đơn ứng tuyển của công ty hiện tại (Nhà tuyển dụng).
  * @returns Promise giải quyết thành `APIResponse<ApplicationResponse[]>`
  */
-export const getMyCompanyApplicationsApi = () => {
+export const getMyCompanyApplicationsApi = (
+  params?: GetMyCompanyApplicationsParams,
+) => {
   const url = API_PATH + "/companies/me/applications";
-  return apiClient.get<APIResponse<ApplicationResponse[]>>(url);
+  return apiClient.get<APIResponse<PageResponse<ApplicationResponse>>>(url, {
+    params,
+  });
 };
 
 /**

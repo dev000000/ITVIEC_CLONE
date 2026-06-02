@@ -9,7 +9,9 @@
     "updateEmail": "Update email",
     "updateProfile": "Update profile",
     "attachedCV": "Your attached CV",
-    "lastUpdated": "Last updated: 24/05/2025",
+    "lastUpdated": "Last updated",
+    "noAttachedCV": "No CV uploaded yet",
+    "loadingAttachedCV": "Loading CV...",
     "manageAttachedCV": "Manage attached CV",
     "yourActivity": "Your activity",
     "appliedJobs": "Applied jobs",
@@ -46,12 +48,25 @@
       "phoneFormat": "Invalid phone number!",
       "locationsRequired": "Please select a work location!"
     },
+    "noCV": "No CV uploaded yet",
+    "lastUpdated": "Last updated",
+    "deleteCV": "Delete CV",
+    "deleteConfirm": "Are you sure you want to delete your CV?",
+    "uploading": "Uploading...",
+    "previewCV": "Preview CV",
+    "previewNotAvailable": "Preview is only available for PDF files. DOCX file will be downloaded.",
     "success": {
       "updateProfile": "Profile updated successfully!",
-      "updateLetter": "Cover letter updated successfully!"
+      "updateLetter": "Cover letter updated successfully!",
+      "uploadCV": "CV uploaded successfully!",
+      "deleteCV": "CV deleted successfully!"
     },
     "error": {
-      "updateFailed": "Update failed!"
+      "updateFailed": "Update failed!",
+      "uploadFailed": "Failed to upload CV. Please try again.",
+      "fileTooLarge": "File size must not exceed 5MB.",
+      "invalidFileType": "Only PDF (.pdf) and Word (.docx, .doc) files are supported.",
+      "deleteFailed": "Failed to delete CV. Please try again."
     }
   },
   "cvProfile": {

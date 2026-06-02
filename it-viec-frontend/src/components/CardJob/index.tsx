@@ -2,6 +2,7 @@ import "./CardJob.scss";
 import { useNavigate } from "react-router-dom";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
+import { getJobTypeOptions, getExperienceLevelOptions } from "@/constants";
 
 interface Job {
   id: number;
@@ -21,7 +22,13 @@ interface CardJobProps {
 function CardJob({ job }: CardJobProps) {
   const navigate = useNavigate();
   const { t } = useTranslation("job");
-  const postedTime = getRelativeTime(job.postedAt);
+  const postedTime = getRelativeTime(job.postedAt, t);
+
+  // Translated enum labels
+  const jobTypeOptions = getJobTypeOptions(t);
+  const experienceLevelOptions = getExperienceLevelOptions(t);
+  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === job.jobType)?.label || job.jobType;
+  const experienceLevelLabel = experienceLevelOptions.find((opt) => opt.value === job.experienceLevel)?.label || job.experienceLevel;
   const handleClick = () => {
     navigate(`${job.id}`);
   }
@@ -39,11 +46,11 @@ function CardJob({ job }: CardJobProps) {
         </div>
         <div className="card-job__item">
           <div className="card-job__title-item">{t("card.jobType")}:</div>
-          <div className="card-job__content-item">{job.jobType}</div>
+          <div className="card-job__content-item">{jobTypeLabel}</div>
         </div>
         <div className="card-job__item">
           <div className="card-job__title-item">{t("card.experienceLevel")}:</div>
-          <div className="card-job__content-item">{job.experienceLevel}</div>
+          <div className="card-job__content-item">{experienceLevelLabel}</div>
         </div>
         <div className="card-job__item">
           <div className="card-job__title-item">{t("card.postedTime")}</div>

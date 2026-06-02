@@ -30,8 +30,8 @@ export interface PageResponse<T> {
   size: number;
   totalElements: number;
   totalPages: number;
-  isFirst: boolean;
-  isLast: boolean;
+  first: boolean;
+  last: boolean;
 }
 
 // --- Common Metadata Types ---
@@ -164,6 +164,7 @@ export interface JobCardResponse {
   city: CityResponse;
   salary: string;
   jobType: JobType;
+  status: JobStatus;
   postedAt: string; // LocalDateTime
   skills: SkillResponse[];
   company: CompanyBaseResponse;
@@ -193,12 +194,19 @@ export interface JobDetailResponse {
 
 // --- Application Types ---
 
+export interface SeekerBasicResponse {
+  id: string;
+  cvUrl: string;
+}
+
 export interface ApplicationResponse {
   id: string;
-  // job?: JobDetailResponse; // Commented out in backend
+  job?: JobCardResponse;
+  seeker?: SeekerBasicResponse;
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
+  resumePreviewUrl?: string;
   coverLetter: string;
   status: ApplicationStatus;
   employerMessage: string;

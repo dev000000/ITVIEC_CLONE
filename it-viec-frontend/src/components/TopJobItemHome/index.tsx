@@ -5,46 +5,28 @@ import { MdLocationCity } from "react-icons/md";
 import { CiLocationOn } from "react-icons/ci";
 import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
+import { getJobTypeOptions, getCityLabel } from "@/constants";
 import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "@/store/userStore";
-import MB from "@/assets/images/mb-bank.webp";
-import SCANDINAVIAN from "@/assets/images/scandinavian-software-park.webp";
-import OTSV from "@/assets/images/one-tech-stop-vietnam-company-ltd.webp";
-import MCREDIT from "@/assets/images/mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei.webp";
-import TYMEX from "@/assets/images/tymex.webp";
-import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
-import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
-import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
-import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
+import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 
-const logoMap: Record<string, string> = {
-  "mb-bank": MB,
-  "scandinavian-software-park": SCANDINAVIAN,
-  "one-tech-stop-vietnam-company-ltd": OTSV,
-  "mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei": MCREDIT,
-  tymex: TYMEX,
-  "andpad-vietnam-co-ltd": ANDPAD,
-  "employment-hero": EMPLOYMENTHERO,
-  "bosch-global-software-technologies-company-limited": BOSCH,
-  "ssi-securities-corporation": SSI,
-};
 
 
 interface TopJobItemProps {
   job: JobCardResponse;
-  companyInfoAdd?: {
-    companyName?: string;
-    slug?: string;
-  };
 }
 
-function TopJobItemHome({ job, companyInfoAdd }: TopJobItemProps) {
+function TopJobItemHome({ job }: TopJobItemProps) {
+  console.log("job in TopJobItemHome component:", job);
   const authenticated = useUserStore((state) => state.authenticated);
   const role = useUserStore((state) => state.role);
   const isSeekerLoggedIn = authenticated && role === "SEEKER";
   const { t } = useTranslation("job");
+  const jobTypeOptions = getJobTypeOptions(t);
+  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === job.jobType)?.label || job.jobType;
+  const cityLabel = getCityLabel(job.city?.cityName, t);
 
   const handleNavigate = () => {
     return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
@@ -87,14 +69,18 @@ function TopJobItemHome({ job, companyInfoAdd }: TopJobItemProps) {
       <div className="job__label job__label--hot">
         <span>HOT</span>
       </div>
-      <div className="job__time">{getRelativeTime(job.postedAt)}</div>
+      {/* Hiển thị thông tin thời gian đăng tuyển */}
+      <div className="job__time">{getRelativeTime(job.postedAt, t)}</div>
+      {/* Hiển thị tên công việc */}
       <div className="job__name">{job.title}</div>
       <div className="job__companies">
+        {/* Hiển thị logo công ty */}
         <div className="job__companies-logo">
-          <img src={logoMap[job.company?.slug || companyInfoAdd?.slug || ""]} alt="logo_companies" />
+          <img src={job.company?.logoUrl || IMAGE_NOT_FOUND} alt="logo_companies" />
         </div>
+        {/* Hiển thị tên công ty */}
         <div className="job__companies-name">
-          {job.company?.companyName || companyInfoAdd?.companyName || ""}
+          {job.company?.companyName || "--"}
 
         </div>
       </div>
@@ -113,13 +99,16 @@ function TopJobItemHome({ job, companyInfoAdd }: TopJobItemProps) {
       </div>
       <div className="job__location">
         <MdLocationCity className="job__location-icon" />
-        <span>{job.jobType}</span>
+        {/* Hiển thị loại công việc */}
+        <span>{jobTypeLabel}</span>
       </div>
       <div className="job__city">
+        {/* Hiển thị thành phố */}
         <CiLocationOn className="job__city-icon" />
-        <span>{job.city?.cityName}</span>
+        <span>{cityLabel}</span>
       </div>
       <div className="job__list-tag" ref={tagListRef}>
+        {/* Hiển thị kỹ năng */}
         {sortedSkills.slice(0, visibleTagsCount).map((skill) => (
           <TagSkill key={skill.id} text={skill.skillName} />
         ))}

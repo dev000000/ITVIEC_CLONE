@@ -3,6 +3,7 @@ package com.dev001.itviec.controller;
 import com.dev001.itviec.dto.request.SeekerUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.SeekerCvContent;
+import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.service.SeekerService;
 import jakarta.validation.Valid;
@@ -65,7 +66,8 @@ public class SeekerController {
                 .build();
     }
 
-    // 5.API cho phép seeker upload CV của mình (.pdf, .doc, .docx, tối đa 5MB) (PRIVATE)
+    // 5.API cho phép seeker upload CV của mình (.pdf, .doc, .docx, tối đa 5MB)
+    // (PRIVATE)
     @PostMapping(value = "/me/cv", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerResponse> uploadMyCv(@RequestPart("file") MultipartFile file) {
@@ -86,6 +88,27 @@ public class SeekerController {
                 .body(cv.getData());
     }
 
+    // 6b.API cho phép seeker lấy metadata CV của mình (fileName, contentType, size,
+    // updatedAt) (PRIVATE)
+    @GetMapping("/me/cv/metadata")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<SeekerCvMetadataResponse> getMyCvMetadata() {
+        return ApiResponse.<SeekerCvMetadataResponse>builder()
+                .code(1000)
+                .result(seekerService.getMyCvMetadata())
+                .build();
+    }
+
+    @GetMapping("/me/cv/preview")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ResponseEntity<byte[]> previewMyCv() {
+        SeekerCvContent cv = seekerService.getMyCv();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + cv.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(cv.getContentType()))
+                .body(cv.getData());
+    }
+
     // 7.API cho phép employer/admin download CV của seeker theo id (PRIVATE)
     @GetMapping("/{id}/cv")
     @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN')")
@@ -97,9 +120,10 @@ public class SeekerController {
                 .body(cv.getData());
     }
 
-    // 7b.API preview CV inline (dùng cho FE hiển thị trực tiếp trong browser, không download) (PRIVATE)
+    // 7b.API preview CV inline (dùng cho FE hiển thị trực tiếp trong browser, không
+    // download) (PRIVATE)
     @GetMapping("/{id}/cv/preview")
-    @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN', 'SEEKER')")
+    @PreAuthorize("hasAnyRole('EMPLOYER', 'ADMIN')")
     public ResponseEntity<byte[]> previewCvBySeekerId(@PathVariable String id) {
         SeekerCvContent cv = seekerService.getCvBySeekerId(id);
         return ResponseEntity.ok()
@@ -118,5 +142,3 @@ public class SeekerController {
                 .build();
     }
 }
-
-

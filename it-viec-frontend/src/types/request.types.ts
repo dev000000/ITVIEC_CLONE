@@ -11,17 +11,19 @@ import type {
   WorkingHours,
 } from "./common.types";
 
-export type EntityId = number | string;
-
-// Minimal relation payload accepted by backend for nested entities.
-export interface EntityRef {
-  id: EntityId;
+export interface GetMyCompanyApplicationsParams {
+  page?: number;
+  size?: number;
+  status?: ApplicationStatus;
+  jobTitle?: string;
 }
+import type {
+  CityResponse,
+  CountryResponse,
+  SkillResponse,
+} from "./response.types";
 
-export type CityRef = EntityRef;
-export type SkillRef = EntityRef;
-export type CountryRef = EntityRef;
-
+export type EntityId = number | string;
 export type IsoDateString = string;
 export type IsoDateTimeString = string;
 
@@ -52,47 +54,47 @@ export interface SeekerUpdateRequest {
   phoneNumber: string;
   dateOfBirth: IsoDateString;
   gender: Gender;
-  city?: CityRef | null;
+  city?: CityResponse | null;
   address?: string;
   personalLink?: string;
   coverLetter?: string;
-  skills?: SkillRef[];
-  desiredLocations?: CityRef[];
+  skills?: SkillResponse[];
+  desiredLocations?: CityResponse[];
 }
 
 export interface CompanyUpdateRequest {
   companyName: string;
-  description?: string;
+  description: string;
   website?: string;
   logoUrl?: string;
   address: string;
   companyModel: CompanyModel;
   industry: string;
   companySize: CompanySize;
-  country: CountryRef;
+  country: CountryResponse;
   workingHours: WorkingHours;
   overtimePolicy: OvertimePolicy;
   companyIntroduction: string;
   ourExpertise: string;
   whyWorkHere: string;
-  companySkills?: SkillRef[];
+  companySkills?: SkillResponse[];
 }
 
 export interface JobCreateRequest {
-  companyId: string;
   title: string;
   jobReason: string;
   jobDescription: string;
   jobRequirements: string;
   whyJoinUs: string;
   location: string;
-  city: CityRef;
+  city: CityResponse;
   salary: string;
   jobType: JobType;
   experienceLevel: ExperienceLevel;
   postedAt: IsoDateTimeString;
   expiresAt: IsoDateTimeString;
-  skills: SkillRef[];
+  status: JobStatus;
+  skills: SkillResponse[];
 }
 
 export interface JobUpdateRequest {
@@ -102,21 +104,21 @@ export interface JobUpdateRequest {
   jobRequirements: string;
   whyJoinUs: string;
   location: string;
-  city?: CityRef | null;
+  city: CityResponse;
   salary: string;
   jobType: JobType;
   experienceLevel: ExperienceLevel;
   postedAt: IsoDateTimeString;
   expiresAt: IsoDateTimeString;
   status: JobStatus;
-  skills?: SkillRef[];
+  skills: SkillResponse[];
 }
 
 export interface ApplicationRequest {
   fullName: string;
   phoneNumber: string;
   coverLetter?: string;
-  desiredLocations?: CityRef[];
+  desiredLocations?: CityResponse[];
 }
 
 export interface ApplicationUpdateRequest {

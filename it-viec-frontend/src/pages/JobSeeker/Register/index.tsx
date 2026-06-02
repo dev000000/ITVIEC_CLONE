@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { registerSeekerApi } from "@/services/authApi";
 import { useTranslation } from "react-i18next";
+import { getApiErrorMessage } from "@/utils/apiError";
 
 // Kiểu dữ liệu form đăng ký tài khoản
 interface RegisterFormValues {
@@ -92,12 +93,10 @@ function Register() {
       navigate("/login");
     } catch (error) {
       console.log('Lỗi khi đăng ký: ', error);
-      const errorMessage = error.response?.data?.message || t("register.errorTitle");
-      const errorCode = error.response?.data?.code || "unknown_error";
       Swal.fire({
         icon: "error",
         title: t("register.errorTitle"),
-        text: `${errorMessage} (Mã lỗi: ${errorCode})`,
+        text: getApiErrorMessage(error, t),
       });
     }
   };

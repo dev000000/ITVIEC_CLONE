@@ -1,5 +1,7 @@
 // Trang quản lý danh sách Jobs của Employer
-// Hiển thị toàn bộ job của công ty và cho phép tạo job mới qua modal formimport EmployerStart from "@/components/EmployerStart";
+// Hiển thị toàn bộ job của công ty và cho phép tạo job mới qua modal
+import EmployerStart from "@/components/EmployerStart";
+import emptyImage from "@/assets/images/everything-empty.svg";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { createJobApi, getMyJobsApi } from "@/services/jobApi";
@@ -8,83 +10,80 @@ import { getAllCitiesApi } from "@/services/cityApi";
 import "./EmployerJobs.scss";
 import ButtonAction from "@/components/ButtonAction";
 import { MdAdd } from "react-icons/md";
+import { MdSearch } from "react-icons/md";
 import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
 import { Col, DatePicker, Row, Select } from "antd";
 import { Button, Form, Input } from "antd";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
-import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import dayjs from "dayjs";
 import TopJobItemEmployer from "@/components/TopJobItemEmployer";
-import { useCompanyStore } from "@/store/companyStore";
-import {
-  findCityRef,
-  findSkillRefs,
-  toExperienceLevel,
-  toJobStatus,
-  toJobType,
-} from "@/utils/apiPayloadMappers";
 import type {
   CityResponse,
   JobDetailResponse,
   SkillResponse,
 } from "@/types/response.types";
+import {
+  getExperienceLevelOptions,
+  getJobStatusOptions,
+  getJobTypeOptions,
+} from "@/constants";
+import type { JobCreateRequest } from "@/types/request.types";
+import { getApiErrorMessage } from "@/utils/apiError";
 
-function EmployerJobs() {
+const customStyles = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    marginRight: "-50%",
+    transform: "translate(-45%, -50%)",
+    padding: 0,
+    overflow: "hidden",
+  },
+};
+
+interface JobsFormValues extends Omit<JobCreateRequest, "city" | "skills"> {
+  city: number;
+  skills: number[];
+}
+
+const EmployerJobs = () => {
   const { t } = useTranslation();
-  // companyId từ Zustand store, đính kèm vào payload khi tạo job mới
-  const companyId = useCompanyStore((state) => state.id);
   // Danh sách job của công ty hiển thị trên trang
   const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
+
   // Trạng thái mở/đóng modal form tạo job mới
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
   const [form] = Form.useForm();
+
   // Danh sách skills và cities từ API, dùng cho Select dropdown trong form tạo job
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
-  // Các tùy chọn cho Select dropdown trong form tạo job
-  const jobTypeList = [
-    { value: "Tại văn phòng", label: <span>Tại văn phòng</span> },
-    { value: "Làm Từ Xa", label: <span>Làm Từ Xa</span> },
-    { value: "Linh Hoạt", label: <span>Linh Hoạt</span> },
-  ];
-  const experienceLevelList = [
-    { value: "Intern", label: <span>Intern</span> },
-    { value: "Fresher", label: <span>Fresher</span> },
-    { value: "Junior", label: <span>Junior</span> },
-    { value: "Middle", label: <span>Middle</span> },
-    { value: "Senior", label: <span>Senior</span> },
-    { value: "Lead", label: <span>Lead</span> },
-    { value: "Manager", label: <span>Manager</span> },
-    { value: "Expert", label: <span>Expert</span> },
-    { value: "Principal", label: <span>Principal</span> },
-  ];
-  const statusList = [
-    {
-      value: "Draft",
-      label: (
-        <span style={{ color: "#CB8E3C", fontWeight: "bold" }}>Draft</span>
-      ),
-    },
-    {
-      value: "Active",
-      label: (
-        <span style={{ color: "#46963E", fontWeight: "bold" }}>Active</span>
-      ),
-    },
-    {
-      value: "Expired",
-      label: (
-        <span style={{ color: "#040404", fontWeight: "bold" }}>Expired</span>
-      ),
-    },
-    {
-      value: "Closed",
-      label: (
-        <span style={{ color: "#AD3D35", fontWeight: "bold" }}>Closed</span>
-      ),
-    },
-  ];
+
+  // Giá trị filter tìm kiếm job
+  const [filterTitle, setFilterTitle] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string | undefined>(undefined);
+  const [filterJobType, setFilterJobType] = useState<string | undefined>(undefined);
+  const [filterCityId, setFilterCityId] = useState<number | undefined>(undefined);
+
+  // Các tùy chọn cho Select dropdown lấy từ constants + i18n (đồng bộ với backend enum)
+  const jobTypeOptions = getJobTypeOptions(t);
+  const experienceLevelOptions = getExperienceLevelOptions(t);
+  const jobStatusOptions = getJobStatusOptions(t);
+
+  // Form chỉ cho phép chọn ACTIVE hoặc DRAFT khi tạo job mới
+  const activeAndDraftStatusOptions = jobStatusOptions.filter(
+    (o) => o.value === "ACTIVE" || o.value === "DRAFT"
+  );
+
+  // Theo dõi giá trị postedAt để dùng cho validate expiresAt
+  const postedAtValue = Form.useWatch("postedAt", form);
+
+
   // Chuyển đổi skills và cities từ API sang định dạng Select options của Ant Design
   const skillList = skills.map((skill) => ({
     value: skill.id,
@@ -94,21 +93,11 @@ function EmployerJobs() {
     value: city.id,
     label: <span>{city.cityName}</span>,
   }));
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-45%, -50%)",
-      padding: 0,
-      overflow: "hidden",
-    },
-  };
+
+
   // Fetch song song skills, cities và danh sách job của công ty khi component mount
   useEffect(() => {
-    const getCompany = async () => {
+    const fetchData = async () => {
       try {
         const [skillsResponse, citiesResponse, jobsResponse] = await Promise.all([
           getAllSkillsApi(),
@@ -119,79 +108,93 @@ function EmployerJobs() {
         setCities(citiesResponse.data.result || []);
         setJobs(jobsResponse.data.result || []);
       } catch (error) {
-        console.error("Error fetching company or job data:", error);
+        console.error("Error fetching data:", error);
         Swal.fire({
           icon: "error",
-          title: "Oops...",
-          text: "Failed to load company or job data!",
+          title: t("employer:jobs.notifications.oops"),
+          text: getApiErrorMessage(error, t),
         });
       }
     };
-    getCompany();
+    fetchData();
   }, []);
+
+  // Tìm kiếm / lọc danh sách job theo các filter đang chọn
+  const handleSearch = async () => {
+    try {
+      const jobsResponse = await getMyJobsApi({
+        title: filterTitle || undefined,
+        status: filterStatus,
+        jobType: filterJobType,
+        cityId: filterCityId,
+      });
+      setJobs(jobsResponse.data.result || []);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: t("employer:jobs.notifications.oops"),
+        text: getApiErrorMessage(error, t),
+      });
+    }
+  };
+
+  // Xử lý mở modal form tạo job mới
   const handleAdd = () => {
     openModal();
   };
+  // Hàm mở/đóng modal
   const openModal = () => {
     setIsOpen(true);
   };
+  // Đóng modal và reset form 
   const closeModal = () => {
     setIsOpen(false);
   };
+
+  // Xử lý khi submit form thất bại (validate không pass)
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
+
   // Xử lý submit form tạo job mới
   // Map giá trị form → định dạng API, gọi API tạo job, sau đó refresh lại danh sách
-  const onFinish = async (values: Record<string, unknown>) => {
-    const formattedValues = {
-      companyId: String(companyId ?? ""),
-      title: String(values.title ?? ""),
-      jobReason: String(values.jobReason ?? ""),
-      jobDescription: String(values.jobDescription ?? ""),
-      jobRequirements: String(values.jobRequirements ?? ""),
-      whyJoinUs: String(values.whyJoinUs ?? ""),
-      location: String(values.location ?? ""),
-      city: findCityRef(values.city, cities, cities[0]) ?? { id: 0 },
-      salary: String(values.salary ?? ""),
-      jobType: toJobType(values.jobType),
-      experienceLevel: toExperienceLevel(values.experienceLevel),
-      postedAt: values.postedAt
-        ? dayjs(values.postedAt as string).toISOString()
-        : dayjs().toISOString(),
-      expiresAt: values.expiresAt
-        ? dayjs(values.expiresAt as string).toISOString()
-        : dayjs().add(30, "day").toISOString(),
-      status: toJobStatus(values.status),
-      skills: findSkillRefs(values.skills, skills),
-    };
+  const onFinish = async (values: JobsFormValues) => {
+    const data = {
+      ...values,
+      city: cities.find((city) => city.id === values.city) || null,
+      skills: skills.filter((skill) => values.skills.includes(skill.id)),
+      postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
+      expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
+    }
     try {
-      await createJobApi(formattedValues);
+      await createJobApi(data);
       Swal.fire({
-        title: "Add job Success!",
+        title: t("employer:jobs.notifications.addSuccess"),
         icon: "success",
         draggable: true,
       });
       setIsOpen(false);
+      // Refresh lại danh sách job sau khi tạo thành công
       const jobList = await getMyJobsApi();
       setJobs(jobList.data.result || []);
+
     } catch (error) {
       console.error("Error adding job:", error);
-      setJobs([]);
       Swal.fire({
-        title: "Add job Failed!",
-        text: "Please try again later.",
         icon: "error",
+        title: t("employer:jobs.notifications.oops"),
+        text: getApiErrorMessage(error, t),
       });
     }
   };
   return (
     <>
+      {/* Modal form tạo job mới */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel={t("employer:jobs.addTitle")}
       >
         <div className="job-form__title-wrap">
           <div className="job-form__title">{t("employer:jobs.addTitle")}</div>
@@ -219,60 +222,138 @@ function EmployerJobs() {
           >
             <Row gutter={[10, 10]}>
               <Col span={24}>
-                <Form.Item label={t("employer:jobs.form.title")} name="title">
-                  <Input />
+                <Form.Item
+                  label={t("employer:jobs.form.title")}
+                  name="title"
+                  rules={[{ required: true, message: t("employer:jobs.form.titleRequired") }]}
+                >
+                  <Input placeholder={t("employer:jobs.form.titlePlaceholder")} />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label={t("employer:jobs.form.location")} name="location">
-                  <Input />
+                <Form.Item
+                  label={t("employer:jobs.form.location")}
+                  name="location"
+                  rules={[{ required: true, message: t("employer:jobs.form.locationRequired") }]}
+                >
+                  <Input placeholder={t("employer:jobs.form.locationPlaceholder")} />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label="City" name="city">
+                <Form.Item
+                  label={t("employer:jobs.form.city")}
+                  name="city"
+                  rules={[{ required: true, message: t("employer:jobs.form.cityRequired") }]}
+                >
                   <Select
-                    placeholder="Please select a city"
+                    placeholder={t("employer:jobs.form.selectCityPlaceholder")}
                     options={cityList}
                   />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label={t("employer:jobs.form.salary")} name="salary">
-                  <Input />
+                <Form.Item
+                  label={t("employer:jobs.form.salary")}
+                  name="salary"
+                  rules={[{ required: true, message: t("employer:jobs.form.salaryRequired") }]}
+                >
+                  <Input placeholder={t("employer:jobs.form.salaryPlaceholder")} />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label={t("employer:jobs.form.jobType")} name="jobType">
+                <Form.Item
+                  label={t("employer:jobs.form.jobType")}
+                  name="jobType"
+                  rules={[{ required: true, message: t("employer:jobs.form.jobTypeRequired") }]}
+                >
                   <Select
-                    placeholder="Please select a job type"
-                    options={jobTypeList}
-                  ></Select>
+                    placeholder={t("employer:jobs.form.selectJobTypePlaceholder")}
+                    options={jobTypeOptions}
+                  />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label={t("employer:jobs.form.experienceLevel")} name="experienceLevel">
+                <Form.Item
+                  label={t("employer:jobs.form.experienceLevel")}
+                  name="experienceLevel"
+                  rules={[{ required: true, message: t("employer:jobs.form.levelRequired") }]}
+                >
                   <Select
-                    placeholder="Please select a level"
-                    options={experienceLevelList}
-                  ></Select>
+                    placeholder={t("employer:jobs.form.selectLevelPlaceholder")}
+                    options={experienceLevelOptions}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="postedAt" label={t("employer:jobs.form.postedAt")}>
-                  <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                <Form.Item
+                  name="postedAt"
+                  label={t("employer:jobs.form.postedAt")}
+                  rules={[
+                    { required: true, message: t("employer:jobs.form.postedAtRequired") },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+                        if (value.isBefore(dayjs().startOf("day"))) {
+                          return Promise.reject(new Error(t("employer:jobs.form.dateNotPast")));
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder={t("employer:jobs.form.datePickerPlaceholder")}
+                    disabledDate={(current) => current && current < dayjs().startOf("day")}
+                  />
                 </Form.Item>
               </Col>
               <Col span={12}>
-                <Form.Item name="expiresAt" label={t("employer:jobs.form.expiresAt")}>
-                  <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                <Form.Item
+                  name="expiresAt"
+                  label={t("employer:jobs.form.expiresAt")}
+                  rules={[
+                    { required: true, message: t("employer:jobs.form.expiresAtRequired") },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+                        if (value.isBefore(dayjs().startOf("day"))) {
+                          return Promise.reject(new Error(t("employer:jobs.form.dateNotPast")));
+                        }
+                        if (postedAtValue && value.isBefore(postedAtValue)) {
+                          return Promise.reject(
+                            new Error(t("employer:jobs.form.expiresBeforePosted"))
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder={t("employer:jobs.form.datePickerPlaceholder")}
+                    disabledDate={(current) => {
+                      if (current && current < dayjs().startOf("day")) return true;
+                      if (postedAtValue && current && current < dayjs(postedAtValue).startOf("day"))
+                        return true;
+                      return false;
+                    }}
+                  />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label={t("employer:jobs.form.status")} name="status">
+                <Form.Item
+                  label={t("employer:jobs.form.status")}
+                  name="status"
+                  rules={[{ required: true, message: t("employer:jobs.form.statusRequired") }]}
+                >
                   <Select
-                    placeholder="Please select status"
-                    options={statusList}
-                  ></Select>
+                    placeholder={t("employer:jobs.form.selectStatusPlaceholder")}
+                    options={activeAndDraftStatusOptions}
+                  />
                 </Form.Item>
               </Col>
               <Col span={24}>
@@ -282,38 +363,48 @@ function EmployerJobs() {
                   rules={[
                     {
                       required: true,
-                      message: "Please select required skills",
+                      message: t("employer:jobs.form.selectSkillsRequired"),
                       type: "array",
+                    },
+                    {
+                      validator: (_, value: number[]) => {
+                        if (!value || value.length < 3) {
+                          return Promise.reject(
+                            new Error(t("employer:jobs.form.skillsMinRequired"))
+                          );
+                        }
+                        return Promise.resolve();
+                      },
                     },
                   ]}
                 >
                   <Select
                     mode="multiple"
-                    placeholder="Please select required skills"
+                    placeholder={t("employer:jobs.form.selectSkillsPlaceholder")}
                     options={skillList}
-                  ></Select>
+                  />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobReason" label={t("employer:jobs.form.jobReason")}>
+                <Form.Item name="jobReason" label={t("employer:jobs.form.jobReason")} required={true}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobDescription" label={t("employer:jobs.form.jobDescription")}>
+                <Form.Item name="jobDescription" label={t("employer:jobs.form.jobDescription")} required={true}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="jobRequirements" label={t("employer:jobs.form.jobRequirements")}>
+                <Form.Item name="jobRequirements" label={t("employer:jobs.form.jobRequirements")} required={true}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item name="whyJoinUs" label={t("employer:jobs.form.whyJoinUs")}>
+                <Form.Item name="whyJoinUs" label={t("employer:jobs.form.whyJoinUs")} required={true}>
                   {/* @ts-expect-error — value/onChange injected by Form.Item */}
                   <SimpleEditor />
                 </Form.Item>
@@ -329,19 +420,70 @@ function EmployerJobs() {
           </Form>
         </div>
       </Modal>
+      {/* Phần header với title và nút tạo job mới */}
       <div className="employer-jobs">
-        <EmployerStart content={t("employer:jobs.title")} type="search" />
+        <EmployerStart content={t("employer:jobs.title")} type="search" hideSearch />
+        {/* Thanh filter + nút tạo mới */}
         <div className="employer-job__button-wrap">
           <ButtonAction
             text={t("employer:jobs.create")}
             icon={<MdAdd />}
             handle={handleAdd}
-          ></ButtonAction>
+          />
+          <div className="employer-job__filter-group">
+            <Input
+              placeholder={t("employer:jobs.filter.titlePlaceholder")}
+              value={filterTitle}
+              onChange={(e) => setFilterTitle(e.target.value)}
+              onPressEnter={handleSearch}
+              size="large"
+              style={{ width: 200 }}
+              allowClear
+            />
+            <Select
+              placeholder={t("employer:jobs.filter.statusPlaceholder")}
+              options={jobStatusOptions}
+              value={filterStatus}
+              onChange={(v) => setFilterStatus(v)}
+              allowClear
+              size="large"
+              style={{ width: 160 }}
+            />
+            <Select
+              placeholder={t("employer:jobs.filter.jobTypePlaceholder")}
+              options={jobTypeOptions}
+              value={filterJobType}
+              onChange={(v) => setFilterJobType(v)}
+              allowClear
+              size="large"
+              style={{ width: 180 }}
+            />
+            <Select
+              placeholder={t("employer:jobs.filter.cityPlaceholder")}
+              options={cityList}
+              value={filterCityId}
+              onChange={(v) => setFilterCityId(v)}
+              allowClear
+              size="large"
+              style={{ width: 160 }}
+            />
+            <ButtonAction
+              text={t("employer:jobs.filter.searchButton")}
+              icon={<MdSearch />}
+              handle={handleSearch}
+            />
+          </div>
         </div>
+        {/* Danh sách job hiển thị dạng grid */}
         <div className="employer-jobs__list">
-          <Row gutter={[20, 20]}>
-            {jobs.map((job) => {
-              return (
+          {jobs.length === 0 ? (
+            <div className="employer-jobs__empty">
+              <img src={emptyImage} alt="No jobs" />
+              <p>{t("employer:jobs.noJobs")}</p>
+            </div>
+          ) : (
+            <Row gutter={[20, 20]}>
+              {jobs.map((job) => (
                 <Col
                   xxl={6}
                   xl={8}
@@ -351,12 +493,11 @@ function EmployerJobs() {
                   xs={24}
                   key={job.id}
                 >
-                  {/* <CardJob job={job} /> */}
                   <TopJobItemEmployer job={job} />
                 </Col>
-              );
-            })}
-          </Row>
+              ))}
+            </Row>
+          )}
         </div>
       </div>
     </>
