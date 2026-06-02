@@ -1,14 +1,9 @@
 package com.dev001.itviec.controller;
 
-import com.dev001.itviec.dto.request.SeekerUpdateRequest;
-import com.dev001.itviec.dto.response.ApiResponse;
-import com.dev001.itviec.dto.response.SeekerCvContent;
-import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
-import com.dev001.itviec.dto.response.SeekerResponse;
-import com.dev001.itviec.service.SeekerService;
+import java.util.List;
+
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +11,15 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import com.dev001.itviec.dto.request.SeekerUpdateRequest;
+import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.SeekerCvContent;
+import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
+import com.dev001.itviec.dto.response.SeekerResponse;
+import com.dev001.itviec.service.SeekerService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController

@@ -1,16 +1,17 @@
 package com.dev001.itviec.repository;
 
-import com.dev001.itviec.entity.company.Company;
-import com.dev001.itviec.entity.job.Job;
-import com.dev001.itviec.enums.JobStatus;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import java.util.List;
-import java.util.Optional;
+import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.job.Job;
+import com.dev001.itviec.enums.JobStatus;
 
 public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificationExecutor<Job> {
 

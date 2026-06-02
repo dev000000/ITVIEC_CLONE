@@ -1,14 +1,13 @@
 package com.dev001.itviec.configuration;
 
-import com.dev001.itviec.exception.TokenExpiredException;
-import com.dev001.itviec.repository.TokenRepository;
+import java.io.IOException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +18,11 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
+import com.dev001.itviec.exception.TokenExpiredException;
+import com.dev001.itviec.repository.TokenRepository;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
@@ -43,11 +46,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         || uri.startsWith("/api/v1/companies/slug/")
                         || uri.matches("/api/v1/companies/[^/]+/logo"));
 
-        boolean isPublicJobGet = method.equals("GET")
-                && (uri.equals("/api/v1/jobs")
-                        || uri.startsWith("/api/v1/jobs/slug/"));
-
-        boolean isPublicAuthGet = method.equals("GET") && uri.equals("/api/v1/auth/me");
+        boolean isPublicJobGet =
+                method.equals("GET") && (uri.equals("/api/v1/jobs") || uri.startsWith("/api/v1/jobs/slug/"));
 
         return (uri.contains("/api/v1/cities") && method.equals("GET"))
                 || (uri.contains("/api/v1/skills") && method.equals("GET"))
@@ -56,8 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || uri.contains("/refresh-token")
                 || uri.contains("/login")
                 || isPublicCompanyGet
-                || isPublicJobGet
-                || isPublicAuthGet;
+                || isPublicJobGet;
     }
 
     @Override
@@ -90,7 +89,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (isTokenExpired) {
             request.setAttribute("auth.error.code", "ACCESS_TOKEN_EXPIRED");
             SecurityContextHolder.clearContext();
-            throw new TokenExpiredException("Access token expired");
+            new JwtAuthenticationEntryPoint()
+                    .commence(request, response, new TokenExpiredException("Access token expired"));
+            return;
         }
         email = jwtService.extractEmail(jwt).orElse(null);
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {

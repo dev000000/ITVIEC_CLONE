@@ -1,18 +1,20 @@
 package com.dev001.itviec.dto.request;
 
-import com.dev001.itviec.entity.city.City;
-import com.dev001.itviec.entity.skill.Skill;
-import com.dev001.itviec.enums.Gender;
+import java.time.LocalDate;
+import java.util.Set;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+
+import com.dev001.itviec.entity.city.City;
+import com.dev001.itviec.entity.skill.Skill;
+import com.dev001.itviec.enums.Gender;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

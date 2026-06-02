@@ -1,5 +1,20 @@
 package com.dev001.itviec.service.impl;
 
+import static com.dev001.itviec.enums.TokenType.BEARER;
+import static com.dev001.itviec.exception.ErrorCode.*;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dev001.itviec.configuration.CookieFactory;
 import com.dev001.itviec.configuration.JwtService;
 import com.dev001.itviec.dto.request.AuthenticationRequest;
@@ -16,21 +31,9 @@ import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.TokenRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.AuthenticationService;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import static com.dev001.itviec.enums.TokenType.BEARER;
-import static com.dev001.itviec.exception.ErrorCode.*;
 
 @Slf4j
 @Service

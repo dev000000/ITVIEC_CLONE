@@ -1,9 +1,10 @@
 package com.dev001.itviec.repository;
 
-import com.dev001.itviec.entity.seeker.SeekerCv;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import com.dev001.itviec.entity.seeker.SeekerCv;
 
 public interface SeekerCvRepository extends JpaRepository<SeekerCv, String> {
 
@@ -13,4 +14,3 @@ public interface SeekerCvRepository extends JpaRepository<SeekerCv, String> {
 
     void deleteBySeekerId(String seekerId);
 }
-

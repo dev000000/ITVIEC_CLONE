@@ -1,5 +1,15 @@
 package com.dev001.itviec.service.impl;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import com.dev001.itviec.dto.request.SeekerUpdateRequest;
 import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
@@ -14,17 +24,9 @@ import com.dev001.itviec.repository.SeekerCvRepository;
 import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.SeekerService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @Service
@@ -98,7 +100,8 @@ public class SeekerServiceImpl implements SeekerService {
         Seeker seeker = getSeekerByCookie();
 
         // Upsert: tìm CV cũ hoặc tạo mới
-        SeekerCv seekerCv = seekerCvRepository.findBySeekerId(seeker.getId())
+        SeekerCv seekerCv = seekerCvRepository
+                .findBySeekerId(seeker.getId())
                 .orElse(SeekerCv.builder().seeker(seeker).build());
 
         try {
@@ -128,7 +131,8 @@ public class SeekerServiceImpl implements SeekerService {
     @Transactional(readOnly = true)
     @Override
     public SeekerCvContent getCvBySeekerId(String seekerId) {
-        SeekerCv cv = seekerCvRepository.findBySeekerId(seekerId)
+        SeekerCv cv = seekerCvRepository
+                .findBySeekerId(seekerId)
                 .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
         return new SeekerCvContent(cv.getFileName(), cv.getContentType(), cv.getData());
     }
@@ -148,7 +152,8 @@ public class SeekerServiceImpl implements SeekerService {
     @Override
     public SeekerCvMetadataResponse getMyCvMetadata() {
         Seeker seeker = getSeekerByCookie();
-        SeekerCv cv = seekerCvRepository.findBySeekerId(seeker.getId())
+        SeekerCv cv = seekerCvRepository
+                .findBySeekerId(seeker.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
         return SeekerCvMetadataResponse.builder()
                 .fileName(cv.getFileName())

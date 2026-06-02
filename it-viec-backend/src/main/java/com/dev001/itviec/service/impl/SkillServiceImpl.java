@@ -1,18 +1,20 @@
 package com.dev001.itviec.service.impl;
 
+import static com.dev001.itviec.exception.ErrorCode.SKILL_NAME_EXISTED;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
 import com.dev001.itviec.dto.response.SkillResponse;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.mapper.SkillMapper;
 import com.dev001.itviec.repository.SkillRepository;
 import com.dev001.itviec.service.SkillService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static com.dev001.itviec.exception.ErrorCode.SKILL_NAME_EXISTED;
 
 /**
  * Triển khai nghiệp vụ cho tính năng quản lý Skill.

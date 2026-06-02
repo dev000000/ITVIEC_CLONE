@@ -38,8 +38,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
     private static final long MAX_COMPANY_LOGO_SIZE_BYTES = 2 * 1024 * 1024;
-    private static final Set<String> ALLOWED_COMPANY_LOGO_TYPES = Set.of(MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE, "image/webp");
+    private static final Set<String> ALLOWED_COMPANY_LOGO_TYPES =
+            Set.of(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, "image/webp");
 
     private final CompanyMapper companyMapper;
     private final CompanyLogoRepository companyLogoRepository;
@@ -124,9 +124,9 @@ public class CompanyServiceImpl implements CompanyService {
         validateCompanyLogo(file);
 
         Company company = getCurrentEmployerCompany();
-        CompanyLogo companyLogo = companyLogoRepository.findByCompanyId(company.getId()).orElse(CompanyLogo.builder()
-                .company(company)
-                .build());
+        CompanyLogo companyLogo = companyLogoRepository
+                .findByCompanyId(company.getId())
+                .orElse(CompanyLogo.builder().company(company).build());
 
         try {
             companyLogo.setFileName(resolveCompanyLogoFileName(file));

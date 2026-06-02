@@ -1,5 +1,7 @@
 package com.dev001.itviec.service;
 
+import java.util.List;
+
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
@@ -7,8 +9,6 @@ import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
-
-import java.util.List;
 
 public interface JobService {
 

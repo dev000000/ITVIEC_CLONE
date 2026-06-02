@@ -1,5 +1,20 @@
 package com.dev001.itviec.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import jakarta.persistence.criteria.Predicate;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
@@ -22,21 +37,9 @@ import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.service.ApplicationService;
 import com.dev001.itviec.service.EmployerService;
 import com.dev001.itviec.service.SeekerService;
-import jakarta.persistence.criteria.Predicate;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 @Slf4j
 @Service
@@ -135,8 +138,7 @@ public class ApplicationServiceImpl implements ApplicationService {
 
             if (jobTitle != null && !jobTitle.isBlank()) {
                 predicates.add(cb.like(
-                        cb.lower(jobJoin.get("title")),
-                        "%" + jobTitle.trim().toLowerCase(Locale.ROOT) + "%"));
+                        cb.lower(jobJoin.get("title")), "%" + jobTitle.trim().toLowerCase(Locale.ROOT) + "%"));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));

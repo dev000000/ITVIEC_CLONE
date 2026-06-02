@@ -1,7 +1,5 @@
 package com.dev001.itviec.configuration;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +18,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
@@ -27,15 +28,15 @@ import org.springframework.web.filter.CorsFilter;
 @EnableMethodSecurity
 public class SecurityConfig {
     private final String[] PUBLIC_URLS_GET = {
-            "/api/v1/cities",
-            "/api/v1/skills",
-            "/api/v1/countries",
-            "/api/v1/companies",
-            "/api/v1/companies/slug/*",
-            "/api/v1/companies/*/logo",
-            "/api/v1/jobs",
-            "/api/v1/jobs/slug/*",
-            "/api/v1/auth/me",
+        "/api/v1/cities",
+        "/api/v1/skills",
+        "/api/v1/countries",
+        "/api/v1/companies",
+        "/api/v1/companies/slug/*",
+        "/api/v1/companies/*/logo",
+        "/api/v1/jobs",
+        "/api/v1/jobs/slug/*",
+        "/api/v1/auth/me",
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

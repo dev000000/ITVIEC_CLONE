@@ -1,5 +1,27 @@
 package com.dev001.itviec.service.impl;
 
+import static com.dev001.itviec.enums.JobStatus.ACTIVE;
+import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
+
+import java.text.Normalizer;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import jakarta.persistence.criteria.Predicate;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
@@ -19,29 +41,9 @@ import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.JobService;
-import jakarta.persistence.criteria.Predicate;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.text.Normalizer;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.dev001.itviec.enums.JobStatus.ACTIVE;
-import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -109,7 +111,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobDetailResponse> getJobsByCurrentEmployer(String title, JobStatus status, JobType jobType, Long cityId) {
+    public List<JobDetailResponse> getJobsByCurrentEmployer(
+            String title, JobStatus status, JobType jobType, Long cityId) {
         // 1. Lấy email từ SecurityContext
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {
@@ -119,8 +122,11 @@ public class JobServiceImpl implements JobService {
 
         // 2. Lấy user → employer → company
         User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        Employer employer = employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
-        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
+        Employer employer =
+                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+        Company company = companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
 
         // 3. Build Specification với các filter tùy chọn
         Specification<Job> spec = (root, query, cb) -> {

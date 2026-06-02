@@ -2,6 +2,8 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +25,6 @@ import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.dto.response.CompanyLogoContent;
 import com.dev001.itviec.service.CompanyService;
 
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -62,7 +63,8 @@ public class CompanyController {
     public ResponseEntity<byte[]> getCompanyLogo(@PathVariable String id) {
         CompanyLogoContent logoContent = companyService.getCompanyLogo(id);
         MediaType mediaType = MediaType.APPLICATION_OCTET_STREAM;
-        if (logoContent.getContentType() != null && !logoContent.getContentType().isBlank()) {
+        if (logoContent.getContentType() != null
+                && !logoContent.getContentType().isBlank()) {
             mediaType = MediaType.parseMediaType(logoContent.getContentType());
         }
 
