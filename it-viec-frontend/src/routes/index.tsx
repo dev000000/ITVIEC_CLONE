@@ -30,11 +30,11 @@ import { ROLE } from '@/types/common.types';
 export const routes: RouteObject[] = [
   {
     path: '/',
-    element: <LayoutDefault />,
+    element: <LayoutDefault />, // Đã check
     children: [
-      { path: '/', element: <Home /> },
-      { path: 'terms-conditions-vn', element: <Term /> },
-      { path: 'quy-dinh-bao-mat', element: <Policy /> },
+      { path: '/', element: <Home /> }, 
+      { path: 'terms-conditions-vn', element: <Term /> }, // Đã check
+      { path: 'quy-dinh-bao-mat', element: <Policy /> }, // Đã check
       {
         path: 'viec-lam-it',
         children: [
