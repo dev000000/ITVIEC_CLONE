@@ -101,6 +101,14 @@
       "phoneRequired": "Vui lòng nhập số điện thoại!",
       "dobRequired": "Vui lòng chọn ngày sinh!"
     },
+    "success": {
+      "avatarUploaded": "Tải avatar lên thành công!",
+      "avatarDeleted": "Xóa avatar thành công!"
+    },
+    "error": {
+      "invalidAvatarType": "Chỉ hỗ trợ ảnh PNG, JPEG hoặc WEBP.",
+      "avatarTooLarge": "Kích thước avatar không được vượt quá 2MB."
+    },
     "intro": "Giới thiệu bản thân",
     "introDesc": "Giới thiệu điểm mạnh và số năm kinh nghiệm của bạn",
     "education": "Học vấn",

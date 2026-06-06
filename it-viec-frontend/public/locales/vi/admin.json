@@ -1,0 +1,154 @@
+{
+  "login": {
+    "badge": "KHÔNG GIAN ADMIN",
+    "title": "Đăng nhập quản trị",
+    "subtitle": "Truy cập khu vực quản lý người dùng, công việc và báo cáo trên toàn hệ thống.",
+    "heroEyebrow": "TRUNG TÂM ĐIỀU HÀNH ADMIN",
+    "heroTitle": "Quản trị hệ thống tuyển dụng với góc nhìn toàn cục",
+    "heroDescription": "Theo dõi người dùng, công việc và tín hiệu vận hành trong một không gian riêng cho quản trị viên.",
+    "remember": "Ghi nhớ thiết bị này",
+    "submit": "Đăng nhập",
+    "supportTitle": "Hỗ trợ"
+  },
+  "layout": {
+    "title": "Admin"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "users": "Quản lý user",
+    "jobs": "Job",
+    "report": "Report",
+    "popularTags": "Popular tags"
+  },
+  "actions": {
+    "reset": "Đặt lại"
+  },
+  "notifications": {
+    "oops": "Ôi!"
+  },
+  "empty": {
+    "pendingUsers": "Không có tài khoản chờ kích hoạt",
+    "attentionJobs": "Không có công việc cần chú ý"
+  },
+  "dashboard": {
+    "title": "Tổng quan admin",
+    "stats": {
+      "totalUsers": "Tổng user",
+      "activeUsers": "User đang hoạt động",
+      "inactiveUsers": "User chờ/khoá",
+      "totalJobs": "Tổng job",
+      "activeJobs": "Job đang active",
+      "pendingApplications": "Đơn chờ xử lý"
+    },
+    "pendingUsers": {
+      "title": "User chờ kích hoạt",
+      "subtitle": "Danh sách tài khoản cần admin theo dõi."
+    },
+    "attentionJobs": {
+      "title": "Job cần chú ý",
+      "subtitle": "Job sắp hết hạn, đã đóng hoặc không còn active."
+    }
+  },
+  "users": {
+    "title": "Quản lý user",
+    "save": "Lưu",
+    "protectedAdmin": "Admin được bảo vệ",
+    "columns": {
+      "email": "Email",
+      "role": "Vai trò",
+      "status": "Trạng thái",
+      "action": "Thao tác"
+    },
+    "filters": {
+      "email": "Lọc theo email",
+      "role": "Lọc theo vai trò",
+      "status": "Lọc theo trạng thái"
+    },
+    "notifications": {
+      "updateSuccess": "Cập nhật trạng thái user thành công"
+    }
+  },
+  "jobs": {
+    "title": "Quản lý job",
+    "viewDetail": "Xem chi tiết",
+    "detailTitle": "Chi tiết job",
+    "saveStatus": "Lưu trạng thái",
+    "delete": "Xoá mềm",
+    "salary": "Mức lương",
+    "location": "Địa điểm",
+    "columns": {
+      "title": "Tiêu đề",
+      "company": "Công ty",
+      "city": "Thành phố",
+      "jobType": "Hình thức",
+      "status": "Trạng thái",
+      "postedAt": "Ngày đăng",
+      "expiresAt": "Hết hạn",
+      "action": "Thao tác"
+    },
+    "filters": {
+      "title": "Lọc theo tiêu đề",
+      "company": "Lọc theo công ty",
+      "status": "Lọc theo trạng thái",
+      "jobType": "Lọc theo hình thức",
+      "city": "Lọc theo thành phố"
+    },
+    "sections": {
+      "reason": "Lý do gia nhập",
+      "description": "Mô tả công việc",
+      "requirements": "Yêu cầu công việc",
+      "whyJoinUs": "Tại sao nên gia nhập"
+    },
+    "notifications": {
+      "statusUpdated": "Cập nhật trạng thái job thành công",
+      "deleteConfirmTitle": "Xoá mềm job này?",
+      "deleteConfirmText": "Job vẫn được giữ trong hệ thống nhưng sẽ không còn ở trạng thái hoạt động.",
+      "deleted": "Job đã được chuyển sang trạng thái đóng"
+    }
+  },
+  "report": {
+    "title": "Báo cáo",
+    "stats": {
+      "totalUsers": "User",
+      "totalJobs": "Job",
+      "totalApplications": "Ứng tuyển"
+    },
+    "sections": {
+      "userRoles": "User theo vai trò",
+      "userStatuses": "User theo trạng thái",
+      "jobStatuses": "Job theo trạng thái",
+      "jobTypes": "Job theo hình thức",
+      "applicationStatuses": "Ứng tuyển theo trạng thái"
+    },
+    "columns": {
+      "label": "Nhãn",
+      "count": "Số lượng"
+    }
+  },
+  "popularTags": {
+    "title": "Quản lý popular tags",
+    "listTitle": "Danh sách tag gợi ý",
+    "listDescription": "Các tag này sẽ được dùng để gợi ý khi người dùng nhập vào ô tìm kiếm.",
+    "categories": {
+      "skill": "Skill and Expertise",
+      "company": "Company"
+    },
+    "filters": {
+      "category": "Chọn category",
+      "name": "Chọn tên skill hoặc công ty"
+    },
+    "actions": {
+      "add": "Thêm tag"
+    },
+    "columns": {
+      "category": "Category",
+      "name": "Tên",
+      "action": "Thao tác"
+    },
+    "notifications": {
+      "created": "Thêm popular tag thành công",
+      "deleted": "Xóa popular tag thành công",
+      "deleteConfirmTitle": "Xóa popular tag này?"
+    }
+  }
+}

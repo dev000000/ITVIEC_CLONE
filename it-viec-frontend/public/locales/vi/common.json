@@ -129,8 +129,6 @@
     "unauthorized": "Bạn không có quyền truy cập"
   },
   "apiErrors": {
-    "default": "Có lỗi xảy ra, vui lòng thử lại",
-    "9999": "Lỗi hệ thống, vui lòng thử lại sau",
     "1001": "Tài khoản đã tồn tại",
     "1002": "Không tìm thấy người dùng",
     "1003": "Tên đăng nhập phải từ 3 đến 50 ký tự",
@@ -207,7 +205,16 @@
     "1074": "Logo phải là ảnh PNG, JPEG hoặc WEBP",
     "1075": "Logo không được vượt quá 2 MB",
     "1076": "Không tìm thấy logo công ty",
-    "1077": "Tải lên logo thất bại"
+    "1077": "Tải lên logo thất bại",
+    "1088": "Không tìm thấy skill",
+    "1089": "Không tìm thấy popular tag",
+    "1090": "Popular tag đã tồn tại",
+    "1091": "Category của popular tag không hợp lệ",
+    "1092": "Source ID của popular tag không hợp lệ",
+    "1093": "Category của popular tag là bắt buộc",
+    "1094": "Source ID của popular tag là bắt buộc",
+    "9999": "Lỗi hệ thống, vui lòng thử lại sau",
+    "default": "Có lỗi xảy ra, vui lòng thử lại"
   },
   "pagination": {
     "showing": "Hiển thị {{from}}-{{to}} trong {{total}} kết quả"
@@ -298,6 +305,11 @@
     "pendingActivation": "Chờ kích hoạt",
     "active": "Đang hoạt động",
     "disabled": "Đã vô hiệu hóa"
+  },
+  "roles": {
+    "admin": "Quản trị viên",
+    "employer": "Nhà tuyển dụng",
+    "seeker": "Người tìm việc"
   },
   "workingHours": {
     "monFri": "Thứ 2 – Thứ 6",
