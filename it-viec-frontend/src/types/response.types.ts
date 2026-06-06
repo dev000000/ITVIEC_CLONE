@@ -30,8 +30,10 @@ export interface PageResponse<T> {
   size: number;
   totalElements: number;
   totalPages: number;
-  first: boolean;
-  last: boolean;
+  first?: boolean;
+  last?: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
 }
 
 // --- Common Metadata Types ---
@@ -93,6 +95,7 @@ export interface SeekerResponse {
   address: string;
   personalLink: string;
   coverLetter: string;
+  avatarUrl?: string | null;
   createdAt: string; // LocalDateTime (ISO string)
   updatedAt: string; // LocalDateTime (ISO string)
   skills: SkillResponse[];
@@ -130,6 +133,12 @@ export interface CompanyCardResponse {
   address: string;
   companySkills: SkillResponse[];
   numberOfJobsActive: number;
+}
+
+export interface CompanyOptionResponse {
+  id: string;
+  companyName: string;
+  slug: string;
 }
 
 export interface CompanyDetailResponse {
@@ -190,6 +199,14 @@ export interface JobDetailResponse {
   createdAt: string;
   updatedAt: string;
   skills: SkillResponse[];
+}
+
+export interface PopularTagResponse {
+  id: number;
+  category: string;
+  name: string;
+  sourceId: string;
+  companySlug?: string | null;
 }
 
 // --- Application Types ---

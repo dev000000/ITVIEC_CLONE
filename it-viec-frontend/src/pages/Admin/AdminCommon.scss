@@ -1,0 +1,118 @@
+.admin-page {
+  position: relative;
+  z-index: 1;
+  padding: 24px 0 0;
+  min-height: 100vh;
+
+  .employer-start {
+    padding: 18px 22px;
+    margin-bottom: 20px;
+    border-radius: 20px;
+    border: 1px solid #dbe7ef;
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.94), rgb(240 253 250 / 0.88));
+    box-shadow: 0 18px 40px rgb(15 23 42 / 0.06);
+    color: #0f172a;
+
+    &__left {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    &__right {
+      gap: 14px;
+
+      &-datetime {
+        color: #64748b;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .button-search,
+  .button-back {
+    background: rgb(20 184 166 / 0.12);
+    color: #0f766e;
+    border: 1px solid rgb(20 184 166 / 0.18);
+  }
+}
+
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.9);
+  border: 1px solid #dbe7ef;
+  box-shadow: 0 20px 45px rgb(15 23 42 / 0.06);
+  margin-bottom: 20px;
+}
+
+.admin-panel {
+  border-radius: 20px;
+  border: 1px solid #dbe7ef;
+  box-shadow: 0 20px 45px rgb(15 23 42 / 0.06);
+}
+
+.admin-stat-card {
+  border-radius: 20px;
+  border: 1px solid #dbe7ef;
+  box-shadow: 0 20px 45px rgb(15 23 42 / 0.06);
+
+  .ant-card-body {
+    padding: 22px;
+  }
+}
+
+.admin-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  h3 {
+    margin: 0;
+    color: #0f172a;
+  }
+
+  p {
+    margin: 0;
+    color: #64748b;
+  }
+}
+
+.admin-richtext {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+  line-height: 1.7;
+}
+
+.admin-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+@media (width <= 992px) {
+  .admin-page {
+    .employer-start {
+      align-items: flex-start;
+      gap: 10px;
+      flex-direction: column;
+
+      &__left {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .admin-report-grid {
+    grid-template-columns: 1fr;
+  }
+}

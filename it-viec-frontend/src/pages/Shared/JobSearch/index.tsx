@@ -1,122 +1,194 @@
-import { useEffect, useState } from "react";
-import { Button, Col, Form, Input, Row, Select } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import { Button, Col, Form, Row, Select } from "antd";
 import "./JobSearch.scss";
 import { FiSearch } from "react-icons/fi";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
-import { getAllJobsApi } from "@/services/jobApi";
+import { getAllSearchJobsApi } from "@/services/jobApi";
 import imgNoJob from "@/assets/images/robby-oops.svg";
-import { isObjectEmpty } from "@/helpers/checkObject";
-import { getAllCitiesApi } from "@/services/cityApi";
 import TopJobItemHome from "@/components/TopJobItemHome";
 import { useTranslation } from "react-i18next";
-import type { JobCardResponse, CityResponse } from "@/types/response.types";
+import SearchKeywordInput from "@/components/SearchKeywordInput";
+import useSearchMetadata from "@/hooks/useSearchMetadata";
+import type { ExperienceLevel, JobType } from "@/types/common.types";
+import type {
+  CityResponse,
+  JobCardResponse,
+  PopularTagResponse,
+} from "@/types/response.types";
+import {
+  buildJobSearchPath,
+  deslugifySearchSegment,
+  findCityBySegment,
+} from "@/utils/jobSearch";
+import { getExperienceLevelOptions, getJobTypeOptions } from "@/constants";
 
 interface JobSearchProps {
-  keyword?: string;
-  city?: string;
+  keywordSegment?: string;
+  citySegment?: string;
 }
 
-function JobSearch({ keyword, city }: JobSearchProps) {
-  if (!city) {
-    const decodedKeyword = decodeURIComponent(keyword || "");
-    const result = cities.some((c) => c.cityName === decodedKeyword);
-    if (result) {
-      city = decodedKeyword;
-      keyword = "";
-    }
-  }
-  if (!keyword) {
-    keyword = "";
-  }
+interface SearchFormValues {
+  city?: string;
+  keyword?: string;
+}
+
+interface SearchFilters {
+  experienceLevel?: ExperienceLevel;
+  jobType?: JobType;
+}
+
+const defaultFilters: SearchFilters = {};
+
+function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
   const { t } = useTranslation("shared");
-  const [searchParams] = useSearchParams();
-  const jobSelectedSlug = searchParams.get("job_selected");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedJobSlug = searchParams.get("job_selected");
   const [listJob, setListJob] = useState<JobCardResponse[]>([]);
-  const [jobSelected, setJobSelected] = useState<JobCardResponse | Record<string, never>>({});
-  const [cities, setCities] = useState<CityResponse[]>([]);
+  const [jobSelected, setJobSelected] = useState<JobCardResponse | null>(null);
+  const [filters, setFilters] = useState<SearchFilters>(defaultFilters);
+  const [isLoading, setIsLoading] = useState(true);
+  const [totalJobs, setTotalJobs] = useState(0);
+  const { cities, popularTags, isLoading: isMetadataLoading } = useSearchMetadata();
   const navigate = useNavigate();
   const isMobile = window.innerWidth <= 1199;
-  const [form] = Form.useForm();
-  form.setFieldsValue({
-    keyword: keyword,
-    city: city || "all",
-  });
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // TODO(service-new-migration): Chua co service_new thay the cho legacy API `getJobsSearch`.
-        // Legacy call: GET `jobs?status=Active&_expand=company&title_like=...&city_like=...`.
-        // Muc dich: tim job active theo keyword/city cho trang JobSearch.
-        // Tam thoi lay danh sach job active tu service_new roi filter client-side de khong phu thuoc `src/services`.
-        const response = await getAllJobsApi(0, 100);
-        const jobs = response.data.result.data ?? [];
-        const normalizedKeyword = keyword.trim().toLowerCase();
-        const normalizedCity = (city || "").trim().toLowerCase();
-        const result = jobs.filter((job) => {
-          const matchKeyword =
-            !normalizedKeyword ||
-            job.title.toLowerCase().includes(normalizedKeyword);
-          const matchCity =
-            !normalizedCity ||
-            normalizedCity === "all" ||
-            job.city?.cityName.toLowerCase().includes(normalizedCity);
+  const [form] = Form.useForm<SearchFormValues>();
 
-          return matchKeyword && matchCity;
+  const jobTypeOptions = useMemo(() => getJobTypeOptions(t), [t]);
+  const experienceLevelOptions = useMemo(
+    () => getExperienceLevelOptions(t),
+    [t],
+  );
+
+  const resolvedSearch = useMemo(() => {
+    const cityFromSecondSegment = findCityBySegment(citySegment, cities);
+    if (cityFromSecondSegment) {
+      return {
+        keyword: deslugifySearchSegment(keywordSegment),
+        city: cityFromSecondSegment,
+      };
+    }
+
+    const cityFromFirstSegment = !citySegment
+      ? findCityBySegment(keywordSegment, cities)
+      : null;
+
+    if (cityFromFirstSegment) {
+      return {
+        keyword: "",
+        city: cityFromFirstSegment,
+      };
+    }
+
+    return {
+      keyword: deslugifySearchSegment(keywordSegment),
+      city: null as CityResponse | null,
+    };
+  }, [cities, citySegment, keywordSegment]);
+
+  useEffect(() => {
+    form.setFieldsValue({
+      keyword: resolvedSearch.keyword,
+      city: resolvedSearch.city?.cityName ?? "all",
+    });
+  }, [form, resolvedSearch.city?.cityName, resolvedSearch.keyword]);
+
+  useEffect(() => {
+    setFilters(defaultFilters);
+  }, [citySegment, keywordSegment]);
+
+  useEffect(() => {
+    if (isMetadataLoading) {
+      return;
+    }
+
+    const loadJobs = async () => {
+      try {
+        setIsLoading(true);
+        const jobs = await getAllSearchJobsApi({
+          keyword: resolvedSearch.keyword || undefined,
+          cityId: resolvedSearch.city?.id,
+          experienceLevel: filters.experienceLevel,
+          jobType: filters.jobType,
         });
 
-        setListJob(result || []);
-        if (result && result.length > 0) {
-          const selectedJob = result.find(
-            (job) => job.slug === jobSelectedSlug,
-          );
-          if (selectedJob) {
-            setJobSelected(selectedJob);
-          } else if (!jobSelectedSlug) {
-            navigate(`?job_selected=${result[0].slug}`);
-            setJobSelected(result[0]);
+        setListJob(jobs);
+        setTotalJobs(jobs.length);
+
+        if (!jobs.length) {
+          setJobSelected(null);
+          if (selectedJobSlug) {
+            setSearchParams({}, { replace: true });
           }
-        } else {
-          setListJob([]);
+          return;
+        }
+
+        const matchedSelectedJob =
+          jobs.find((job) => job.slug === selectedJobSlug) ?? jobs[0];
+
+        setJobSelected(matchedSelectedJob);
+
+        if (matchedSelectedJob.slug !== selectedJobSlug) {
+          setSearchParams(
+            { job_selected: matchedSelectedJob.slug },
+            { replace: true },
+          );
         }
       } catch (error) {
         console.error("Error fetching job data:", error);
         setListJob([]);
-        setJobSelected({});
+        setJobSelected(null);
+        setTotalJobs(0);
+      } finally {
+        setIsLoading(false);
       }
     };
-    fetchData();
-  }, [keyword, city]);
 
-  useEffect(() => {
-    const loadCities = async () => {
-      try {
-        const response = await getAllCitiesApi();
-        setCities(response.data.result ?? []);
-      } catch (error) {
-        console.error("Error fetching cities:", error);
-      }
-    };
-    loadCities();
-  }, []);
+    loadJobs();
+  }, [
+    filters.experienceLevel,
+    filters.jobType,
+    isMetadataLoading,
+    resolvedSearch.city?.id,
+    resolvedSearch.keyword,
+    selectedJobSlug,
+    setSearchParams,
+  ]);
 
-  const handleFinish = (values: { keyword?: string; city?: string }) => {
-    if (values.city === "all") {
-      values.city = "";
-    }
-    if (values.city && values.keyword) {
-      return navigate(`/viec-lam-it/${values.keyword}/${values.city}`);
-    }
-    if (values.city && !values.keyword) {
-      return navigate(`/viec-lam-it/${values.city}`);
-    }
-    if (!values.city && values.keyword) {
-      return navigate(`/viec-lam-it/${values.keyword}`);
-    }
-    return navigate(`/viec-lam-it`);
+  const handleFinish = (values: SearchFormValues) => {
+    setFilters(defaultFilters);
+    navigate(
+      buildJobSearchPath({
+        keyword: values.keyword,
+        city: values.city === "all" ? "" : values.city,
+      }),
+    );
   };
-  const handleFinishFail = (errorInfo: unknown) => {
-    console.log("Form failed:", errorInfo);
+
+  const handlePopularTagSelect = (tag: PopularTagResponse) => {
+    const selectedCity = form.getFieldValue("city");
+
+    if (tag.category === "Company" && tag.companySlug) {
+      navigate(`/nha-tuyen-dung/${tag.companySlug}`);
+      return;
+    }
+
+    setFilters(defaultFilters);
+    navigate(
+      buildJobSearchPath({
+        keyword: tag.name,
+        city: selectedCity === "all" ? "" : selectedCity,
+      }),
+    );
   };
+
+  const handleSelectJob = (job: JobCardResponse) => {
+    setJobSelected(job);
+    setSearchParams({ job_selected: job.slug });
+  };
+
+  const headingKeyword =
+    resolvedSearch.keyword || resolvedSearch.city?.cityName || t("jobSearch.allJobs");
+
   return (
     <div className="job-search">
       <div className="job-search__section-search">
@@ -124,7 +196,6 @@ function JobSearch({ keyword, city }: JobSearchProps) {
           <Form
             className="search-form"
             onFinish={handleFinish}
-            onFinishFailed={handleFinishFail}
             form={form}
           >
             <Row gutter={[{ xxl: 16, xl: 16, lg: 0, md: 0, sm: 0, xs: 0 }, 10]}>
@@ -135,10 +206,12 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                     optionFilterProp="label"
                     size="large"
                     options={[
-                      { value: "all", label: "Tất cả thành phố" },
-                      ...cities.map((c) => ({ value: c.cityName, label: c.cityName })),
+                      { value: "all", label: t("jobSearch.allCities") },
+                      ...cities.map((city) => ({
+                        value: city.cityName,
+                        label: city.cityName,
+                      })),
                     ]}
-                    value={city}
                   />
                 </Form.Item>
               </Col>
@@ -151,11 +224,11 @@ function JobSearch({ keyword, city }: JobSearchProps) {
                 xs={{ flex: "auto" }}
               >
                 <Form.Item name="keyword">
-                  <Input
+                  <SearchKeywordInput
                     placeholder={t("jobSearch.placeholder")}
-                    allowClear
-                    size="large"
-                    value={keyword}
+                    popularTags={popularTags}
+                    onTagSelect={handlePopularTagSelect}
+                    onSubmit={() => form.submit()}
                   />
                 </Form.Item>
               </Col>
@@ -184,96 +257,89 @@ function JobSearch({ keyword, city }: JobSearchProps) {
       </div>
       <div className="job-search__section-content">
         <div className="container">
-          {/* <div className="job-search__company-spotlight">
-            <div className="job-search__img-wrap">
-              <img src={img} alt="background_company" />
+          {isLoading ? (
+            <div className="job-search__state job-search__state--loading">
+              {t("jobSearch.loading")}
             </div>
-            <div className="job-search__content-wrap">
-              <div className="job-search__logo-wrap">
-                <img src={logo} alt="logo_company" />
-              </div>
-              <div className="job-search__content">
-                <h4 className="job-search__name">Thoughtworks Vietnam</h4>
-                <div className="job-search__city">
-                  <CiLocationOn />
-                  <span>TP Hồ Chí Minh</span>
-                </div>
-                <p className="job-search__description">
-                  A global tech consultancy that integrates strategy, design &
-                  engineering to drive digital innovation
-                </p>
-                <Link to="#" className="job-search__link">
-                  Xem công ty <MdOutlineKeyboardArrowRight />
-                </Link>
-              </div>
-            </div>
-          </div> */}
-          {listJob.length > 0 ? (
+          ) : listJob.length > 0 ? (
             <>
               <h2 className="job-search__total-jobs">
-                {listJob.length > 0 ? listJob.length : 0} <span>{keyword}</span>{" "}
-                {t("jobSearch.jobsInVietnam")}
+                {totalJobs} <span>{headingKeyword}</span> {t("jobSearch.jobsInVietnam")}
               </h2>
-              <div className="job-search__filter-wrap"></div>
+              <div className="job-search__filter-wrap">
+                <Select
+                  allowClear
+                  className="job-search__filter"
+                  placeholder={t("jobSearch.filters.experienceLevel")}
+                  options={experienceLevelOptions}
+                  value={filters.experienceLevel}
+                  onChange={(value) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      experienceLevel: value,
+                    }))
+                  }
+                />
+                <Select
+                  allowClear
+                  className="job-search__filter"
+                  placeholder={t("jobSearch.filters.jobType")}
+                  options={jobTypeOptions}
+                  value={filters.jobType}
+                  onChange={(value) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      jobType: value,
+                    }))
+                  }
+                />
+              </div>
               <div className="job-search__main-content">
                 <Row gutter={[20, 20]}>
                   <Col xxl={10} xl={10} lg={24} md={24} sm={24} xs={24}>
                     <div className="job-search__list-job">
-                      {listJob.length > 0 &&
-                        listJob.map((job) =>
-                          isMobile ? (
-                            <TopJobItemHome
-                              job={job}
-                              key={job.id}
-                            />
-                          ) : (
-                            <div
-                              className={
-                                jobSelected.slug == job.slug
-                                  ? "job-search__item job-search__item--active"
-                                  : "job-search__item"
-                              }
-                              key={job.id}
-                              onClick={() => {
-                                navigate(`?job_selected=${job.slug}`);
-                                setJobSelected(job);
-                              }}
-                            >
-                              <TopJobItemHome
-                                job={job}
-                              />
-                            </div>
-                          ),
-                        )}
+                      {listJob.map((job) =>
+                        isMobile ? (
+                          <TopJobItemHome job={job} key={job.id} />
+                        ) : (
+                          <div
+                            className={
+                              jobSelected?.slug === job.slug
+                                ? "job-search__item job-search__item--active"
+                                : "job-search__item"
+                            }
+                            key={job.id}
+                            onClick={() => handleSelectJob(job)}
+                          >
+                            <TopJobItemHome job={job} />
+                          </div>
+                        ),
+                      )}
                     </div>
                   </Col>
                   <Col xxl={14} xl={14} lg={24} md={24} sm={24} xs={24}>
                     <div className="job-search__detail-job">
-                      {isObjectEmpty(jobSelected) ? (
-                        <div></div>
-                      ) : (
+                      {jobSelected ? (
                         <Outlet
                           context={{
-                            jobSelected: jobSelected,
+                            jobSelected,
                           }}
                         />
-                      )}
+                      ) : null}
                     </div>
                   </Col>
                 </Row>
               </div>
             </>
           ) : (
-            <>
-              <div className="job-search__no-results">
-                <div className="job-search__noImg-wrap">
-                  <div className="job-search__noImg">
-                    <img src={imgNoJob} alt="No job found" />
-                  </div>
+            <div className="job-search__no-results">
+              <div className="job-search__noImg-wrap">
+                <div className="job-search__noImg">
+                  <img src={imgNoJob} alt="No job found" />
                 </div>
-                <h2>{t("jobSearch.noResults")}</h2>
               </div>
-            </>
+              <h2>{t("jobSearch.noResults")}</h2>
+            </div>
           )}
         </div>
       </div>

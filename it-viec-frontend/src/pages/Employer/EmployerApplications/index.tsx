@@ -35,10 +35,11 @@ import { getApplicationStatusOptions } from "@/constants";
 import { type ApplicationStatus } from "@/types/common.types";
 import { toApplicationStatus } from "@/utils/apiPayloadMappers";
 import { getApiErrorMessage } from "@/utils/apiError";
-import type { CityResponse, ApplicationResponse, PageResponse } from "@/types/response.types";
+import type { CityResponse } from "@/types/response.types";
 
 // Kiểu dữ liệu cho mỗi dòng trong bảng danh sách đơn ứng tuyển
 interface ApplicationRecord {
+  id: string;
   job?: { id?: string | number; title?: string };
   fullName: string;
   phoneNumber: string;

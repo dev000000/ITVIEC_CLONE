@@ -1,13 +1,11 @@
 
 import { Navigate, Outlet } from "react-router-dom";
 import { useUserStore } from "@/store/userStore";
+import { getDefaultRouteByRole } from "@/utils/roleRedirect";
 
 const PublicRoute = () => {
   const { authenticated, role } = useUserStore();
-  const isLoggedAndIsASeeker = authenticated && role === "SEEKER";
-  return (
-    <>{!isLoggedAndIsASeeker ? <Outlet /> : <Navigate to="/" />}</>
-  );
+  return authenticated ? <Navigate to={getDefaultRouteByRole(role)} replace /> : <Outlet />;
 };
 
 export default PublicRoute;

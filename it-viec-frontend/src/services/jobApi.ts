@@ -1,8 +1,11 @@
 import Configs from "@/configurations/appConfig";
 import apiClient from "./apiClient";
 import {
+  type AdminJobStatusUpdateRequest,
+  type GetAdminJobsParams,
   type JobCreateRequest,
   type JobUpdateRequest,
+  type SearchJobsParams,
 } from "@/types/request.types";
 import {
   type JobCardResponse,
@@ -12,6 +15,10 @@ import {
 } from "@/types/response.types";
 
 const API_PATH = Configs.API_ENDPOINT + "/api/v1";
+const ADMIN_JOBS_PAGE_SIZE = 100;
+
+type AdminJobCollectionParams = Omit<GetAdminJobsParams, "page" | "size">;
+type JobSearchCollectionParams = Omit<SearchJobsParams, "page" | "size">;
 
 /**
  * Lấy danh sách công việc đang active có phân trang (Hiển thị trang chủ/tìm kiếm).
@@ -26,13 +33,87 @@ export const getAllJobsApi = (page: number = 0, size: number = 10) => {
   });
 };
 
+export const getAdminJobsApi = (params?: GetAdminJobsParams) => {
+  const url = `${API_PATH}/admin/jobs`;
+  return apiClient.get<APIResponse<PageResponse<JobDetailResponse>>>(url, { params });
+};
+
+export const searchJobsApi = (params?: SearchJobsParams) => {
+  const url = `${API_PATH}/jobs/search`;
+  return apiClient.get<APIResponse<PageResponse<JobCardResponse>>>(url, { params });
+};
+
+export const getAllAdminJobsApi = async (
+  params?: AdminJobCollectionParams,
+) => {
+  let page = 0;
+  let totalPages = 1;
+  const jobs: JobDetailResponse[] = [];
+
+  while (page < totalPages) {
+    const response = await getAdminJobsApi({
+      ...params,
+      page,
+      size: ADMIN_JOBS_PAGE_SIZE,
+    });
+    const pageResult = response.data.result;
+
+    jobs.push(...(pageResult.data ?? []));
+    totalPages = Math.max(pageResult.totalPages, 1);
+    page += 1;
+  }
+
+  return jobs;
+};
+
+export const getAllSearchJobsApi = async (
+  params?: JobSearchCollectionParams,
+) => {
+  let page = 0;
+  let totalPages = 1;
+  const jobs: JobCardResponse[] = [];
+
+  while (page < totalPages) {
+    const response = await searchJobsApi({
+      ...params,
+      page,
+      size: ADMIN_JOBS_PAGE_SIZE,
+    });
+    const pageResult = response.data.result;
+
+    jobs.push(...(pageResult.data ?? []));
+    totalPages = Math.max(pageResult.totalPages, 1);
+    page += 1;
+  }
+
+  return jobs;
+};
+
+export const getAdminJobDetailApi = (id: number | string) => {
+  const url = `${API_PATH}/admin/jobs/${id}`;
+  return apiClient.get<APIResponse<JobDetailResponse>>(url);
+};
+
+export const updateAdminJobStatusApi = (
+  id: number | string,
+  request: AdminJobStatusUpdateRequest,
+) => {
+  const url = `${API_PATH}/admin/jobs/${id}/status`;
+  return apiClient.patch<APIResponse<JobDetailResponse>>(url, request);
+};
+
+export const deleteAdminJobApi = (id: number | string) => {
+  const url = `${API_PATH}/admin/jobs/${id}`;
+  return apiClient.delete<APIResponse<void>>(url);
+};
+
 /**
  * Lấy thông tin chi tiết công việc theo slug (Công việc phải đang active).
  * @param slug - Slug của công việc
  * @returns Promise giải quyết thành `APIResponse<JobDetailResponse>`
  */
 export const getJobBySlugApi = (slug: string) => {
-  const url = `${API_PATH}/jobs/${slug}`;
+  const url = `${API_PATH}/jobs/slug/${slug}`;
   return apiClient.get<APIResponse<JobDetailResponse>>(url);
 };
 
@@ -87,6 +168,13 @@ export const deleteJobApi = (id: number | string) => {
 
 export default {
   getAllJobsApi,
+  getAdminJobsApi,
+  searchJobsApi,
+  getAllAdminJobsApi,
+  getAllSearchJobsApi,
+  getAdminJobDetailApi,
+  updateAdminJobStatusApi,
+  deleteAdminJobApi,
   getJobBySlugApi,
   getMyJobsApi,
   createJobApi,

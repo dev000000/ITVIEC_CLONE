@@ -30,7 +30,7 @@ function Home() {
   }, []);
   return (
     <>
-      <SearchFormHome jobList={jobList} />
+      <SearchFormHome totalJobs={totalJobs} />
       <CampaignHighLight />
       <TopCompanies companyList={companyList} />
       <TopJob jobList={jobList} totalJobs={totalJobs} />

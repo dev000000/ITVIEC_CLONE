@@ -20,6 +20,7 @@ export interface SeekerState {
   address: string | undefined;
   personalLink: string | undefined;
   coverLetter: string | undefined;
+  avatarUrl: string | null | undefined;
   createdAt: string | undefined; // LocalDateTime (ISO string)
   updatedAt: string | undefined; // LocalDateTime (ISO string)
   skills: SkillResponse[];

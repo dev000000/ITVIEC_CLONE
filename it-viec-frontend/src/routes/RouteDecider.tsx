@@ -1,35 +1,28 @@
-import type { FC } from 'react';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import JobDetail from '@/pages/Shared/JobDetail';
-import JobSearch from '@/pages/Shared/JobSearch';
-import { getJobBySlugApi } from '@/services/jobApi';
+import type { FC } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import JobDetail from "@/pages/Shared/JobDetail";
+import JobSearch from "@/pages/Shared/JobSearch";
+import { getJobBySlugApi } from "@/services/jobApi";
 
-/**
- * RouteDecider - Dynamic route resolver
- * Checks if param1 is a job slug or a search keyword
- */
 const RouteDecider: FC = () => {
   const { param1, param2 } = useParams<"param1" | "param2">();
-  const [isChecking, setIsChecking] = useState<boolean>(true);
-  const [isSlug, setIsSlug] = useState<boolean>(false);
+  const [isChecking, setIsChecking] = useState(true);
+  const [isSlug, setIsSlug] = useState(false);
 
   useEffect(() => {
-    const checkSlug = async (): Promise<void> => {
+    const checkSlug = async () => {
       if (!param1) {
         setIsChecking(false);
+        setIsSlug(false);
         return;
       }
 
       try {
         const result = await getJobBySlugApi(param1);
-        if (result.data.result) {
-          setIsSlug(true);
-        } else {
-          setIsSlug(false);
-        }
+        setIsSlug(Boolean(result.data.result));
       } catch (error) {
-        console.error('Error checking slug:', error);
+        console.error("Error checking slug:", error);
         setIsSlug(false);
       } finally {
         setIsChecking(false);
@@ -44,16 +37,12 @@ const RouteDecider: FC = () => {
   }
 
   if (isSlug) {
-    return <JobDetail slug={param1 || ''} />;
+    return <JobDetail slug={param1 || ""} />;
   }
 
-  if (param2) {
-    return <JobSearch keyword={param1 || ''} city={param2} />;
-  }
-
-  return <JobSearch keyword={param1 || ''} />;
+  return <JobSearch keywordSegment={param1} citySegment={param2} />;
 };
 
-RouteDecider.displayName = 'RouteDecider';
+RouteDecider.displayName = "RouteDecider";
 
 export default RouteDecider;

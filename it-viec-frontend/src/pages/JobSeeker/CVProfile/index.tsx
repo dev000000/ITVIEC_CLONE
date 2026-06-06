@@ -3,10 +3,10 @@
 // Các section có thể thêm (chưa triển khai): Giới thiệu, Học vấn, Kinh nghiệm, Kỹ năng, Dự án, Chứng chỉ, Giải thưởng
 // Chỉnh sửa thông tin cá nhân qua Modal (Ant Design Form + DatePicker)
 // Dữ liệu từ Zustand: useSeekerStore (thông tin seeker) + useUserStore (email)
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import "./CVProfile.scss";
 import { FaRegEdit } from "react-icons/fa";
-import avatar from "@/assets/images/unnamed.jpg";
+import avatarDefault from "@/assets/images/avatar-default.svg";
 import { MdOutlineMailOutline } from "react-icons/md";
 import { FiPhone } from "react-icons/fi";
 import { CiGift } from "react-icons/ci";
@@ -26,7 +26,11 @@ import { Col, DatePicker, Row, Select } from "antd";
 import { Form, Input } from "antd";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoCameraOutline } from "react-icons/io5";
-import { updateMyProfileApi } from "@/services/seekerApi";
+import {
+  deleteMyAvatarApi,
+  updateMyPersonalInfoApi,
+  uploadMyAvatarApi,
+} from "@/services/seekerApi";
 import { getAllCitiesApi } from "@/services/cityApi";
 import { getGenderOptions } from "@/constants";
 import dayjs from "dayjs";
@@ -35,9 +39,6 @@ import { useSeekerStore } from "@/store/seekerStore";
 import { useUserStore } from "@/store/userStore";
 import {
   findCityRef,
-  findCityRefs,
-  toEntityRef,
-  toGender,
 } from "@/utils/apiPayloadMappers";
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
@@ -58,6 +59,8 @@ interface CVProfileFormValues {
 
 // Định dạng ngày tháng hiển thị trong DatePicker
 const dateFormat = "DD/MM/YYYY";
+const MAX_AVATAR_SIZE_BYTES = 2 * 1024 * 1024;
+const ACCEPTED_AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 // Style căn giữa màn hình cho react-modal
 const customStyles = {
   content: {
@@ -78,7 +81,9 @@ function CVProfile() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [cities, setCities] = useState<CityResponse[]>([]);
   const [form] = Form.useForm();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation("jobseeker");
+  const avatarSrc = seeker.avatarUrl || avatarDefault;
 
   // Tải danh sách tất cả thành phố khi component mount
   // Dùng cho Select dropdown "Địa điểm hiện tại" và map id khi gọi API cập nhật
@@ -119,31 +124,87 @@ function CVProfile() {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
-  // Submit form thông tin cá nhân: xây dựng payload đầy đủ,
-  // gọi API cập nhật → lưu kết quả mới vào store và hiển thị thông báo
+  // Submit Form 3: chỉ cập nhật thông tin cá nhân (không đụng skills, desiredLocations, coverLetter)
+  const handleAvatarSelect = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+
+    if (!file) return;
+
+    if (!ACCEPTED_AVATAR_TYPES.includes(file.type)) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: t("cvProfile.error.invalidAvatarType"),
+      });
+      return;
+    }
+
+    if (file.size > MAX_AVATAR_SIZE_BYTES) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: t("cvProfile.error.avatarTooLarge"),
+      });
+      return;
+    }
+
+    try {
+      const response = await uploadMyAvatarApi(file);
+      setSeekerFullInfo(response.data.result);
+      Swal.fire({
+        title: t("cvProfile.success.avatarUploaded"),
+        icon: "success",
+        draggable: true,
+      });
+    } catch (error) {
+      console.error("Error uploading avatar:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: getApiErrorMessage(error, t),
+      });
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    try {
+      const response = await deleteMyAvatarApi();
+      setSeekerFullInfo(response.data.result);
+      Swal.fire({
+        title: t("cvProfile.success.avatarDeleted"),
+        icon: "success",
+        draggable: true,
+      });
+    } catch (error) {
+      console.error("Error deleting avatar:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: getApiErrorMessage(error, t),
+      });
+    }
+  };
+
   const onFinish = async (values: CVProfileFormValues) => {
-    const updatedSeekerInfor = {
+    const payload = {
       fullName: values.fullName,
+      gender: (values.gender ?? seeker.gender ?? "OTHERS") as import("@/types/common.types").Gender,
       jobTitle: values.jobTitle,
+      personalLink: values.personalLink || "",
       phoneNumber: values.phoneNumber,
       dateOfBirth: values.dateOfBirth
         ? dayjs(values.dateOfBirth).format("YYYY-MM-DD")
         : seeker.dateOfBirth || "1999-01-01",
-      gender: toGender(values.gender),
       city: findCityRef(values.city, cities, seeker.city),
       address: values.address || "",
-      personalLink: values.personalLink || "",
-      coverLetter: seeker.coverLetter || "",
-      skills: seeker.skills
-        .map((skill) => toEntityRef(skill.id))
-        .filter((skill): skill is { id: number | string } => Boolean(skill)),
-      desiredLocations: findCityRefs(
-        seeker.desiredLocations?.map((city) => city.cityName) ?? [],
-        cities,
-      ),
     };
     try {
-      const response = await updateMyProfileApi(updatedSeekerInfor);
+      const response = await updateMyPersonalInfoApi(payload);
       setSeekerFullInfo(response.data.result);
       Swal.fire({
         title: "Update Profile Success!",
@@ -163,6 +224,13 @@ function CVProfile() {
   };
   return (
     <>
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
+        style={{ display: "none" }}
+        onChange={handleAvatarChange}
+      />
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
@@ -195,14 +263,20 @@ function CVProfile() {
             <Row gutter={[10, 10]}>
               <Col xxl={6} xl={6} lg={24} md={24} sm={24} xs={24}>
                 <div className="cv-form__img">
-                  <img src={avatar} alt="" />
+                  <img src={avatarSrc} alt="avatar" />
                 </div>
                 <div className="cv-form__button-wrap">
-                  <div className="cv-form__button cv-form__button--fix">
+                  <div
+                    className="cv-form__button cv-form__button--fix"
+                    onClick={handleAvatarSelect}
+                  >
                     <IoCameraOutline />
                     <span className="cv-form__button-text">{t("cvProfile.editPhoto")}</span>
                   </div>
-                  <div className="cv-form__button cv-form__button--delete">
+                  <div
+                    className="cv-form__button cv-form__button--delete"
+                    onClick={handleDeleteAvatar}
+                  >
                     <FaRegTrashAlt />
                     <span className="cv-form__button-text">{t("cvProfile.deletePhoto")}</span>
                   </div>
@@ -377,7 +451,7 @@ function CVProfile() {
           <div className="cv-profile__header">
             <div className="cv-profile__imgtext-wrapper">
               <div className="cv-profile__avatar-wrapper">
-                <img src={avatar} alt="avatar" className="cv-profile__avatar" />
+                <img src={avatarSrc} alt="avatar" className="cv-profile__avatar" />
               </div>
               {seeker ? (
                 <div className="cv-profile__user-wrapper">

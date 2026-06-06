@@ -12,19 +12,26 @@ import ButtonSubmit from "@/components/Button";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import type { AuthenticationRequest } from "@/types/request.types";
-import { loginApi } from "@/services/authApi";
+import { loginApi, logoutApi } from "@/services/authApi";
 import { getMyProfileApi } from "@/services/seekerApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useTranslation } from "react-i18next";
 import { getApiErrorMessage } from "@/utils/apiError";
+import { ROLE } from "@/types/common.types";
+import { getDefaultRouteByRole } from "@/utils/roleRedirect";
+import { useCompanyStore } from "@/store/companyStore";
+import { getLoginRoleMismatchFeedback, isExpectedLoginRole } from "@/utils/loginRoleGuard";
 
 
 function Login() {
   const navigate = useNavigate();
   const { t } = useTranslation("auth");
   const setLogin = useUserStore((state) => state.setLogin);
+  const logout = useUserStore((state) => state.logout);
   const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
+  const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+  const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
 
   // Xử lý submit form đăng nhập:
   // 1. Gọi loginApi → lưu thông tin user (role, email, id...) vào userStore
@@ -34,6 +41,24 @@ function Login() {
     try {
       const { data: apiData } = await loginApi(values);
       const user = apiData.result;
+
+      if (!isExpectedLoginRole(ROLE.SEEKER, user.role)) {
+        const feedback = getLoginRoleMismatchFeedback(ROLE.SEEKER, user.role);
+        await logoutApi().catch(() => undefined);
+        logout();
+        clearSeekerInfo();
+        clearCompanyInfo();
+        await Swal.fire({
+          icon: "warning",
+          title: feedback.title,
+          text: feedback.text,
+        });
+        navigate(feedback.redirectTo, { replace: true });
+        return;
+      }
+
+      clearSeekerInfo();
+      clearCompanyInfo();
       setLogin({
         authenticated: user.authenticated,
         id: user.id,
@@ -55,6 +80,7 @@ function Login() {
         address: seeker.address,
         personalLink: seeker.personalLink,
         coverLetter: seeker.coverLetter,
+        avatarUrl: seeker.avatarUrl,
         createdAt: seeker.createdAt,
         updatedAt: seeker.updatedAt,
         skills: seeker.skills,
@@ -66,7 +92,7 @@ function Login() {
         icon: "success",
         draggable: true,
       });
-      navigate("/");
+      navigate(getDefaultRouteByRole(user.role));
 
     } catch (error) {
       console.error("Lỗi khi đăng nhập: ", error);

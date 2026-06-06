@@ -1,10 +1,16 @@
 import Configs from "@/configurations/appConfig";
 import apiClient from "./apiClient";
-import { type CompanyUpdateRequest } from "@/types/request.types";
 import {
+  type CompanyUpdateRequest,
+  type GetAdminCompaniesParams,
+} from "@/types/request.types";
+import {
+  type CompanyBriefResponse,
   type CompanyCardResponse,
   type CompanyDetailResponse,
+  type CompanyOptionResponse,
   type APIResponse,
+  type PageResponse,
 } from "@/types/response.types";
 
 const API_PATH = Configs.API_ENDPOINT + "/api/v1/companies";
@@ -16,6 +22,18 @@ const API_PATH = Configs.API_ENDPOINT + "/api/v1/companies";
 export const getAllCompaniesApi = () => {
   const url = API_PATH;
   return apiClient.get<APIResponse<CompanyCardResponse[]>>(url);
+};
+
+export const getAdminCompaniesApi = (params?: GetAdminCompaniesParams) => {
+  const url = `${Configs.API_ENDPOINT}/api/v1/admin/companies`;
+  return apiClient.get<APIResponse<PageResponse<CompanyBriefResponse>>>(url, {
+    params,
+  });
+};
+
+export const getAdminCompanyOptionsApi = () => {
+  const url = `${Configs.API_ENDPOINT}/api/v1/admin/companies/options`;
+  return apiClient.get<APIResponse<CompanyOptionResponse[]>>(url);
 };
 
 /**
@@ -73,6 +91,8 @@ export const deleteMyCompanyLogoApi = () => {
 
 export default {
   getAllCompaniesApi,
+  getAdminCompaniesApi,
+  getAdminCompanyOptionsApi,
   getCompanyBySlugApi,
   updateMyCompanyApi,
   getMyCompanyApi,

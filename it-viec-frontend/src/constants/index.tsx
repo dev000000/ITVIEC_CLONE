@@ -61,6 +61,12 @@ export const getJobTypeOptions = (t: TFunction) => [
   { value: "FLEXIBLE", label: t("common:jobType.flexible") },
 ];
 
+export const getRoleOptions = (t: TFunction) => [
+  { value: "ADMIN", label: t("common:roles.admin") },
+  { value: "EMPLOYER", label: t("common:roles.employer") },
+  { value: "SEEKER", label: t("common:roles.seeker") },
+];
+
 export const getOvertimePolicyOptions = (t: TFunction) => [
   { value: "NO_OVERTIME", label: t("common:overtimePolicy.noOvertime") },
   { value: "OPTIONAL", label: t("common:overtimePolicy.optional") },

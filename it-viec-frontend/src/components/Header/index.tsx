@@ -3,7 +3,7 @@ import logo from "../../assets/images/nhieu viec (355 x 85 px).png";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
-import avatar from "../../assets/images/unnamed.jpg";
+import avatarDefault from "@/assets/images/avatar-default.svg";
 import { RxDashboard } from "react-icons/rx";
 import { FaRegFileAlt } from "react-icons/fa";
 import { FiUser } from "react-icons/fi";
@@ -436,6 +436,7 @@ interface HeaderProps {
 }
 const Header = ({ type }: HeaderProps) => {
   const fullName = useSeekerStore((state) => state.fullName);
+  const avatarUrl = useSeekerStore((state) => state.avatarUrl);
   const authenticated = useUserStore((state) => state.authenticated);
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const logout = useUserStore((state) => state.logout);
@@ -749,7 +750,7 @@ const Header = ({ type }: HeaderProps) => {
                   onClick={() => setSidebar({ left: false, right: true })}
                 >
                   <div className="header__menu-avatar">
-                    <img src={avatar} alt="user_avatar" />
+                    <img src={avatarUrl || avatarDefault} alt="user_avatar" />
                   </div>
                   <div className="header__menu-name-wrap">
                     <IoIosArrowDown />
@@ -832,7 +833,7 @@ const Header = ({ type }: HeaderProps) => {
                 {authenticated ? (
                   <li className="header__menu">
                     <div className="header__menu-avatar">
-                      <img src={avatar} alt="user_avatar" />
+                      <img src={avatarUrl || avatarDefault} alt="user_avatar" />
                     </div>
                     <div className="header__menu-name-wrap">
                       <span className="header__menu-name">

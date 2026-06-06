@@ -1,0 +1,137 @@
+.layout-admin {
+  overflow-y: hidden;
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  margin-left: 200px;
+
+  &__siderbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at top, rgb(56 189 248 / 0.12), transparent 30%),
+      #01081d;
+    color: white;
+    max-width: 200px;
+    z-index: 1000;
+
+    .menu-item a.active {
+      border-right-color: #14b8a6;
+
+      .menu-item__icon {
+        color: #14b8a6;
+      }
+    }
+
+    &-list {
+      margin: 20px 0 0 0;
+      color: rgb(255 255 255 / 0.5);
+    }
+
+    &-logo {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 10px 0 0 0;
+      gap: 5px;
+
+      img {
+        width: 50%;
+      }
+    }
+
+    &-button {
+      width: 100%;
+      position: absolute;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+
+      .language-switcher__btn {
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+
+      > button {
+        cursor: pointer;
+        padding: 5px 12px;
+        border-radius: 5px;
+        color: white;
+        background-color: #0f766e;
+        border: none;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        span {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  &__maincontent {
+    background-color: #f5f8fb;
+    flex: 1;
+    min-height: 100vh;
+    overflow-y: scroll;
+    color: #000000;
+    position: relative;
+    overflow-x: hidden;
+    padding-bottom: 40px;
+  }
+
+  &__background {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top right, rgb(20 184 166 / 0.12), transparent 24%),
+      linear-gradient(180deg, rgb(8 145 178 / 0.08), transparent 25%);
+    pointer-events: none;
+  }
+
+  @media (width <= 1024px) {
+    margin-left: 50px;
+
+    &__siderbar {
+      width: 50px;
+      overflow: hidden;
+
+      &-logo {
+        display: none;
+      }
+
+      &-button {
+        button {
+          background-color: transparent;
+          padding: 0;
+        }
+
+        svg {
+          color: #14b8a6;
+          font-size: 23px;
+        }
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+
+  @media (width <= 768px) {
+    margin-left: 30px;
+
+    &__siderbar {
+      width: 30px;
+    }
+  }
+}

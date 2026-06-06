@@ -1,0 +1,20 @@
+.search-keyword-input {
+  width: 100%;
+
+  &__group-title {
+    padding: 4px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  &__option-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: #111827;
+  }
+
+  .ant-select-selection-search-input {
+    height: 100% !important;
+  }
+}
