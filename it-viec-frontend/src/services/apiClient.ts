@@ -48,7 +48,7 @@ apiClient.interceptors.response.use(
 
     // Lỗi 401: Chưa xác thực (thường là do chưa đăng nhập)
     if (error.response?.status === 401) {
-      toast.error(error.response?.data?.message || "Phiên đăng nhập hết hạn.");
+      // toast.error(error.response?.data?.message || "Phiên đăng nhập hết hạn.");
       return Promise.reject(error);
     }
 
@@ -61,10 +61,14 @@ apiClient.interceptors.response.use(
           })
           .catch((_error) => {
             // Refresh thất bại -> Đăng xuất người dùng
-            toast.error(_error.response?.data?.message || "Vui lòng đăng nhập lại.");
+            // toast.error(_error.response?.data?.message || "Vui lòng đăng nhập lại.");
+
+            // Clear thông tin các store (user, seeker, company)
             useUserStore.getState().logout();
             useSeekerStore.getState().clearSeekerInfo();
             useCompanyStore.getState().clearCompanyInfo();
+
+            // Gọi API logout để clear token ở cookies
             logoutApi();
             return Promise.reject(_error);
           })
@@ -81,7 +85,7 @@ apiClient.interceptors.response.use(
 
     // Lỗi 403: Không có quyền truy cập
     if (error.response?.status === 403) {
-      toast.error(error.response?.data?.message || "Bạn không có quyền thực hiện hành động này.");
+      // toast.error(error.response?.data?.message || "Bạn không có quyền thực hiện hành động này.");
       return Promise.reject(error);
     }
 
