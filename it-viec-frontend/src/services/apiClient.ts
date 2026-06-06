@@ -1,6 +1,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUserStore } from "@/store/userStore";
+import { useSeekerStore } from "@/store/seekerStore";
+import { useCompanyStore } from "@/store/companyStore";
 import { logoutApi, refreshTokenCookieApi } from "./authApi";
 
 /**
@@ -61,6 +63,8 @@ apiClient.interceptors.response.use(
             // Refresh thất bại -> Đăng xuất người dùng
             toast.error(_error.response?.data?.message || "Vui lòng đăng nhập lại.");
             useUserStore.getState().logout();
+            useSeekerStore.getState().clearSeekerInfo();
+            useCompanyStore.getState().clearCompanyInfo();
             logoutApi();
             return Promise.reject(_error);
           })

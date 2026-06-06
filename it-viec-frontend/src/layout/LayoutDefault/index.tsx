@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getMeApi, logoutApi } from "@/services/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
+import { useCompanyStore } from "@/store/companyStore";
 import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
@@ -15,6 +16,7 @@ const { Content } = Layout;
 const LayoutDefault = () => {
   const { t } = useTranslation("common");
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+  const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
   const logout = useUserStore((state) => state.logout);
   const setLogin = useUserStore((state) => state.setLogin);
 
@@ -32,13 +34,14 @@ const LayoutDefault = () => {
         logout();
         // Clear thông tin seeker trong store nếu có
         clearSeekerInfo();
+        clearCompanyInfo();
       } finally {
         setIsCheckingToken(false);
       }
     }
     checkAuth();
 
-  }, [clearSeekerInfo, logout, setLogin]);
+  }, [clearCompanyInfo, clearSeekerInfo, logout, setLogin]);
 
   return (
     <>

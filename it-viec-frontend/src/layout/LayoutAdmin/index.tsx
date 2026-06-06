@@ -10,7 +10,6 @@ import { BsBriefcase } from "react-icons/bs";
 import { IoIosLogOut } from "react-icons/io";
 import Swal from "sweetalert2";
 import { logoutApi } from "@/services/authApi";
-import { clearStorage } from "@/helpers/localStorage";
 import { useUserStore } from "@/store/userStore";
 import { useCompanyStore } from "@/store/companyStore";
 import { useSeekerStore } from "@/store/seekerStore";
@@ -36,7 +35,6 @@ function LayoutAdmin() {
         logout();
         clearCompanyInfo();
         clearSeekerInfo();
-        clearStorage();
         navigate("/admin/login");
         Swal.fire({
           title: t("common:layout.logoutSuccess"),
