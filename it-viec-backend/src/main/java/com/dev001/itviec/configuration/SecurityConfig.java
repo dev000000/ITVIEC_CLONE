@@ -34,9 +34,11 @@ public class SecurityConfig {
         "/api/v1/companies",
         "/api/v1/companies/slug/*",
         "/api/v1/companies/*/logo",
+        "/api/v1/seekers/*/avatar",
         "/api/v1/jobs",
+        "/api/v1/jobs/search",
         "/api/v1/jobs/slug/*",
-        "/api/v1/auth/me",
+        "/api/v1/tag/popular",
     };
 
     private final JwtAuthenticationFilter jwtAuthFilter;

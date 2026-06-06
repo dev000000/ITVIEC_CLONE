@@ -97,7 +97,19 @@ public enum ErrorCode {
     SEEKER_CV_INVALID_TYPE(1079, "CV must be a PDF, DOC, or DOCX file", HttpStatus.BAD_REQUEST),
     SEEKER_CV_TOO_LARGE(1080, "CV file must not exceed 5 MB", HttpStatus.BAD_REQUEST),
     SEEKER_CV_NOT_FOUND(1081, "CV not found", HttpStatus.NOT_FOUND),
-    SEEKER_CV_UPLOAD_FAILED(1082, "Failed to upload CV", HttpStatus.INTERNAL_SERVER_ERROR);
+    SEEKER_CV_UPLOAD_FAILED(1082, "Failed to upload CV", HttpStatus.INTERNAL_SERVER_ERROR),
+    SEEKER_AVATAR_REQUIRED(1083, "Avatar file is required", HttpStatus.BAD_REQUEST),
+    SEEKER_AVATAR_INVALID_TYPE(1084, "Avatar must be a PNG, JPEG, or WEBP image", HttpStatus.BAD_REQUEST),
+    SEEKER_AVATAR_TOO_LARGE(1085, "Avatar file must not exceed 2 MB", HttpStatus.BAD_REQUEST),
+    SEEKER_AVATAR_NOT_FOUND(1086, "Avatar not found", HttpStatus.NOT_FOUND),
+    SEEKER_AVATAR_UPLOAD_FAILED(1087, "Failed to upload avatar", HttpStatus.INTERNAL_SERVER_ERROR),
+    SKILL_NOT_FOUND(1088, "Skill not found", HttpStatus.NOT_FOUND),
+    POPULAR_TAG_NOT_FOUND(1089, "Popular tag not found", HttpStatus.NOT_FOUND),
+    POPULAR_TAG_ALREADY_EXISTS(1090, "Popular tag already exists", HttpStatus.BAD_REQUEST),
+    POPULAR_TAG_CATEGORY_INVALID(1091, "Popular tag category is invalid", HttpStatus.BAD_REQUEST),
+    POPULAR_TAG_SOURCE_ID_INVALID(1092, "Popular tag source id is invalid", HttpStatus.BAD_REQUEST),
+    POPULAR_TAG_CATEGORY_REQUIRED(1093, "Popular tag category is required", HttpStatus.BAD_REQUEST),
+    POPULAR_TAG_SOURCE_ID_REQUIRED(1094, "Popular tag source id is required", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

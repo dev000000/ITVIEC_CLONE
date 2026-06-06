@@ -4,22 +4,29 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.dev001.itviec.dto.request.SeekerBasicInfoUpdateRequest;
+import com.dev001.itviec.dto.request.SeekerCoverLetterUpdateRequest;
+import com.dev001.itviec.dto.request.SeekerPersonalInfoUpdateRequest;
 import com.dev001.itviec.dto.request.SeekerUpdateRequest;
+import com.dev001.itviec.dto.response.SeekerAvatarContent;
 import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
 import com.dev001.itviec.entity.seeker.Seeker;
+import com.dev001.itviec.entity.seeker.SeekerAvatar;
 import com.dev001.itviec.entity.seeker.SeekerCv;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.SeekerMapper;
+import com.dev001.itviec.repository.SeekerAvatarRepository;
 import com.dev001.itviec.repository.SeekerCvRepository;
 import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.UserRepository;
@@ -33,6 +40,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SeekerServiceImpl implements SeekerService {
 
+    private static final long MAX_AVATAR_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
+    private static final Set<String> ALLOWED_AVATAR_TYPES =
+            Set.of(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, "image/webp");
     private static final long MAX_CV_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
     private static final Set<String> ALLOWED_CV_TYPES = Set.of(
             "application/pdf",
@@ -41,6 +51,7 @@ public class SeekerServiceImpl implements SeekerService {
 
     private final SeekerMapper seekerMapper;
     private final SeekerRepository seekerRepository;
+    private final SeekerAvatarRepository seekerAvatarRepository;
     private final SeekerCvRepository seekerCvRepository;
     private final UserRepository userRepository;
 
@@ -87,6 +98,89 @@ public class SeekerServiceImpl implements SeekerService {
         seeker.setCoverLetter(request.getCoverLetter());
         seeker.setSkills(request.getSkills());
         seeker.setDesiredLocations(request.getDesiredLocations());
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    // ===================== Partial Update =====================
+
+    @Transactional
+    @Override
+    public SeekerResponse updateMyCoverLetter(SeekerCoverLetterUpdateRequest request) {
+        Seeker seeker = getSeekerByCookie();
+        seeker.setCoverLetter(request.getCoverLetter());
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse updateMyBasicInfo(SeekerBasicInfoUpdateRequest request) {
+        Seeker seeker = getSeekerByCookie();
+        seeker.setFullName(request.getFullName());
+        seeker.setPhoneNumber(request.getPhoneNumber());
+        seeker.setDesiredLocations(request.getDesiredLocations());
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse updateMyPersonalInfo(SeekerPersonalInfoUpdateRequest request) {
+        Seeker seeker = getSeekerByCookie();
+        seeker.setFullName(request.getFullName());
+        seeker.setGender(request.getGender());
+        seeker.setJobTitle(request.getJobTitle());
+        seeker.setPersonalLink(request.getPersonalLink());
+        seeker.setPhoneNumber(request.getPhoneNumber());
+        seeker.setDateOfBirth(request.getDateOfBirth());
+        seeker.setCity(request.getCity());
+        seeker.setAddress(request.getAddress());
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    // ===================== Avatar =====================
+
+    @Transactional
+    @Override
+    public SeekerResponse uploadMyAvatar(MultipartFile file) {
+        validateAvatarFile(file);
+
+        Seeker seeker = getSeekerByCookie();
+        SeekerAvatar seekerAvatar = seekerAvatarRepository
+                .findBySeekerId(seeker.getId())
+                .orElse(SeekerAvatar.builder().seeker(seeker).build());
+
+        try {
+            seekerAvatar.setFileName(resolveAvatarFileName(file));
+            seekerAvatar.setContentType(file.getContentType());
+            seekerAvatar.setSize(file.getSize());
+            seekerAvatar.setData(file.getBytes());
+        } catch (IOException exception) {
+            log.error("Failed to read avatar file for seekerId={}", seeker.getId(), exception);
+            throw new AppException(ErrorCode.SEEKER_AVATAR_UPLOAD_FAILED);
+        }
+
+        seekerAvatarRepository.save(seekerAvatar);
+        seeker.setAvatarUrl(buildAvatarUrl(seeker.getId()));
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SeekerAvatarContent getSeekerAvatar(String seekerId) {
+        SeekerAvatar seekerAvatar = seekerAvatarRepository
+                .findBySeekerId(seekerId)
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_AVATAR_NOT_FOUND));
+        return new SeekerAvatarContent(
+                seekerAvatar.getFileName(), seekerAvatar.getContentType(), seekerAvatar.getData());
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse deleteMyAvatar() {
+        Seeker seeker = getSeekerByCookie();
+        if (seekerAvatarRepository.existsBySeekerId(seeker.getId())) {
+            seekerAvatarRepository.deleteBySeekerId(seeker.getId());
+        }
+        seeker.setAvatarUrl(null);
         return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
     }
 
@@ -165,6 +259,19 @@ public class SeekerServiceImpl implements SeekerService {
 
     // ===================== Helpers =====================
 
+    private void validateAvatarFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new AppException(ErrorCode.SEEKER_AVATAR_REQUIRED);
+        }
+        if (file.getSize() > MAX_AVATAR_SIZE_BYTES) {
+            throw new AppException(ErrorCode.SEEKER_AVATAR_TOO_LARGE);
+        }
+        String contentType = file.getContentType();
+        if (contentType == null || !ALLOWED_AVATAR_TYPES.contains(contentType.toLowerCase())) {
+            throw new AppException(ErrorCode.SEEKER_AVATAR_INVALID_TYPE);
+        }
+    }
+
     private void validateCvFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new AppException(ErrorCode.SEEKER_CV_REQUIRED);
@@ -175,6 +282,25 @@ public class SeekerServiceImpl implements SeekerService {
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_CV_TYPES.contains(contentType.toLowerCase())) {
             throw new AppException(ErrorCode.SEEKER_CV_INVALID_TYPE);
+        }
+    }
+
+    private String resolveAvatarFileName(MultipartFile file) {
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isBlank()) {
+            return "seeker-avatar";
+        }
+        return originalFilename;
+    }
+
+    private String buildAvatarUrl(String seekerId) {
+        String relativePath = "/api/v1/seekers/" + seekerId + "/avatar";
+        try {
+            return ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(relativePath)
+                    .toUriString();
+        } catch (IllegalStateException exception) {
+            return relativePath;
         }
     }
 

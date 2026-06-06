@@ -46,6 +46,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         || uri.startsWith("/api/v1/companies/slug/")
                         || uri.matches("/api/v1/companies/[^/]+/logo"));
 
+        boolean isPublicSeekerAvatarGet = method.equals("GET") && uri.matches("/api/v1/seekers/[^/]+/avatar");
+
         boolean isPublicJobGet =
                 method.equals("GET") && (uri.equals("/api/v1/jobs") || uri.startsWith("/api/v1/jobs/slug/"));
 
@@ -56,6 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || uri.contains("/refresh-token")
                 || uri.contains("/login")
                 || isPublicCompanyGet
+                || isPublicSeekerAvatarGet
                 || isPublicJobGet;
     }
 
