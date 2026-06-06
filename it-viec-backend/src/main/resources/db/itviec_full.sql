@@ -52,6 +52,7 @@ CREATE TABLE seekers (
   personal_link VARCHAR(255),
   cover_letter VARCHAR(500),
   cv_url VARCHAR(500),
+  avatar_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_seekers_user FOREIGN KEY (user_id) REFERENCES users(id),
@@ -145,6 +146,18 @@ CREATE TABLE seeker_cvs (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_seeker_cvs_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id)
 );
+-- Bảng avatar của ứng viên
+CREATE TABLE seeker_avatars (
+  id VARCHAR(255) PRIMARY KEY,
+  seeker_id VARCHAR(255) NOT NULL UNIQUE,
+  file_name VARCHAR(255) NOT NULL,
+  content_type VARCHAR(100) NOT NULL,
+  size BIGINT NOT NULL,
+  avatar_data LONGBLOB NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_seeker_avatars_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+);
 -- Bảng job
 CREATE TABLE jobs (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -232,6 +245,17 @@ CREATE TABLE job_skills (
   PRIMARY KEY (job_id, skill_id),
   CONSTRAINT fk_job_skills_job FOREIGN KEY (job_id) REFERENCES jobs(id),
   CONSTRAINT fk_job_skills_skill FOREIGN KEY (skill_id) REFERENCES skills(id)
+);
+-- Bảng tag gợi ý phổ biến cho search
+CREATE TABLE popular_tags (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  category VARCHAR(50) NOT NULL,
+  skill_id BIGINT UNIQUE,
+  company_id VARCHAR(255) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_popular_tags_skill FOREIGN KEY (skill_id) REFERENCES skills(id),
+  CONSTRAINT fk_popular_tags_company FOREIGN KEY (company_id) REFERENCES companies(id)
 );
 -- Chọn schema để làm việc
 USE itviec_db;

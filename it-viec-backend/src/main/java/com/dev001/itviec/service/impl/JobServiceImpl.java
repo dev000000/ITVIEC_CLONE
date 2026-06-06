@@ -1,5 +1,34 @@
 package com.dev001.itviec.service.impl;
 
+import static com.dev001.itviec.enums.JobStatus.ACTIVE;
+import static com.dev001.itviec.enums.JobStatus.CLOSED;
+import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
+
+import java.text.Normalizer;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dev001.itviec.dto.request.JobCreateRequest;
 import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
@@ -8,7 +37,9 @@ import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.job.Job;
+import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
 import com.dev001.itviec.exception.AppException;
@@ -19,29 +50,9 @@ import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.JobService;
-import jakarta.persistence.criteria.Predicate;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.text.Normalizer;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.dev001.itviec.enums.JobStatus.ACTIVE;
-import static com.dev001.itviec.exception.ErrorCode.COMPANY_NOT_FOUND;
-import static com.dev001.itviec.exception.ErrorCode.JOB_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -54,29 +65,16 @@ public class JobServiceImpl implements JobService {
     private final UserRepository userRepository;
     private final EmployerRepository employerRepository;
 
-    //    @Override
-    //    public List<JobResponse> getAllJobsActive() {
-    //        return jobMapper.toJobResponse(jobRepository.findByStatus(ACTIVE));
-    //    }
-
     @Override
     public JobDetailResponse getJobBySlug(String slug) {
-        Job job = jobRepository.findBySlug(slug).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+        Job job = jobRepository.findBySlugAndStatus(slug, ACTIVE).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
         return jobMapper.toJobDetailResponse(job);
     }
 
     @Override
     public JobDetailResponse createJob(JobCreateRequest request) {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        Employer employer =
-                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+        Company company = getCurrentEmployerCompany();
 
-        Company company = companyRepository
-                .findByEmployer(employer)
-                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
-        // 1. build job
         Job job = Job.builder()
                 .company(company)
                 .title(request.getTitle())
@@ -95,77 +93,56 @@ public class JobServiceImpl implements JobService {
                 .skills(request.getSkills() == null ? new HashSet<>() : new HashSet<>(request.getSkills()))
                 .build();
 
-        // 2. save lan 1
         job = jobRepository.save(job);
-
-        // 3. Generate slug = slug va id
-        String slug = generateSlug(job.getTitle(), company.getCompanyName(), job.getId());
-        job.setSlug(slug);
-
-        // 4. save lan 2 => update slug
+        job.setSlug(generateSlug(job.getTitle(), company.getCompanyName(), job.getId()));
         job = jobRepository.save(job);
 
         return jobMapper.toJobDetailResponse(job);
     }
 
     @Override
-    public List<JobDetailResponse> getJobsByCurrentEmployer(String title, JobStatus status, JobType jobType, Long cityId) {
-        // 1. Lấy email từ SecurityContext
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
-        String email = authentication.getName();
-
-        // 2. Lấy user → employer → company
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-        Employer employer = employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
-        Company company = companyRepository.findByEmployer(employer).orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
-
-        // 3. Build Specification với các filter tùy chọn
-        Specification<Job> spec = (root, query, cb) -> {
-            List<Predicate> predicates = new ArrayList<>();
-
-            // Bắt buộc: chỉ lấy job của company hiện tại
-            predicates.add(cb.equal(root.get("company"), company));
-
-            // Filter theo title (contains, case-insensitive)
-            if (title != null && !title.isBlank()) {
-                predicates.add(cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase(Locale.ROOT) + "%"));
-            }
-
-            // Filter theo status
-            if (status != null) {
-                predicates.add(cb.equal(root.get("status"), status));
-            }
-
-            // Filter theo jobType
-            if (jobType != null) {
-                predicates.add(cb.equal(root.get("jobType"), jobType));
-            }
-
-            // Filter theo cityId
-            if (cityId != null) {
-                predicates.add(cb.equal(root.get("city").get("id"), cityId));
-            }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
-        };
-
-        // 4. Query và map
+    public List<JobDetailResponse> getJobsByCurrentEmployer(
+            String title, JobStatus status, JobType jobType, Long cityId) {
+        Company company = getCurrentEmployerCompany();
+        Specification<Job> spec =
+                buildJobFilterSpecification(company, title, null, status, jobType, cityId, null, null, true);
         return jobMapper.toJobDetailResponse(jobRepository.findAll(spec));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<JobDetailResponse> getAdminJobs(
+            int page,
+            int size,
+            String title,
+            String companyName,
+            JobStatus status,
+            JobType jobType,
+            Long cityId,
+            LocalDate postedAtFrom,
+            LocalDate postedAtTo) {
+        Specification<Job> spec = buildJobFilterSpecification(
+                null, title, companyName, status, jobType, cityId, postedAtFrom, postedAtTo, false);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("postedAt"), Sort.Order.desc("id")));
+        Page<Job> jobPage = jobRepository.findAll(spec, pageable);
+        List<JobDetailResponse> jobResponses = jobMapper.toJobDetailResponse(jobPage.getContent());
+
+        return PageResponse.<JobDetailResponse>builder()
+                .data(jobResponses)
+                .size(jobResponses.size())
+                .page(jobPage.getNumber())
+                .totalElements(jobPage.getTotalElements())
+                .totalPages(jobPage.getTotalPages())
+                .isFirst(jobPage.isFirst())
+                .isLast(jobPage.isLast())
+                .build();
     }
 
     @Transactional(readOnly = true)
     @Override
     public PageResponse<JobCardResponse> getJobCards(int page, int size) {
-
-        // 1. Tạo Pageable
         Pageable pageable = PageRequest.of(page, size);
-        // 2. query db
         Page<Job> jobPage = jobRepository.findByStatus(ACTIVE, pageable);
-
-        // 3. map dto job -> jobCard
         List<JobCardResponse> jobCardResponseList = jobMapper.toJobCardResponse(jobPage.getContent());
 
         return PageResponse.<JobCardResponse>builder()
@@ -180,29 +157,30 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public PageResponse<JobCardResponse> searchJobs(
+            int page, int size, String keyword, Long cityId, JobType jobType, ExperienceLevel experienceLevel) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("postedAt"), Sort.Order.desc("id")));
+        Page<Job> jobPage = jobRepository.findAll(
+                buildPublicJobSearchSpecification(keyword, cityId, jobType, experienceLevel), pageable);
+        List<JobCardResponse> jobCardResponses = jobMapper.toJobCardResponse(jobPage.getContent());
+
+        return PageResponse.<JobCardResponse>builder()
+                .data(jobCardResponses)
+                .size(jobCardResponses.size())
+                .page(jobPage.getNumber())
+                .totalElements(jobPage.getTotalElements())
+                .totalPages(jobPage.getTotalPages())
+                .isFirst(jobPage.isFirst())
+                .isLast(jobPage.isLast())
+                .build();
+    }
+
+    @Override
     public JobDetailResponse updateJob(Long id, JobUpdateRequest request) {
-        // 1. lấy email từ SecurityContext
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
-        }
-        String email = authentication.getName();
-        // 2. lấy user từ email
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
-
-        // 3. lấy employer từ user
-        Employer employer =
-                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
-
-        // 4. lấy company từ employer
-        Company company = companyRepository
-                .findByEmployer(employer)
-                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
-
-        // 5. lấy job chi tiết đó bằng id và job đó phải thuộc công ty
+        Company company = getCurrentEmployerCompany();
         Job job = jobRepository.findByIdAndCompany(id, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
 
-        // 6. Cập nhật thông tin của job đó
         job.setTitle(request.getTitle());
         job.setJobReason(request.getJobReason());
         job.setJobDescription(request.getJobDescription());
@@ -217,15 +195,40 @@ public class JobServiceImpl implements JobService {
         job.setExpiresAt(request.getExpiresAt());
         job.setStatus(request.getStatus());
         job.setSkills(request.getSkills());
+        job.setSlug(generateSlug(job.getTitle(), company.getCompanyName(), job.getId()));
 
-        // 7. Tạo slug
-        String slug = generateSlug(job.getTitle(), company.getCompanyName(), job.getId());
-        job.setSlug(slug);
-
-        // 8. Lưu vào db
         return jobMapper.toJobDetailResponse(jobRepository.save(job));
     }
 
+    @Override
+    public JobDetailResponse getAdminJobById(Long id) {
+        Job job = jobRepository.findById(id).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+        return jobMapper.toJobDetailResponse(job);
+    }
+
+    @Override
+    public JobDetailResponse updateJobStatusByAdmin(Long id, JobStatus status) {
+        Job job = jobRepository.findById(id).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+        job.setStatus(status);
+        return jobMapper.toJobDetailResponse(jobRepository.save(job));
+    }
+
+    @Override
+    public void deleteJobByCurrentEmployer(Long id) {
+        Company company = getCurrentEmployerCompany();
+        Job job = jobRepository.findByIdAndCompany(id, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+        job.setStatus(CLOSED);
+        jobRepository.save(job);
+    }
+
+    @Override
+    public void deleteJobByAdmin(Long id) {
+        Job job = jobRepository.findById(id).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+        job.setStatus(CLOSED);
+        jobRepository.save(job);
+    }
+
+    @Override
     public String generateSlug(String jobTitle, String companyName, Long jobId) {
         if (jobId == null) {
             return "";
@@ -239,19 +242,145 @@ public class JobServiceImpl implements JobService {
                 .collect(Collectors.joining("-"));
     }
 
+    @Override
     public String normalizeToSlug(String input) {
         if (input == null || input.trim().isEmpty()) {
             return "";
         }
 
         String slug = input.trim().toLowerCase(Locale.ROOT);
-
         slug = Normalizer.normalize(slug, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-
-        slug = slug.replace("đ", "d").replace("Đ", "d");
-
+        slug = slug.replace("\u0111", "d").replace("\u0110", "d");
         slug = slug.replaceAll("[^a-z0-9]+", "-").replaceAll("^-+|-+$", "");
 
         return slug;
+    }
+
+    Specification<Job> buildPublicJobSearchSpecification(
+            String keyword, Long cityId, JobType jobType, ExperienceLevel experienceLevel) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            Join<Job, Skill> skillJoin = root.join("skills", JoinType.LEFT);
+
+            if (query != null) {
+                query.distinct(true);
+            }
+
+            predicates.add(cb.equal(root.get("status"), ACTIVE));
+
+            if (keyword != null && !keyword.isBlank()) {
+                String normalizedKeyword = keyword.trim().toLowerCase(Locale.ROOT);
+                String normalizedSlugKeyword = normalizeToSlug(keyword);
+                Set<String> keywordTokens = Stream.of(normalizedKeyword.split("\\s+"))
+                        .map(String::trim)
+                        .filter(token -> !token.isBlank())
+                        .collect(Collectors.toCollection(LinkedHashSet::new));
+
+                List<Predicate> keywordPredicates = new ArrayList<>();
+                keywordPredicates.add(cb.like(cb.lower(root.get("title")), "%" + normalizedKeyword + "%"));
+                keywordPredicates.add(
+                        cb.like(cb.lower(root.get("company").get("companyName")), "%" + normalizedKeyword + "%"));
+                keywordPredicates.add(cb.like(cb.lower(skillJoin.get("skillName")), "%" + normalizedKeyword + "%"));
+
+                if (!normalizedSlugKeyword.isBlank()) {
+                    keywordPredicates.add(cb.like(cb.lower(root.get("slug")), "%" + normalizedSlugKeyword + "%"));
+                }
+
+                for (String keywordToken : keywordTokens) {
+                    String tokenPattern = "%" + keywordToken + "%";
+                    keywordPredicates.add(cb.like(cb.lower(root.get("title")), tokenPattern));
+                    keywordPredicates.add(cb.like(cb.lower(root.get("company").get("companyName")), tokenPattern));
+                    keywordPredicates.add(cb.like(cb.lower(skillJoin.get("skillName")), tokenPattern));
+                    keywordPredicates.add(cb.like(cb.lower(root.get("slug")), "%" + normalizeToSlug(keywordToken) + "%"));
+                }
+
+                predicates.add(cb.or(keywordPredicates.toArray(new Predicate[0])));
+            }
+
+            if (cityId != null) {
+                predicates.add(cb.equal(root.get("city").get("id"), cityId));
+            }
+
+            if (jobType != null) {
+                predicates.add(cb.equal(root.get("jobType"), jobType));
+            }
+
+            if (experienceLevel != null) {
+                predicates.add(cb.equal(root.get("experienceLevel"), experienceLevel));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    Specification<Job> buildJobFilterSpecification(
+            Company company,
+            String title,
+            String companyName,
+            JobStatus status,
+            JobType jobType,
+            Long cityId,
+            LocalDate postedAtFrom,
+            LocalDate postedAtTo,
+            boolean applyDefaultSort) {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (applyDefaultSort && query != null) {
+                query.orderBy(cb.desc(root.get("postedAt")), cb.desc(root.get("id")));
+            }
+
+            if (company != null) {
+                predicates.add(cb.equal(root.get("company"), company));
+            }
+
+            if (title != null && !title.isBlank()) {
+                predicates.add(cb.like(cb.lower(root.get("title")), "%" + title.toLowerCase(Locale.ROOT) + "%"));
+            }
+
+            if (companyName != null && !companyName.isBlank()) {
+                predicates.add(cb.like(
+                        cb.lower(root.get("company").get("companyName")),
+                        "%" + companyName.toLowerCase(Locale.ROOT) + "%"));
+            }
+
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            if (jobType != null) {
+                predicates.add(cb.equal(root.get("jobType"), jobType));
+            }
+
+            if (cityId != null) {
+                predicates.add(cb.equal(root.get("city").get("id"), cityId));
+            }
+
+            if (postedAtFrom != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("postedAt"), postedAtFrom.atStartOfDay()));
+            }
+
+            if (postedAtTo != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("postedAt"), postedAtTo.atTime(23, 59, 59, 999999999)));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private Company getCurrentEmployerCompany() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        String email = authentication.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        Employer employer =
+                employerRepository.findByUser(user).orElseThrow(() -> new AppException(ErrorCode.EMPLOYER_NOT_FOUND));
+
+        return companyRepository
+                .findByEmployer(employer)
+                .orElseThrow(() -> new AppException(ErrorCode.COMPANY_NOT_FOUND));
     }
 }

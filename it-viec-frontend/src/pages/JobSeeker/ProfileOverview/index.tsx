@@ -5,7 +5,7 @@
 import "./ProfileOverview.scss";
 import { MdMailOutline } from "react-icons/md";
 import { Link } from "react-router-dom";
-import avatar from "@/assets/images/unnamed.jpg";
+import avatarDefault from "@/assets/images/avatar-default.svg";
 import { LuBriefcase } from "react-icons/lu";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import uploadImg from "@/assets/images/uploaded-resume.svg";
@@ -33,6 +33,7 @@ const mockData = {
 function ProfileOverview() {
   const fullName = useSeekerStore((state) => state.fullName);
   const jobTitle = useSeekerStore((state) => state.jobTitle);
+  const avatarUrl = useSeekerStore((state) => state.avatarUrl);
   const email = useUserStore((state) => state.email);
   const [jobApplicationsCount, setJobApplicationsCount] = useState(0);
   const { t, i18n } = useTranslation("jobseeker");
@@ -97,7 +98,7 @@ function ProfileOverview() {
       <div className="job-seeker-section">
         <div className="profile-overview__information">
           <div className="profile-overview__image-wrapper">
-            <img src={avatar} alt="user_avatar" />
+            <img src={avatarUrl || avatarDefault} alt="user_avatar" />
           </div>
           <div className="profile-overview__details">
             <h1 className="profile-overview__name">

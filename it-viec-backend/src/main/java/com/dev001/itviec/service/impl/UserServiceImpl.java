@@ -1,5 +1,13 @@
 package com.dev001.itviec.service.impl;
 
+import static com.dev001.itviec.exception.ErrorCode.ADMIN_IS_NOT_ALLOWED_TO_UPDATE_STATUS_ADMIN;
+import static com.dev001.itviec.exception.ErrorCode.USER_NOT_FOUND;
+
+import java.util.List;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
 import com.dev001.itviec.configuration.JwtService;
 import com.dev001.itviec.dto.request.UserUpdateRequest;
 import com.dev001.itviec.dto.response.UserResponse;
@@ -9,15 +17,9 @@ import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.mapper.UserMapper;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
-import static com.dev001.itviec.exception.ErrorCode.ADMIN_IS_NOT_ALLOWED_TO_UPDATE_STATUS_ADMIN;
-import static com.dev001.itviec.exception.ErrorCode.USER_NOT_FOUND;
 
 @Slf4j
 @Service

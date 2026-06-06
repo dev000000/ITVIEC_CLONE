@@ -1,5 +1,11 @@
 package com.dev001.itviec.service.impl;
 
+import java.util.List;
+
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.dev001.itviec.dto.request.EmployerUpdateRequest;
 import com.dev001.itviec.dto.response.EmployerResponse;
 import com.dev001.itviec.entity.employer.Employer;
@@ -10,13 +16,9 @@ import com.dev001.itviec.mapper.EmployerMapper;
 import com.dev001.itviec.repository.EmployerRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.EmployerService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service

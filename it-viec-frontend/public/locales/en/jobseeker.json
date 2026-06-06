@@ -101,6 +101,14 @@
       "phoneRequired": "Please enter your phone number!",
       "dobRequired": "Please select your date of birth!"
     },
+    "success": {
+      "avatarUploaded": "Avatar uploaded successfully!",
+      "avatarDeleted": "Avatar deleted successfully!"
+    },
+    "error": {
+      "invalidAvatarType": "Only PNG, JPEG, and WEBP images are supported.",
+      "avatarTooLarge": "Avatar size must not exceed 2MB."
+    },
     "intro": "About Me",
     "introDesc": "Introduce your strengths and years of experience",
     "education": "Education",

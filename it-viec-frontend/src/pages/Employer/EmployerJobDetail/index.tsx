@@ -26,13 +26,6 @@ import { clearStorage } from "@/helpers/localStorage";
 import { useCompanyStore } from "@/store/companyStore";
 import { useUserStore } from "@/store/userStore";
 import ButtonAction from "@/components/ButtonAction";
-import {
-  findCityRef,
-  findSkillRefs,
-  toExperienceLevel,
-  toJobStatus,
-  toJobType,
-} from "@/utils/apiPayloadMappers";
 import { getApiErrorMessage } from "@/utils/apiError";
 import {
   getExperienceLevelOptions,

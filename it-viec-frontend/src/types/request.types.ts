@@ -10,13 +10,6 @@ import type {
   UserStatus,
   WorkingHours,
 } from "./common.types";
-
-export interface GetMyCompanyApplicationsParams {
-  page?: number;
-  size?: number;
-  status?: ApplicationStatus;
-  jobTitle?: string;
-}
 import type {
   CityResponse,
   CountryResponse,
@@ -26,6 +19,20 @@ import type {
 export type EntityId = number | string;
 export type IsoDateString = string;
 export type IsoDateTimeString = string;
+
+export interface PaginationParams {
+  page?: number;
+  size?: number;
+}
+
+export interface GetMyCompanyApplicationsParams extends PaginationParams {
+  status?: ApplicationStatus;
+  jobTitle?: string;
+}
+
+export interface EntityRef {
+  id: EntityId;
+}
 
 export interface AuthenticationRequest {
   email: string;
@@ -40,6 +47,10 @@ export interface RegisterUserSeekerRequest {
 
 export interface UserUpdateRequest {
   status: UserStatus;
+}
+
+export interface AdminJobStatusUpdateRequest {
+  status: JobStatus;
 }
 
 export interface EmployerUpdateRequest {
@@ -60,6 +71,30 @@ export interface SeekerUpdateRequest {
   coverLetter?: string;
   skills?: SkillResponse[];
   desiredLocations?: CityResponse[];
+}
+
+/** Form 1: Chỉ cập nhật cover letter */
+export interface SeekerCoverLetterUpdateRequest {
+  coverLetter: string;
+}
+
+/** Form 2: Cập nhật thông tin cơ bản (fullName, phoneNumber, desiredLocations) */
+export interface SeekerBasicInfoUpdateRequest {
+  fullName: string;
+  phoneNumber: string;
+  desiredLocations: EntityRef[];
+}
+
+/** Form 3: Cập nhật thông tin cá nhân đầy đủ */
+export interface SeekerPersonalInfoUpdateRequest {
+  fullName: string;
+  gender: Gender;
+  jobTitle: string;
+  personalLink?: string;
+  phoneNumber: string;
+  dateOfBirth: IsoDateString;
+  city?: EntityRef | null;
+  address?: string;
 }
 
 export interface CompanyUpdateRequest {
@@ -114,11 +149,40 @@ export interface JobUpdateRequest {
   skills: SkillResponse[];
 }
 
+export interface GetAdminJobsParams extends PaginationParams {
+  title?: string;
+  companyName?: string;
+  status?: JobStatus;
+  jobType?: JobType;
+  cityId?: number;
+  postedAtFrom?: IsoDateString;
+  postedAtTo?: IsoDateString;
+}
+
+export interface GetAdminCompaniesParams extends PaginationParams {
+  companyName?: string;
+  companyModel?: CompanyModel;
+  countryId?: number;
+  companySize?: CompanySize;
+}
+
+export interface SearchJobsParams extends PaginationParams {
+  keyword?: string;
+  cityId?: number;
+  jobType?: JobType;
+  experienceLevel?: ExperienceLevel;
+}
+
+export interface PopularTagCreateRequest {
+  category: string;
+  sourceId: string;
+}
+
 export interface ApplicationRequest {
   fullName: string;
   phoneNumber: string;
   coverLetter?: string;
-  desiredLocations?: CityResponse[];
+  desiredLocations?: EntityRef[];
 }
 
 export interface ApplicationUpdateRequest {

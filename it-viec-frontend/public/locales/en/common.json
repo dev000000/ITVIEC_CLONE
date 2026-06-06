@@ -120,7 +120,7 @@
     "successTitle": "Done!"
   },
   "language": {
-    "vi": "Ti\u1ebfng Vi\u1ec7t",
+    "vi": "Tiếng Việt",
     "en": "English"
   },
   "errors": {
@@ -129,8 +129,6 @@
     "unauthorized": "You are not authorized to access this page"
   },
   "apiErrors": {
-    "default": "Something went wrong, please try again",
-    "9999": "An unexpected system error occurred, please try again later",
     "1001": "User already exists",
     "1002": "User not found",
     "1003": "Username must be between 3 and 50 characters",
@@ -207,7 +205,16 @@
     "1074": "Company logo must be a PNG, JPEG, or WEBP image",
     "1075": "Company logo must not exceed 2 MB",
     "1076": "Company logo not found",
-    "1077": "Failed to upload company logo"
+    "1077": "Failed to upload company logo",
+    "1088": "Skill not found",
+    "1089": "Popular tag not found",
+    "1090": "Popular tag already exists",
+    "1091": "Invalid popular tag category",
+    "1092": "Invalid popular tag source ID",
+    "1093": "Popular tag category is required",
+    "1094": "Popular tag source ID is required",
+    "9999": "An unexpected system error occurred, please try again later",
+    "default": "Something went wrong, please try again"
   },
   "pagination": {
     "showing": "Showing {{from}}-{{to}} of {{total}} results"
@@ -234,7 +241,7 @@
     "pressRelease": "Press Release",
     "contactTitle": "Contact us to post a job at:",
     "sendContact": "Send contact information",
-    "copyright": "Copyright \u00a9 NHIEU VIEC JSC"
+    "copyright": "Copyright © NHIEU VIEC JSC"
   },
   "header": {
     "employer": "For Employers",
@@ -298,6 +305,11 @@
     "pendingActivation": "Pending Activation",
     "active": "Active",
     "disabled": "Disabled"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "employer": "Employer",
+    "seeker": "Job seeker"
   },
   "workingHours": {
     "monFri": "Monday – Friday",

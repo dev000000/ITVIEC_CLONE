@@ -1,4 +1,4 @@
-import type { RouteObject } from 'react-router-dom';
+import { Navigate, type RouteObject } from 'react-router-dom';
 import Error404 from '@/pages/Shared/Error404';
 import PublicRoutes from './PublicRoutes';
 import PrivateRoutes from './PrivateRoutes';
@@ -9,6 +9,8 @@ import Policy from '@/pages/Shared/Policy';
 import Employer from '@/pages/Employer/EmployerHome';
 import EmployerPrivateRoutes from './EmployerPrivateRoute';
 import EmployerPublicRoutes from './EmployerPublicRoute';
+import AdminPrivateRoutes from './AdminPrivateRoute';
+import AdminPublicRoutes from './AdminPublicRoute';
 import LayoutEmployer from '@/layout/LayoutEmployer';
 import LayoutCheckToken from '@/layout/LayoutCheckToken';
 import JobApplications from '@/pages/JobSeeker/JobApplications';
@@ -99,6 +101,17 @@ export const routes: RouteObject[] = [
       {
         element: <LayoutCheckToken checkRole={ROLE.EMPLOYER} />,
         children: [EmployerPrivateRoutes],
+      },
+    ],
+  },
+  {
+    path: 'admin',
+    children: [
+      { path: '', element: <Navigate to="login" replace /> },
+      AdminPublicRoutes,
+      {
+        element: <LayoutCheckToken checkRole={ROLE.ADMIN} />,
+        children: [AdminPrivateRoutes],
       },
     ],
   },

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUserStore } from "@/store/userStore";
-import { refreshTokenCookieApi } from "./authApi";
+import { logoutApi, refreshTokenCookieApi } from "./authApi";
 
 /**
  * Khởi tạo axios instance để tùy chỉnh cấu hình cho toàn bộ dự án.
@@ -61,6 +61,7 @@ apiClient.interceptors.response.use(
             // Refresh thất bại -> Đăng xuất người dùng
             toast.error(_error.response?.data?.message || "Vui lòng đăng nhập lại.");
             useUserStore.getState().logout();
+            logoutApi();
             return Promise.reject(_error);
           })
           .finally(() => {

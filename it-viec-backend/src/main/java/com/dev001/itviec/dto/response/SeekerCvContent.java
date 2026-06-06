@@ -13,4 +13,3 @@ public class SeekerCvContent {
     String contentType;
     byte[] data;
 }
-

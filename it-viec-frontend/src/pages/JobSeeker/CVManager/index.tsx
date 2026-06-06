@@ -15,7 +15,7 @@ import { Form, Input, Spin } from "antd";
 import { Col, Row, Select } from "antd";
 import { IoClose } from "react-icons/io5";
 import Swal from "sweetalert2";
-import { updateMyProfileApi } from "@/services/seekerApi";
+import { updateMyCoverLetterApi, updateMyBasicInfoApi } from "@/services/seekerApi";
 import {
   deleteMyCvApi,
   getMyCvMetadataApi,
@@ -25,15 +25,12 @@ import {
 import { getAllCitiesApi } from "@/services/cityApi";
 import { useSeekerStore } from "@/store/seekerStore";
 import {
-  findCityRef,
   findCityRefs,
-  toEntityRef,
 } from "@/utils/apiPayloadMappers";
 import { clearStorage } from "@/helpers/localStorage";
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
 import type { SeekerCvMetadataResponse } from "@/types/seekerCv.types";
-import type { SeekerUpdateRequest } from "@/types/request.types";
 import { getApiErrorMessage } from "@/utils/apiError";
 
 // Kiểu dữ liệu form thông tin cá nhân trong modal chỉnh sửa
@@ -168,31 +165,6 @@ function CVManager() {
     console.log("Failed:", errorInfo);
   };
 
-  // Tạo payload chuẩn để gọi updateMyProfileApi
-  // Cast về SeekerUpdateRequest: findCityRef/findCityRefs trả EntityRef ({id}) — backend chỉ cần id
-  const buildSeekerUpdatePayload = (
-    values: Partial<CVManagerFormValues & CoverLetterFormValues>,
-  ): SeekerUpdateRequest => ({
-    fullName: values.fullName ?? seeker.fullName ?? "",
-    jobTitle: seeker.jobTitle ?? "",
-    phoneNumber: values.phoneNumber ?? seeker.phoneNumber ?? "",
-    dateOfBirth: seeker.dateOfBirth ?? "1999-01-01",
-    gender: seeker.gender ?? "OTHERS",
-    city: findCityRef(seeker.city?.id, cities, seeker.city) as unknown as CityResponse,
-    address: seeker.address ?? "",
-    personalLink: seeker.personalLink ?? "",
-    coverLetter: values.coverLetter ?? seeker.coverLetter ?? "",
-    skills: seeker.skills
-      .map((skill) => toEntityRef(skill.id))
-      .filter((skill): skill is { id: number | string } => Boolean(skill)) as unknown as CityResponse[],
-    desiredLocations: findCityRefs(
-      values.desiredLocations ??
-      seeker.desiredLocations?.map((city) => city.cityName) ??
-      [],
-      cities,
-    ) as unknown as CityResponse[],
-  });
-
   // Tải danh sách thành phố khi component mount
   useEffect(() => {
     const loadCities = async () => {
@@ -218,14 +190,18 @@ function CVManager() {
     return true;
   };
 
-  // Submit form thông tin cá nhân
+  // Form 2: Submit thông tin cơ bản (fullName, phoneNumber, desiredLocations)
   const onFinish = async (values: CVManagerFormValues) => {
     if (!checkUserSession()) return;
     try {
-      const response = await updateMyProfileApi(buildSeekerUpdatePayload(values));
+      const payload = {
+        fullName: values.fullName,
+        phoneNumber: values.phoneNumber,
+        desiredLocations: findCityRefs(values.desiredLocations, cities),
+      };
+      const response = await updateMyBasicInfoApi(payload);
       const result = response.data.result;
       setSeekerFullInfo(result);
-      setCoverLetter(result.coverLetter || "");
       Swal.fire({
         title: t("cvManager.success.updateProfile"),
         icon: "success",
@@ -243,11 +219,11 @@ function CVManager() {
     }
   };
 
-  // Submit form cover letter
+  // Form 1: Submit cover letter
   const onFinish2 = async (values: CoverLetterFormValues) => {
     if (!checkUserSession()) return;
     try {
-      const response = await updateMyProfileApi(buildSeekerUpdatePayload(values));
+      const response = await updateMyCoverLetterApi({ coverLetter: values.coverLetter });
       const result = response.data.result;
       setSeekerFullInfo(result);
       setCoverLetter(result.coverLetter || "");

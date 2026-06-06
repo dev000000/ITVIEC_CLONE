@@ -10,7 +10,7 @@ i18n
   .init({
     fallbackLng: "vi",
     defaultNS: "common",
-    ns: ["common", "auth", "job", "employer", "shared", "jobseeker"],
+    ns: ["common", "auth", "job", "employer", "shared", "jobseeker", "admin"],
     supportedLngs: ["vi", "en"],
 
     interpolation: {

@@ -69,6 +69,7 @@ const companyInforDefault: CompanyDetailResponse = {
       },
       "salary": "You'll love it",
       "jobType": "ONSITE",
+      "status": "ACTIVE",
       "postedAt": "2025-04-29T07:00:00",
       "skills": [
         {
@@ -101,6 +102,7 @@ const companyInforDefault: CompanyDetailResponse = {
       },
       "salary": "You'll love it",
       "jobType": "ONSITE",
+      "status": "ACTIVE",
       "postedAt": "2025-04-29T07:00:00",
       "skills": [
         {
@@ -133,6 +135,7 @@ const companyInforDefault: CompanyDetailResponse = {
       },
       "salary": "1,500 - 2,500 USD",
       "jobType": "ONSITE",
+      "status": "ACTIVE",
       "postedAt": "2025-04-28T07:00:00",
       "skills": [
         {

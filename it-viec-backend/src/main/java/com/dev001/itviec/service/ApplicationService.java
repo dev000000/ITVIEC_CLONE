@@ -1,14 +1,15 @@
 package com.dev001.itviec.service;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.enums.ApplicationStatus;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 public interface ApplicationService {
     List<ApplicationResponse> getAllApplications();
@@ -17,7 +18,8 @@ public interface ApplicationService {
 
     List<ApplicationResponse> getMyApplications();
 
-    PageResponse<ApplicationResponse> getMyCompanyApplications(int page, int size, ApplicationStatus status, String jobTitle);
+    PageResponse<ApplicationResponse> getMyCompanyApplications(
+            int page, int size, ApplicationStatus status, String jobTitle);
 
     ApplicationResponse getMyApplicationById(String id);
 

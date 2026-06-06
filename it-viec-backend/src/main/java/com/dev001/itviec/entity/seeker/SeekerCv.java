@@ -1,7 +1,9 @@
 package com.dev001.itviec.entity.seeker;
 
-import com.dev001.itviec.entity.base.BaseEntity;
 import jakarta.persistence.*;
+
+import com.dev001.itviec.entity.base.BaseEntity;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -38,4 +40,3 @@ public class SeekerCv extends BaseEntity {
     @Column(name = "cv_data", nullable = false, columnDefinition = "LONGBLOB")
     byte[] data;
 }
-

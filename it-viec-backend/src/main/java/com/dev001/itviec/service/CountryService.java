@@ -1,8 +1,8 @@
 package com.dev001.itviec.service;
 
-import com.dev001.itviec.dto.response.CountryResponse;
-
 import java.util.List;
+
+import com.dev001.itviec.dto.response.CountryResponse;
 
 public interface CountryService {
 

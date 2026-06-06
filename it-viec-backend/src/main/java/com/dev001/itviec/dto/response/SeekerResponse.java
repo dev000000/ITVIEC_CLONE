@@ -26,6 +26,7 @@ public class SeekerResponse {
     String address;
     String personalLink;
     String coverLetter;
+    String avatarUrl;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     Set<SkillResponse> skills;

@@ -1,9 +1,9 @@
 package com.dev001.itviec.service;
 
+import java.util.List;
+
 import com.dev001.itviec.dto.request.UserUpdateRequest;
 import com.dev001.itviec.dto.response.UserResponse;
-
-import java.util.List;
 
 public interface UserService {
 

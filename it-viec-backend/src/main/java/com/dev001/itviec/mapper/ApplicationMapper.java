@@ -1,15 +1,16 @@
 package com.dev001.itviec.mapper;
 
+import java.util.List;
+
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
+
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
 import com.dev001.itviec.entity.application.Application;
 import com.dev001.itviec.entity.job.Job;
-import org.mapstruct.AfterMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-
-import java.util.List;
 
 @Mapper(
         componentModel = "spring",

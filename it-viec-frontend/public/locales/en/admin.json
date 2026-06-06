@@ -1,0 +1,154 @@
+{
+  "login": {
+    "badge": "ADMIN SPACE",
+    "title": "Admin sign in",
+    "subtitle": "Access platform-wide user, job, and reporting controls from one workspace.",
+    "heroEyebrow": "ADMIN CONTROL CENTER",
+    "heroTitle": "Operate the hiring platform with a full-system view",
+    "heroDescription": "Track users, jobs, and operational signals in a dedicated workspace for administrators.",
+    "remember": "Remember this device",
+    "submit": "Sign in",
+    "supportTitle": "Support"
+  },
+  "layout": {
+    "title": "Admin"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "jobs": "Jobs",
+    "report": "Reports",
+    "popularTags": "Popular tags"
+  },
+  "actions": {
+    "reset": "Reset"
+  },
+  "notifications": {
+    "oops": "Oops"
+  },
+  "empty": {
+    "pendingUsers": "No pending users",
+    "attentionJobs": "No jobs need attention"
+  },
+  "dashboard": {
+    "title": "Admin dashboard",
+    "stats": {
+      "totalUsers": "Total users",
+      "activeUsers": "Active users",
+      "inactiveUsers": "Inactive users",
+      "totalJobs": "Total jobs",
+      "activeJobs": "Active jobs",
+      "pendingApplications": "Pending applications"
+    },
+    "pendingUsers": {
+      "title": "Pending users",
+      "subtitle": "Accounts waiting for activation."
+    },
+    "attentionJobs": {
+      "title": "Jobs needing attention",
+      "subtitle": "Expired, soon-to-expire, or non-active jobs."
+    }
+  },
+  "users": {
+    "title": "User management",
+    "save": "Save",
+    "protectedAdmin": "Protected admin",
+    "columns": {
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "action": "Action"
+    },
+    "filters": {
+      "email": "Filter by email",
+      "role": "Filter by role",
+      "status": "Filter by status"
+    },
+    "notifications": {
+      "updateSuccess": "User status updated"
+    }
+  },
+  "jobs": {
+    "title": "Job management",
+    "viewDetail": "View detail",
+    "detailTitle": "Job detail",
+    "saveStatus": "Save status",
+    "delete": "Soft delete",
+    "salary": "Salary",
+    "location": "Location",
+    "columns": {
+      "title": "Title",
+      "company": "Company",
+      "city": "City",
+      "jobType": "Job type",
+      "status": "Status",
+      "postedAt": "Posted at",
+      "expiresAt": "Expires at",
+      "action": "Action"
+    },
+    "filters": {
+      "title": "Filter by title",
+      "company": "Filter by company",
+      "status": "Filter by status",
+      "jobType": "Filter by job type",
+      "city": "Filter by city"
+    },
+    "sections": {
+      "reason": "Why join",
+      "description": "Description",
+      "requirements": "Requirements",
+      "whyJoinUs": "Why join us"
+    },
+    "notifications": {
+      "statusUpdated": "Job status updated",
+      "deleteConfirmTitle": "Soft delete this job?",
+      "deleteConfirmText": "The job will be kept in the system and moved out of active circulation.",
+      "deleted": "Job marked as closed"
+    }
+  },
+  "report": {
+    "title": "Reports",
+    "stats": {
+      "totalUsers": "Users",
+      "totalJobs": "Jobs",
+      "totalApplications": "Applications"
+    },
+    "sections": {
+      "userRoles": "Users by role",
+      "userStatuses": "Users by status",
+      "jobStatuses": "Jobs by status",
+      "jobTypes": "Jobs by type",
+      "applicationStatuses": "Applications by status"
+    },
+    "columns": {
+      "label": "Label",
+      "count": "Count"
+    }
+  },
+  "popularTags": {
+    "title": "Popular tag management",
+    "listTitle": "Search suggestion tags",
+    "listDescription": "These tags are used to drive suggestions in the search input.",
+    "categories": {
+      "skill": "Skill and Expertise",
+      "company": "Company"
+    },
+    "filters": {
+      "category": "Select category",
+      "name": "Select skill or company"
+    },
+    "actions": {
+      "add": "Add tag"
+    },
+    "columns": {
+      "category": "Category",
+      "name": "Name",
+      "action": "Action"
+    },
+    "notifications": {
+      "created": "Popular tag added",
+      "deleted": "Popular tag removed",
+      "deleteConfirmTitle": "Delete this popular tag?"
+    }
+  }
+}
