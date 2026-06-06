@@ -1,7 +1,5 @@
 package com.dev001.itviec.controller;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
@@ -23,6 +21,7 @@ import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.dto.response.CompanyLogoContent;
+import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.service.CompanyService;
 
 import lombok.AccessLevel;
@@ -41,10 +40,12 @@ public class CompanyController {
     // 1. API trả về toàn bộ company có kèm số lượng job đang active, để hiển thị ở (PUBLIC)
     // trang chủ
     @GetMapping
-    public ApiResponse<List<CompanyCardResponse>> getAllCompanies() {
-        return ApiResponse.<List<CompanyCardResponse>>builder()
+    public ApiResponse<PageResponse<CompanyCardResponse>> getAllCompanies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ApiResponse.<PageResponse<CompanyCardResponse>>builder()
                 .code(1000)
-                .result(companyService.getAllCompaniesWithJobCountActive())
+                .result(companyService.getAllCompaniesWithJobCountActive(page, size))
                 .build();
     }
 

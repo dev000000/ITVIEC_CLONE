@@ -24,6 +24,10 @@ public interface CompanyRepository extends JpaRepository<Company, String>, JpaSp
     @EntityGraph(attributePaths = {"country"})
     Page<Company> findAll(Specification<Company> spec, Pageable pageable);
 
+    @Override
+    @EntityGraph(attributePaths = {"companySkills"})
+    Page<Company> findAll(Pageable pageable);
+
     @EntityGraph(attributePaths = {"employer", "country", "companySkills"})
     Optional<Company> findByEmployer(Employer employer);
 
