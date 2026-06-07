@@ -4,59 +4,85 @@ import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useTranslation } from "react-i18next";
-import { useCompanyStore } from "@/store/companyStore";
 import { useUserStore } from "@/store/userStore";
-
-interface Job {
-  id?: number;
-  title?: string;
-  salary?: string;
-  company?: {
-    companyName?: string;
-  };
-}
+import type { ApplicationCheckResponse, JobDetailResponse } from "@/types/response.types";
+import { useEffect, useState } from "react";
+import { checkMyApplicationExistsApi } from "@/services/applicationApi";
 
 interface CardJobHeadProps {
-  job: Job;
+  job: JobDetailResponse;
 }
 
-function CardJobHead({ job }: CardJobHeadProps) {
-  const companyName = useCompanyStore((state) => state.companyName);
+// Phần đầu của card hiển thị chi tiết công việc, bao gồm tên công việc, tên công ty, mức lương và nút ứng tuyển
+const CardJobHead = ({ job }: CardJobHeadProps) => {
+  const { t } = useTranslation("shared");
+
+  // State để quản lý trạng thái đã ứng tuyển hay chưa và thời giuan ứng tuyển
+  const [applicationCheck, setApplicationCheck] = useState<ApplicationCheckResponse>({
+    applied: false,
+    createdAt: null,
+  });
+  // State để quản lý trạng thái tải dữ liệu ứng tuyển
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Lấy thông tin xác thực và vai trò người dùng từ store
   const authenticated = useUserStore((state) => state.authenticated);
   const role = useUserStore((state) => state.role);
-  const { t } = useTranslation("shared");
-  const type = {
-    applied: false,
-    appliedAt: "",
-  };
+  // Kiểm tra nếu người dùng đã đăng nhập và có vai trò là "SEEKER"
+  const isSeekerLoggedIn = authenticated && role === "SEEKER";
 
-  // TODO(service-new-migration): Chua co service_new thay the cho legacy API `checkApplication`.
-  // Legacy call: GET `applications?seekerId=...&jobId=...`.
-  // Muc dich: kiem tra seeker da ung tuyen job nay chua de doi nut Apply thanh Applied.
-  // Tam thoi fallback la chua applied de khong phu thuoc `src/services`.
+  // Hàm xử lý kiểm tra trạng thái người dùng đã ứng tuyển vào công việc này hay chưa
+  useEffect(() => {
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await checkMyApplicationExistsApi(job.id);
+        console.log("Check application response:", response);
+        setApplicationCheck((prev) => ({
+          ...prev,
+          applied: response.data.result.applied,
+          createdAt: response.data.result.createdAt,
+        }));
+      } catch (error) {
+        console.error("Error checking application status:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkApplicationStatus();
+
+  }, [job.id, isSeekerLoggedIn]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
       <div className="card-job-head">
-        <h1 className="card-job-head__job-name">{job.title}</h1>
+        {/* Hiển thị tên công việc  */}
+        <h1 className="card-job-head__job-name">{job.title || "--"}</h1>
+        {/* Hiển thị tên công ty */}
         <div className="card-job-head__employer-name">
-          {job.company?.companyName || companyName}
+          {job.company?.companyName || "--"}
         </div>
-        {authenticated ? (
+        {/* Nếu người dùng đã đăng nhập và có vai trò là "SEEKER" thì hiển thị mức lương */}
+        {isSeekerLoggedIn ? (
           <>
             <div className="card-job-head__salary">
               <AiOutlineDollarCircle />
-              <span> {job.salary} </span>
+              <span> {job.salary || "--"} </span>
             </div>
           </>
         ) : (
+          // Nếu người dùng chưa đăng nhập hoặc không có vai trò là "SEEKER" thì hiển thị liên kết đăng nhập
           <div className="card-job-head__salary card-job-head__salary-notLogin">
             <AiOutlineDollarCircle />
             <Link to="/login">{t("jobSearchDetail.loginToSeeSalary")}</Link>
           </div>
         )}
         <div className="card-job-head__wrap-button">
-          {!type.applied ? (
+          {!applicationCheck.applied ? (
+            // Nếu chưa ứng tuyển vào công việc này, hiển thị nút "Apply Now" và biểu tượng trái tim
             <>
               <Link
                 to="job_applications/new"
@@ -66,7 +92,7 @@ function CardJobHead({ job }: CardJobHeadProps) {
                 {" "}
                 {t("jobSearchDetail.applyNow")}{" "}
               </Link>
-              {authenticated && role === "SEEKER" ? (
+              {isSeekerLoggedIn ? (
                 <div className="card-job-head__heart">
                   <FaHeart />
                 </div>
@@ -82,7 +108,7 @@ function CardJobHead({ job }: CardJobHeadProps) {
             <div className="card-job-head__applied">
               <IoMdCheckmarkCircleOutline />
               <span>{t("jobSearchDetail.applied")}</span>
-              <span>{type.appliedAt}</span>
+              <span>{applicationCheck.createdAt}</span>
 
             </div>
           )}
@@ -90,6 +116,12 @@ function CardJobHead({ job }: CardJobHeadProps) {
       </div>
     </>
   );
+
 }
+
+
+
+
+
 
 export default CardJobHead;
