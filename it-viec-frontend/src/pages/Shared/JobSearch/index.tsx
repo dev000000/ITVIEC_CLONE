@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FC } from "react";
 import { Button, Col, Form, Row, Select } from "antd";
 import "./JobSearch.scss";
 import { FiSearch } from "react-icons/fi";
 import { Outlet, useNavigate, useSearchParams } from "react-router-dom";
-import { getAllSearchJobsApi } from "@/services/jobApi";
 import imgNoJob from "@/assets/images/robby-oops.svg";
 import TopJobItemHome from "@/components/TopJobItemHome";
 import { useTranslation } from "react-i18next";
 import SearchKeywordInput from "@/components/SearchKeywordInput";
-import useSearchMetadata from "@/hooks/useSearchMetadata";
 import type { ExperienceLevel, JobType } from "@/types/common.types";
 import type {
   CityResponse,
@@ -17,180 +15,194 @@ import type {
 } from "@/types/response.types";
 import {
   buildJobSearchPath,
-  deslugifySearchSegment,
-  findCityBySegment,
 } from "@/utils/jobSearch";
-import { getExperienceLevelOptions, getJobTypeOptions } from "@/constants";
+import { getCityLabel, getExperienceLevelOptions, getJobTypeOptions } from "@/constants";
+import { getAllCitiesApi } from "@/services/cityApi";
+import { getPopularTagsApi } from "@/services/tagApi";
+import { getApiErrorMessage } from "@/utils/apiError";
+import Swal from "sweetalert2";
+import { searchJobsApi } from "@/services/jobApi";
 
+// Định nghĩa các interface cho props và state của component JobSearch
 interface JobSearchProps {
   keywordSegment?: string;
   citySegment?: string;
 }
 
+// Định nghĩa interface cho giá trị của form tìm kiếm
 interface SearchFormValues {
   city?: string;
   keyword?: string;
 }
 
+// Định nghĩa interface cho các filter khi tìm kiếm việc làm
 interface SearchFilters {
   experienceLevel?: ExperienceLevel;
   jobType?: JobType;
 }
 
 const defaultFilters: SearchFilters = {};
-
-function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
+// 1.4.1 Trang tìm kiếm việc làm sẽ có các thành phần sau:
+// - Search form: bao gồm input tìm kiếm theo từ khóa và select để chọn thành phố
+// - Job list: hiển thị danh sách việc làm dựa trên từ khóa và thành phố đã chọn, có phân trang nếu cần
+// - Job detail: khi click vào một việc làm trong danh sách thì sẽ hiển thị chi tiết việc làm đó ở phần bên phải ( chỉ hiển thị trên desktop, mobile sẽ không có phần này )
+// - Filter: có thể filter thêm theo kinh nghiệm và loại hình công việc ( full-time, part-time, internship )
+const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
   const { t } = useTranslation("shared");
+  const navigate = useNavigate();
+  // State để kiểm tra xem có đang ở trên thiết bị mobile 
+  const isMobile = window.innerWidth <= 1199;
+
+  // Lấy param job_selected từ URL để xác định việc làm nào đang được chọn để hiển thị chi tiết
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedJobSlug = searchParams.get("job_selected");
+
+  // State để lưu danh sách việc làm lấy được từ API
   const [listJob, setListJob] = useState<JobCardResponse[]>([]);
-  const [jobSelected, setJobSelected] = useState<JobCardResponse | null>(null);
-  const [filters, setFilters] = useState<SearchFilters>(defaultFilters);
-  const [isLoading, setIsLoading] = useState(true);
+
+  // State để lưu tổng số việc làm tìm được ( dùng để hiển thị ở phần heading )
   const [totalJobs, setTotalJobs] = useState(0);
-  const { cities, popularTags, isLoading: isMetadataLoading } = useSearchMetadata();
-  const navigate = useNavigate();
-  const isMobile = window.innerWidth <= 1199;
+
+  // State để lưu việc làm đang được chọn để hiển thị chi tiết
+  const [jobSelected, setJobSelected] = useState<JobCardResponse | null>(null);
+
+  // State để lưu các filter được chọn ( kinh nghiệm, loại hình công việc )
+  const [filters, setFilters] = useState<SearchFilters>(defaultFilters);
+
+  // State để kiểm tra xem đang trong quá trình load dữ liệu việc làm hay không
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [isLoadingMetadata, setIsLoadingMetadata] = useState(true);
+
+  // State để lưu danh sách thành phố và tag phổ biến để hiển thị trong form tìm kiếm
+  const [cities, setCities] = useState<CityResponse[]>([]);
+  const [popularTags, setPopularTags] = useState<PopularTagResponse[]>([]);
+
+  // State để lưu form tìm kiếm
   const [form] = Form.useForm<SearchFormValues>();
 
+  // Lấy danh sách kiểu công việc và cấp độ kinh nghiệm để hiển thị select chọn trong filter
   const jobTypeOptions = useMemo(() => getJobTypeOptions(t), [t]);
   const experienceLevelOptions = useMemo(
     () => getExperienceLevelOptions(t),
     [t],
   );
 
-  const resolvedSearch = useMemo(() => {
-    const cityFromSecondSegment = findCityBySegment(citySegment, cities);
-    if (cityFromSecondSegment) {
-      return {
-        keyword: deslugifySearchSegment(keywordSegment),
-        city: cityFromSecondSegment,
-      };
-    }
-
-    const cityFromFirstSegment = !citySegment
-      ? findCityBySegment(keywordSegment, cities)
-      : null;
-
-    if (cityFromFirstSegment) {
-      return {
-        keyword: "",
-        city: cityFromFirstSegment,
-      };
-    }
-
-    return {
-      keyword: deslugifySearchSegment(keywordSegment),
-      city: null as CityResponse | null,
-    };
-  }, [cities, citySegment, keywordSegment]);
-
+  // Fill dữ liệu vào form tìm kiếm 
   useEffect(() => {
     form.setFieldsValue({
-      keyword: resolvedSearch.keyword,
-      city: resolvedSearch.city?.cityName ?? "all",
+      keyword: keywordSegment || "",
+      city: citySegment || "",
     });
-  }, [form, resolvedSearch.city?.cityName, resolvedSearch.keyword]);
+  }, [form, keywordSegment, citySegment]);
 
+  // Fill dữ liệu default filters khi có sự thay đổi của keywordSegment hoặc citySegment 
   useEffect(() => {
     setFilters(defaultFilters);
-  }, [citySegment, keywordSegment]);
+  }, [keywordSegment, citySegment]);
 
+  // Hàm xử lý khi component được mount lên sẽ gọi API để lấy danh sách thành phố và tag phổ biến để hiển thị trong form tìm kiếm
   useEffect(() => {
-    if (isMetadataLoading) {
-      return;
-    }
-
-    const loadJobs = async () => {
+    const loadMetadata = async () => {
+      setIsLoadingMetadata(true);
       try {
-        setIsLoading(true);
-        const jobs = await getAllSearchJobsApi({
-          keyword: resolvedSearch.keyword || undefined,
-          cityId: resolvedSearch.city?.id,
+        const [citiesResponse, tagsResponse] = await Promise.all([
+          getAllCitiesApi(),
+          getPopularTagsApi(),
+        ]);
+
+        setCities(citiesResponse.data.result ?? []);
+        setPopularTags(tagsResponse.data.result ?? []);
+      } catch (error) {
+        console.error("Error loading search metadata:", error);
+      } finally {
+        setIsLoadingMetadata(false);
+      }
+
+    };
+    loadMetadata();
+  }, []);
+
+  // Hàm xử lý khi component được mount hoặc filter thay đổi => call API để lấy danh sách việc làm dựa trên từ khóa, thành phố và filter đã chọn
+  useEffect(() => {
+    const fetchJobs = async () => {
+      setIsLoading(true);
+      try {
+        if(isLoadingMetadata) return;
+        const response = await searchJobsApi({
+          keyword: keywordSegment || undefined,
+          cityId: citySegment ? cities.find((city) => city.slug === citySegment)?.id : undefined,
           experienceLevel: filters.experienceLevel,
           jobType: filters.jobType,
         });
 
-        setListJob(jobs);
-        setTotalJobs(jobs.length);
+        setListJob(response.data.result?.data ?? []);
+        console.log("Fetched jobs:", response.data.result?.data);
+        setTotalJobs(response.data.result?.totalElements ?? 0);
 
-        if (!jobs.length) {
-          setJobSelected(null);
-          if (selectedJobSlug) {
-            setSearchParams({}, { replace: true });
-          }
-          return;
-        }
-
-        const matchedSelectedJob =
-          jobs.find((job) => job.slug === selectedJobSlug) ?? jobs[0];
-
-        setJobSelected(matchedSelectedJob);
-
-        if (matchedSelectedJob.slug !== selectedJobSlug) {
-          setSearchParams(
-            { job_selected: matchedSelectedJob.slug },
-            { replace: true },
+        // Nếu có slug của việc làm được chọn trong URL thì sẽ tìm việc làm đó trong danh sách việc làm nhận được từ API để hiển thị chi tiết
+        if (selectedJobSlug) {
+          const selectedJob = response.data.result?.data?.find(
+            (job) => job.slug === selectedJobSlug,
           );
+          setJobSelected(selectedJob);
+        } else {
+          setJobSelected(response.data.result?.data?.[0]);
         }
       } catch (error) {
-        console.error("Error fetching job data:", error);
-        setListJob([]);
-        setJobSelected(null);
-        setTotalJobs(0);
+        Swal.fire({
+          icon: "error",
+          title: t("jobSearch.notifications.oops"),
+          text: getApiErrorMessage(error, t),
+        });
+        console.error("Error fetching jobs:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
-    loadJobs();
-  }, [
-    filters.experienceLevel,
-    filters.jobType,
-    isMetadataLoading,
-    resolvedSearch.city?.id,
-    resolvedSearch.keyword,
-    selectedJobSlug,
-    setSearchParams,
-  ]);
-
+    fetchJobs();
+  }, [filters, t, keywordSegment, citySegment, isLoadingMetadata, cities]);
+  
+  // Hàm xử lý khi submit form tìm kiếm
   const handleFinish = (values: SearchFormValues) => {
     setFilters(defaultFilters);
     navigate(
       buildJobSearchPath({
         keyword: values.keyword,
-        city: values.city === "all" ? "" : values.city,
+        city: values.city,
       }),
     );
   };
 
-  const handlePopularTagSelect = (tag: PopularTagResponse) => {
-    const selectedCity = form.getFieldValue("city");
-
-    if (tag.category === "Company" && tag.companySlug) {
-      navigate(`/nha-tuyen-dung/${tag.companySlug}`);
-      return;
+  // Hàm xử lý khi người dùng click vào một tag gợi ý
+  const handleTagNavigation = (tag: PopularTagResponse) => {
+    switch (tag.category) {
+      // Nếu ấn tag liên quan đến công ty thì sẽ điều hướng đến trang chi tiết công ty đó
+      case "Company":
+        navigate(`/nha-tuyen-dung/${tag.companySlug}`);
+        return;
+      // Nếu ấn tag lien quan đến kỹ năng thì sẽ điều hướng đến trang tìm kiếm việc làm với từ khóa là tên tag đó
+      case "Skill and Expertise":
+        navigate(
+          buildJobSearchPath({
+            keyword: tag.name,
+          }),
+        );
+        return;
+      default:
+        break;
     }
-
-    setFilters(defaultFilters);
-    navigate(
-      buildJobSearchPath({
-        keyword: tag.name,
-        city: selectedCity === "all" ? "" : selectedCity,
-      }),
-    );
   };
 
+  // Hàm xử lý khi click vào một việc làm trong danh sách để hiển thị chi tiết
   const handleSelectJob = (job: JobCardResponse) => {
     setJobSelected(job);
     setSearchParams({ job_selected: job.slug });
   };
 
-  const headingKeyword =
-    resolvedSearch.keyword || resolvedSearch.city?.cityName || t("jobSearch.allJobs");
-
   return (
     <div className="job-search">
+      {/* Form tìm kiếm */}
       <div className="job-search__section-search">
         <div className="search-form__container">
           <Form
@@ -199,6 +211,7 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
             form={form}
           >
             <Row gutter={[{ xxl: 16, xl: 16, lg: 0, md: 0, sm: 0, xs: 0 }, 10]}>
+              {/* Ô select thành phố */}
               <Col xxl={5} xl={5} lg={24} md={24} sm={24} xs={24}>
                 <Form.Item name="city">
                   <Select
@@ -206,15 +219,16 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
                     optionFilterProp="label"
                     size="large"
                     options={[
-                      { value: "all", label: t("jobSearch.allCities") },
+                      { value: "", label: t("jobSearch.allCities") },
                       ...cities.map((city) => ({
-                        value: city.cityName,
-                        label: city.cityName,
+                        value: city.slug,
+                        label: getCityLabel(city.cityName, t),
                       })),
                     ]}
                   />
                 </Form.Item>
               </Col>
+              {/* Ô input từ khóa */}
               <Col
                 xxl={14}
                 xl={14}
@@ -227,11 +241,12 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
                   <SearchKeywordInput
                     placeholder={t("jobSearch.placeholder")}
                     popularTags={popularTags}
-                    onTagSelect={handlePopularTagSelect}
+                    onTagSelect={handleTagNavigation}
                     onSubmit={() => form.submit()}
                   />
                 </Form.Item>
               </Col>
+              {/* Nút tìm kiếm */}
               <Col
                 xxl={5}
                 xl={5}
@@ -255,6 +270,7 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
           </Form>
         </div>
       </div>
+      {/* Hiển thị danh sách việc làm, công việc đang được chọn, filter lọc công việc */}
       <div className="job-search__section-content">
         <div className="container">
           {isLoading ? (
@@ -263,10 +279,12 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
             </div>
           ) : listJob.length > 0 ? (
             <>
+              {/* Hiển thị tổng số việc làm */}
               <h2 className="job-search__total-jobs">
-                {totalJobs} <span>{headingKeyword}</span> {t("jobSearch.jobsInVietnam")}
+                {totalJobs} <span></span> {t("jobSearch.jobsInVietnam")}
               </h2>
-              <div className="job-search__filter-wrap">
+              {/* Hiển thị filter để lọc thêm việc làm theo kinh nghiệm và loại hình công việc */}
+              {/* <div className="job-search__filter-wrap">
                 <Select
                   allowClear
                   className="job-search__filter"
@@ -293,9 +311,11 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
                     }))
                   }
                 />
-              </div>
+              </div> */}
+              {/* Hiển thị danh sách việc làm + việc làm đang được chọn */}
               <div className="job-search__main-content">
                 <Row gutter={[20, 20]}>
+                  {/* Hiển thị danh sách việc làm bên trái */}
                   <Col xxl={10} xl={10} lg={24} md={24} sm={24} xs={24}>
                     <div className="job-search__list-job">
                       {listJob.map((job) =>
@@ -311,12 +331,13 @@ function JobSearch({ keywordSegment, citySegment }: JobSearchProps) {
                             key={job.id}
                             onClick={() => handleSelectJob(job)}
                           >
-                            <TopJobItemHome job={job} />
+                            <TopJobItemHome job={job} isNotNavigate={true} />
                           </div>
                         ),
                       )}
                     </div>
                   </Col>
+                  {/* Hiển thị chi tiết việc làm bên phải */}
                   <Col xxl={14} xl={14} lg={24} md={24} sm={24} xs={24}>
                     <div className="job-search__detail-job">
                       {jobSelected ? (

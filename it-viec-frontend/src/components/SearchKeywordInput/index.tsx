@@ -3,6 +3,8 @@ import { AutoComplete, Input } from "antd";
 import type { DefaultOptionType } from "antd/es/select";
 import "./SearchKeywordInput.scss";
 import type { PopularTagResponse } from "@/types/response.types";
+import { getMatchScore } from "@/utils/skillMatch";
+import HighlightLabel from "../HighlightLabel";
 
 interface SearchKeywordOption extends DefaultOptionType {
   tag?: PopularTagResponse;
@@ -34,41 +36,32 @@ function SearchKeywordInput({
   size = "large",
 }: SearchKeywordInputProps) {
   const options = useMemo(() => {
-    const normalizedValue = value?.trim().toLowerCase() ?? "";
+  const normalizedValue = value?.trim().toLowerCase() ?? "";
 
-    if (!normalizedValue) {
-      return [];
-    }
+  if (!normalizedValue) return [];
 
-    return CATEGORY_ORDER.map((category) => {
-      const categoryTags = popularTags.filter(
-        (tag) =>
-          tag.category === category &&
-          tag.name.toLowerCase().includes(normalizedValue),
-      );
+  return CATEGORY_ORDER.map((category) => {
+    const categoryTags = popularTags
+      .filter((tag) => tag.category === category)
+      .map((tag) => ({ tag, score: getMatchScore(tag.name, normalizedValue) }))
+      .filter(({ score }) => score > 0)          // loại bỏ không match
+      .sort((a, b) => b.score - a.score)         // sắp xếp theo độ liên quan
+      .map(({ tag }) => tag);
 
-      if (!categoryTags.length) {
-        return null;
-      }
+    if (!categoryTags.length) return null;
 
-      return {
+    return {
+      label: <div className="search-keyword-input__group-title">{category}</div>,
+      options: categoryTags.map((tag) => ({
+        value: tag.name,
         label: (
-          <div className="search-keyword-input__group-title">
-            {category}
-          </div>
+          <HighlightLabel name={tag.name} query={normalizedValue} />  // optional
         ),
-        options: categoryTags.map((tag) => ({
-          value: tag.name,
-          label: (
-            <div className="search-keyword-input__option-label">
-              {tag.name}
-            </div>
-          ),
-          tag,
-        })),
-      } as SearchKeywordGroupOption;
-    }).filter(Boolean) as SearchKeywordGroupOption[];
-  }, [popularTags, value]);
+        tag,
+      })),
+    } as SearchKeywordGroupOption;
+  }).filter(Boolean) as SearchKeywordGroupOption[];
+}, [popularTags, value]);
 
   return (
     <AutoComplete

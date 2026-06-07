@@ -1,123 +1,143 @@
 import "./JobSearchDetail.scss";
 import { Link, useOutletContext } from "react-router-dom";
 import { ImCoinDollar } from "react-icons/im";
-import logo from "@/assets/images/Companylogo.webp";
 import { FaHeart } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { MdLocationCity } from "react-icons/md";
 import { GoClock } from "react-icons/go";
 import TagSkill from "@/components/TagSkill";
 import { Tooltip } from "antd";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
 import { getJobBySlugApi } from "@/services/jobApi";
-import type { JobCardResponse, JobDetailResponse } from "@/types/response.types";
+import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
+import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
+import { type JobCardResponse, type JobDetailResponse } from "@/types/response.types";
 import { getJobTypeOptions } from "@/constants";
 
-type JobSelected = Partial<JobCardResponse & JobDetailResponse> & {
-  requiredSkills?: string[];
-  slug: string;
-};
-
 interface JobSearchDetailOutletContext {
-  jobSelected: JobSelected;
+  jobSelected: JobCardResponse;
 }
 
-function JobSearchDetail() {
-  const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
+// Component hiển thị chi tiết công việc đang được chọn trong JobSearch, nhận dữ liệu qua useOutletContext từ JobSearch
+const JobSearchDetail = () => {
   const { t } = useTranslation("shared");
-  const [jobDetail, setJobDetail] = useState<JobSelected | null>(null);
-  const currentJob = jobDetail || jobSelected;
 
-  // Translated enum label
-  const jobTypeOptions = getJobTypeOptions(t);
-  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === currentJob.jobType)?.label || currentJob.jobType;
-  const rawSkills =
-    currentJob.skills?.map((skill) => skill.skillName) ||
-    currentJob.requiredSkills ||
-    [];
-  const sortedSkills = [...rawSkills].sort((a, b) => a.length - b.length);
+  // Lấy jobSelected từ context của Outlet
+  const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
+
+  // State để lưu chi tiết công việc sau khi fetch từ API
+  const [jobDetail, setJobDetail] = useState<JobDetailResponse>(jobSelected as JobDetailResponse);
+
+  // Lấy thông tin xác thực và vai trò người dùng từ store
   const authenticated = useUserStore((state) => state.authenticated);
-  const tagListRef = useRef<HTMLDivElement>(null);
-  const [visibleTagsCount, setVisibleTagsCount] = useState(
-    sortedSkills.length || 0
-  );
+  const role = useUserStore((state) => state.role);
+  // Kiểm tra nếu người dùng đã đăng nhập và có vai trò là "SEEKER"
+  const isSeekerLoggedIn = authenticated && role === "SEEKER";
+
+  // Sắp xếp skills theo thứ tự độ dài trước khi hiển thị
+  const sortedSkills = useMemo(() => {
+    if (!jobDetail?.skills) return [];
+    return [...jobDetail.skills].sort((a, b) => a.skillName.length - b.skillName.length);
+  }, [jobDetail?.skills]);
+
+  // Sử dụng hook custom để quản lý số lượng tag hiển thị và ref cho danh sách tag
+  const { tagListRef, visibleTagsCount } = useVisibleTagCount(sortedSkills);
+
+  // State để quản lý trạng thái loading khi fetch chi tiết công việc
+  const [isLoading, setIsLoading] = useState(false);
+  const jobTypeOptions = getJobTypeOptions(t);
+  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === jobDetail.jobType)?.label || jobDetail.jobType;
+
+
 
   useEffect(() => {
+    let isCancelled = false;
+
     const fetchJobDetail = async () => {
       try {
         if (!jobSelected.slug) {
-          setJobDetail(null);
           return;
         }
 
         const response = await getJobBySlugApi(jobSelected.slug);
-        setJobDetail(response.data.result);
+        if (!isCancelled) {
+          setJobDetail(response.data.result);
+
+          console.log("Fetched job detail for search panel:", response.data.result);
+        }
       } catch (error) {
         console.error("Error fetching job detail for search panel:", error);
-        setJobDetail(null);
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+
       }
     };
 
     fetchJobDetail();
-  }, [jobSelected.slug]);
 
-  useEffect(() => {
-    const handleTagOverflow = () => {
-      const tagList = tagListRef.current;
-      if (!tagList) return;
-      const tagElements = tagList.getElementsByClassName("tag-skill") as HTMLCollectionOf<HTMLElement>;
-      const wrapperWidth = tagList.offsetWidth;
-      let totalWidth = 0;
-      let count = 0;
-      for (let i = 0; i < tagElements.length; i++) {
-        totalWidth += tagElements[i].offsetWidth + 5;
-        if (totalWidth > wrapperWidth) {
-          break;
-        }
-        count++;
-      }
-      setVisibleTagsCount(count);
-      window.addEventListener("resize", handleTagOverflow);
-      return () => {
-        window.removeEventListener("resize", handleTagOverflow);
-      };
+    return () => {
+      isCancelled = true;
     };
-    handleTagOverflow();
-  }, [sortedSkills.length]);
+  }, [jobSelected]);
+
+  if (isLoading || !jobDetail) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div className="job-search-detail">
+      {/* Hiển thị khối đầu */}
       <div className="job-search-detail__head">
         <div className="job-search-detail__head-content">
+          {/* Hiển thị logo công ty */}
           <div className="job-search-detail__head-left">
-            <img src={logo} alt="logo_company" />
+            <img src={jobDetail.company?.logoUrl || IMAGE_NOT_FOUND} alt="logo_company" />
           </div>
           <div className="job-search-detail__head-right">
+            {/* Hiển thị tiêu đề công việc */}
             <h2 className="job-search-detail__head-name">
-              <a href={`/viec-lam-it/${currentJob.slug}`} rel="noopener noreferrer" target="_blank">{currentJob.title || "???"}</a>
+              <a href={`/viec-lam-it/${jobDetail?.slug}`} rel="noopener noreferrer" target="_blank">{jobDetail?.title || "???"}</a>
             </h2>
+            {/* Hiển thị tên công ty */}
             <Link to="#" className="job-search-detail__head-company">
-              {currentJob.company?.companyName || "???"}
+              {jobDetail.company?.companyName || "???"}
             </Link>
-            <div className="job-search-detail__head-salary">
+            {/* Hiển thị mức lương */}
+            <div
+              className={
+                isSeekerLoggedIn
+                  ? "job-search-detail__head-salary job-search-detail__head-salary--visible"
+                  : "job-search-detail__head-salary"
+              }
+            >
               <ImCoinDollar />
-              <span>{currentJob.salary || "???"}</span>
+              <span>
+                {isSeekerLoggedIn
+                  ? (jobDetail?.salary || "???")
+                  : t("jobSearchDetail.loginToSeeSalary")}
+              </span>
             </div>
+
           </div>
         </div>
         <div className="card-job-head__wrap-button">
+          {/* Button ứng tuyển */}
           <Link
-            to={`/viec-lam-it/${currentJob.slug}/job_applications/new`}
+            to={`/viec-lam-it/${jobDetail.slug}/job_applications/new`}
             // target="_blank"
             className="card-job-head__button"
           >
             {" "}
             {t("jobSearchDetail.applyNow")}{" "}
           </Link>
-          {authenticated ? (
+          {/* Button yêu thích */}
+          {isSeekerLoggedIn ? (
             <div className="card-job-head__heart">
               <FaHeart />
             </div>
@@ -131,12 +151,13 @@ function JobSearchDetail() {
         </div>
       </div>
       <hr className="hr" />
+      {/* Hiển thị khối thân */}
       <div className="job-search-detail__body">
         <div className="job-search-detail__preview-job">
           <div className="job-search-detail__list-item">
             <div className="job-search-detail__item">
               <IoLocationOutline />
-              <span>{currentJob.location || "???"}</span>
+              <span>{jobDetail.location || "???"}</span>
             </div>
             <div className="job-search-detail__item">
               <MdLocationCity />
@@ -144,20 +165,21 @@ function JobSearchDetail() {
             </div>
             <div className="job-search-detail__item">
               <GoClock />
-              <span> {getRelativeTime(currentJob.postedAt, t)} </span>
+              <span> {getRelativeTime(jobDetail.postedAt, t)} </span>
             </div>
           </div>
           <div className="divide--dashed--small"></div>
           <div className="job-search-detail__skill-wrap">
             <div className="job-search-detail__text">{t("jobSearchDetail.skills")}</div>
             <div className="job-search-detail__skills">
+              {/* Hiển thị danh sách kỹ năng */}
               <div className="job__list-tag" ref={tagListRef}>
                 {sortedSkills.slice(0, visibleTagsCount).map((skill, index) => (
-                  <TagSkill key={`${skill}-${index}`} text={skill} />
+                  <TagSkill key={`${skill.skillName}-${index}`} text={skill.skillName} />
                 ))}
                 {sortedSkills.length > visibleTagsCount && (
                   <Tooltip
-                    title={sortedSkills.slice(visibleTagsCount).join(", ")}
+                    title={sortedSkills.slice(visibleTagsCount).map(skill => skill.skillName).join(", ")}
                     placement="top"
                   >
                     <span className="job__more-tags">
@@ -174,28 +196,28 @@ function JobSearchDetail() {
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(currentJob.jobReason),
+                __html: DOMPurify.sanitize(jobDetail.jobReason),
               }}
             />
             <h2>{t("jobSearchDetail.jobDescription")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(currentJob.jobRequirements),
+                __html: DOMPurify.sanitize(jobDetail.jobDescription),
               }}
             />
             <h2>{t("jobSearchDetail.jobRequirements")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(currentJob.whyJoinUs),
+                __html: DOMPurify.sanitize(jobDetail.jobRequirements),
               }}
             />
             <h2>{t("jobSearchDetail.whyJoinUs")}</h2>
             <div
               className="preview-content"
               dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(currentJob.jobDescription),
+                __html: DOMPurify.sanitize(jobDetail.whyJoinUs),
               }}
             />
           </div>

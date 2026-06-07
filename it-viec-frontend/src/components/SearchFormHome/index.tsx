@@ -116,7 +116,7 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
                   options={[
                     { value: "", label: t("jobSearch.allCities") },
                     ...cities.map((city) => ({
-                      value: city.cityName,
+                      value: city.slug,
                       label: getCityLabel(city.cityName, t),
                     })),
                   ]}

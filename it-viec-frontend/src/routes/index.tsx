@@ -36,20 +36,20 @@ export const routes: RouteObject[] = [
       { path: 'terms-conditions-vn', element: <Term /> }, // Đã check
       { path: 'quy-dinh-bao-mat', element: <Policy /> }, // Đã check
       {
-        path: 'viec-lam-it', 
+        path: 'viec-lam-it', // Đã check
         children: [
           {
-            path: '', 
+            path: '', // Đã check
             element: <JobSearch />, 
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
           {
-            path: ':param1', 
+            path: ':param1', // Đã check
             element: <RouteDecider />,
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
           {
-            path: ':param1/:param2', 
+            path: ':param1/:param2', // Đã check
             element: <RouteDecider />,
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
