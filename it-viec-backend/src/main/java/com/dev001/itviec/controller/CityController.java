@@ -2,12 +2,8 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
-import jakarta.validation.Valid;
-
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.dev001.itviec.dto.request.CityCreateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.CityResponse;
 import com.dev001.itviec.service.CityService;
@@ -33,10 +29,10 @@ public class CityController {
     }
 
     // 2.API cho phép admin thêm city mới vào hệ thống (PRIVATE)
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<CityResponse> createCity(@RequestBody @Valid CityCreateRequest request) {
-        CityResponse newCity = cityService.createCity(request.getCityName());
-        return ApiResponse.<CityResponse>builder().code(1000).result(newCity).build();
-    }
+//    @PostMapping
+//    @PreAuthorize("hasRole('ADMIN')")
+//    public ApiResponse<CityResponse> createCity(@RequestBody @Valid CityCreateRequest request) {
+//        CityResponse newCity = cityService.createCity(request.getCityName());
+//        return ApiResponse.<CityResponse>builder().code(1000).result(newCity).build();
+//    }
 }

@@ -10,7 +10,8 @@ CREATE TABLE skills (
 -- Bảng thành phố
 CREATE TABLE cities (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  city_name VARCHAR(100) NOT NULL
+  city_name VARCHAR(100) NOT NULL UNIQUE,
+  slug VARCHAR(120) NOT NULL UNIQUE
 );
 -- Bảng đất nước
 CREATE TABLE countries (

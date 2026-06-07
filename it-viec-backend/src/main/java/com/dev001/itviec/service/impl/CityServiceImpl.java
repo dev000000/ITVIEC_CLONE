@@ -6,12 +6,14 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.dev001.itviec.dto.request.CityCreateRequest;
 import com.dev001.itviec.dto.response.CityResponse;
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.mapper.CityMapper;
 import com.dev001.itviec.repository.CityRepository;
 import com.dev001.itviec.service.CityService;
+import com.dev001.itviec.util.CitySlugUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +32,9 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public CityResponse createCity(String cityName) {
+    public CityResponse createCity(CityCreateRequest request) {
+        String cityName = request.getCityName();
+        String slug = CitySlugUtils.toSlug(cityName);
 
         // 1. check city exist
         boolean isCityNameExisted = cityRepository.existsByCityName(cityName);
@@ -39,7 +43,7 @@ public class CityServiceImpl implements CityService {
         }
 
         // 2. create city
-        City city = City.builder().cityName(cityName).build();
+        City city = City.builder().cityName(cityName).slug(slug).build();
 
         // 3. save city
         City saved = cityRepository.save(city);

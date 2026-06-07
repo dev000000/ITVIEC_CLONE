@@ -11,4 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class CityResponse {
     Long id;
     String cityName;
+    String slug;
 }
