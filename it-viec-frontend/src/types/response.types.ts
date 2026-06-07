@@ -41,6 +41,7 @@ export interface PageResponse<T> {
 export interface CityResponse {
   id: number;
   cityName: string;
+  slug: string;
 }
 
 export interface CountryResponse {
