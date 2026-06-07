@@ -13,8 +13,8 @@ interface TopJobProps {
 
 function TopJob({ jobList, totalJobs }: TopJobProps) {
   const { t } = useTranslation("job");
-  console.log("jobList in TopJob component:", jobList);
-  console.log("totalJobs in TopJob component:", totalJobs);
+  // console.log("jobList in TopJob component:", jobList);
+  // console.log("totalJobs in TopJob component:", totalJobs);
   return (
     <>
       {totalJobs > 8 && (

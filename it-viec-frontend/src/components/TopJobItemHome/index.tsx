@@ -19,7 +19,7 @@ interface TopJobItemProps {
 }
 
 function TopJobItemHome({ job }: TopJobItemProps) {
-  console.log("job in TopJobItemHome component:", job);
+  // console.log("job in TopJobItemHome component:", job);
   const authenticated = useUserStore((state) => state.authenticated);
   const role = useUserStore((state) => state.role);
   const isSeekerLoggedIn = authenticated && role === "SEEKER";
