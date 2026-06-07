@@ -56,12 +56,12 @@ export const routes: RouteObject[] = [
         ],
       },
       {
-        path: 'nha-tuyen-dung/:slug', 
-        element: <EmployerDetail />,
+        path: 'nha-tuyen-dung/:slug', // Đã check
+        element: <EmployerDetail />, // Đã check
         children: [
-          { path: '', element: <EmployerDetailInfo /> },
-          { path: 'bai-viet', element: <EmployerDetailBlog /> },
-          { path: 'danh-gia', element: <EmployerDetailRate /> },
+          { path: '', element: <EmployerDetailInfo /> }, // Đã check
+          { path: 'bai-viet', element: <EmployerDetailBlog /> }, // Đã check
+          { path: 'danh-gia', element: <EmployerDetailRate /> }, // Đã check
         ],
       },
       // Public routes: không cần token check
