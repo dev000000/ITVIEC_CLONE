@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
+import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
@@ -52,7 +53,17 @@ public class ApplicationController {
                 .build();
     }
 
-    // 3.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ (PRIVATE)
+    // 3.API cho phép seeker kiểm tra bản thân đã ứng tuyển job hiện tại chưa (PRIVATE)
+    @GetMapping("/seekers/me/applications/check")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<ApplicationCheckResponse> hasAppliedToJob(@RequestParam Long jobId) {
+        return ApiResponse.<ApplicationCheckResponse>builder()
+                .code(1000)
+                .result(applicationService.hasAppliedToJob(jobId))
+                .build();
+    }
+
+    // 4.API cho phép công ty (company) xem tất cả đơn ứng tuyển của họ (PRIVATE)
     @GetMapping("/companies/me/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<PageResponse<ApplicationResponse>> getMyCompanyApplications(
@@ -66,7 +77,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 4.API cho phép công ty cập nhật trạng thái đơn ứng tuyển của họ (PRIVATE)
+    // 5.API cho phép công ty cập nhật trạng thái đơn ứng tuyển của họ (PRIVATE)
     @PatchMapping("/companies/me/applications/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<ApplicationResponse> updateApplicationStatus(
@@ -77,7 +88,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 5.API cho phép công ty xem chi tiết 1 đơn ứng tuyển (PRIVATE)
+    // 6.API cho phép công ty xem chi tiết 1 đơn ứng tuyển (PRIVATE)
     @GetMapping("/companies/me/applications/{id}")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<ApplicationResponse> getApplicationById(@PathVariable String id) {
@@ -87,7 +98,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 6.API cho phép admin xem toàn bộ đơn ứng tuyển (PRIVATE)
+    // 7.API cho phép admin xem toàn bộ đơn ứng tuyển (PRIVATE)
     @GetMapping("/applications")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<ApplicationResponse>> getAllApplications() {
@@ -97,7 +108,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 7.API cho phép người xin việc xem chi tiết 1 đơn ứng tuyển của họ (PRIVATE)
+    // 8.API cho phép người xin việc xem chi tiết 1 đơn ứng tuyển của họ (PRIVATE)
     @GetMapping("/seekers/me/applications/{id}")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<ApplicationResponse> getMyApplicationById(@PathVariable String id) {
@@ -107,7 +118,7 @@ public class ApplicationController {
                 .build();
     }
 
-    // 8.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể (PRIVATE)
+    // 9.API cho phép công ty hiện tại xem tất cả đơn ứng tuyển của 1 job cụ thể (PRIVATE)
     @GetMapping("/companies/me/jobs/{id}/applications")
     @PreAuthorize("hasRole('EMPLOYER')")
     public ApiResponse<List<ApplicationResponse>> getApplicationsByJobId(@PathVariable Long id) {

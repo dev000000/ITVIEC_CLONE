@@ -245,3 +245,8 @@ export interface ApplicationCreateResponse {
   updatedAt: string;
   desiredLocations: CityResponse[];
 }
+
+export interface ApplicationCheckResponse {
+  applied: boolean;
+  createdAt?: string | null;
+}

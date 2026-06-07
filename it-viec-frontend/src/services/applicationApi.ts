@@ -6,6 +6,7 @@ import {
   type GetMyCompanyApplicationsParams,
 } from "@/types/request.types";
 import {
+  type ApplicationCheckResponse,
   type ApplicationCreateResponse,
   type ApplicationResponse,
   type APIResponse,
@@ -32,6 +33,18 @@ export const applyToJobApi = (jobId: number, request: ApplicationRequest) => {
 export const getMyApplicationsApi = () => {
   const url = API_PATH + "/seekers/me/applications";
   return apiClient.get<APIResponse<ApplicationResponse[]>>(url);
+};
+
+/**
+ * Kiểm tra người tìm việc hiện tại đã ứng tuyển công việc này chưa.
+ * @param jobId - ID của công việc
+ * @returns Promise giải quyết thành `APIResponse<ApplicationCheckResponse>`
+ */
+export const checkMyApplicationExistsApi = (jobId: number) => {
+  const url = API_PATH + "/seekers/me/applications/check";
+  return apiClient.get<APIResponse<ApplicationCheckResponse>>(url, {
+    params: { jobId },
+  });
 };
 
 /**
@@ -103,6 +116,7 @@ export const getApplicationsByJobIdApi = (jobId: number) => {
 export default {
   applyToJobApi,
   getMyApplicationsApi,
+  checkMyApplicationExistsApi,
   getMyCompanyApplicationsApi,
   updateApplicationStatusApi,
   getApplicationByIdApi,
