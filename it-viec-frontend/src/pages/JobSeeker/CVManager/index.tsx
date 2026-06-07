@@ -6,7 +6,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import React from "react";
 import "./CVManager.scss";
-import { useNavigate } from "react-router-dom";
 import uploadImg from "@/assets/images/uploaded-resume.svg";
 import ButtonUpload from "@/components/ButtonUpload";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
@@ -27,7 +26,6 @@ import { useSeekerStore } from "@/store/seekerStore";
 import {
   findCityRefs,
 } from "@/utils/apiPayloadMappers";
-import { clearStorage } from "@/helpers/localStorage";
 import { useTranslation } from "react-i18next";
 import type { CityResponse } from "@/types/response.types";
 import type { SeekerCvMetadataResponse } from "@/types/seekerCv.types";
@@ -74,17 +72,14 @@ function CVManager() {
   const [form] = Form.useForm();
   const [coverLetterForm] = Form.useForm();
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [userId] = useState(localStorage.getItem("id") || "");
   const [isEditing, setIsEditing] = useState(false);
   const seeker = useSeekerStore();
   const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
-  const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const [coverLetter, setCoverLetter] = useState(seeker.coverLetter || "");
   const [value, setValue] = useState<string[]>(
     seeker.desiredLocations?.map((city) => city.cityName) || [],
   );
   const [cities, setCities] = useState<CityResponse[]>([]);
-  const navigate = useNavigate();
   const { t, i18n } = useTranslation("jobseeker");
 
   // CV state
@@ -178,21 +173,8 @@ function CVManager() {
     loadCities();
   }, []);
 
-  // Kiểm tra user hiện tại còn đúng không (tránh trường hợp đổi tài khoản)
-  const checkUserSession = () => {
-    const currentUserId = localStorage.getItem("id");
-    if (currentUserId !== userId && currentUserId) {
-      clearStorage();
-      clearSeekerInfo();
-      navigate("/login");
-      return false;
-    }
-    return true;
-  };
-
   // Form 2: Submit thông tin cơ bản (fullName, phoneNumber, desiredLocations)
   const onFinish = async (values: CVManagerFormValues) => {
-    if (!checkUserSession()) return;
     try {
       const payload = {
         fullName: values.fullName,
@@ -221,7 +203,6 @@ function CVManager() {
 
   // Form 1: Submit cover letter
   const onFinish2 = async (values: CoverLetterFormValues) => {
-    if (!checkUserSession()) return;
     try {
       const response = await updateMyCoverLetterApi({ coverLetter: values.coverLetter });
       const result = response.data.result;

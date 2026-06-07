@@ -48,4 +48,6 @@ public interface JobRepository extends JpaRepository<Job, Long>, JpaSpecificatio
 
     @EntityGraph(attributePaths = {"company", "city", "skills"})
     Optional<Job> findByIdAndCompany(Long id, Company company);
+
+    long countByCompanyAndStatus(Company company, JobStatus status);
 }

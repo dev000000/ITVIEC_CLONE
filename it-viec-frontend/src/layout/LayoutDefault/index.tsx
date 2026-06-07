@@ -7,24 +7,40 @@ import { useEffect, useState } from "react";
 import { getMeApi, logoutApi } from "@/services/authApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
+import { useCompanyStore } from "@/store/companyStore";
 import { useTranslation } from "react-i18next";
 
 const { Content } = Layout;
 
-// LayoutDefault sẽ dùng để check login từ token ( cookies ) để tránh việc người dùng đã login nhưng refresh lại trang thì sẽ bị mất thông tin login
+// 1.LayoutDefault sẽ dùng để check login từ token ( cookies ) để tránh việc người dùng đã login nhưng refresh lại trang thì sẽ bị mất thông tin login
+// Với trường hợp check login xem đã login chưa để hiển thị + logic xử lí cho chuẩn 
 const LayoutDefault = () => {
+  console.log("1.LayoutDefault rendered");
   const { t } = useTranslation("common");
+  // Hàm clear đi thông tin của seeker trong store
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+
+  // Hàm clear đi thông tin của company trong store
+  const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
+
+  // Hàm clear đi thông tin của user trong store
   const logout = useUserStore((state) => state.logout);
+
+  // Hàm này sẽ set thông tin user vào store
   const setLogin = useUserStore((state) => state.setLogin);
 
+  // State để kiểm tra xem đang trong quá trình check token hay không
   const [isCheckingToken, setIsCheckingToken] = useState(true);
 
+  // Khi component được mount lên thì sẽ check token để lấy thông tin user
   useEffect(() => {
     const checkAuth = async (): Promise<void> => {
       try {
-        const response = await getMeApi();
-        setLogin(response.data.result);
+        const { data: meData } = await getMeApi();
+        // console.log("Thông tin user sau khi check token:", meData);
+
+        // Nếu gọi API getMeApi thành công thì sẽ set thông tin user vào store
+        setLogin(meData.result);
       } catch {
         // Gọi API logout để clear token ở cookies
         await logoutApi();
@@ -32,27 +48,33 @@ const LayoutDefault = () => {
         logout();
         // Clear thông tin seeker trong store nếu có
         clearSeekerInfo();
+        // Clear thông tin company trong store nếu có
+        clearCompanyInfo();
       } finally {
+        // Kết thúc quá trình check token
         setIsCheckingToken(false);
       }
     }
     checkAuth();
 
-  }, [clearSeekerInfo, logout, setLogin]);
+  }, [clearCompanyInfo, clearSeekerInfo, logout, setLogin]);
 
+  // Nếu đang trong quá trình check token thì hiển thị loading, early return...
+  if (isCheckingToken) return <div>{t("layout.loading")}</div>;
+
+  // Nếu đã check xong token thì hiển thị layout bình thường
   return (
     <>
-      {isCheckingToken ? (
-        <div>{t("layout.loading")}</div>
-      ) : (
-        <Layout className="layout-default">
-          <Header type="jobSeeker" />
-          <Content className="content">
-            <Outlet />
-          </Content>
-          <FooterComp />
-        </Layout>
-      )}
+      <Layout className="layout-default">
+        {/* Header kiểu login */}
+        <Header type="home" />
+        {/* Nội dung phần body */}
+        <Content className="content">
+          <Outlet />
+        </Content>
+        {/* Footer */}
+        <FooterComp />
+      </Layout>
     </>
   );
 }

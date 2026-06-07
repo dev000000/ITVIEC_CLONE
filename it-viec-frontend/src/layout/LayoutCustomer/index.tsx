@@ -10,10 +10,10 @@ import { MdOutlineSpaceDashboard } from "react-icons/md";
 import { BsBriefcase } from "react-icons/bs";
 import { HiOutlineDocument } from "react-icons/hi2";
 import { IoIosLogOut } from "react-icons/io";
-import { clearStorage } from "@/helpers/localStorage";
 import Swal from "sweetalert2";
 import { useUserStore } from "@/store/userStore";
 import { useCompanyStore } from "@/store/companyStore";
+import { useSeekerStore } from "@/store/seekerStore";
 import { CgProfile } from "react-icons/cg";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -23,6 +23,7 @@ function LayoutCustomer() {
   const logout = useUserStore((state) => state.logout);
   const setCompanyFullInfo = useCompanyStore((state) => state.setCompanyFullInfo);
   const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
+  const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const [isLoadingCompany, setIsLoadingCompany] = useState(false);
   const navigate = useNavigate();
 
@@ -36,12 +37,12 @@ function LayoutCustomer() {
         console.error("Failed to load company information", error);
         logout();
         clearCompanyInfo();
-        clearStorage();
+        clearSeekerInfo();
         navigate("/");
       }
     };
     getCompanyInfo();
-  }, [clearCompanyInfo, logout, navigate, setCompanyFullInfo]);
+  }, [clearCompanyInfo, clearSeekerInfo, logout, navigate, setCompanyFullInfo]);
 
   const handleLogout = (): void => {
     Swal.fire({
@@ -56,7 +57,7 @@ function LayoutCustomer() {
         await logoutApi();
         logout();
         clearCompanyInfo();
-        clearStorage();
+        clearSeekerInfo();
         navigate("/");
         Swal.fire({
           title: t("layout.logoutSuccess"),

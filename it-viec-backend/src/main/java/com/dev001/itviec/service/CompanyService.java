@@ -21,7 +21,7 @@ public interface CompanyService {
 
     List<CompanyOptionResponse> getAdminCompanyOptions();
 
-    List<CompanyCardResponse> getAllCompaniesWithJobCountActive();
+    PageResponse<CompanyCardResponse> getAllCompaniesWithJobCountActive(int page, int size);
 
     CompanyDetailResponse getCompanyWithJobsActive(String slug);
 

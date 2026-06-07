@@ -10,19 +10,21 @@ interface TopJobProps {
   jobList: JobCardResponse[];
   totalJobs: number;
 }
-
-function TopJob({ jobList, totalJobs }: TopJobProps) {
+// Component hiển thị phần các việc làm hàng đầu trên trang chủ
+const TopJob = ({ jobList, totalJobs }: TopJobProps) => {
+  // console.log("TopJob component rendered with totalJobs:", totalJobs);
+  // console.log("TopJob component rendered with jobList:", jobList);
   const { t } = useTranslation("job");
-  console.log("jobList in TopJob component:", jobList);
-  console.log("totalJobs in TopJob component:", totalJobs);
   return (
     <>
       {totalJobs > 8 && (
         <div className="top-job">
           <div className="container">
+            {/* Tiêu đề */}
             <h1 className="top-job__title">
               {t("topJobsTitle", { count: totalJobs })}
             </h1>
+            {/* Danh sách việc làm */}
             <div className="top-job__list">
               <Row gutter={[20, 20]}>
                 {jobList.map((job) => (
@@ -42,6 +44,7 @@ function TopJob({ jobList, totalJobs }: TopJobProps) {
                 ))}
               </Row>
             </div>
+            {/* Nút xem thêm */}
             <div className="top-job__button-more">
               <Link to="/viec-lam-it">
                 <span>{t("viewMore", { count: totalJobs - 8 })}</span>

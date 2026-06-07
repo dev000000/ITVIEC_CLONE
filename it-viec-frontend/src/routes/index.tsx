@@ -29,34 +29,34 @@ import { ROLE } from '@/types/common.types';
  */
 export const routes: RouteObject[] = [
   {
-    path: '/',
-    element: <LayoutDefault />,
+    path: '/', // Đã check
+    element: <LayoutDefault />, 
     children: [
-      { path: '/', element: <Home /> },
-      { path: 'terms-conditions-vn', element: <Term /> },
-      { path: 'quy-dinh-bao-mat', element: <Policy /> },
+      { path: '/', element: <Home /> }, // Đã check
+      { path: 'terms-conditions-vn', element: <Term /> }, // Đã check
+      { path: 'quy-dinh-bao-mat', element: <Policy /> }, // Đã check
       {
-        path: 'viec-lam-it',
+        path: 'viec-lam-it', 
         children: [
           {
-            path: '',
-            element: <JobSearch />,
+            path: '', 
+            element: <JobSearch />, 
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
           {
-            path: ':param1',
+            path: ':param1', 
             element: <RouteDecider />,
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
           {
-            path: ':param1/:param2',
+            path: ':param1/:param2', 
             element: <RouteDecider />,
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
         ],
       },
       {
-        path: 'nha-tuyen-dung/:slug',
+        path: 'nha-tuyen-dung/:slug', 
         element: <EmployerDetail />,
         children: [
           { path: '', element: <EmployerDetailInfo /> },

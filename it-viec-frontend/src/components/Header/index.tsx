@@ -20,7 +20,9 @@ import { useState, useMemo } from "react";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useUserStore } from "@/store/userStore";
+import { useCompanyStore } from "@/store/companyStore";
 import { useTranslation } from "react-i18next";
+import { logoutApi } from "@/services/authApi";
 const jobItemsStatic = {
   header: "Việc làm IT",
   items: [
@@ -431,14 +433,16 @@ const companyItemsStatic = {
   ],
 };
 
+
 interface HeaderProps {
-  type: "jobSeeker" | "employer";
+  type: "home" | "employer";
 }
 const Header = ({ type }: HeaderProps) => {
   const fullName = useSeekerStore((state) => state.fullName);
   const avatarUrl = useSeekerStore((state) => state.avatarUrl);
   const authenticated = useUserStore((state) => state.authenticated);
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+  const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
   const logout = useUserStore((state) => state.logout);
   const { t } = useTranslation("common");
   const [sidebar, setSidebar] = useState({
@@ -515,9 +519,11 @@ const Header = ({ type }: HeaderProps) => {
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
       confirmButtonText: t("buttons.yes"),
-    }).then((result) => {
+    }).then(async (result) => {
       if (result.isConfirmed) {
+        await logoutApi().catch(() => undefined);
         clearSeekerInfo();
+        clearCompanyInfo();
         logout();
         Swal.fire({
           title: t("logout.successTitle"),

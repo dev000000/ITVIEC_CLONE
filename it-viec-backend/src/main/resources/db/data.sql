@@ -4326,6 +4326,13 @@ VALUES -- 73: Đà Nẵng
   ('00000000-0000-0000-0000-000000000131', 24),
   ('00000000-0000-0000-0000-000000000131', 16),
   ('00000000-0000-0000-0000-000000000131', 10);
+-- Seed popular tags từ toàn bộ skill và company hiện có
+INSERT INTO popular_tags (category, skill_id)
+SELECT 'SKILL_AND_EXPERTISE', id
+FROM skills;
 
+INSERT INTO popular_tags (category, company_id)
+SELECT 'COMPANY', id
+FROM companies;
 
 

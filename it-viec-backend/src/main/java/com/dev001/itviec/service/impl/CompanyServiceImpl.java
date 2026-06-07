@@ -99,19 +99,27 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CompanyCardResponse> getAllCompaniesWithJobCountActive() {
-        List<Object[]> rows = companyRepository.findAllCompaniesWithJobCountActive(JobStatus.ACTIVE);
-
-        return rows.stream()
-                .map(row -> {
-                    Company company = (Company) row[0];
-                    int activeJobCount = ((Long) row[1]).intValue();
-
+    public PageResponse<CompanyCardResponse> getAllCompaniesWithJobCountActive(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("companyName"), Sort.Order.asc("id")));
+        Page<Company> companyPage = companyRepository.findAll(pageable);
+        List<CompanyCardResponse> companyResponses = companyPage.getContent().stream()
+                .map(company -> {
+                    int activeJobCount = (int) jobRepository.countByCompanyAndStatus(company, JobStatus.ACTIVE);
                     CompanyCardResponse response = companyMapper.toCompanyCardResponse(company);
                     response.setNumberOfJobsActive(activeJobCount);
                     return response;
                 })
                 .toList();
+
+        return PageResponse.<CompanyCardResponse>builder()
+                .data(companyResponses)
+                .page(companyPage.getNumber())
+                .size(companyResponses.size())
+                .totalElements(companyPage.getTotalElements())
+                .totalPages(companyPage.getTotalPages())
+                .isFirst(companyPage.isFirst())
+                .isLast(companyPage.isLast())
+                .build();
     }
 
     @Override

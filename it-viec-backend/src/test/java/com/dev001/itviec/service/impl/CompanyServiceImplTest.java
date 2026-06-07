@@ -25,9 +25,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.dev001.itviec.dto.response.CompanyBriefResponse;
+import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyOptionResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
 import com.dev001.itviec.mapper.CompanyMapper;
@@ -84,6 +86,48 @@ class CompanyServiceImplTest {
         assertThat(result.getPage()).isZero();
         assertThat(result.getSize()).isEqualTo(1);
         assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getTotalPages()).isEqualTo(1);
+        assertThat(result.isFirst()).isTrue();
+        assertThat(result.isLast()).isTrue();
+    }
+
+    @Test
+    void getAllCompaniesWithJobCountActiveShouldReturnPaginatedResponse() {
+        Company firstCompany =
+                Company.builder().id("company-1").companyName("Alpha").build();
+        Company secondCompany =
+                Company.builder().id("company-2").companyName("Beta").build();
+        CompanyCardResponse firstResponse = CompanyCardResponse.builder()
+                .id("company-1")
+                .companyName("Alpha")
+                .build();
+        CompanyCardResponse secondResponse = CompanyCardResponse.builder()
+                .id("company-2")
+                .companyName("Beta")
+                .build();
+
+        when(companyRepository.findAll(any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(firstCompany, secondCompany), Pageable.ofSize(9).withPage(0), 2));
+        when(companyMapper.toCompanyCardResponse(firstCompany)).thenReturn(firstResponse);
+        when(companyMapper.toCompanyCardResponse(secondCompany)).thenReturn(secondResponse);
+        when(jobRepository.countByCompanyAndStatus(firstCompany, JobStatus.ACTIVE)).thenReturn(3L);
+        when(jobRepository.countByCompanyAndStatus(secondCompany, JobStatus.ACTIVE)).thenReturn(1L);
+
+        PageResponse<CompanyCardResponse> result = companyService.getAllCompaniesWithJobCountActive(0, 9);
+
+        ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.forClass(Pageable.class);
+        verify(companyRepository).findAll(pageableCaptor.capture());
+
+        Pageable pageable = pageableCaptor.getValue();
+        assertThat(pageable.getPageNumber()).isZero();
+        assertThat(pageable.getPageSize()).isEqualTo(9);
+        assertThat(pageable.getSort()).isEqualTo(Sort.by(Sort.Order.asc("companyName"), Sort.Order.asc("id")));
+        assertThat(result.getData()).containsExactly(firstResponse, secondResponse);
+        assertThat(result.getData().get(0).getNumberOfJobsActive()).isEqualTo(3);
+        assertThat(result.getData().get(1).getNumberOfJobsActive()).isEqualTo(1);
+        assertThat(result.getPage()).isZero();
+        assertThat(result.getSize()).isEqualTo(2);
+        assertThat(result.getTotalElements()).isEqualTo(2);
         assertThat(result.getTotalPages()).isEqualTo(1);
         assertThat(result.isFirst()).isTrue();
         assertThat(result.isLast()).isTrue();

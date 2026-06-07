@@ -22,7 +22,6 @@ import { IoClose } from "react-icons/io5";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-import { clearStorage } from "@/helpers/localStorage";
 import { useCompanyStore } from "@/store/companyStore";
 import { useUserStore } from "@/store/userStore";
 import ButtonAction from "@/components/ButtonAction";
@@ -48,6 +47,7 @@ const EmployerJobDetail = () => {
   const { t } = useTranslation();
   // Thông tin công ty từ Zustand store, hiển thị trong CardInforEmployer
   const company = useCompanyStore();
+  const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
   const logout = useUserStore((state) => state.logout);
   const [form] = Form.useForm();
   // Trạng thái mở/đóng modal form chỉnh sửa job
@@ -107,7 +107,7 @@ const EmployerJobDetail = () => {
           (item) => String(item.id) === String(id),
         );
         if (!jobInfo) {
-          clearStorage();
+          clearCompanyInfo();
           logout();
           navigate("/");
           return;
@@ -145,7 +145,7 @@ const EmployerJobDetail = () => {
       }
     };
     fetchJob();
-  }, [company.id, id, logout, navigate]);
+  }, [clearCompanyInfo, company.id, id, logout, navigate]);
 
 
   // Hiện confirm dialog trước khi xóa job; sau khi xóa thành công thì navigate về trang trước ( Hiện tại chưa xử lí API xóa )

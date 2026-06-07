@@ -1424,6 +1424,7 @@ VALUES (
     '<div class="why-work-here"><div class="paragraph text-break"><ul><li class="ipy-1 fw-700">Attractive salary and bonus package</li><li class="ipy-1 fw-700">Premium AON healthcare insurance</li><li class="ipy-1 fw-700">Fully sponsored training to build your career</li></ul></div><div class="paragraph text-break text-contain-hyperlink"><p><strong>Chứng khoán SSI nhận 3 giải thưởng nơi làm việc tốt nhất: <a href="https://bit.ly/3qTDKKE">https://bit.ly/3qTDKKE</a></strong></p><ul><li>Highly competitive remuneration package: Attractive monthly salary, 13th month salary, KPIs cash bonus, Public holiday cash bonus, Birthday gift, Lunar new year gift,...</li><li>Premium AON healthcare insurance and full labor insurance</li><li>12 days Annual leave + 2 days sick leave with full paid</li><li>Luxury team-building trip and varied engagement activities</li><li>Joining the leisure clubs: Football, E-Sport, Running, Gym, Yoga....</li><li>Fully sponsored training to build your career</li><li>Professional, open minded and supportive working environment</li></ul></div></div>',
     '2025-05-04 19:17:00'
   );
+
 INSERT INTO company_skills (company_id, skill_id)
 VALUES ('a1b2c3d4-e5f6-11ee-c0mp-000000000001', 81),
   ('a1b2c3d4-e5f6-11ee-c0mp-000000000001', 48),
@@ -4586,5 +4587,12 @@ VALUES -- 73: Đà Nẵng
   ('00000000-0000-0000-0000-000000000131', 16),
   ('00000000-0000-0000-0000-000000000131', 10);
 
+-- Seed popular tags từ toàn bộ skill và company hiện có
+INSERT INTO popular_tags (category, skill_id)
+SELECT 'SKILL_AND_EXPERTISE', id
+FROM skills;
 
+INSERT INTO popular_tags (category, company_id)
+SELECT 'COMPANY', id
+FROM companies;
 

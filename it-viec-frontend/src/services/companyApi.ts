@@ -16,12 +16,16 @@ import {
 const API_PATH = Configs.API_ENDPOINT + "/api/v1/companies";
 
 /**
- * Lấy toàn bộ danh sách công ty kèm số lượng job đang active (Hiển thị trang chủ).
- * @returns Promise giải quyết thành `APIResponse<CompanyCardResponse[]>`
+ * Lấy danh sách công ty kèm số lượng job đang active có phân trang (Hiển thị trang chủ).
+ * @param page - Chỉ mục trang (mặc định 0)
+ * @param size - Kích thước trang (mặc định 10)
+ * @returns Promise giải quyết thành `APIResponse<PageResponse<CompanyCardResponse>>`
  */
-export const getAllCompaniesApi = () => {
+export const getAllCompaniesApi = (page: number = 0, size: number = 10) => {
   const url = API_PATH;
-  return apiClient.get<APIResponse<CompanyCardResponse[]>>(url);
+  return apiClient.get<APIResponse<PageResponse<CompanyCardResponse>>>(url, {
+    params: { page, size },
+  });
 };
 
 export const getAdminCompaniesApi = (params?: GetAdminCompaniesParams) => {

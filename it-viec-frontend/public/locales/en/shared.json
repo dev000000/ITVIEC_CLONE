@@ -1,6 +1,6 @@
 {
   "jobSearch": {
-    "placeholder": "Enter keywords by skill, position, company...",
+    "placeholder": "Enter keywords by skill, company...",
     "searchButton": "Search",
     "totalJobs": "{{count}} <span>{{keyword}}</span> jobs in Vietnam",
     "jobsInVietnam": "jobs in Vietnam",
@@ -65,5 +65,10 @@
   },
   "term": {
     "title": "Terms of Use"
+  },
+  "home": {
+    "notifications": {
+      "oops": "Oops!"
+    }
   }
 }

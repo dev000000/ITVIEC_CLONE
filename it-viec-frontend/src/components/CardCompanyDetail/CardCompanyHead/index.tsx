@@ -18,7 +18,7 @@ const MockData = {
 }
 const CardCompanyHead = ({ companyInfor }: CardCompanyHeadProps) => {
   const { t } = useTranslation("shared");
-  console.log("companyInfor in CardCompanyHead:", companyInfor);
+  // console.log("companyInfor in CardCompanyHead:", companyInfor);
   return (
     <div className="card-company__head">
       <div className="container">
