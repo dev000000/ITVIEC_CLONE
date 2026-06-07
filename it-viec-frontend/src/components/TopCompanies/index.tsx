@@ -3,43 +3,30 @@ import "./TopCompanies.scss";
 import { RiRadioButtonLine } from "react-icons/ri";
 import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import MB from "@/assets/images/mb-bank.webp";
-import SCANDINAVIAN from "@/assets/images/scandinavian-software-park.webp";
-import OTSV from "@/assets/images/one-tech-stop-vietnam-company-ltd.webp";
-import MCREDIT from "@/assets/images/mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei.webp";
-import TYMEX from "@/assets/images/tymex.webp";
-import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
-import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
-import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
-import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import type { CompanyCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
-
-const logoMap: Record<string, string> = {
-  "mb-bank": MB,
-  "scandinavian-software-park": SCANDINAVIAN,
-  "one-tech-stop-vietnam-company-ltd": OTSV,
-  "mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei": MCREDIT,
-  tymex: TYMEX,
-  "andpad-vietnam-co-ltd": ANDPAD,
-  "employment-hero": EMPLOYMENTHERO,
-  "bosch-global-software-technologies-company-limited": BOSCH,
-  "ssi-securities-corporation": SSI,
-};
+import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 
 interface TopCompaniesProps {
   companyList: CompanyCardResponse[];
 }
 
-function TopCompanies({ companyList }: TopCompaniesProps) {
-  companyList = companyList || [];
+// Component hiển thị phần các công ty hàng đầu trên trang chủ
+const TopCompanies = ({ companyList }: TopCompaniesProps) => {
+  console.log("TopCompanies component rendered with companyList:", companyList);
   const navigate = useNavigate();
   const { t } = useTranslation("job");
+
+  const handleNavigateToCompanyDetail = (slug: string) => {
+    navigate(`/nha-tuyen-dung/${slug}`);
+  }
   return (
     <>
       <div className="top-companies">
         <div className="container">
+          {/* Tiêu đề */}
           <h1 className="top-companies__title">{t("topEmployers")}</h1>
+          {/* Danh sách công ty */}
           <div className="top-companies__list">
             <Row gutter={[{ xs: 0, sm: 16, md: 20, lg: 20 }, 20]}>
               {companyList.map((company) => {
@@ -56,19 +43,20 @@ function TopCompanies({ companyList }: TopCompaniesProps) {
                   >
                     <div
                       className="top-companies__item"
-                      onClick={() => {
-                        navigate(`/nha-tuyen-dung/${company.slug}`);
-                      }}
+                      onClick={() => handleNavigateToCompanyDetail(company.slug)}
                     >
+                      {/* Logo công ty */}
                       <div className="top-companies__image">
                         <img
-                          src={logoMap[company.slug]}
+                          src={company.logoUrl || IMAGE_NOT_FOUND}
                           alt="logo_companies"
                         ></img>
                       </div>
+                      {/* Tên công ty */}
                       <div className="top-companies__name">
                         {company.companyName}
                       </div>
+                      {/* Danh sách kỹ năng */}
                       <div className="top-companies__list-tag">
                         {company.companySkills.map((skill) => (
                           <div className="top-companies__tag" key={skill.id}>
@@ -76,6 +64,7 @@ function TopCompanies({ companyList }: TopCompaniesProps) {
                           </div>
                         ))}
                       </div>
+                      {/* Địa chỉ và số lượng công việc */}
                       <div className="top-companies__footer">
                         <div>{company.address}</div>
                         <div className="top-companies__view-more">

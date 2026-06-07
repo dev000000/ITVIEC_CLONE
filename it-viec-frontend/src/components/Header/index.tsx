@@ -433,8 +433,9 @@ const companyItemsStatic = {
   ],
 };
 
+
 interface HeaderProps {
-  type: "jobSeeker" | "employer";
+  type: "home" | "employer";
 }
 const Header = ({ type }: HeaderProps) => {
   const fullName = useSeekerStore((state) => state.fullName);

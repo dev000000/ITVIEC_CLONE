@@ -65,5 +65,10 @@
   },
   "term": {
     "title": "Điều khoản sử dụng"
+  },
+  "home": {
+    "notifications": {
+      "oops": "Ôi!"
+    }
   }
 }

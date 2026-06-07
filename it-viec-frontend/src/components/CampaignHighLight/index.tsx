@@ -2,7 +2,9 @@ import "./CampaignHighLight.scss";
 import img from "@/assets/images/hot 1.webp";
 import { BsArrowRightCircle } from "react-icons/bs";
 import { useTranslation } from "react-i18next";
-function CampaignHighLight() {
+
+// Component hiển thị phần highlight các chiến dịch tuyển dụng nổi bật trên trang chủ
+const CampaignHighLight = () => {
   const { t } = useTranslation("jobseeker");
   return (
     <>

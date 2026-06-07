@@ -12,33 +12,37 @@ import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 
-
-
 interface TopJobItemProps {
   job: JobCardResponse;
 }
+// Component hiển thị một item việc làm trong phần Top Job trên trang chủ
+const TopJobItemHome = ({ job }: TopJobItemProps) => {
+  console.log("job in TopJobItemHome component:", job);
 
-function TopJobItemHome({ job }: TopJobItemProps) {
-  // console.log("job in TopJobItemHome component:", job);
+  // Lấy thông tin xác thực và vai trò người dùng từ store
   const authenticated = useUserStore((state) => state.authenticated);
   const role = useUserStore((state) => state.role);
+  // Kiểm tra nếu người dùng đã đăng nhập và có vai trò là "SEEKER"
   const isSeekerLoggedIn = authenticated && role === "SEEKER";
+
   const { t } = useTranslation("job");
-  const jobTypeOptions = getJobTypeOptions(t);
-  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === job.jobType)?.label || job.jobType;
-  const cityLabel = getCityLabel(job.city?.cityName, t);
-
-  const handleNavigate = () => {
-    return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
-  };
-
+  // Sử dụng useRef để tham chiếu đến wrapper chứa các tag kỹ năng
   const tagListRef = useRef<HTMLDivElement>(null);
 
-  const rawSkills = job.skills || [];
-  const sortedSkills = [...rawSkills].sort(
+  // Lấy nhãn loại công việc từ giá trị jobType (i18n)
+  const jobTypeOptions = getJobTypeOptions(t);
+  const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === job.jobType)?.label || job.jobType;
+
+  // Lấy nhãn thành phố từ tên thành phố (i18n)
+  const cityLabel = getCityLabel(job.city?.cityName, t);
+
+  // Sắp xếp kỹ năng theo độ dài tên để ưu tiên hiển thị những kỹ năng có tên ngắn hơn
+  const sortedSkills = [...job.skills].sort(
     (a, b) => a.skillName.length - b.skillName.length
   );
   const [visibleTagsCount, setVisibleTagsCount] = useState(sortedSkills.length);
+
+  // Sử dụng useEffect để tính toán số lượng tag kỹ năng hiển thị dựa trên kích thước của wrapper và kích thước của các tag kỹ năng
   useEffect(() => {
     const handleTagOverflow = () => {
       const tagList = tagListRef.current;
@@ -62,6 +66,11 @@ function TopJobItemHome({ job }: TopJobItemProps) {
     };
     handleTagOverflow();
   }, [sortedSkills.length]);
+
+  // Hàm xử lý khi người dùng click vào item việc làm, mở trang chi tiết việc làm trong tab mới
+  const handleNavigate = () => {
+    return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
+  };
 
 
   return (
