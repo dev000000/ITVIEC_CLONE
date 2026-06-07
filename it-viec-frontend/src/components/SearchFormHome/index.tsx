@@ -102,7 +102,7 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
         <Form
           className="search-form"
           form={form}
-          initialValues={{ city: "all", keyword: "" }}
+          initialValues={{ city: "", keyword: "" }}
           onFinish={handleSearchNavigation}
         >
           <Row gutter={[{ xxl: 16, xl: 16, lg: 0, md: 0, sm: 0, xs: 0 }, 10]}>
@@ -114,7 +114,7 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
                   optionFilterProp="label"
                   size="large"
                   options={[
-                    { value: "all", label: t("jobSearch.allCities") },
+                    { value: "", label: t("jobSearch.allCities") },
                     ...cities.map((city) => ({
                       value: city.cityName,
                       label: getCityLabel(city.cityName, t),

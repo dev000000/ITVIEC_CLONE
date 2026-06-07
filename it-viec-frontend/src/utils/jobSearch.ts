@@ -30,17 +30,17 @@ export const deslugifySearchSegment = (value?: string) => {
 
 export const buildJobSearchPath = (params: { keyword?: string; city?: string }) => {
   const keywordSegment = slugifySearchSegment(params.keyword);
-  const citySegment = slugifySearchSegment(params.city === "all" ? "" : params.city);
+  const citySegment = slugifySearchSegment(params.city);
 
-  if (keywordSegment && citySegment) {
+  if (keywordSegment !== "" && citySegment !== "") {
     return `/viec-lam-it/${keywordSegment}/${citySegment}`;
   }
 
-  if (keywordSegment) {
+  if (keywordSegment !== "") {
     return `/viec-lam-it/${keywordSegment}`;
   }
 
-  if (citySegment) {
+  if (citySegment !== "") {
     return `/viec-lam-it/${citySegment}`;
   }
 
