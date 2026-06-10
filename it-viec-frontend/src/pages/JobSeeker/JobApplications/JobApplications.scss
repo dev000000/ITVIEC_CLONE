@@ -1,16 +1,18 @@
 .job-applications {
   overflow-x: hidden;
-  position: relative; 
+  position: relative;
   z-index: 1;
   font-size: 16px;
+
   &__background {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 400px;
+
     &:before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: -10%;
@@ -20,52 +22,247 @@
       border-radius: 0 0 50% 50%;
       overflow-x: hidden;
     }
-    
   }
+
   &__header {
     display: flex;
     align-items: center;
     padding: 20px 0;
     position: relative;
   }
+
   &__header-back {
     position: absolute;
     color: white;
     display: flex;
     align-items: center;
     text-decoration: none;
+
     svg {
       font-size: 20px;
     }
+
     span {
       margin-left: 2px;
     }
   }
-  &__header-logo 
-  {
+
+  &__header-logo {
     width: 120px;
     aspect-ratio: 355 / 85;
     margin: auto;
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
   }
+
   &__form {
     background-color: white;
     padding: 24px 20px;
     border-radius: 5px;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, .06);
   }
+
   &__name-job {
     font-size: 22px;
     margin-top: 0;
+    margin-bottom: 24px;
   }
+
   &__title {
     font-size: 18px;
     font-weight: 700;
+    margin: 0 0 16px;
   }
+
+  &__form-label {
+    font-size: 16px;
+    color: #A6A6A6;
+  }
+
+  &__hidden-input {
+    display: none;
+  }
+
+  &__cv-options {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  &__cv-option {
+    border: 1px solid #D9D9D9;
+    border-radius: 8px;
+    padding: 18px 20px;
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+
+    &--active {
+      border-color: #ED1B2F;
+      box-shadow: 0 0 0 1px rgba(237, 27, 47, .12);
+      background-color: #FFF9FA;
+    }
+
+    &--disabled {
+      opacity: .72;
+    }
+  }
+
+  &__cv-option-trigger {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #121212;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+
+    &:disabled {
+      cursor: default;
+    }
+  }
+
+  &__cv-radio {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #BFBFBF;
+    position: relative;
+    flex-shrink: 0;
+
+    &--active {
+      border-color: #ED1B2F;
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: #ED1B2F;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  &__cv-option-title {
+    line-height: 1.3;
+  }
+
+  &__cv-option-body {
+    margin-top: 14px;
+    padding-left: 36px;
+  }
+
+  &__cv-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #A6A6A6;
+    font-size: 14px;
+  }
+
+  &__cv-file-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #121212;
+
+    svg {
+      color: #ED1B2F;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__cv-link {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: #2643E9;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  &__cv-preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+
+    svg {
+      color: #2643E9;
+      font-size: 18px;
+    }
+  }
+
+  &__cv-meta {
+    margin-top: 8px;
+    color: #7A7A7A;
+    font-size: 14px;
+
+    &--empty {
+      font-style: italic;
+    }
+  }
+
+  &__upload-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__upload-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid #ED1B2F;
+    border-radius: 6px;
+    background: #fff;
+    color: #ED1B2F;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+
+    svg {
+      font-size: 18px;
+    }
+  }
+
+  &__upload-file-name {
+    color: #414240;
+    font-size: 15px;
+  }
+
+  &__upload-help {
+    margin-top: 12px;
+    color: #7A7A7A;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  &__helper-text {
+    margin-bottom: 24px;
+    color: #A6A6A6;
+    font-size: 16px;
+  }
+
   @media (max-width: 768px) {
     &__header-back {
       svg {
@@ -82,9 +279,27 @@
     &__title {
       font-size: 16px;
     }
-  }
 
+    &__form {
+      padding: 20px 16px;
+    }
+
+    &__cv-option {
+      padding: 16px;
+    }
+
+    &__cv-option-body {
+      padding-left: 0;
+    }
+
+    &__upload-row {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 12px;
+    }
+  }
 }
+
 .icontainer-sm {
   position: relative;
   z-index: 2;

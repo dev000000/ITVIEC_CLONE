@@ -88,6 +88,9 @@ public class ApplicationServiceImpl implements ApplicationService {
             resumeUrl = seeker.getCvUrl();
         } else {
             resumeUrl = seeker.getCvUrl();
+            if (resumeUrl == null || resumeUrl.isBlank()) {
+                throw new AppException(ErrorCode.SEEKER_CV_REQUIRED);
+            }
         }
 
         // 5. Tạo mới đơn ứng tuyển
@@ -102,7 +105,16 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .desiredLocations(request.getDesiredLocations())
                 .build();
 
-        return applicationMapper.toApplicationCreateResponse(applicationRepository.save(application));
+        Application savedApplication = applicationRepository.save(application);
+
+        // 6. Đồng bộ thông tin seeker để những lần ứng tuyển sau được prefill bằng dữ liệu mới nhất
+        seeker.setFullName(request.getFullName());
+        seeker.setPhoneNumber(request.getPhoneNumber());
+        seeker.setDesiredLocations(request.getDesiredLocations());
+        seeker.setCoverLetter(request.getCoverLetter());
+        seekerRepository.save(seeker);
+
+        return applicationMapper.toApplicationCreateResponse(savedApplication);
     }
 
     @Override

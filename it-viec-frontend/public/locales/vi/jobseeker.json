@@ -99,6 +99,7 @@
       "fullNameRequired": "Vui lòng nhập họ và tên!",
       "jobTitleRequired": "Vui lòng nhập chức danh!",
       "phoneRequired": "Vui lòng nhập số điện thoại!",
+      "phoneFormat": "Số điện thoại không hợp lệ!",
       "dobRequired": "Vui lòng chọn ngày sinh!"
     },
     "success": {
@@ -160,6 +161,17 @@
   "jobApplications": {
     "back": "Quay lại",
     "invalidJob": "Công việc không hợp lệ",
+    "cvTitle": "CV ứng tuyển",
+    "useCurrentCv": "Sử dụng CV hiện tại",
+    "uploadNewCv": "Tải lên CV mới",
+    "chooseFile": "Chọn file",
+    "noFileSelected": "Chưa có file nào được chọn",
+    "noCurrentCv": "Bạn chưa có CV hiện tại. Vui lòng tải CV mới để ứng tuyển.",
+    "currentCvUpdatedAt": "Ngày tải lên: {{date}}",
+    "supportedFormats": "Hỗ trợ định dạng .doc, .docx hoặc .pdf, dưới 5MB và không chứa mật khẩu bảo vệ",
+    "previewCurrentCv": "Xem CV hiện tại",
+    "cvRequired": "Vui lòng chọn CV để hoàn tất ứng tuyển!",
+    "loadingCv": "Đang tải CV...",
     "basicInfo": "Thông tin cơ bản",
     "fullName": "Họ và Tên",
     "phoneNumber": "Số điện thoại",
@@ -183,7 +195,13 @@
     "successTitle": "Đơn ứng tuyển đã được gửi thành công!",
     "successText": "Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.",
     "submitFailed": "Không thể gửi đơn ứng tuyển, vui lòng thử lại sau!",
-    "submitError": "Có lỗi xảy ra khi gửi đơn ứng tuyển!"
+    "submitError": "Có lỗi xảy ra khi gửi đơn ứng tuyển!",
+    "validation": {
+      "fullNameRequired": "Vui lòng nhập họ và tên!",
+      "phoneRequired": "Vui lòng nhập số điện thoại!",
+      "phoneFormat": "Số điện thoại không hợp lệ!",
+      "locationsRequired": "Vui lòng chọn đúng 3 địa điểm làm việc mong muốn!"
+    }
   },
   "settings": {
     "title": "Cài đặt"

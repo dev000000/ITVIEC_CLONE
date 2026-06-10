@@ -32,7 +32,7 @@ import {
   uploadMyAvatarApi,
 } from "@/services/seekerApi";
 import { getAllCitiesApi } from "@/services/cityApi";
-import { getGenderOptions } from "@/constants";
+import { getGenderOptions, PHONE_NUMBER_REGEX } from "@/constants";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import { useSeekerStore } from "@/store/seekerStore";
@@ -337,9 +337,13 @@ function CVProfile() {
                           required: true,
                           message: t("cvProfile.validation.phoneRequired"),
                         },
+                        {
+                          pattern: PHONE_NUMBER_REGEX,
+                          message: t("cvProfile.validation.phoneFormat"),
+                        },
                       ]}
                     >
-                      <Input size="large" />
+                      <Input size="large" maxLength={10} />
                     </Form.Item>
                   </Col>
                   <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>

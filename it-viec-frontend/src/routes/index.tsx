@@ -74,13 +74,13 @@ export const routes: RouteObject[] = [
     ],
   },
   {
-    element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
+    element: <LayoutCheckToken checkRole={ROLE.SEEKER} />, 
     children: [
       {
-        element: <PrivateRoute />,
+        element: <PrivateRoute />, 
         children: [
           {
-            path: 'viec-lam-it/:slug/job_applications/new',
+            path: 'viec-lam-it/:slug/job_applications/new', // Đã check
             element: <JobApplications />,
           },
         ],

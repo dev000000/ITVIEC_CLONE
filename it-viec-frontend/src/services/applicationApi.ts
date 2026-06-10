@@ -19,11 +19,27 @@ const API_PATH = Configs.API_ENDPOINT + "/api/v1";
  * Nộp đơn ứng tuyển cho một công việc cụ thể (Người tìm việc).
  * @param jobId - ID của công việc
  * @param request - Đối tượng chứa thông tin ứng tuyển: `ApplicationRequest`
+ * @param cvFile - CV mới nếu người dùng chọn upload ngay trong form ứng tuyển
  * @returns Promise giải quyết thành `APIResponse<ApplicationCreateResponse>`
  */
-export const applyToJobApi = (jobId: number, request: ApplicationRequest) => {
+export const applyToJobApi = (
+  jobId: number,
+  request: ApplicationRequest,
+  cvFile?: File | null,
+) => {
   const url = API_PATH + `/jobs/${jobId}/applications`;
-  return apiClient.post<APIResponse<ApplicationCreateResponse>>(url, request);
+  const formData = new FormData();
+
+  formData.append(
+    "request",
+    new Blob([JSON.stringify(request)], { type: "application/json" }),
+  );
+
+  if (cvFile) {
+    formData.append("cvFile", cvFile);
+  }
+
+  return apiClient.post<APIResponse<ApplicationCreateResponse>>(url, formData);
 };
 
 /**

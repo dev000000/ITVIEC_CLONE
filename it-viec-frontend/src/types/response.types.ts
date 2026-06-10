@@ -239,6 +239,7 @@ export interface ApplicationCreateResponse {
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
+  resumePreviewUrl?: string;
   coverLetter: string;
   status: ApplicationStatus;
   createdAt: string;

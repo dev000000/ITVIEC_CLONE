@@ -5,12 +5,14 @@ import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.Gender;
+import com.dev001.itviec.validator.PhoneNumberPatterns;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -27,6 +29,7 @@ public class SeekerUpdateRequest {
     String jobTitle;
 
     @NotBlank(message = "PHONE_NUMBER_REQUIRED")
+    @Pattern(regexp = PhoneNumberPatterns.VIETNAM_PHONE_NUMBER, message = "PHONE_NUMBER_INVALID")
     String phoneNumber;
 
     @NotNull(message = "DATE_OF_BIRTH_REQUIRED")

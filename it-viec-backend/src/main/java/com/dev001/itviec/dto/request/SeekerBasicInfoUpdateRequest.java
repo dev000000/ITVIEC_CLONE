@@ -3,9 +3,11 @@ package com.dev001.itviec.dto.request;
 import java.util.Set;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import com.dev001.itviec.entity.city.City;
+import com.dev001.itviec.validator.PhoneNumberPatterns;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -19,6 +21,7 @@ public class SeekerBasicInfoUpdateRequest {
     String fullName;
 
     @NotBlank(message = "PHONE_NUMBER_REQUIRED")
+    @Pattern(regexp = PhoneNumberPatterns.VIETNAM_PHONE_NUMBER, message = "PHONE_NUMBER_INVALID")
     String phoneNumber;
 
     @Size(min = 3, message = "AT_LEAST_3_DESIRED_LOCATIONS_REQUIRED")

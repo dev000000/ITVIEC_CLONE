@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+import com.dev001.itviec.validator.PhoneNumberPatterns;
+
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +22,6 @@ public class EmployerUpdateRequest {
     String jobTitle;
 
     @NotBlank(message = "PHONE_NUMBER_REQUIRED")
-    @Pattern(regexp = "^(0(3[2-9]|5[6-9]|7[0|6-9]|8[0-9]|9[0-9]))[0-9]{7}$", message = "PHONE_NUMBER_INVALID")
+    @Pattern(regexp = PhoneNumberPatterns.VIETNAM_PHONE_NUMBER, message = "PHONE_NUMBER_INVALID")
     String phoneNumber;
 }

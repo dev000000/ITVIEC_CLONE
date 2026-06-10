@@ -21,6 +21,7 @@ import {
   getMyCvPreviewUrl,
   uploadMyCvApi,
 } from "@/services/seekerCvApi";
+import { PHONE_NUMBER_REGEX } from "@/constants";
 import { getAllCitiesApi } from "@/services/cityApi";
 import { useSeekerStore } from "@/store/seekerStore";
 import {
@@ -406,12 +407,12 @@ function CVManager() {
                       message: t("cvManager.validation.phoneRequired"),
                     },
                     {
-                      pattern: /^[0-9]{10,11}$/,
+                      pattern: PHONE_NUMBER_REGEX,
                       message: t("cvManager.validation.phoneFormat"),
                     },
                   ]}
                 >
-                  <Input size="large" />
+                  <Input size="large" maxLength={10} />
                 </Form.Item>
               </Col>
               <Col span={24}>

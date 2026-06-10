@@ -99,6 +99,7 @@
       "fullNameRequired": "Please enter your full name!",
       "jobTitleRequired": "Please enter your job title!",
       "phoneRequired": "Please enter your phone number!",
+      "phoneFormat": "Invalid phone number!",
       "dobRequired": "Please select your date of birth!"
     },
     "success": {
@@ -160,6 +161,17 @@
   "jobApplications": {
     "back": "Back",
     "invalidJob": "Invalid job",
+    "cvTitle": "Application CV",
+    "useCurrentCv": "Use current CV",
+    "uploadNewCv": "Upload a new CV",
+    "chooseFile": "Choose file",
+    "noFileSelected": "No file selected yet",
+    "noCurrentCv": "You do not have a current CV yet. Please upload a new CV to apply.",
+    "currentCvUpdatedAt": "Uploaded on: {{date}}",
+    "supportedFormats": "Supports .doc, .docx or .pdf format, under 5MB and not password protected",
+    "previewCurrentCv": "Preview current CV",
+    "cvRequired": "Please choose a CV before submitting your application!",
+    "loadingCv": "Loading CV...",
     "basicInfo": "Basic Information",
     "fullName": "Full Name",
     "phoneNumber": "Phone Number",
@@ -183,7 +195,13 @@
     "successTitle": "Application submitted successfully!",
     "successText": "We will contact you as soon as possible.",
     "submitFailed": "Cannot submit application, please try again later!",
-    "submitError": "An error occurred while submitting the application!"
+    "submitError": "An error occurred while submitting the application!",
+    "validation": {
+      "fullNameRequired": "Please enter your full name!",
+      "phoneRequired": "Please enter your phone number!",
+      "phoneFormat": "Invalid phone number!",
+      "locationsRequired": "Please select exactly 3 desired work locations!"
+    }
   },
   "settings": {
     "title": "Settings"
