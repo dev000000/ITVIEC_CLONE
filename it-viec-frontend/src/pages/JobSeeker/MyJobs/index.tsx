@@ -9,6 +9,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getMyApplicationsApi } from "@/services/applicationApi";
 import type { ApplicationResponse, JobDetailResponse } from "@/types/response.types";
+import { useSavedJobsStore } from "@/store/savedJobsStore";
 
 // Kiểu dữ liệu cho một đơn ứng tuyển sau khi đã map từ API response
 interface ApplicationItem {
@@ -51,6 +52,7 @@ function MyJobs() {
   const [totalApplications, setTotalApplications] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation("jobseeker");
+  const savedCount = useSavedJobsStore((s) => s.count);
   const [pagination, setPagination] = useState<PaginationState>({
     current: 1,
     pageSize: 5,
@@ -130,7 +132,7 @@ function MyJobs() {
               end
             >
               <span className="my-jobs__text">{t("myJobs.saved")}</span>
-              <span className="my-jobs__count">0</span>
+              <span className="my-jobs__count">{savedCount}</span>
             </NavLink>
           </li>
           <li className="my-jobs__item-wrapper">

@@ -143,9 +143,32 @@
     "findJob": "Find a job"
   },
   "savedJobs": {
-    "notification": "You can save up to 20 jobs.",
+    "notification": "You can save up to {{max}} jobs. Currently saved {{count}} jobs.",
     "emptyMessage": "You have not saved any jobs.",
-    "findJob": "Find a job"
+    "findJob": "Find a job",
+    "sortBy": "Sort by: ",
+    "sortExpireAsc": "Expiring soonest",
+    "sortExpireDesc": "Expiring latest",
+    "apply": "Apply Now",
+    "alreadyApplied": "Already Applied",
+    "expired": "Expired",
+    "closed": "Closed",
+    "expiresIn": "Expires in {{days}} days",
+    "tooltip": {
+      "save": "Save this job",
+      "saved": "Saved"
+    },
+    "toast": {
+      "savedTitle": "This job has been added to Saved Jobs.",
+      "viewList": "View list",
+      "limitTitle": "Saved jobs limit reached",
+      "limitDesc": "You can only save up to {{max}} jobs. Please unsave some jobs first.",
+      "saveFailTitle": "Failed to save job",
+      "retry": "Retry",
+      "unsavedTitle": "You have unsaved this job.",
+      "unsaved": "You have unsaved this job.",
+      "undo": "Undo"
+    }
   },
   "recentlyViewed": {
     "notification": "Only shows jobs viewed in the last 3 months",

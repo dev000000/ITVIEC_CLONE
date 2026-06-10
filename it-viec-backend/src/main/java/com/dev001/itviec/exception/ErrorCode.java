@@ -109,7 +109,10 @@ public enum ErrorCode {
     POPULAR_TAG_CATEGORY_INVALID(1091, "Popular tag category is invalid", HttpStatus.BAD_REQUEST),
     POPULAR_TAG_SOURCE_ID_INVALID(1092, "Popular tag source id is invalid", HttpStatus.BAD_REQUEST),
     POPULAR_TAG_CATEGORY_REQUIRED(1093, "Popular tag category is required", HttpStatus.BAD_REQUEST),
-    POPULAR_TAG_SOURCE_ID_REQUIRED(1094, "Popular tag source id is required", HttpStatus.BAD_REQUEST);
+    POPULAR_TAG_SOURCE_ID_REQUIRED(1094, "Popular tag source id is required", HttpStatus.BAD_REQUEST),
+    SAVED_JOBS_LIMIT_EXCEEDED(1095, "You can save up to 20 jobs", HttpStatus.BAD_REQUEST),
+    SAVED_JOB_NOT_FOUND(1096, "Saved job not found", HttpStatus.NOT_FOUND),
+    JOB_NOT_SAVABLE(1097, "Job is not savable", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

@@ -1,7 +1,6 @@
 import "./JobSearchDetail.scss";
 import { Link, useOutletContext } from "react-router-dom";
 import { ImCoinDollar } from "react-icons/im";
-import { FaHeart } from "react-icons/fa";
 import { IoLocationOutline } from "react-icons/io5";
 import { MdLocationCity } from "react-icons/md";
 import { GoClock } from "react-icons/go";
@@ -11,12 +10,15 @@ import { useEffect, useMemo, useState } from "react";
 import DOMPurify from "dompurify";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
-import { useUserStore } from "@/store/userStore";
 import { getJobBySlugApi } from "@/services/jobApi";
+import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
+import { getLoginRouteByRole } from "@/utils/roleRedirect";
+import { ROLE } from "@/types/common.types";
 import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
 import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 import { type JobCardResponse, type JobDetailResponse } from "@/types/response.types";
 import { getJobTypeOptions } from "@/constants";
+import SaveJobButton from "@/components/SaveJobButton";
 
 interface JobSearchDetailOutletContext {
   jobSelected: JobCardResponse;
@@ -32,11 +34,8 @@ const JobSearchDetail = () => {
   // State để lưu chi tiết công việc sau khi fetch từ API
   const [jobDetail, setJobDetail] = useState<JobDetailResponse>(jobSelected as JobDetailResponse);
 
-  // Lấy thông tin xác thực và vai trò người dùng từ store
-  const authenticated = useUserStore((state) => state.authenticated);
-  const role = useUserStore((state) => state.role);
-  // Kiểm tra nếu người dùng đã đăng nhập và có vai trò là "SEEKER"
-  const isSeekerLoggedIn = authenticated && role === "SEEKER";
+  const isSeekerLoggedIn = useIsSeekerLoggedIn();
+  const seekerLoginPath = getLoginRouteByRole(ROLE.SEEKER);
 
   // Sắp xếp skills theo thứ tự độ dài trước khi hiển thị
   const sortedSkills = useMemo(() => {
@@ -117,11 +116,13 @@ const JobSearchDetail = () => {
               }
             >
               <ImCoinDollar />
-              <span>
-                {isSeekerLoggedIn
-                  ? (jobDetail?.salary || "???")
-                  : t("jobSearchDetail.loginToSeeSalary")}
-              </span>
+              {isSeekerLoggedIn ? (
+                <span>{jobDetail?.salary || "???"}</span>
+              ) : (
+                <Link to={seekerLoginPath} className="job-search-detail__head-salary-link">
+                  {t("jobSearchDetail.loginToSeeSalary")}
+                </Link>
+              )}
             </div>
 
           </div>
@@ -129,25 +130,19 @@ const JobSearchDetail = () => {
         <div className="card-job-head__wrap-button">
           {/* Button ứng tuyển */}
           <Link
-            to={`/viec-lam-it/${jobDetail.slug}/job_applications/new`}
-            // target="_blank"
+            to={
+              isSeekerLoggedIn
+                ? `/viec-lam-it/${jobDetail.slug}/job_applications/new`
+                : seekerLoginPath
+            }
             className="card-job-head__button"
           >
-            {" "}
-            {t("jobSearchDetail.applyNow")}{" "}
+            {t("jobSearchDetail.applyNow")}
           </Link>
           {/* Button yêu thích */}
-          {isSeekerLoggedIn ? (
-            <div className="card-job-head__heart">
-              <FaHeart />
-            </div>
-          ) : (
-            <div className="card-job-head__heart">
-              <Link to="/login">
-                <FaHeart />
-              </Link>
-            </div>
-          )}
+          <div className="card-job-head__heart">
+            <SaveJobButton jobId={jobDetail.id} />
+          </div>
         </div>
       </div>
       <hr className="hr" />

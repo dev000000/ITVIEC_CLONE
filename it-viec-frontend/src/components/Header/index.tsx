@@ -23,6 +23,7 @@ import { useUserStore } from "@/store/userStore";
 import { useCompanyStore } from "@/store/companyStore";
 import { useTranslation } from "react-i18next";
 import { logoutApi } from "@/services/authApi";
+import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
 const jobItemsStatic = {
   header: "Việc làm IT",
   items: [
@@ -440,7 +441,7 @@ interface HeaderProps {
 const Header = ({ type }: HeaderProps) => {
   const fullName = useSeekerStore((state) => state.fullName);
   const avatarUrl = useSeekerStore((state) => state.avatarUrl);
-  const authenticated = useUserStore((state) => state.authenticated);
+  const isSeekerLoggedIn = useIsSeekerLoggedIn();
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
   const logout = useUserStore((state) => state.logout);
@@ -750,7 +751,7 @@ const Header = ({ type }: HeaderProps) => {
               </Link>
             </div>
             <div className="header__login-mobile">
-              {authenticated ? (
+              {isSeekerLoggedIn ? (
                 <li
                   className="header__menu header__menu--mobile"
                   onClick={() => setSidebar({ left: false, right: true })}
@@ -836,7 +837,7 @@ const Header = ({ type }: HeaderProps) => {
                     {t("header.employer")}
                   </Link>
                 </li>
-                {authenticated ? (
+                {isSeekerLoggedIn ? (
                   <li className="header__menu">
                     <div className="header__menu-avatar">
                       <img src={avatarUrl || avatarDefault} alt="user_avatar" />

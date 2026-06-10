@@ -247,6 +247,19 @@ CREATE TABLE job_skills (
   CONSTRAINT fk_job_skills_job FOREIGN KEY (job_id) REFERENCES jobs(id),
   CONSTRAINT fk_job_skills_skill FOREIGN KEY (skill_id) REFERENCES skills(id)
 );
+-- Bảng việc làm đã lưu (bookmark) của seeker
+CREATE TABLE saved_jobs (
+  id VARCHAR(255) PRIMARY KEY,
+  seeker_id VARCHAR(255) NOT NULL,
+  job_id BIGINT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT uk_saved_jobs_seeker_job UNIQUE (seeker_id, job_id),
+  CONSTRAINT fk_saved_jobs_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT fk_saved_jobs_job FOREIGN KEY (job_id) REFERENCES jobs(id)
+);
+CREATE INDEX idx_saved_jobs_seeker ON saved_jobs(seeker_id);
+CREATE INDEX idx_saved_jobs_seeker_created_at ON saved_jobs(seeker_id, created_at);
 -- Bảng tag gợi ý phổ biến cho search
 CREATE TABLE popular_tags (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,

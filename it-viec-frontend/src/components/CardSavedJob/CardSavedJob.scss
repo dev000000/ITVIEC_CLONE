@@ -1,0 +1,201 @@
+.card-saved-job {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  &__wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  &__left {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__img-wrap {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border: 1px solid #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__content-wrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #121212;
+    margin: 0 0 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover {
+        color: #ed1b2f;
+      }
+    }
+  }
+
+  &__company {
+    font-size: 14px;
+    color: #414042;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 4px;
+
+    &:hover {
+      color: #ed1b2f;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+    color: #6b6b6b;
+    margin-top: 4px;
+    align-items: center;
+  }
+
+  &__meta-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    svg {
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__salary {
+    color: #0ab305;
+    font-weight: 500;
+  }
+
+  &__expires {
+    color: #ed1b2f;
+    font-weight: 500;
+  }
+
+  &__right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  &__date {
+    font-size: 13px;
+    color: #6b6b6b;
+    white-space: nowrap;
+  }
+
+  &__apply-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 20px;
+    background-color: #ed1b2f;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+
+    &:hover {
+      color: #fff;
+      opacity: 0.88;
+    }
+
+    &--disabled {
+      background-color: #f0f0f0;
+      color: #999;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  &__heart-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+
+    svg {
+      font-size: 28px;
+      fill: red;
+      stroke: red;
+      stroke-width: 40;
+    }
+  }
+}
+
+.card-saved-job__unsave-toast {
+  text-align: left;
+  padding: 0 4px;
+
+  &-message {
+    margin: 0 0 4px;
+    font-size: 14px;
+    color: #121212;
+  }
+
+  &-undo {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #1677ff;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+
+    &:hover {
+      color: #4096ff;
+    }
+  }
+}

@@ -143,9 +143,32 @@
     "findJob": "Tìm việc ngay"
   },
   "savedJobs": {
-    "notification": "Bạn có thể lưu tối đa 20 công việc.",
+    "notification": "Bạn có thể lưu tối đa {{max}} công việc. Hiện đã lưu {{count}} việc làm.",
     "emptyMessage": "Bạn chưa lưu công việc nào.",
-    "findJob": "Tìm việc ngay"
+    "findJob": "Tìm việc ngay",
+    "sortBy": "Sắp xếp theo: ",
+    "sortExpireAsc": "Sắp hết hạn gần nhất",
+    "sortExpireDesc": "Sắp hết hạn xa nhất",
+    "apply": "Ứng tuyển",
+    "alreadyApplied": "Đã ứng tuyển",
+    "expired": "Đã hết hạn",
+    "closed": "Đã đóng",
+    "expiresIn": "Hết hạn trong {{days}} ngày",
+    "tooltip": {
+      "save": "Lưu việc này",
+      "saved": "Đã lưu"
+    },
+    "toast": {
+      "savedTitle": "Việc làm này đã được thêm vào mục Việc làm đã lưu.",
+      "viewList": "Xem danh sách",
+      "limitTitle": "Đã đạt giới hạn lưu việc làm",
+      "limitDesc": "Bạn chỉ có thể lưu tối đa {{max}} việc làm. Vui lòng bỏ lưu một số việc làm trước.",
+      "saveFailTitle": "Lưu việc làm thất bại",
+      "retry": "Thử lại",
+      "unsavedTitle": "Bạn đã bỏ lưu việc làm.",
+      "unsaved": "Bạn đã bỏ lưu việc làm.",
+      "undo": "Hoàn tác"
+    }
   },
   "recentlyViewed": {
     "notification": "Chỉ hiển thị công việc đã xem trong 3 tháng gần nhất",

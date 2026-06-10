@@ -69,6 +69,16 @@
           text-decoration: none;
         }
       }
+
+      &-link {
+        color: #414042;
+        text-decoration: underline;
+        font-weight: 700;
+
+        &:hover {
+          color: #414042;
+        }
+      }
     }
   }
   .card-job-head__wrap-button {

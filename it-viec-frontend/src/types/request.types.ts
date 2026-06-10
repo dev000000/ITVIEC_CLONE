@@ -194,6 +194,10 @@ export interface CityCreateRequest {
   cityName: string;
 }
 
+export interface GetSavedJobsParams extends PaginationParams {
+  sort?: "expiresAt,asc" | "expiresAt,desc";
+}
+
 export interface SkillCreateRequest {
   skillName: string;
 }

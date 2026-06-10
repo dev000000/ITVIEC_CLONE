@@ -251,3 +251,25 @@ export interface ApplicationCheckResponse {
   applied: boolean;
   createdAt?: string | null;
 }
+
+// --- Saved Job Types ---
+
+export interface SavedJobItemResponse {
+  id: number;
+  title: string;
+  slug: string;
+  city: CityResponse;
+  salary: string;
+  jobType: JobType;
+  status: JobStatus;
+  postedAt: string;
+  expiresAt: string;
+  skills: SkillResponse[];
+  company: CompanyBaseResponse;
+}
+
+export interface SavedJobResponse {
+  id: string;
+  savedAt: string;
+  job: SavedJobItemResponse;
+}

@@ -21,7 +21,7 @@ import { getApiErrorMessage } from "@/utils/apiError";
 import { ROLE } from "@/types/common.types";
 import { getDefaultRouteByRole } from "@/utils/roleRedirect";
 import { useCompanyStore } from "@/store/companyStore";
-import { getLoginRoleMismatchFeedback, isExpectedLoginRole } from "@/utils/loginRoleGuard";
+import { isLoginRoleMatch } from "@/utils/loginRoleValidation";
 
 
 function Login() {
@@ -42,18 +42,15 @@ function Login() {
       const { data: apiData } = await loginApi(values);
       const user = apiData.result;
 
-      if (!isExpectedLoginRole(ROLE.SEEKER, user.role)) {
-        const feedback = getLoginRoleMismatchFeedback(ROLE.SEEKER, user.role);
+      if (!isLoginRoleMatch(ROLE.SEEKER, user.role)) {
         await logoutApi().catch(() => undefined);
         logout();
         clearSeekerInfo();
         clearCompanyInfo();
         await Swal.fire({
-          icon: "warning",
-          title: feedback.title,
-          text: feedback.text,
+          icon: "error",
+          title: t("login.errorTitle"),
         });
-        navigate(feedback.redirectTo, { replace: true });
         return;
       }
 
