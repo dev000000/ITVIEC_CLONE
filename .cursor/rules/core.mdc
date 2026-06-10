@@ -1,0 +1,24 @@
+---
+description: Core conventions for project-itviec monorepo
+alwaysApply: true
+---
+
+# Core
+
+- Read relevant code before editing; prefer minimal patches over broad refactors.
+- Do not rename public APIs, routes, DTO fields, or Zustand state keys unless the task requires it.
+- Preserve folder structure and naming inside each package.
+
+## Packages
+
+| Package | Stack | Default port |
+|---------|-------|--------------|
+| `it-viec-frontend` | React 19, Vite, TypeScript, Ant Design, Zustand, Sass | 5173 (Vite) |
+| `it-viec-backend` | Spring Boot 3, Java 17 | 8081 |
+| `database` | json-server mock | 3333 |
+
+## Validation (run smallest relevant check)
+
+- Frontend: `npm run type-check` or `npm run lint` in `it-viec-frontend`
+- Backend: `./mvnw test` or targeted test class in `it-viec-backend`
+- Do not modify lockfiles or generated files unless required.

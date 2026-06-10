@@ -1,0 +1,45 @@
+---
+description: Spring Boot conventions for it-viec-backend
+globs: it-viec-backend/**/*.java
+alwaysApply: false
+---
+
+# Backend Java
+
+Base package: `com.dev001.itviec`
+
+## Layer separation
+
+| Layer | Location | Responsibility |
+|-------|----------|----------------|
+| Controller | `controller/` | HTTP mapping, `@Valid` on request body |
+| Service | `service/`, `service/impl/` | Business logic |
+| Repository | `repository/` | JPA data access |
+| Entity | `entity/` | JPA entities |
+| DTO | `dto/request`, `dto/response` | API contracts |
+| Mapper | `mapper/` | Entity ↔ DTO conversion |
+| Validator | `validator/` | Custom validation annotations |
+
+## API response wrapper
+
+All endpoints return `ApiResponse<T>`:
+
+```java
+return ApiResponse.<SomeResponse>builder()
+    .code(1000)
+    .result(someResponse)
+    .build();
+```
+
+- Base path: `/api/v1/...`
+- Use `@RequiredArgsConstructor` + `private final` injection (Lombok)
+- Request DTOs: validation annotations; custom validators in `validator/`
+- Exceptions: `AppException` — do not swallow errors in controllers
+
+## When adding endpoints
+
+1. Request/Response DTO
+2. Service interface + impl
+3. Mapper if entity mapping needed
+4. Controller method
+5. Update frontend types + service if contract changes

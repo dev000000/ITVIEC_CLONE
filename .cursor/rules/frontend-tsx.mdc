@@ -1,0 +1,47 @@
+---
+description: React/TSX patterns for it-viec-frontend
+globs: it-viec-frontend/**/*.tsx
+alwaysApply: false
+---
+
+# Frontend TSX
+
+- Functional components with explicit TypeScript types for props and API data.
+- Reuse components in `src/components/`, hooks, and Zustand stores before adding abstractions.
+- UI library: Ant Design. Icons: `@ant-design/icons`, `react-icons`, or Font Awesome as existing pages do.
+
+## State
+
+- Global auth/user: `useUserStore` (`src/store/userStore.ts`)
+- Role-specific: `useSeekerStore`, `useCompanyStore`
+- Local UI state: `useState` in the page/component
+
+## i18n
+
+- Use `useTranslation("namespace")` — namespaces: `shared`, `common`, `auth`, `job`, `jobseeker`, `employer`, `admin`
+- Locale files: `public/locales/{vi,en}/*.json`
+- Do not hardcode user-visible strings
+
+## API in pages
+
+```typescript
+// ✅ Call service layer, read response.data.result
+const res = await getAllJobsApi(0, 8);
+setJobList(res.data.result.data ?? []);
+
+// ❌ Do not use raw axios in pages — use src/services/*Api.ts
+```
+
+- Error messages: `getApiErrorMessage` from `@/utils/apiError`
+- User alerts: SweetAlert2 (`Swal`) or Ant Design `message`/`notification` — match surrounding page
+
+## Routing & auth
+
+- Routes: `src/routes/index.tsx` and role modules (`PrivateRoutes`, `EmployerPrivateRoute`, etc.)
+- Guards: `src/components/route/` (`PrivateRoute`, `EmployerPrivateRoute`, …)
+- Roles: `ROLE` from `@/types/common.types` — `ADMIN`, `EMPLOYER`, `SEEKER`
+
+## Styling
+
+- Colocated `.scss` or Sass modules next to component
+- Shared styles: `src/styles/`
