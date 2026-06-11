@@ -273,3 +273,22 @@ export interface SavedJobResponse {
   savedAt: string;
   job: SavedJobItemResponse;
 }
+
+export interface EmployerRegistrationResponse {
+  userId: string;
+  email: string;
+  fullName: string;
+  jobTitle: string;
+  phoneNumber: string;
+  referralSource?: string;
+  companyName: string;
+  companyAddress: string;
+  website?: string;
+  status: UserStatus;
+  createdAt: string;
+}
+
+export interface CompanyProfileStatusResponse {
+  complete: boolean;
+  missingFields: string[];
+}

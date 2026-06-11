@@ -25,6 +25,7 @@ import JobSearchDetail from '@/pages/Shared/JobSearchDetail';
 import { ROLE } from '@/types/common.types';
 import ActivateAccount from '@/pages/JobSeeker/ActivateAccount';
 import RegisterSuccess from '@/pages/JobSeeker/RegisterSuccess';
+import EmployerActivate from '@/pages/Employer/EmployerActivate';
 
 /**
  * Main application routes configuration for React Router v6
@@ -94,7 +95,10 @@ export const routes: RouteObject[] = [
   {
     path: 'employer',
     element: <LayoutEmployer />,
-    children: [{ path: '', element: <Employer /> }],
+    children: [
+      { path: '', element: <Employer /> },
+      { path: 'activate', element: <EmployerActivate /> },
+    ],
   },
   {
     path: 'customer',

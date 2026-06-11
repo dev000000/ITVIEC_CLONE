@@ -309,6 +309,7 @@
   },
   "userStatus": {
     "pendingActivation": "Chờ kích hoạt",
+    "pendingAdminReview": "Chờ duyệt",
     "active": "Đang hoạt động",
     "disabled": "Đã vô hiệu hóa"
   },

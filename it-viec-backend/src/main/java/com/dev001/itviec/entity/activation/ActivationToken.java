@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.persistence.*;
 
 import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.enums.ActivationTokenType;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -30,6 +31,11 @@ public class ActivationToken {
 
     @Column(nullable = false, unique = true)
     String token;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "token_type", nullable = false)
+    @Builder.Default
+    ActivationTokenType tokenType = ActivationTokenType.EMAIL_VERIFY;
 
     @Column(name = "expires_at", nullable = false)
     LocalDateTime expiresAt;

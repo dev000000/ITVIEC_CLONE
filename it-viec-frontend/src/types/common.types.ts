@@ -82,6 +82,7 @@ export type TokenType = (typeof TOKEN_TYPE_VALUES)[number];
 
 export const USER_STATUS_VALUES = [
   "PENDING_ACTIVATION",
+  "PENDING_ADMIN_REVIEW",
   "ACTIVE",
   "DISABLED",
 ] as const;

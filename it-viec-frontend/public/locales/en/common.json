@@ -309,6 +309,7 @@
   },
   "userStatus": {
     "pendingActivation": "Pending Activation",
+    "pendingAdminReview": "Pending Admin Review",
     "active": "Active",
     "disabled": "Disabled"
   },

@@ -205,3 +205,20 @@ export interface GetSavedJobsParams extends PaginationParams {
 export interface SkillCreateRequest {
   skillName: string;
 }
+
+export interface RegisterEmployerRequest {
+  fullName: string;
+  jobTitle: string;
+  email: string;
+  phoneNumber: string;
+  referralSource?: string;
+  companyName: string;
+  companyAddress: string;
+  website?: string;
+}
+
+export interface EmployerActivateRequest {
+  token: string;
+  password: string;
+  confirmPassword: string;
+}

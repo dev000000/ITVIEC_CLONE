@@ -20,6 +20,7 @@ app:
   activation:
     base-url: http://localhost:5173
     expiry-hours: 24
+    employer-expiry-hours: 72
     resend-cooldown-minutes: 2
 application:
   security:

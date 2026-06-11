@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.dev001.itviec.dto.request.EmployerActivateRequest;
 import com.dev001.itviec.dto.request.ResendActivationRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.service.ActivationService;
@@ -32,6 +33,15 @@ public class ActivationController {
         return ApiResponse.<String>builder()
                 .code(1000)
                 .result("Activation email sent")
+                .build();
+    }
+
+    @PostMapping("/activate-employer")
+    public ApiResponse<String> activateEmployer(@RequestBody @Valid EmployerActivateRequest request) {
+        activationService.activateEmployer(request.getToken(), request.getPassword(), request.getConfirmPassword());
+        return ApiResponse.<String>builder()
+                .code(1000)
+                .result("Employer account activated successfully")
                 .build();
     }
 }

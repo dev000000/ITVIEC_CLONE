@@ -9,4 +9,8 @@ public interface ActivationService {
     void activate(String token);
 
     void resendActivation(String email);
+
+    void createAndSendEmployerActivation(User user);
+
+    void activateEmployer(String token, String password, String confirmPassword);
 }

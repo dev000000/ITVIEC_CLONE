@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.dev001.itviec.dto.request.EmployerUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.CompanyProfileStatusResponse;
 import com.dev001.itviec.dto.response.EmployerResponse;
+import com.dev001.itviec.service.CompanyService;
 import com.dev001.itviec.service.EmployerService;
 
 import lombok.AccessLevel;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class EmployerController {
     EmployerService employerService;
+    CompanyService companyService;
 
     // 1.API này trả về cho employer profile của bản thân (PRIVATE)
     @GetMapping("/me")
@@ -45,7 +48,17 @@ public class EmployerController {
                 .build();
     }
 
-    // 3.API này cho phép admin xem danh sách employer (PRIVATE)
+    // 3.API trả về trạng thái hoàn thiện hồ sơ công ty (PRIVATE)
+    @GetMapping("/me/company-profile-status")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<CompanyProfileStatusResponse> getCompanyProfileStatus() {
+        return ApiResponse.<CompanyProfileStatusResponse>builder()
+                .code(1000)
+                .result(companyService.getCompanyProfileStatus())
+                .build();
+    }
+
+    // 4.API này cho phép admin xem danh sách employer (PRIVATE)
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<EmployerResponse>> getAllEmployers() {

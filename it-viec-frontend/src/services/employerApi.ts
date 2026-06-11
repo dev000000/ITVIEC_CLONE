@@ -3,6 +3,7 @@ import apiClient from "./apiClient";
 import { type EmployerUpdateRequest } from "@/types/request.types";
 import {
   type EmployerResponse,
+  type CompanyProfileStatusResponse,
   type APIResponse,
 } from "@/types/response.types";
 
@@ -46,9 +47,16 @@ export const getEmployerByIdApi = (id: string) => {
   return apiClient.get<APIResponse<EmployerResponse>>(url);
 };
 
+export const getCompanyProfileStatusApi = () => {
+  return apiClient.get<APIResponse<CompanyProfileStatusResponse>>(
+    API_PATH + "/me/company-profile-status"
+  );
+};
+
 export default {
   getMyEmployerProfileApi,
   updateMyEmployerProfileApi,
   getAllEmployersApi,
   getEmployerByIdApi,
+  getCompanyProfileStatusApi,
 };

@@ -4,6 +4,8 @@ import {
   type AuthenticationRequest,
   type RegisterUserSeekerRequest,
   type ResendActivationRequest,
+  type RegisterEmployerRequest,
+  type EmployerActivateRequest,
 } from "@/types/request.types";
 import {
   type AuthenticationResponse,
@@ -78,6 +80,14 @@ export const resendActivationApi = (request: ResendActivationRequest) => {
   return apiClient.post<APIResponse<string>>(API_PATH + "/resend-activation", request);
 };
 
+export const registerEmployerApi = (request: RegisterEmployerRequest) => {
+  return apiClient.post<APIResponse<string>>(API_PATH + "/register/employers", request);
+};
+
+export const activateEmployerApi = (request: EmployerActivateRequest) => {
+  return apiClient.post<APIResponse<string>>(API_PATH + "/activate-employer", request);
+};
+
 export default {
   loginApi,
   getMeApi,
@@ -86,4 +96,6 @@ export default {
   logoutApi,
   activateAccountApi,
   resendActivationApi,
+  registerEmployerApi,
+  activateEmployerApi,
 };

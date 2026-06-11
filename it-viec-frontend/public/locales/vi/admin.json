@@ -18,7 +18,32 @@
     "users": "Quản lý user",
     "jobs": "Job",
     "report": "Report",
-    "popularTags": "Popular tags"
+    "popularTags": "Popular tags",
+    "employerRegistrations": "Đăng ký nhà tuyển dụng"
+  },
+  "employerRegistrations": {
+    "title": "Đăng ký nhà tuyển dụng chờ duyệt",
+    "empty": "Không có đăng ký nào đang chờ duyệt",
+    "approve": "Duyệt",
+    "reject": "Từ chối",
+    "approveConfirmTitle": "Xác nhận duyệt?",
+    "approveConfirmText": "Gửi email thiết lập mật khẩu tới {{email}}?",
+    "rejectConfirmTitle": "Xác nhận từ chối?",
+    "rejectConfirmText": "Từ chối đăng ký của {{email}}?",
+    "approveSuccess": "Đã duyệt và gửi email kích hoạt",
+    "rejectSuccess": "Đã từ chối đăng ký",
+    "columns": {
+      "fullName": "Họ tên",
+      "email": "Email",
+      "jobTitle": "Chức vụ",
+      "phone": "SĐT",
+      "company": "Công ty",
+      "address": "Địa chỉ",
+      "website": "Website",
+      "referral": "Nguồn",
+      "status": "Trạng thái",
+      "action": "Thao tác"
+    }
   },
   "actions": {
     "reset": "Đặt lại"

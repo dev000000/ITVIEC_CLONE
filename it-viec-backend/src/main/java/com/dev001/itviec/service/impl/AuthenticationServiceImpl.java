@@ -65,6 +65,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (user.getStatus() == UserStatus.PENDING_ACTIVATION) {
             throw new AppException(ACCOUNT_NOT_ACTIVATED);
         }
+        if (user.getStatus() == UserStatus.PENDING_ADMIN_REVIEW) {
+            throw new AppException(ACCOUNT_PENDING_ADMIN_REVIEW);
+        }
         if (user.getStatus() == UserStatus.DISABLED) {
             throw new AppException(ACCOUNT_DISABLED);
         }

@@ -80,6 +80,7 @@ export const getOvertimePolicyOptions = (t: TFunction) => [
 
 export const getUserStatusOptions = (t: TFunction) => [
   { value: "PENDING_ACTIVATION", label: t("common:userStatus.pendingActivation") },
+  { value: "PENDING_ADMIN_REVIEW", label: t("common:userStatus.pendingAdminReview") },
   { value: "ACTIVE", label: t("common:userStatus.active") },
   { value: "DISABLED", label: t("common:userStatus.disabled") },
 ];

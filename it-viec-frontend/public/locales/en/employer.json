@@ -1,6 +1,24 @@
 {
+  "register": {
+    "successTitle": "Registration submitted!",
+    "successMessage": "Thank you for registering. We have sent a confirmation email. Please wait for an administrator to verify your company information. Once approved, you will receive an email to set up your password.",
+    "backToHome": "Back to home"
+  },
+  "activate": {
+    "title": "Set your password",
+    "passwordPlaceholder": "Password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "passwordMismatch": "Passwords do not match",
+    "submitBtn": "Activate account",
+    "successTitle": "Activation successful!",
+    "successMessage": "Your employer account is now active. Please sign in and complete your company profile before posting jobs.",
+    "loginBtn": "Sign in now",
+    "missingToken": "Invalid activation link. Please check your email again."
+  },
   "dashboard": {
     "title": "Dashboard",
+    "profileIncomplete": "Please complete your company profile before posting jobs.",
+    "completeProfile": "Complete company profile",
     "welcome": "Hello, {{name}}!",
     "totalJobs": "Total Jobs",
     "totalApplications": "Total Applications",

@@ -56,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 || (uri.contains("/api/v1/countries") && method.equals("GET"))
                 || (uri.contains("/api/v1/tag/popular") && method.equals("GET"))
                 || uri.contains("/register/seekers")
+                || uri.contains("/register/employers")
                 || uri.contains("/refresh-token")
                 || uri.contains("/login")
                 || isPublicCompanyGet

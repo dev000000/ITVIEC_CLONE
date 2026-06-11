@@ -122,7 +122,11 @@ public enum ErrorCode {
     ACCOUNT_ALREADY_ACTIVATED(1106, "Account is already activated", HttpStatus.BAD_REQUEST),
     ACTIVATION_RESEND_TOO_SOON(
             1107, "Please wait before requesting a new activation email", HttpStatus.TOO_MANY_REQUESTS),
-    ACCOUNT_DISABLED(1108, "Account has been disabled", HttpStatus.FORBIDDEN);
+    ACCOUNT_DISABLED(1108, "Account has been disabled", HttpStatus.FORBIDDEN),
+    ACCOUNT_PENDING_ADMIN_REVIEW(1109, "Account is pending admin review", HttpStatus.FORBIDDEN),
+    PASSWORD_MISMATCH(1110, "Passwords do not match", HttpStatus.BAD_REQUEST),
+    EMPLOYER_REGISTRATION_ALREADY_EXISTS(
+            1111, "Employer registration already exists for this email", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

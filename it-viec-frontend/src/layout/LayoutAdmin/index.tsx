@@ -5,7 +5,7 @@ import MenuItem from "@/components/SiderBar/MenuItem";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
-import { FiUsers, FiPieChart, FiTag } from "react-icons/fi";
+import { FiUsers, FiPieChart, FiTag, FiUserCheck } from "react-icons/fi";
 import { BsBriefcase } from "react-icons/bs";
 import { IoIosLogOut } from "react-icons/io";
 import Swal from "sweetalert2";
@@ -87,6 +87,13 @@ function LayoutAdmin() {
                 link: "report",
                 name: t("admin:menu.report"),
                 icon: <FiPieChart />,
+              }}
+            />
+            <MenuItem
+              props={{
+                link: "employer-registrations",
+                name: t("admin:menu.employerRegistrations"),
+                icon: <FiUserCheck />,
               }}
             />
           </ul>

@@ -18,7 +18,32 @@
     "users": "Users",
     "jobs": "Jobs",
     "report": "Reports",
-    "popularTags": "Popular tags"
+    "popularTags": "Popular tags",
+    "employerRegistrations": "Employer registrations"
+  },
+  "employerRegistrations": {
+    "title": "Pending employer registrations",
+    "empty": "No pending registrations",
+    "approve": "Approve",
+    "reject": "Reject",
+    "approveConfirmTitle": "Confirm approval?",
+    "approveConfirmText": "Send password setup email to {{email}}?",
+    "rejectConfirmTitle": "Confirm rejection?",
+    "rejectConfirmText": "Reject registration from {{email}}?",
+    "approveSuccess": "Approved and activation email sent",
+    "rejectSuccess": "Registration rejected",
+    "columns": {
+      "fullName": "Full name",
+      "email": "Email",
+      "jobTitle": "Job title",
+      "phone": "Phone",
+      "company": "Company",
+      "address": "Address",
+      "website": "Website",
+      "referral": "Source",
+      "status": "Status",
+      "action": "Actions"
+    }
   },
   "actions": {
     "reset": "Reset"

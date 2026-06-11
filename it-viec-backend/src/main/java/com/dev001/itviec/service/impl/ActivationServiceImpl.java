@@ -9,11 +9,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dev001.itviec.entity.activation.ActivationToken;
 import com.dev001.itviec.entity.user.User;
+import com.dev001.itviec.enums.ActivationTokenType;
 import com.dev001.itviec.enums.UserStatus;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.repository.ActivationTokenRepository;
@@ -32,12 +34,16 @@ public class ActivationServiceImpl implements ActivationService {
     private final ActivationTokenRepository activationTokenRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     @Value("${app.activation.base-url:http://localhost:5173}")
     private String frontendBaseUrl;
 
     @Value("${app.activation.expiry-hours:24}")
     private int expiryHours;
+
+    @Value("${app.activation.employer-expiry-hours:72}")
+    private int employerExpiryHours;
 
     @Value("${app.activation.resend-cooldown-minutes:2}")
     private int resendCooldownMinutes;
@@ -49,6 +55,7 @@ public class ActivationServiceImpl implements ActivationService {
 
         ActivationToken activationToken = ActivationToken.builder()
                 .token(tokenValue)
+                .tokenType(ActivationTokenType.EMAIL_VERIFY)
                 .expiresAt(LocalDateTime.now().plusHours(expiryHours))
                 .used(false)
                 .user(user)
@@ -62,8 +69,7 @@ public class ActivationServiceImpl implements ActivationService {
                 "activationLink", activationLink,
                 "expiryHours", expiryHours);
 
-        emailService.sendHtml(
-                user.getEmail(), "[ITViec] Xác thực tài khoản của bạn", "email/activation", variables);
+        emailService.sendHtml(user.getEmail(), "[ITViec] Xác thực tài khoản của bạn", "email/activation", variables);
     }
 
     @Override
@@ -72,6 +78,10 @@ public class ActivationServiceImpl implements ActivationService {
         ActivationToken found = activationTokenRepository
                 .findByTokenAndUsedFalse(token)
                 .orElseThrow(() -> new AppException(ACTIVATION_TOKEN_INVALID));
+
+        if (found.getTokenType() != ActivationTokenType.EMAIL_VERIFY) {
+            throw new AppException(ACTIVATION_TOKEN_INVALID);
+        }
 
         if (found.getExpiresAt().isBefore(LocalDateTime.now())) {
             throw new AppException(ACTIVATION_TOKEN_EXPIRED);
@@ -96,8 +106,7 @@ public class ActivationServiceImpl implements ActivationService {
             throw new AppException(ACCOUNT_ALREADY_ACTIVATED);
         }
 
-        Optional<ActivationToken> latest =
-                activationTokenRepository.findFirstByUserOrderByCreatedAtDesc(user);
+        Optional<ActivationToken> latest = activationTokenRepository.findFirstByUserOrderByCreatedAtDesc(user);
         if (latest.isPresent()) {
             long minutesSince = ChronoUnit.MINUTES.between(latest.get().getCreatedAt(), LocalDateTime.now());
             if (minutesSince < resendCooldownMinutes) {
@@ -109,5 +118,65 @@ public class ActivationServiceImpl implements ActivationService {
         createAndSendActivation(user);
 
         log.info("Activation email resent to: {}", email);
+    }
+
+    @Override
+    @Transactional
+    public void createAndSendEmployerActivation(User user) {
+        activationTokenRepository.markAllUsedByUser(user);
+
+        String tokenValue = UUID.randomUUID().toString();
+
+        ActivationToken activationToken = ActivationToken.builder()
+                .token(tokenValue)
+                .tokenType(ActivationTokenType.SET_PASSWORD)
+                .expiresAt(LocalDateTime.now().plusHours(employerExpiryHours))
+                .used(false)
+                .user(user)
+                .build();
+        activationTokenRepository.save(activationToken);
+
+        String activationLink = frontendBaseUrl + "/customer/activate?token=" + tokenValue;
+
+        Map<String, Object> variables = Map.of(
+                "name", user.getEmail(),
+                "activationLink", activationLink,
+                "expiryHours", employerExpiryHours);
+
+        emailService.sendHtml(
+                user.getEmail(),
+                "[ITViec] Thiết lập mật khẩu tài khoản nhà tuyển dụng",
+                "email/employer-activation",
+                variables);
+    }
+
+    @Override
+    @Transactional
+    public void activateEmployer(String token, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw new AppException(PASSWORD_MISMATCH);
+        }
+
+        ActivationToken found = activationTokenRepository
+                .findByTokenAndUsedFalse(token)
+                .orElseThrow(() -> new AppException(ACTIVATION_TOKEN_INVALID));
+
+        if (found.getTokenType() != ActivationTokenType.SET_PASSWORD) {
+            throw new AppException(ACTIVATION_TOKEN_INVALID);
+        }
+
+        if (found.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new AppException(ACTIVATION_TOKEN_EXPIRED);
+        }
+
+        User user = found.getUser();
+        user.setPassword(passwordEncoder.encode(password));
+        user.setStatus(UserStatus.ACTIVE);
+        userRepository.save(user);
+
+        found.setUsed(true);
+        activationTokenRepository.save(found);
+
+        log.info("Employer account activated for user: {}", user.getEmail());
     }
 }
