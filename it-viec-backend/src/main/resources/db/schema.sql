@@ -39,6 +39,18 @@ CREATE TABLE tokens (
   user_id VARCHAR(255) NOT NULL,
   CONSTRAINT fk_tokens_user FOREIGN KEY (user_id) REFERENCES users(id)
 );
+-- Bảng token kích hoạt tài khoản
+CREATE TABLE activation_tokens (
+  id VARCHAR(255) PRIMARY KEY,
+  token VARCHAR(255) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  is_used BOOLEAN DEFAULT FALSE,
+  created_at DATETIME,
+  user_id VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_activation_tokens_user FOREIGN KEY (user_id) REFERENCES users(id),
+  INDEX idx_activation_token (token),
+  INDEX idx_activation_user_id (user_id)
+);
 -- Bảng ứng viên
 CREATE TABLE seekers (
   id VARCHAR(255) PRIMARY KEY,
@@ -264,10 +276,12 @@ CREATE INDEX idx_saved_jobs_seeker_created_at ON saved_jobs(seeker_id, created_a
 CREATE TABLE popular_tags (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   category VARCHAR(50) NOT NULL,
-  skill_id BIGINT UNIQUE,
-  company_id VARCHAR(255) UNIQUE,
+  skill_id BIGINT,
+  company_id VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT uk_popular_tags_skill UNIQUE (skill_id),
+  CONSTRAINT uk_popular_tags_company UNIQUE (company_id),
   CONSTRAINT fk_popular_tags_skill FOREIGN KEY (skill_id) REFERENCES skills(id),
   CONSTRAINT fk_popular_tags_company FOREIGN KEY (company_id) REFERENCES companies(id)
 );
