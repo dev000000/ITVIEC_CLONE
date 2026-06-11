@@ -213,6 +213,12 @@
     "1092": "Source ID của popular tag không hợp lệ",
     "1093": "Category của popular tag là bắt buộc",
     "1094": "Source ID của popular tag là bắt buộc",
+    "1103": "Token xác thực không hợp lệ hoặc đã được sử dụng",
+    "1104": "Token xác thực đã hết hạn",
+    "1105": "Tài khoản chưa được xác thực. Vui lòng kiểm tra email của bạn.",
+    "1106": "Tài khoản này đã được kích hoạt",
+    "1107": "Vui lòng chờ trước khi yêu cầu gửi lại email xác thực",
+    "1108": "Tài khoản đã bị vô hiệu hóa",
     "9999": "Lỗi hệ thống, vui lòng thử lại sau",
     "default": "Có lỗi xảy ra, vui lòng thử lại"
   },
@@ -303,6 +309,7 @@
   },
   "userStatus": {
     "pendingActivation": "Chờ kích hoạt",
+    "pendingAdminReview": "Chờ duyệt",
     "active": "Đang hoạt động",
     "disabled": "Đã vô hiệu hóa"
   },

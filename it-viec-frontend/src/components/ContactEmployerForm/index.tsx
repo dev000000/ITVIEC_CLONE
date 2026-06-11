@@ -1,14 +1,25 @@
 import { Col, Form, Input, Row, Select } from "antd";
 import "./ContactEmployerForm.scss";
 import ButtonSubmit from "@/components/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AgreementCheckBox from "@/components/AgreementCheckbox";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { registerEmployerApi } from "@/services/authApi";
+import { getAllCitiesApi } from "@/services/cityApi";
+import { getApiErrorMessage } from "@/utils/apiError";
+import Swal from "sweetalert2";
+import type { CityResponse } from "@/types/response.types";
+
 function ContactEmployerForm() {
   const { t } = useTranslation("employer");
+  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [checked, setChecked] = useState(false);
-  const listItem = [
+  const [submitting, setSubmitting] = useState(false);
+  const [cities, setCities] = useState<CityResponse[]>([]);
+
+  const referralOptions = [
     { value: "Tìm kiếm Google", label: "Tìm kiếm Google" },
     { value: "Facebook", label: "Facebook" },
     { value: "Linkedin", label: "Linkedin" },
@@ -17,23 +28,59 @@ function ContactEmployerForm() {
     { value: "Bạn bè giới thiệu", label: "Bạn bè giới thiệu" },
     { value: "Khác", label: "Khác" },
   ];
-  const listItem2 = [
-    { value: "Ho Chi Minh", label: "Ho Chi Minh" },
-    { value: "Ha Noi", label: "Ha Noi" },
-    { value: "Da Nang", label: "Da Nang" },
-    { value: "Others", label: "Others" },
-  ];
+
+  useEffect(() => {
+    getAllCitiesApi()
+      .then((res) => setCities(res.data.result ?? []))
+      .catch(() => {
+        // fallback — keep empty list; user can still type
+      });
+  }, []);
+
+  const cityOptions = cities.map((c) => ({ value: c.cityName, label: c.cityName }));
+
   const onHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChecked(e.target.checked);
   };
-  const onFinish = (values: Record<string, unknown>) => {
-    console.log(values);
+
+  const onFinish = async (values: {
+    username: string;
+    title: string;
+    email: string;
+    phoneNumber: string;
+    source?: string;
+    nameCompany: string;
+    companyAddress: string;
+    companyAddressWebsite?: string;
+  }) => {
+    try {
+      setSubmitting(true);
+      await registerEmployerApi({
+        fullName: values.username,
+        jobTitle: values.title,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        referralSource: values.source,
+        companyName: values.nameCompany,
+        companyAddress: values.companyAddress,
+        website: values.companyAddressWebsite,
+      });
+      navigate("/customer/register-success");
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: getApiErrorMessage(err, t),
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <>
       <div className="contact-employer-form">
-        <Form onFinish={onFinish}>
+        <Form form={form} onFinish={onFinish}>
           <h3 className="contact-emploter-form__title">{t("contact.customerTitle")}</h3>
           <Row gutter={20}>
             <Col xxl={12} xl={12} lg={24} md={24} sm={24} xs={24}>
@@ -60,10 +107,8 @@ function ContactEmployerForm() {
               <Form.Item
                 name="email"
                 rules={[
-                  {
-                    required: true,
-                    message: t("contact.emailError"),
-                  },
+                  { required: true, message: t("contact.emailError") },
+                  { type: "email", message: t("contact.emailError") },
                 ]}
               >
                 <Input size="large" placeholder={t("contact.emailPlaceholder")} />
@@ -73,10 +118,7 @@ function ContactEmployerForm() {
               <Form.Item
                 name="phoneNumber"
                 rules={[
-                  {
-                    required: true,
-                    message: t("contact.phoneError"),
-                  },
+                  { required: true, message: t("contact.phoneError") },
                 ]}
               >
                 <Input size="large" placeholder={t("contact.phonePlaceholder")} />
@@ -86,7 +128,7 @@ function ContactEmployerForm() {
               <Form.Item name="source">
                 <Select
                   size="large"
-                  options={listItem}
+                  options={referralOptions}
                   placeholder={t("contact.sourcePlaceholder")}
                 />
               </Form.Item>
@@ -113,19 +155,18 @@ function ContactEmployerForm() {
               >
                 <Select
                   size="large"
-                  options={listItem2}
+                  options={cityOptions}
                   placeholder={t("contact.companyAddressPlaceholder")}
+                  showSearch
+                  filterOption={(input, option) =>
+                    (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+                  }
                 />
               </Form.Item>
             </Col>
-
             <Col span={24}>
               <Form.Item name="companyAddressWebsite">
                 <Input size="large" placeholder={t("contact.websitePlaceholder")} />
-                {/* <span>
-                  URL bao gồm đầy đủ giao thức (https), ví dụ:
-                  https://itviec.com
-                </span> */}
               </Form.Item>
             </Col>
           </Row>
@@ -154,7 +195,7 @@ function ContactEmployerForm() {
                 <div className="center-item">
                   <ButtonSubmit
                     text={t("contact.contactBtn")}
-                    disabled={!checked}
+                    disabled={!checked || submitting}
                     type="max"
                   />
                 </div>

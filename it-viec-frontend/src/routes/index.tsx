@@ -23,6 +23,9 @@ import JobSearch from '@/pages/Shared/JobSearch';
 import RouteDecider from './RouteDecider';
 import JobSearchDetail from '@/pages/Shared/JobSearchDetail';
 import { ROLE } from '@/types/common.types';
+import ActivateAccount from '@/pages/JobSeeker/ActivateAccount';
+import RegisterSuccess from '@/pages/JobSeeker/RegisterSuccess';
+import EmployerActivate from '@/pages/Employer/EmployerActivate';
 
 /**
  * Main application routes configuration for React Router v6
@@ -35,33 +38,35 @@ export const routes: RouteObject[] = [
       { path: '/', element: <Home /> }, // Đã check
       { path: 'terms-conditions-vn', element: <Term /> }, // Đã check
       { path: 'quy-dinh-bao-mat', element: <Policy /> }, // Đã check
+      { path: 'activate', element: <ActivateAccount /> },
+      { path: 'register-success', element: <RegisterSuccess /> },
       {
-        path: 'viec-lam-it', 
+        path: 'viec-lam-it', // Đã check
         children: [
           {
-            path: '', 
+            path: '', // Đã check
             element: <JobSearch />, 
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
           {
-            path: ':param1', 
+            path: ':param1', // Đã check
             element: <RouteDecider />,
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
           {
-            path: ':param1/:param2', 
+            path: ':param1/:param2', // Đã check
             element: <RouteDecider />,
             children: [{ path: '', element: <JobSearchDetail /> }],
           },
         ],
       },
       {
-        path: 'nha-tuyen-dung/:slug', 
-        element: <EmployerDetail />,
+        path: 'nha-tuyen-dung/:slug', // Đã check
+        element: <EmployerDetail />, // Đã check
         children: [
-          { path: '', element: <EmployerDetailInfo /> },
-          { path: 'bai-viet', element: <EmployerDetailBlog /> },
-          { path: 'danh-gia', element: <EmployerDetailRate /> },
+          { path: '', element: <EmployerDetailInfo /> }, // Đã check
+          { path: 'bai-viet', element: <EmployerDetailBlog /> }, // Đã check
+          { path: 'danh-gia', element: <EmployerDetailRate /> }, // Đã check
         ],
       },
       // Public routes: không cần token check
@@ -74,13 +79,13 @@ export const routes: RouteObject[] = [
     ],
   },
   {
-    element: <LayoutCheckToken checkRole={ROLE.SEEKER} />,
+    element: <LayoutCheckToken checkRole={ROLE.SEEKER} />, 
     children: [
       {
-        element: <PrivateRoute />,
+        element: <PrivateRoute />, 
         children: [
           {
-            path: 'viec-lam-it/:slug/job_applications/new',
+            path: 'viec-lam-it/:slug/job_applications/new', // Đã check
             element: <JobApplications />,
           },
         ],
@@ -90,7 +95,10 @@ export const routes: RouteObject[] = [
   {
     path: 'employer',
     element: <LayoutEmployer />,
-    children: [{ path: '', element: <Employer /> }],
+    children: [
+      { path: '', element: <Employer /> },
+      { path: 'activate', element: <EmployerActivate /> },
+    ],
   },
   {
     path: 'customer',

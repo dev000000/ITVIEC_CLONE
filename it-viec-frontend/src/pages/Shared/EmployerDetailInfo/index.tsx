@@ -18,8 +18,8 @@ import { useTranslation } from "react-i18next";
 interface EmployerDetailOutletContext {
   companyInfor: CompanyDetailResponse;
 }
-
-function EmployerDetailInfo() {
+// 1.5.1 Tab thông tin chi tiết của nhà tuyển dụng
+const EmployerDetailInfo = () => {
   const { companyInfor } = useOutletContext<EmployerDetailOutletContext>();
   const { t, i18n } = useTranslation("shared");
   const isEN = i18n.language === "en";
@@ -30,6 +30,7 @@ function EmployerDetailInfo() {
 
   return (
     <div className="empoyer-detail-infor">
+      {/* Hiển thị thông tin tổng quan về công ty */}
       <div className="empoyer-detail-infor__box empoyer-detail-infor__overview">
         <h2 className="empoyer-detail-infor__main-title">{t("employerDetailInfo.generalInfo")}</h2>
         <Row className="empoyer-detail-infor__row" gutter={[16, 16]}>
@@ -79,6 +80,7 @@ function EmployerDetailInfo() {
           </Col>
         </Row>
       </div>
+      {/* Hiển thị phần giới thiệu của công ty */}
       <div className="empoyer-detail-infor__box empoyer-detail-infor__introduction">
         <h2 className="empoyer-detail-infor__main-title">{t("employerDetailInfo.companyIntro")}</h2>
         <div
@@ -88,11 +90,13 @@ function EmployerDetailInfo() {
           }}
         />
       </div>
+      {/* Hiển thị phần chuyên môn của công ty */}
       <div className="empoyer-detail-infor__box empoyer-detail-infor__ourexpertise">
         <h2 className="empoyer-detail-infor__main-title">
           {t("employerDetailInfo.ourExpertise")}
         </h2>
         <div className="empoyer-detail-infor__intro-skills">{t("employerDetailInfo.keySkills")}</div>
+        {/* Hiển thị danh sách kỹ năng của công ty */}
         <div className="empoyer-detail-infor__list-tag">
           {companyInfor?.companySkills?.map((skill) => (
             <TagSkill key={skill.id} text={skill.skillName} />
@@ -105,6 +109,7 @@ function EmployerDetailInfo() {
           }}
         />
       </div>
+      {/* Hiển thị phần lợi ích của công ty */}
       <div className="empoyer-detail-infor__box empoyer-detail-infor__benefits">
         <h2 className="empoyer-detail-infor__main-title">
           {t("employerDetailInfo.whyWorkHere")}

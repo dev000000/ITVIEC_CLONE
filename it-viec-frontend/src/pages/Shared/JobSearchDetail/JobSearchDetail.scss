@@ -55,12 +55,30 @@
       align-items: center;
       margin-top: 10px;
       gap: 5px;
-      color: #0ab305 ;
       font-size: 16px;
+      color: #414042;
+      span {
+        text-decoration: underline;
+      }
       svg {
         font-size: 20px;
       }
+      &--visible {
+        color: #0ab305;
+        span {
+          text-decoration: none;
+        }
+      }
 
+      &-link {
+        color: #414042;
+        text-decoration: underline;
+        font-weight: 700;
+
+        &:hover {
+          color: #414042;
+        }
+      }
     }
   }
   .card-job-head__wrap-button {

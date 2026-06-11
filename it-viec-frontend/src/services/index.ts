@@ -6,6 +6,7 @@ import companyApi from "./companyApi";
 import countryApi from "./countryApi";
 import employerApi from "./employerApi";
 import jobApi from "./jobApi";
+import savedJobApi from "./savedJobApi";
 import seekerApi from "./seekerApi";
 import skillApi from "./skillApi";
 import userApi from "./userApi";
@@ -19,6 +20,7 @@ export {
   countryApi,
   employerApi,
   jobApi,
+  savedJobApi,
   seekerApi,
   skillApi,
   userApi,
@@ -33,6 +35,7 @@ const services = {
   countryApi,
   employerApi,
   jobApi,
+  savedJobApi,
   seekerApi,
   skillApi,
   userApi,

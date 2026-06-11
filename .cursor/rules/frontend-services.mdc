@@ -1,0 +1,51 @@
+---
+description: Frontend API services and types conventions
+globs: it-viec-frontend/src/{services,types}/**/*
+alwaysApply: false
+---
+
+# Frontend Services & Types
+
+## Service file pattern
+
+Follow `src/services/authApi.ts`:
+
+```typescript
+import Configs from "@/configurations/appConfig";
+import apiClient from "./apiClient";
+import type { SomeRequest } from "@/types/request.types";
+import type { SomeResponse, APIResponse } from "@/types/response.types";
+
+const API_PATH = Configs.API_ENDPOINT + "/api/v1/...";
+
+export const someApi = (request: SomeRequest) => {
+  return apiClient.post<APIResponse<SomeResponse>>(API_PATH, request);
+};
+```
+
+- Always use `apiClient` (HttpOnly cookie auth, refresh on 410)
+- Base URL: `Configs.API_ENDPOINT` (default `http://localhost:8081`)
+- Export named functions; group by domain (`jobApi.ts`, `companyApi.ts`, …)
+
+## Response shape
+
+```typescript
+interface APIResponse<T> {
+  code: number;      // backend success code: 1000
+  message: string;
+  result: T;
+}
+
+interface PageResponse<T> {
+  data: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+}
+```
+
+- Paginated lists: `response.data.result.data`, totals from `totalElements`
+- Request types: `src/types/request.types.ts`
+- Response types: `src/types/response.types.ts`
+- Enums synced from backend: `src/types/common.types.ts`

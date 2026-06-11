@@ -1,62 +1,52 @@
 import type { CityResponse } from "@/types/response.types";
 
-const normalizeWhitespace = (value: string) => value.trim().replace(/\s+/g, " ");
-
-export const normalizeSearchKeyword = (value?: string) =>
-  value ? normalizeWhitespace(value) : "";
-
-export const slugifySearchSegment = (value?: string) => {
-  const normalized = normalizeSearchKeyword(value);
-  if (!normalized) {
-    return "";
-  }
-
-  return normalized
+// Hàm chuyển đổi keyword thành slug
+export const toSlug = (keyword: string): string => {
+  if (keyword === "") return "";
+  return keyword
+    .toLowerCase()
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "d")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[đĐ]/g, "d")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(/[^a-z0-9\s]/g, "")
+    .trim()
+    .replace(/\s+/g, " ")   // ← collapse nhiều space thành 1 space
+    .replace(/ /g, "-");    // ← rồi mới đổi space thành "-"
 };
 
-export const deslugifySearchSegment = (value?: string) => {
-  if (!value) {
-    return "";
-  }
-
-  return normalizeSearchKeyword(decodeURIComponent(value).replace(/-/g, " "));
+// Decode slug về dạng text thường: 
+export const fromSlug = (slug: string): string => {
+  return slug.replace(/-/g, " ");
 };
 
+// Hàm xây dựng đường dẫn tìm kiếm việc làm dựa trên keyword và city, sẽ bỏ qua các phần nếu không có giá trị
 export const buildJobSearchPath = (params: { keyword?: string; city?: string }) => {
-  const keywordSegment = slugifySearchSegment(params.keyword);
-  const citySegment = slugifySearchSegment(params.city === "all" ? "" : params.city);
+  const keywordSegment = toSlug(params.keyword);
+  const city = params.city;
 
-  if (keywordSegment && citySegment) {
-    return `/viec-lam-it/${keywordSegment}/${citySegment}`;
+  const iscityValid = city && city !== "";
+  const isKeywordValid = keywordSegment && keywordSegment !== "";
+
+  if (isKeywordValid && iscityValid) {
+    return `/viec-lam-it/${keywordSegment}/${city}`;
   }
 
-  if (keywordSegment) {
+  if (isKeywordValid) {
     return `/viec-lam-it/${keywordSegment}`;
   }
 
-  if (citySegment) {
-    return `/viec-lam-it/${citySegment}`;
+  if (iscityValid) {
+    return `/viec-lam-it/${city}`;
   }
 
   return "/viec-lam-it";
 };
 
-export const findCityBySegment = (
-  segment: string | undefined,
+// Hàm lấy về city từ segment, nếu không tìm thấy thì trả về null
+export const getCityBySegment = (
+  param: string | undefined,
   cities: CityResponse[],
-) => {
-  if (!segment) {
-    return null;
-  }
-
-  const normalizedSegment = slugifySearchSegment(segment);
-  return (
-    cities.find((city) => slugifySearchSegment(city.cityName) === normalizedSegment) ?? null
-  );
+): CityResponse | null => {
+  return cities.find((city) => city.slug === param) || null;
 };

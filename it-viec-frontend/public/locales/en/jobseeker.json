@@ -99,6 +99,7 @@
       "fullNameRequired": "Please enter your full name!",
       "jobTitleRequired": "Please enter your job title!",
       "phoneRequired": "Please enter your phone number!",
+      "phoneFormat": "Invalid phone number!",
       "dobRequired": "Please select your date of birth!"
     },
     "success": {
@@ -142,9 +143,32 @@
     "findJob": "Find a job"
   },
   "savedJobs": {
-    "notification": "You can save up to 20 jobs.",
+    "notification": "You can save up to {{max}} jobs. Currently saved {{count}} jobs.",
     "emptyMessage": "You have not saved any jobs.",
-    "findJob": "Find a job"
+    "findJob": "Find a job",
+    "sortBy": "Sort by: ",
+    "sortExpireAsc": "Expiring soonest",
+    "sortExpireDesc": "Expiring latest",
+    "apply": "Apply Now",
+    "alreadyApplied": "Already Applied",
+    "expired": "Expired",
+    "closed": "Closed",
+    "expiresIn": "Expires in {{days}} days",
+    "tooltip": {
+      "save": "Save this job",
+      "saved": "Saved"
+    },
+    "toast": {
+      "savedTitle": "This job has been added to Saved Jobs.",
+      "viewList": "View list",
+      "limitTitle": "Saved jobs limit reached",
+      "limitDesc": "You can only save up to {{max}} jobs. Please unsave some jobs first.",
+      "saveFailTitle": "Failed to save job",
+      "retry": "Retry",
+      "unsavedTitle": "You have unsaved this job.",
+      "unsaved": "You have unsaved this job.",
+      "undo": "Undo"
+    }
   },
   "recentlyViewed": {
     "notification": "Only shows jobs viewed in the last 3 months",
@@ -160,6 +184,17 @@
   "jobApplications": {
     "back": "Back",
     "invalidJob": "Invalid job",
+    "cvTitle": "Application CV",
+    "useCurrentCv": "Use current CV",
+    "uploadNewCv": "Upload a new CV",
+    "chooseFile": "Choose file",
+    "noFileSelected": "No file selected yet",
+    "noCurrentCv": "You do not have a current CV yet. Please upload a new CV to apply.",
+    "currentCvUpdatedAt": "Uploaded on: {{date}}",
+    "supportedFormats": "Supports .doc, .docx or .pdf format, under 5MB and not password protected",
+    "previewCurrentCv": "Preview current CV",
+    "cvRequired": "Please choose a CV before submitting your application!",
+    "loadingCv": "Loading CV...",
     "basicInfo": "Basic Information",
     "fullName": "Full Name",
     "phoneNumber": "Phone Number",
@@ -183,7 +218,13 @@
     "successTitle": "Application submitted successfully!",
     "successText": "We will contact you as soon as possible.",
     "submitFailed": "Cannot submit application, please try again later!",
-    "submitError": "An error occurred while submitting the application!"
+    "submitError": "An error occurred while submitting the application!",
+    "validation": {
+      "fullNameRequired": "Please enter your full name!",
+      "phoneRequired": "Please enter your phone number!",
+      "phoneFormat": "Invalid phone number!",
+      "locationsRequired": "Please select exactly 3 desired work locations!"
+    }
   },
   "settings": {
     "title": "Settings"

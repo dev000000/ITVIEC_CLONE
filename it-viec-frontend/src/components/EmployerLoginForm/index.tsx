@@ -16,7 +16,7 @@ import { getDefaultRouteByRole } from "@/utils/roleRedirect";
 import { ROLE } from "@/types/common.types";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useCompanyStore } from "@/store/companyStore";
-import { getLoginRoleMismatchFeedback, isExpectedLoginRole } from "@/utils/loginRoleGuard";
+import { isLoginRoleMatch } from "@/utils/loginRoleValidation";
 
 function EmployerLoginForm() {
   const navigate = useNavigate();
@@ -30,18 +30,15 @@ function EmployerLoginForm() {
       const { data: apiData } = await loginApi(values);
       const user = apiData.result;
 
-      if (!isExpectedLoginRole(ROLE.EMPLOYER, user.role)) {
-        const feedback = getLoginRoleMismatchFeedback(ROLE.EMPLOYER, user.role);
+      if (!isLoginRoleMatch(ROLE.EMPLOYER, user.role)) {
         await logoutApi().catch(() => undefined);
         logout();
         clearSeekerInfo();
         clearCompanyInfo();
         await Swal.fire({
-          icon: "warning",
-          title: feedback.title,
-          text: feedback.text,
+          icon: "error",
+          title: t("auth:login.errorTitle"),
         });
-        navigate(feedback.redirectTo, { replace: true });
         return;
       }
 

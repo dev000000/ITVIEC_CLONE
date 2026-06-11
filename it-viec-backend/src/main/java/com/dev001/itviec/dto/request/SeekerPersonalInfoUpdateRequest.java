@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.enums.Gender;
+import com.dev001.itviec.validator.PhoneNumberPatterns;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -29,6 +31,7 @@ public class SeekerPersonalInfoUpdateRequest {
     String personalLink;
 
     @NotBlank(message = "PHONE_NUMBER_REQUIRED")
+    @Pattern(regexp = PhoneNumberPatterns.VIETNAM_PHONE_NUMBER, message = "PHONE_NUMBER_INVALID")
     String phoneNumber;
 
     @NotNull(message = "DATE_OF_BIRTH_REQUIRED")

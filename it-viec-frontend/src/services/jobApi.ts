@@ -66,29 +66,6 @@ export const getAllAdminJobsApi = async (
   return jobs;
 };
 
-export const getAllSearchJobsApi = async (
-  params?: JobSearchCollectionParams,
-) => {
-  let page = 0;
-  let totalPages = 1;
-  const jobs: JobCardResponse[] = [];
-
-  while (page < totalPages) {
-    const response = await searchJobsApi({
-      ...params,
-      page,
-      size: ADMIN_JOBS_PAGE_SIZE,
-    });
-    const pageResult = response.data.result;
-
-    jobs.push(...(pageResult.data ?? []));
-    totalPages = Math.max(pageResult.totalPages, 1);
-    page += 1;
-  }
-
-  return jobs;
-};
-
 export const getAdminJobDetailApi = (id: number | string) => {
   const url = `${API_PATH}/admin/jobs/${id}`;
   return apiClient.get<APIResponse<JobDetailResponse>>(url);
@@ -171,7 +148,6 @@ export default {
   getAdminJobsApi,
   searchJobsApi,
   getAllAdminJobsApi,
-  getAllSearchJobsApi,
   getAdminJobDetailApi,
   updateAdminJobStatusApi,
   deleteAdminJobApi,

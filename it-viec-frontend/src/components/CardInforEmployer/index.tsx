@@ -1,14 +1,5 @@
 import "./CardInforEmployer.scss";
 import { isObjectEmpty } from "@/helpers/checkObject";
-import MB from "@/assets/images/mb-bank.webp";
-import SCANDINAVIAN from "@/assets/images/scandinavian-software-park.webp";
-import OTSV from "@/assets/images/one-tech-stop-vietnam-company-ltd.webp";
-import MCREDIT from "@/assets/images/mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei.webp";
-import TYMEX from "@/assets/images/tymex.webp";
-import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
-import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
-import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
-import SSI from "@/assets/images/ssi-securities-corporation.webp";
 import { useTranslation } from "react-i18next";
 import {
   getCompanyModelOptions,
@@ -16,41 +7,14 @@ import {
   getWorkingHoursOptions,
   getOvertimePolicyOptions,
 } from "@/constants";
-
-interface Company {
-  slug?: string;
-  companyName?: string;
-  description?: string;
-  companyModel?: string;
-  industry?: string;
-  companySize?: string;
-  country?: string | { countryName?: string };
-  workingHours?: string;
-  overtimePolicy?: string;
-}
+import type { CompanyBriefResponse } from "@/types/response.types";
+import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 
 interface CardInforEmployerProps {
-  company: Company;
-}
-
-const logoMap: Record<string, string> = {
-  "mb-bank": MB,
-  "scandinavian-software-park": SCANDINAVIAN,
-  "one-tech-stop-vietnam-company-ltd": OTSV,
-  "mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei": MCREDIT,
-  "tymex": TYMEX,
-  "andpad-vietnam-co-ltd": ANDPAD,
-  "employment-hero": EMPLOYMENTHERO,
-  "bosch-global-software-technologies-company-limited": BOSCH,
-  "ssi-securities-corporation": SSI,
+  company: CompanyBriefResponse
 };
-function CardInforEmployer({ company }: CardInforEmployerProps) {
-  company = company || {};
+const CardInforEmployer = ({ company }: CardInforEmployerProps) => {
   const { t } = useTranslation("shared");
-  const countryName =
-    typeof company.country === "string"
-      ? company.country
-      : company.country?.countryName;
 
   // Translated enum labels
   const companyModelOptions = getCompanyModelOptions(t);
@@ -62,54 +26,66 @@ function CardInforEmployer({ company }: CardInforEmployerProps) {
   const companySizeLabel = companySizeOptions.find((opt) => opt.value === company.companySize)?.label || company.companySize;
   const workingHoursLabel = workingHoursOptions.find((opt) => opt.value === company.workingHours)?.label || company.workingHours;
   const overtimePolicyLabel = overtimePolicyOptions.find((opt) => opt.value === company.overtimePolicy)?.label || company.overtimePolicy;
+
   if (isObjectEmpty(company)) {
     return <div>{t("employerDetailInfo.noInfo")}</div>
   }
   return (
     <div className="card-infor-employer">
+      {/* Phần đầu */}
       <div className="card-infor-employer__head">
         <div className="card-infor-employer__head-top">
+          {/* Hiển thị logo công ty */}
           <div className="card-infor-employer__logo">
-            <img src={logoMap[company.slug]} alt="logo_company" />
+            <img src={company?.logoUrl || IMAGE_NOT_FOUND} alt="logo_company" />
           </div>
-          <div className="card-infor-employer__name">{company.companyName}</div>
+          {/* Hiển thị tên công ty */}
+          <div className="card-infor-employer__name">{company?.companyName || "--"}</div>
         </div>
+        {/* Hiển thị mô tả công ty */}
         <div className="card-infor-employer__title">
-          {company.description}
+          {company?.description || "--"}
         </div>
       </div>
+      {/* Phần nội dung */}
       <div className="card-infor-employer__body">
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.companyModel")}</div>
-          <div className="card-infor-employer__item-content">{companyModelLabel}</div>
+          {/* Hiển thị mô hình công ty */}
+          <div className="card-infor-employer__item-content">{companyModelLabel || "--"}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">
             {t("employerDetailInfo.companyField")}
           </div>
-          <div className="card-infor-employer__item-content">{company.industry}</div>
+          {/* Hiển thị lĩnh vực công ty */}
+          <div className="card-infor-employer__item-content">{company?.industry || "--"}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.companySize")}</div>
+          {/* Hiển thị quy mô công ty */}
           <div className="card-infor-employer__item-content">
-            {companySizeLabel}
+            {companySizeLabel || "--"}
           </div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.country")}</div>
-          <div className="card-infor-employer__item-content">{countryName}</div>
+          {/* Hiển thị quốc gia công ty */}
+          <div className="card-infor-employer__item-content">{company?.country?.countryName || "--"}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">
             {t("employerDetailInfo.workingHours")}
           </div>
-          <div className="card-infor-employer__item-content">{workingHoursLabel}</div>
+          {/* Hiển thị giờ làm việc */}
+          <div className="card-infor-employer__item-content">{workingHoursLabel || "--"}</div>
         </div>
         <div className="card-infor-employer__item card-infor-employer__item--nodash">
           <div className="card-infor-employer__item-title">
             {t("employerDetailInfo.overtimePolicy")}
           </div>
-          <div className="card-infor-employer__item-content">{overtimePolicyLabel}</div>
+          {/* Hiển thị chính sách làm thêm giờ */}
+          <div className="card-infor-employer__item-content">{overtimePolicyLabel || "--"}</div>
         </div>
       </div>
     </div>

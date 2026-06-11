@@ -2,6 +2,7 @@ package com.dev001.itviec.enums;
 
 public enum UserStatus {
     PENDING_ACTIVATION("Pending Activation"),
+    PENDING_ADMIN_REVIEW("Pending Admin Review"),
     ACTIVE("Active"),
     DISABLED("Disabled");
     private final String displayName;

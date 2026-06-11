@@ -5,10 +5,12 @@ import Header from "@/components/Header";
 import FooterComp from "@/components/Footer";
 import { useEffect, useState } from "react";
 import { getMeApi, logoutApi } from "@/services/authApi";
+import { getMyProfileApi } from "@/services/seekerApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useCompanyStore } from "@/store/companyStore";
 import { useTranslation } from "react-i18next";
+import { ROLE } from "@/types/common.types";
 
 const { Content } = Layout;
 
@@ -19,6 +21,7 @@ const LayoutDefault = () => {
   const { t } = useTranslation("common");
   // Hàm clear đi thông tin của seeker trong store
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
+  const setSeekerFullInfo = useSeekerStore((state) => state.setSeekerFullInfo);
 
   // Hàm clear đi thông tin của company trong store
   const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
@@ -39,8 +42,15 @@ const LayoutDefault = () => {
         const { data: meData } = await getMeApi();
         // console.log("Thông tin user sau khi check token:", meData);
 
-        // Nếu gọi API getMeApi thành công thì sẽ set thông tin user vào store
-        setLogin(meData.result);
+        const user = meData.result;
+        setLogin(user);
+
+        if (user.role === ROLE.SEEKER) {
+          const seekerResponse = await getMyProfileApi();
+          setSeekerFullInfo(seekerResponse.data.result);
+        } else {
+          clearSeekerInfo();
+        }
       } catch {
         // Gọi API logout để clear token ở cookies
         await logoutApi();
@@ -57,7 +67,7 @@ const LayoutDefault = () => {
     }
     checkAuth();
 
-  }, [clearCompanyInfo, clearSeekerInfo, logout, setLogin]);
+  }, [clearCompanyInfo, clearSeekerInfo, logout, setLogin, setSeekerFullInfo]);
 
   // Nếu đang trong quá trình check token thì hiển thị loading, early return...
   if (isCheckingToken) return <div>{t("layout.loading")}</div>;

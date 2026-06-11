@@ -8,7 +8,7 @@ import { useUserStore } from "@/store/userStore";
 import { useTranslation } from "react-i18next";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useCompanyStore } from "@/store/companyStore";
-import { getDefaultRouteByRole, getLoginRouteByRole } from "@/utils/roleRedirect";
+import { getLoginRouteByRole } from "@/utils/roleRedirect";
 
 interface LayoutCheckTokenProps {
   checkRole: Role;
@@ -39,15 +39,10 @@ const LayoutCheckToken = ({ checkRole }: LayoutCheckTokenProps) => {
           status: user.status,
         });
 
-        if (user.role === checkRole) {
-          if (checkRole === ROLE.SEEKER) {
-            const seekerResponse = await getMyProfileApi();
-            setSeekerFullInfo(seekerResponse.data.result);
-          }
-          return;
+        if (user.role === ROLE.SEEKER && checkRole === ROLE.SEEKER) {
+          const seekerResponse = await getMyProfileApi();
+          setSeekerFullInfo(seekerResponse.data.result);
         }
-
-        navigate(getDefaultRouteByRole(user.role), { replace: true });
       } catch (error) {
         console.error("Failed to validate current user session", error);
         logout();

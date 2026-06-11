@@ -7,4 +7,6 @@ import com.dev001.itviec.entity.city.City;
 public interface CityRepository extends JpaRepository<City, Long> {
 
     boolean existsByCityName(String cityName);
+
+    boolean existsBySlug(String slug);
 }

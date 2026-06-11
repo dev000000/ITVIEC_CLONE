@@ -18,6 +18,9 @@ public class City {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(name = "city_name", nullable = false, columnDefinition = "VARCHAR(100)")
+    @Column(name = "city_name", nullable = false, unique = true, columnDefinition = "VARCHAR(100)")
     String cityName;
+
+    @Column(name = "slug", nullable = false, unique = true, length = 120)
+    String slug;
 }

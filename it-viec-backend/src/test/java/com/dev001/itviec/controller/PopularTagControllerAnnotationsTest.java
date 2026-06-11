@@ -13,8 +13,7 @@ class PopularTagControllerAnnotationsTest {
 
     @Test
     void adminPopularTagEndpointsShouldRequireAdminRole() throws NoSuchMethodException {
-        Method createMethod =
-                PopularTagController.class.getMethod("createPopularTag", PopularTagCreateRequest.class);
+        Method createMethod = PopularTagController.class.getMethod("createPopularTag", PopularTagCreateRequest.class);
         Method deleteMethod = PopularTagController.class.getMethod("deletePopularTag", Long.class);
 
         for (Method method : new Method[] {createMethod, deleteMethod}) {

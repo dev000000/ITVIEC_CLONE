@@ -213,6 +213,12 @@
     "1092": "Invalid popular tag source ID",
     "1093": "Popular tag category is required",
     "1094": "Popular tag source ID is required",
+    "1103": "Activation token is invalid or already used",
+    "1104": "Activation token has expired",
+    "1105": "Account is not activated. Please check your email.",
+    "1106": "Account is already activated",
+    "1107": "Please wait before requesting a new activation email",
+    "1108": "Account has been disabled",
     "9999": "An unexpected system error occurred, please try again later",
     "default": "Something went wrong, please try again"
   },
@@ -303,6 +309,7 @@
   },
   "userStatus": {
     "pendingActivation": "Pending Activation",
+    "pendingAdminReview": "Pending Admin Review",
     "active": "Active",
     "disabled": "Disabled"
   },

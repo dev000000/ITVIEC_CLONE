@@ -41,6 +41,7 @@ export interface PageResponse<T> {
 export interface CityResponse {
   id: number;
   cityName: string;
+  slug: string;
 }
 
 export interface CountryResponse {
@@ -238,9 +239,56 @@ export interface ApplicationCreateResponse {
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
+  resumePreviewUrl?: string;
   coverLetter: string;
   status: ApplicationStatus;
   createdAt: string;
   updatedAt: string;
   desiredLocations: CityResponse[];
+}
+
+export interface ApplicationCheckResponse {
+  applied: boolean;
+  createdAt?: string | null;
+}
+
+// --- Saved Job Types ---
+
+export interface SavedJobItemResponse {
+  id: number;
+  title: string;
+  slug: string;
+  city: CityResponse;
+  salary: string;
+  jobType: JobType;
+  status: JobStatus;
+  postedAt: string;
+  expiresAt: string;
+  skills: SkillResponse[];
+  company: CompanyBaseResponse;
+}
+
+export interface SavedJobResponse {
+  id: string;
+  savedAt: string;
+  job: SavedJobItemResponse;
+}
+
+export interface EmployerRegistrationResponse {
+  userId: string;
+  email: string;
+  fullName: string;
+  jobTitle: string;
+  phoneNumber: string;
+  referralSource?: string;
+  companyName: string;
+  companyAddress: string;
+  website?: string;
+  status: UserStatus;
+  createdAt: string;
+}
+
+export interface CompanyProfileStatusResponse {
+  complete: boolean;
+  missingFields: string[];
 }

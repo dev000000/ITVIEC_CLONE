@@ -1,12 +1,12 @@
-// Trang đăng ký tài khoản Employer
-// TODO: chưa implement — đây là placeholder stub, chưa có form đăng ký thực sự
-function EmployerRegister() {
-  // console.log("EmployerRegister");
+import ContactEmployerForm from "@/components/ContactEmployerForm";
+import "./EmployerRegister.scss";
 
+function EmployerRegister() {
   return (
-    <>
-      <div className="test"> EmployerRegister</div>
-    </>
-  )
+    <div className="employer-register">
+      <ContactEmployerForm />
+    </div>
+  );
 }
+
 export default EmployerRegister;

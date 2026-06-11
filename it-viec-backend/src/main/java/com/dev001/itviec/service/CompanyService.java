@@ -10,6 +10,7 @@ import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.dto.response.CompanyLogoContent;
 import com.dev001.itviec.dto.response.CompanyOptionResponse;
+import com.dev001.itviec.dto.response.CompanyProfileStatusResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
@@ -36,4 +37,6 @@ public interface CompanyService {
     CompanyLogoContent getCompanyLogo(String companyId);
 
     String generateCompanySlug(String companyName);
+
+    CompanyProfileStatusResponse getCompanyProfileStatus();
 }

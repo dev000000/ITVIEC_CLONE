@@ -34,4 +34,7 @@ public class Employer extends BaseEntity {
 
     @Column(name = "phone_number", columnDefinition = "VARCHAR(10)")
     String phoneNumber;
+
+    @Column(name = "referral_source", columnDefinition = "VARCHAR(100)")
+    String referralSource;
 }

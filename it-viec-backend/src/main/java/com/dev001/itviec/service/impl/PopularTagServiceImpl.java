@@ -47,10 +47,11 @@ public class PopularTagServiceImpl implements PopularTagService {
             throw new AppException(ErrorCode.POPULAR_TAG_CATEGORY_INVALID);
         }
 
-        PopularTag popularTag = switch (category) {
-            case SKILL_AND_EXPERTISE -> buildSkillPopularTag(request.getSourceId(), category);
-            case COMPANY -> buildCompanyPopularTag(request.getSourceId(), category);
-        };
+        PopularTag popularTag =
+                switch (category) {
+                    case SKILL_AND_EXPERTISE -> buildSkillPopularTag(request.getSourceId(), category);
+                    case COMPANY -> buildCompanyPopularTag(request.getSourceId(), category);
+                };
 
         return toPopularTagResponse(popularTagRepository.save(popularTag));
     }
@@ -58,9 +59,8 @@ public class PopularTagServiceImpl implements PopularTagService {
     @Override
     @Transactional
     public void deletePopularTag(Long id) {
-        PopularTag popularTag = popularTagRepository
-                .findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.POPULAR_TAG_NOT_FOUND));
+        PopularTag popularTag =
+                popularTagRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.POPULAR_TAG_NOT_FOUND));
         popularTagRepository.delete(popularTag);
     }
 

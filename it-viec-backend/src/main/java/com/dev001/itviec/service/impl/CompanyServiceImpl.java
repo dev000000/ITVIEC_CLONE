@@ -26,6 +26,7 @@ import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyDetailResponse;
 import com.dev001.itviec.dto.response.CompanyLogoContent;
 import com.dev001.itviec.dto.response.CompanyOptionResponse;
+import com.dev001.itviec.dto.response.CompanyProfileStatusResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.company.CompanyLogo;
@@ -246,6 +247,35 @@ public class CompanyServiceImpl implements CompanyService {
         slug = slug.replaceAll("^-+|-+$", "");
 
         return slug;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CompanyProfileStatusResponse getCompanyProfileStatus() {
+        Company company = getCurrentEmployerCompany();
+
+        List<String> missing = new ArrayList<>();
+        if (company.getCompanyModel() == null) {
+            missing.add("companyModel");
+        }
+        if (company.getIndustry() == null || company.getIndustry().isBlank()) {
+            missing.add("industry");
+        }
+        if (company.getCompanySize() == null) {
+            missing.add("companySize");
+        }
+        if (company.getCountry() == null) {
+            missing.add("country");
+        }
+        if (company.getCompanyIntroduction() == null
+                || company.getCompanyIntroduction().isBlank()) {
+            missing.add("companyIntroduction");
+        }
+
+        return CompanyProfileStatusResponse.builder()
+                .complete(missing.isEmpty())
+                .missingFields(missing)
+                .build();
     }
 
     Specification<Company> buildAdminCompanySpecification(

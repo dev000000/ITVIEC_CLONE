@@ -2,7 +2,8 @@ import "./EmployerDetailBlog.scss";
 import image from "@/assets/images/everything-empty.svg";
 import { useTranslation } from "react-i18next";
 
-function EmployerDetailBlog() {
+// 1.5.2 Tab bài viết của nhà tuyển dụng
+const EmployerDetailBlog = () => {
   const { t } = useTranslation("shared");
   return (
     <div className='employer-detail-blog'>

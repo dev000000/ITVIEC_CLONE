@@ -99,6 +99,7 @@
       "fullNameRequired": "Vui lòng nhập họ và tên!",
       "jobTitleRequired": "Vui lòng nhập chức danh!",
       "phoneRequired": "Vui lòng nhập số điện thoại!",
+      "phoneFormat": "Số điện thoại không hợp lệ!",
       "dobRequired": "Vui lòng chọn ngày sinh!"
     },
     "success": {
@@ -142,9 +143,32 @@
     "findJob": "Tìm việc ngay"
   },
   "savedJobs": {
-    "notification": "Bạn có thể lưu tối đa 20 công việc.",
+    "notification": "Bạn có thể lưu tối đa {{max}} công việc. Hiện đã lưu {{count}} việc làm.",
     "emptyMessage": "Bạn chưa lưu công việc nào.",
-    "findJob": "Tìm việc ngay"
+    "findJob": "Tìm việc ngay",
+    "sortBy": "Sắp xếp theo: ",
+    "sortExpireAsc": "Sắp hết hạn gần nhất",
+    "sortExpireDesc": "Sắp hết hạn xa nhất",
+    "apply": "Ứng tuyển",
+    "alreadyApplied": "Đã ứng tuyển",
+    "expired": "Đã hết hạn",
+    "closed": "Đã đóng",
+    "expiresIn": "Hết hạn trong {{days}} ngày",
+    "tooltip": {
+      "save": "Lưu việc này",
+      "saved": "Đã lưu"
+    },
+    "toast": {
+      "savedTitle": "Việc làm này đã được thêm vào mục Việc làm đã lưu.",
+      "viewList": "Xem danh sách",
+      "limitTitle": "Đã đạt giới hạn lưu việc làm",
+      "limitDesc": "Bạn chỉ có thể lưu tối đa {{max}} việc làm. Vui lòng bỏ lưu một số việc làm trước.",
+      "saveFailTitle": "Lưu việc làm thất bại",
+      "retry": "Thử lại",
+      "unsavedTitle": "Bạn đã bỏ lưu việc làm.",
+      "unsaved": "Bạn đã bỏ lưu việc làm.",
+      "undo": "Hoàn tác"
+    }
   },
   "recentlyViewed": {
     "notification": "Chỉ hiển thị công việc đã xem trong 3 tháng gần nhất",
@@ -160,6 +184,17 @@
   "jobApplications": {
     "back": "Quay lại",
     "invalidJob": "Công việc không hợp lệ",
+    "cvTitle": "CV ứng tuyển",
+    "useCurrentCv": "Sử dụng CV hiện tại",
+    "uploadNewCv": "Tải lên CV mới",
+    "chooseFile": "Chọn file",
+    "noFileSelected": "Chưa có file nào được chọn",
+    "noCurrentCv": "Bạn chưa có CV hiện tại. Vui lòng tải CV mới để ứng tuyển.",
+    "currentCvUpdatedAt": "Ngày tải lên: {{date}}",
+    "supportedFormats": "Hỗ trợ định dạng .doc, .docx hoặc .pdf, dưới 5MB và không chứa mật khẩu bảo vệ",
+    "previewCurrentCv": "Xem CV hiện tại",
+    "cvRequired": "Vui lòng chọn CV để hoàn tất ứng tuyển!",
+    "loadingCv": "Đang tải CV...",
     "basicInfo": "Thông tin cơ bản",
     "fullName": "Họ và Tên",
     "phoneNumber": "Số điện thoại",
@@ -183,7 +218,13 @@
     "successTitle": "Đơn ứng tuyển đã được gửi thành công!",
     "successText": "Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.",
     "submitFailed": "Không thể gửi đơn ứng tuyển, vui lòng thử lại sau!",
-    "submitError": "Có lỗi xảy ra khi gửi đơn ứng tuyển!"
+    "submitError": "Có lỗi xảy ra khi gửi đơn ứng tuyển!",
+    "validation": {
+      "fullNameRequired": "Vui lòng nhập họ và tên!",
+      "phoneRequired": "Vui lòng nhập số điện thoại!",
+      "phoneFormat": "Số điện thoại không hợp lệ!",
+      "locationsRequired": "Vui lòng chọn đúng 3 địa điểm làm việc mong muốn!"
+    }
   },
   "settings": {
     "title": "Cài đặt"

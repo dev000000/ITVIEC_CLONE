@@ -1,6 +1,24 @@
 {
+  "register": {
+    "successTitle": "Đăng ký thành công!",
+    "successMessage": "Cảm ơn bạn đã đăng ký. Chúng tôi đã gửi email xác nhận. Vui lòng chờ quản trị viên xác thực thông tin công ty. Sau khi được duyệt, bạn sẽ nhận email hướng dẫn thiết lập mật khẩu.",
+    "backToHome": "Về trang chủ"
+  },
+  "activate": {
+    "title": "Thiết lập mật khẩu",
+    "passwordPlaceholder": "Mật khẩu",
+    "confirmPasswordPlaceholder": "Xác nhận mật khẩu",
+    "passwordMismatch": "Mật khẩu xác nhận không khớp",
+    "submitBtn": "Kích hoạt tài khoản",
+    "successTitle": "Kích hoạt thành công!",
+    "successMessage": "Tài khoản nhà tuyển dụng của bạn đã được kích hoạt. Vui lòng đăng nhập và cập nhật hồ sơ công ty trước khi đăng tin tuyển dụng.",
+    "loginBtn": "Đăng nhập ngay",
+    "missingToken": "Liên kết kích hoạt không hợp lệ. Vui lòng kiểm tra lại email."
+  },
   "dashboard": {
     "title": "Bảng điều khiển",
+    "profileIncomplete": "Vui lòng cập nhật thông tin công ty trước khi đăng tin tuyển dụng.",
+    "completeProfile": "Cập nhật hồ sơ công ty",
     "welcome": "Xin chào, {{name}}!",
     "totalJobs": "Tổng việc làm",
     "totalApplications": "Tổng ứng viên",

@@ -45,6 +45,10 @@ export interface RegisterUserSeekerRequest {
   fullName: string;
 }
 
+export interface ResendActivationRequest {
+  email: string;
+}
+
 export interface UserUpdateRequest {
   status: UserStatus;
 }
@@ -194,6 +198,27 @@ export interface CityCreateRequest {
   cityName: string;
 }
 
+export interface GetSavedJobsParams extends PaginationParams {
+  sort?: "expiresAt,asc" | "expiresAt,desc";
+}
+
 export interface SkillCreateRequest {
   skillName: string;
+}
+
+export interface RegisterEmployerRequest {
+  fullName: string;
+  jobTitle: string;
+  email: string;
+  phoneNumber: string;
+  referralSource?: string;
+  companyName: string;
+  companyAddress: string;
+  website?: string;
+}
+
+export interface EmployerActivateRequest {
+  token: string;
+  password: string;
+  confirmPassword: string;
 }

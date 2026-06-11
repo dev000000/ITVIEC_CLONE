@@ -2,7 +2,8 @@ import "./EmployerDetailRate.scss";
 import image from "@/assets/images/everything-empty.svg";
 import { useTranslation } from "react-i18next";
 
-function EmployerDetailRate() {
+// 1.5.3 Tab đánh giá của nhà tuyển dụng
+const EmployerDetailRate = () => {
   const { t } = useTranslation("shared");
   return (
     <div className="employer-detail-rate">

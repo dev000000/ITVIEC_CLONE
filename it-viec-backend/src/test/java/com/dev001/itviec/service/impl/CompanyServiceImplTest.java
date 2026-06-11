@@ -29,9 +29,9 @@ import com.dev001.itviec.dto.response.CompanyCardResponse;
 import com.dev001.itviec.dto.response.CompanyOptionResponse;
 import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
-import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
+import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.mapper.CompanyMapper;
 import com.dev001.itviec.repository.CompanyLogoRepository;
 import com.dev001.itviec.repository.CompanyRepository;
@@ -107,11 +107,14 @@ class CompanyServiceImplTest {
                 .build();
 
         when(companyRepository.findAll(any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(firstCompany, secondCompany), Pageable.ofSize(9).withPage(0), 2));
+                .thenReturn(new PageImpl<>(
+                        List.of(firstCompany, secondCompany), Pageable.ofSize(9).withPage(0), 2));
         when(companyMapper.toCompanyCardResponse(firstCompany)).thenReturn(firstResponse);
         when(companyMapper.toCompanyCardResponse(secondCompany)).thenReturn(secondResponse);
-        when(jobRepository.countByCompanyAndStatus(firstCompany, JobStatus.ACTIVE)).thenReturn(3L);
-        when(jobRepository.countByCompanyAndStatus(secondCompany, JobStatus.ACTIVE)).thenReturn(1L);
+        when(jobRepository.countByCompanyAndStatus(firstCompany, JobStatus.ACTIVE))
+                .thenReturn(3L);
+        when(jobRepository.countByCompanyAndStatus(secondCompany, JobStatus.ACTIVE))
+                .thenReturn(1L);
 
         PageResponse<CompanyCardResponse> result = companyService.getAllCompaniesWithJobCountActive(0, 9);
 
@@ -135,17 +138,26 @@ class CompanyServiceImplTest {
 
     @Test
     void getAdminCompanyOptionsShouldReturnSortedOptions() {
-        Company firstCompany =
-                Company.builder().id("company-1").companyName("Alpha").slug("alpha").build();
-        Company secondCompany =
-                Company.builder().id("company-2").companyName("Beta").slug("beta").build();
+        Company firstCompany = Company.builder()
+                .id("company-1")
+                .companyName("Alpha")
+                .slug("alpha")
+                .build();
+        Company secondCompany = Company.builder()
+                .id("company-2")
+                .companyName("Beta")
+                .slug("beta")
+                .build();
 
         when(companyRepository.findAll(any(Sort.class))).thenReturn(List.of(firstCompany, secondCompany));
 
         List<CompanyOptionResponse> result = companyService.getAdminCompanyOptions();
 
         assertThat(result)
-                .extracting(CompanyOptionResponse::getId, CompanyOptionResponse::getCompanyName, CompanyOptionResponse::getSlug)
+                .extracting(
+                        CompanyOptionResponse::getId,
+                        CompanyOptionResponse::getCompanyName,
+                        CompanyOptionResponse::getSlug)
                 .containsExactly(
                         org.assertj.core.groups.Tuple.tuple("company-1", "Alpha", "alpha"),
                         org.assertj.core.groups.Tuple.tuple("company-2", "Beta", "beta"));

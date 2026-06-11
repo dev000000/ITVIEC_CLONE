@@ -1,20 +1,14 @@
+import type { JobDetailResponse } from "@/types/response.types";
 import "./CardJobContent.scss";
 import DOMPurify from "dompurify";
 import { useTranslation } from "react-i18next";
 
-interface Job {
-  jobReason?: string;
-  jobRequirements?: string;
-  whyJoinUs?: string;
-  jobDescription?: string;
-}
 
 interface CardJobContentProps {
-  job: Job;
+  job: JobDetailResponse;
 }
 
-function CardJobContent({ job }: CardJobContentProps) {
-  job = job || {};
+const CardJobContent = ({ job }: CardJobContentProps) => {
   const { t } = useTranslation("shared");
   return (
     <div className="card-job-content">
@@ -27,17 +21,17 @@ function CardJobContent({ job }: CardJobContentProps) {
         <h2>{t("jobSearchDetail.jobDescription")}</h2>
         <div
           className="preview-content"
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.jobRequirements) }} // Làm sạch HTML trước khi hiển thị
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.jobDescription) }} // Làm sạch HTML trước khi hiển thị
         />
         <h2>{t("jobSearchDetail.jobRequirements")}</h2>
         <div
           className="preview-content"
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.whyJoinUs) }} // Làm sạch HTML trước khi hiển thị
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.jobRequirements) }} // Làm sạch HTML trước khi hiển thị
         />
         <h2>{t("jobSearchDetail.whyJoinUs")}</h2>
         <div
           className="preview-content"
-          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.jobDescription) }} // Làm sạch HTML trước khi hiển thị
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(job.whyJoinUs) }} // Làm sạch HTML trước khi hiển thị
         />
       </div>
     </div>

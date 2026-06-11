@@ -8,8 +8,8 @@ import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -291,7 +291,8 @@ public class JobServiceImpl implements JobService {
                     keywordPredicates.add(cb.like(cb.lower(root.get("title")), tokenPattern));
                     keywordPredicates.add(cb.like(cb.lower(root.get("company").get("companyName")), tokenPattern));
                     keywordPredicates.add(cb.like(cb.lower(skillJoin.get("skillName")), tokenPattern));
-                    keywordPredicates.add(cb.like(cb.lower(root.get("slug")), "%" + normalizeToSlug(keywordToken) + "%"));
+                    keywordPredicates.add(
+                            cb.like(cb.lower(root.get("slug")), "%" + normalizeToSlug(keywordToken) + "%"));
                 }
 
                 predicates.add(cb.or(keywordPredicates.toArray(new Predicate[0])));

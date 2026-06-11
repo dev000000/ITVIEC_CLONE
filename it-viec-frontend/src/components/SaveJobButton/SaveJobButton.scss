@@ -1,0 +1,49 @@
+.save-job-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+
+  svg {
+    font-size: 34px;
+    transition: fill 0.2s, stroke 0.2s;
+    fill: none;
+    stroke: red;
+    stroke-width: 40;
+  }
+
+  &--saved svg {
+    fill: red;
+    stroke: red;
+  }
+
+  &__toast {
+    text-align: left;
+    padding: 0 4px;
+
+    &-message {
+      margin: 0 0 4px;
+      font-size: 14px;
+      color: #121212;
+    }
+
+    &-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #1677ff;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+
+      &:hover {
+        color: #4096ff;
+      }
+    }
+  }
+}

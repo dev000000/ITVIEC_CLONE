@@ -30,6 +30,7 @@ import com.dev001.itviec.mapper.UserMapper;
 import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.repository.TokenRepository;
 import com.dev001.itviec.repository.UserRepository;
+import com.dev001.itviec.service.ActivationService;
 import com.dev001.itviec.service.AuthenticationService;
 
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserMapper userMapper;
     private final CookieFactory cookieFactory;
     private final SeekerRepository seekerRepository;
+    private final ActivationService activationService;
 
     // Method xác thực khi đăng nhập bằng form login
     @Override
@@ -59,19 +61,30 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         // 2. Check user có tồn tại trong DB không
         User user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new AppException(USER_NOT_FOUND));
 
-        // 3. revoke toàn bộ token của user trong DB ( nếu có ) trước khi cấp token mới, tránh trường hợp user đăng nhập
+        // 3. Kiểm tra trạng thái tài khoản trước khi cấp token
+        if (user.getStatus() == UserStatus.PENDING_ACTIVATION) {
+            throw new AppException(ACCOUNT_NOT_ACTIVATED);
+        }
+        if (user.getStatus() == UserStatus.PENDING_ADMIN_REVIEW) {
+            throw new AppException(ACCOUNT_PENDING_ADMIN_REVIEW);
+        }
+        if (user.getStatus() == UserStatus.DISABLED) {
+            throw new AppException(ACCOUNT_DISABLED);
+        }
+
+        // 4. revoke toàn bộ token của user trong DB ( nếu có ) trước khi cấp token mới, tránh trường hợp user đăng nhập
         // ở nhiều nơi cùng lúc
         revokeAllUserTokens(user, true);
 
-        // 4. tạo accesstoken và refresh token cho user
+        // 5. tạo accesstoken và refresh token cho user
         String accessToken = jwtService.generateToken(user, false);
         String refreshToken = jwtService.generateToken(user, true);
 
-        // 5. save token to database
+        // 6. save token to database
         saveUserToken(user, accessToken, true);
         saveUserToken(user, refreshToken, false);
 
-        // 6. set cookie for response
+        // 7. set cookie for response
         response.addHeader(
                 HttpHeaders.SET_COOKIE, cookieFactory.accessCookie(accessToken).toString());
         response.addHeader(
@@ -156,7 +169,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .email(request.getEmail())
                 .password(hashedPassword)
                 .role(Role.SEEKER)
-                .status(UserStatus.ACTIVE)
+                .status(UserStatus.PENDING_ACTIVATION)
                 .build();
         User savedUser = userRepository.save(user);
 
@@ -168,6 +181,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 Seeker.builder().user(savedUser).fullName(normalizedFullName).build();
         // 8. Save Seeker vào DB
         seekerRepository.save(seeker);
+
+        // 9. Tạo activation token và gửi email xác thực
+        activationService.createAndSendActivation(savedUser);
     }
 
     @Override

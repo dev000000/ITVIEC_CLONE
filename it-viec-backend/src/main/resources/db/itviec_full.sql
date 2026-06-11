@@ -10,7 +10,8 @@ CREATE TABLE skills (
 -- Bảng thành phố
 CREATE TABLE cities (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  city_name VARCHAR(100) NOT NULL
+  city_name VARCHAR(100) NOT NULL UNIQUE,
+  slug VARCHAR(120) NOT NULL UNIQUE
 );
 -- Bảng đất nước
 CREATE TABLE countries (
@@ -23,7 +24,7 @@ CREATE TABLE users (
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   role ENUM('ADMIN', 'EMPLOYER', 'SEEKER') NOT NULL,
-  status ENUM('PENDING_ACTIVATION', 'ACTIVE', 'DISABLED') DEFAULT 'PENDING_ACTIVATION',
+  status ENUM('PENDING_ACTIVATION', 'ACTIVE', 'DISABLED', 'PENDING_ADMIN_REVIEW') DEFAULT 'PENDING_ACTIVATION',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -37,6 +38,19 @@ CREATE TABLE tokens (
   is_access_token BOOLEAN DEFAULT FALSE,
   user_id VARCHAR(255) NOT NULL,
   CONSTRAINT fk_tokens_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+-- Bảng token kích hoạt tài khoản
+CREATE TABLE activation_tokens (
+  id VARCHAR(255) PRIMARY KEY,
+  token VARCHAR(255) NOT NULL UNIQUE,
+  token_type ENUM('EMAIL_VERIFY', 'SET_PASSWORD') NOT NULL DEFAULT 'EMAIL_VERIFY',
+  expires_at DATETIME NOT NULL,
+  is_used BOOLEAN DEFAULT FALSE,
+  created_at DATETIME,
+  user_id VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_activation_tokens_user FOREIGN KEY (user_id) REFERENCES users(id),
+  INDEX idx_activation_token (token),
+  INDEX idx_activation_user_id (user_id)
 );
 -- Bảng ứng viên
 CREATE TABLE seekers (
@@ -65,6 +79,7 @@ CREATE TABLE employers (
   full_name VARCHAR(255) NOT NULL,
   job_title VARCHAR(255),
   phone_number VARCHAR(10),
+  referral_source VARCHAR(100),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_employers_user FOREIGN KEY (user_id) REFERENCES users(id)
@@ -246,17 +261,33 @@ CREATE TABLE job_skills (
   CONSTRAINT fk_job_skills_job FOREIGN KEY (job_id) REFERENCES jobs(id),
   CONSTRAINT fk_job_skills_skill FOREIGN KEY (skill_id) REFERENCES skills(id)
 );
+-- Bảng việc làm đã lưu (bookmark) của seeker
+CREATE TABLE saved_jobs (
+  id VARCHAR(255) PRIMARY KEY,
+  seeker_id VARCHAR(255) NOT NULL,
+  job_id BIGINT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT uk_saved_jobs_seeker_job UNIQUE (seeker_id, job_id),
+  CONSTRAINT fk_saved_jobs_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT fk_saved_jobs_job FOREIGN KEY (job_id) REFERENCES jobs(id)
+);
+CREATE INDEX idx_saved_jobs_seeker ON saved_jobs(seeker_id);
+CREATE INDEX idx_saved_jobs_seeker_created_at ON saved_jobs(seeker_id, created_at);
 -- Bảng tag gợi ý phổ biến cho search
 CREATE TABLE popular_tags (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
   category VARCHAR(50) NOT NULL,
-  skill_id BIGINT UNIQUE,
-  company_id VARCHAR(255) UNIQUE,
+  skill_id BIGINT,
+  company_id VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT uk_popular_tags_skill UNIQUE (skill_id),
+  CONSTRAINT uk_popular_tags_company UNIQUE (company_id),
   CONSTRAINT fk_popular_tags_skill FOREIGN KEY (skill_id) REFERENCES skills(id),
   CONSTRAINT fk_popular_tags_company FOREIGN KEY (company_id) REFERENCES companies(id)
 );
+
 -- Chọn schema để làm việc
 USE itviec_db;
 INSERT INTO skills (skill_name)
@@ -372,42 +403,42 @@ VALUES ('ABAP'),
   ('Unity'),
   ('VueJS'),
   ('Wordpress');
-INSERT INTO cities (city_name)
-VALUES ('Tuyên Quang'),
-  ('Lào Cai'),
-  ('Thái Nguyên'),
-  ('Phú Thọ'),
-  ('Bắc Ninh'),
-  ('Hưng Yên'),
-  ('Hải Phòng'),
-  ('Ninh Bình'),
-  ('Quảng Trị'),
-  ('Đà Nẵng'),
-  ('Quảng Ngãi'),
-  ('Gia Lai'),
-  ('Khánh Hòa'),
-  ('Lâm Đồng'),
-  ('Đắk Lắk'),
-  ('Hồ Chí Minh'),
-  ('Đồng Nai'),
-  ('Tây Ninh'),
-  ('Cần Thơ'),
-  ('Vĩnh Long'),
-  ('Đồng Tháp'),
-  ('Cà Mau'),
-  ('An Giang'),
-  ('Hà Nội'),
-  ('Huế'),
-  ('Lai Châu'),
-  ('Điện Biên'),
-  ('Sơn La'),
-  ('Lạng Sơn'),
-  ('Quảng Ninh'),
-  ('Thanh Hóa'),
-  ('Nghệ An'),
-  ('Hà Tĩnh'),
-  ('Cao Bằng'),
-  ('Others');
+INSERT INTO cities (city_name, slug)
+VALUES ('Tuyên Quang', 'tuyen-quang'),
+  ('Lào Cai', 'lao-cai'),
+  ('Thái Nguyên', 'thai-nguyen'),
+  ('Phú Thọ', 'phu-tho'),
+  ('Bắc Ninh', 'bac-ninh'),
+  ('Hưng Yên', 'hung-yen'),
+  ('Hải Phòng', 'hai-phong'),
+  ('Ninh Bình', 'ninh-binh'),
+  ('Quảng Trị', 'quang-tri'),
+  ('Đà Nẵng', 'da-nang'),
+  ('Quảng Ngãi', 'quang-ngai'),
+  ('Gia Lai', 'gia-lai'),
+  ('Khánh Hòa', 'khanh-hoa'),
+  ('Lâm Đồng', 'lam-dong'),
+  ('Đắk Lắk', 'dak-lak'),
+  ('Hồ Chí Minh', 'ho-chi-minh'),
+  ('Đồng Nai', 'dong-nai'),
+  ('Tây Ninh', 'tay-ninh'),
+  ('Cần Thơ', 'can-tho'),
+  ('Vĩnh Long', 'vinh-long'),
+  ('Đồng Tháp', 'dong-thap'),
+  ('Cà Mau', 'ca-mau'),
+  ('An Giang', 'an-giang'),
+  ('Hà Nội', 'ha-noi'),
+  ('Huế', 'hue'),
+  ('Lai Châu', 'lai-chau'),
+  ('Điện Biên', 'dien-bien'),
+  ('Sơn La', 'son-la'),
+  ('Lạng Sơn', 'lang-son'),
+  ('Quảng Ninh', 'quang-ninh'),
+  ('Thanh Hóa', 'thanh-hoa'),
+  ('Nghệ An', 'nghe-an'),
+  ('Hà Tĩnh', 'ha-tinh'),
+  ('Cao Bằng', 'cao-bang'),
+  ('Khác', 'khac');
 INSERT INTO countries (country_name)
 VALUES ('Vietnam'),
   ('Japan'),

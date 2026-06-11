@@ -1,95 +1,116 @@
 import "./CardJobHead.scss";
 import { AiOutlineDollarCircle } from "react-icons/ai";
-import { FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { useTranslation } from "react-i18next";
-import { useCompanyStore } from "@/store/companyStore";
-import { useUserStore } from "@/store/userStore";
-
-interface Job {
-  id?: number;
-  title?: string;
-  salary?: string;
-  company?: {
-    companyName?: string;
-  };
-}
+import type { ApplicationCheckResponse, JobDetailResponse } from "@/types/response.types";
+import { useEffect, useState } from "react";
+import { checkMyApplicationExistsApi } from "@/services/applicationApi";
+import SaveJobButton from "@/components/SaveJobButton";
+import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
+import { getLoginRouteByRole } from "@/utils/roleRedirect";
+import { ROLE } from "@/types/common.types";
 
 interface CardJobHeadProps {
-  job: Job;
+  job: JobDetailResponse;
 }
 
-function CardJobHead({ job }: CardJobHeadProps) {
-  const companyName = useCompanyStore((state) => state.companyName);
-  const authenticated = useUserStore((state) => state.authenticated);
-  const role = useUserStore((state) => state.role);
-  const { t } = useTranslation("shared");
-  const type = {
-    applied: false,
-    appliedAt: "",
-  };
+const SEEKER_LOGIN_PATH = getLoginRouteByRole(ROLE.SEEKER);
 
-  // TODO(service-new-migration): Chua co service_new thay the cho legacy API `checkApplication`.
-  // Legacy call: GET `applications?seekerId=...&jobId=...`.
-  // Muc dich: kiem tra seeker da ung tuyen job nay chua de doi nut Apply thanh Applied.
-  // Tam thoi fallback la chua applied de khong phu thuoc `src/services`.
+// Phần đầu của card hiển thị chi tiết công việc, bao gồm tên công việc, tên công ty, mức lương và nút ứng tuyển
+const CardJobHead = ({ job }: CardJobHeadProps) => {
+  const { t } = useTranslation("shared");
+  const isSeekerLoggedIn = useIsSeekerLoggedIn();
+
+  const [applicationCheck, setApplicationCheck] = useState<ApplicationCheckResponse>({
+    applied: false,
+    createdAt: null,
+  });
+  const [isLoading, setIsLoading] = useState(isSeekerLoggedIn);
+
+  useEffect(() => {
+    if (!isSeekerLoggedIn) {
+      setApplicationCheck({ applied: false, createdAt: null });
+      setIsLoading(false);
+      return;
+    }
+
+    let isCancelled = false;
+    setIsLoading(true);
+
+    const checkApplicationStatus = async () => {
+      try {
+        const response = await checkMyApplicationExistsApi(job.id);
+        if (!isCancelled) {
+          setApplicationCheck({
+            applied: response.data.result.applied,
+            createdAt: response.data.result.createdAt,
+          });
+        }
+      } catch (error) {
+        console.error("Error checking application status:", error);
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    checkApplicationStatus();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [job.id, isSeekerLoggedIn]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <>
-      <div className="card-job-head">
-        <h1 className="card-job-head__job-name">{job.title}</h1>
-        <div className="card-job-head__employer-name">
-          {job.company?.companyName || companyName}
+    <div className="card-job-head">
+      <h1 className="card-job-head__job-name">{job.title || "--"}</h1>
+      <div className="card-job-head__employer-name">
+        {job.company?.companyName || "--"}
+      </div>
+      {isSeekerLoggedIn ? (
+        <div className="card-job-head__salary">
+          <AiOutlineDollarCircle />
+          <span> {job.salary || "--"} </span>
         </div>
-        {authenticated ? (
+      ) : (
+        <div className="card-job-head__salary card-job-head__salary-notLogin">
+          <AiOutlineDollarCircle />
+          <Link to={SEEKER_LOGIN_PATH}>{t("jobSearchDetail.loginToSeeSalary")}</Link>
+        </div>
+      )}
+      <div className="card-job-head__wrap-button">
+        {isSeekerLoggedIn && applicationCheck.applied ? (
+          <div className="card-job-head__applied">
+            <IoMdCheckmarkCircleOutline />
+            <span>{t("jobSearchDetail.applied")}</span>
+            <span>{applicationCheck.createdAt}</span>
+          </div>
+        ) : (
           <>
-            <div className="card-job-head__salary">
-              <AiOutlineDollarCircle />
-              <span> {job.salary} </span>
+            <Link
+              to={
+                isSeekerLoggedIn
+                  ? "job_applications/new"
+                  : SEEKER_LOGIN_PATH
+              }
+              className="card-job-head__button"
+            >
+              {t("jobSearchDetail.applyNow")}
+            </Link>
+            <div className="card-job-head__heart">
+              <SaveJobButton jobId={job.id} />
             </div>
           </>
-        ) : (
-          <div className="card-job-head__salary card-job-head__salary-notLogin">
-            <AiOutlineDollarCircle />
-            <Link to="/login">{t("jobSearchDetail.loginToSeeSalary")}</Link>
-          </div>
         )}
-        <div className="card-job-head__wrap-button">
-          {!type.applied ? (
-            <>
-              <Link
-                to="job_applications/new"
-                // target="_blank"
-                className="card-job-head__button"
-              >
-                {" "}
-                {t("jobSearchDetail.applyNow")}{" "}
-              </Link>
-              {authenticated && role === "SEEKER" ? (
-                <div className="card-job-head__heart">
-                  <FaHeart />
-                </div>
-              ) : (
-                <div className="card-job-head__heart">
-                  <Link to="/login">
-                    <FaHeart />
-                  </Link>
-                </div>
-              )}
-            </>
-          ) : (
-            <div className="card-job-head__applied">
-              <IoMdCheckmarkCircleOutline />
-              <span>{t("jobSearchDetail.applied")}</span>
-              <span>{type.appliedAt}</span>
-
-            </div>
-          )}
-        </div>
       </div>
-    </>
+    </div>
   );
-}
+};
 
 export default CardJobHead;

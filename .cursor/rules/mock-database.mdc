@@ -1,0 +1,12 @@
+---
+description: json-server mock data conventions
+globs: database/**/*
+alwaysApply: false
+---
+
+# Mock Database
+
+- Run: `npm start` in `database/` → port **3333**
+- Data file: `database/database.json`
+- Keep JSON shape aligned with frontend `response.types.ts` and backend DTOs when used for local dev
+- Only update mock data when task involves local-only development or frontend prototyping against json-server

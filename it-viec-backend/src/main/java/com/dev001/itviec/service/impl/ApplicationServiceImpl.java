@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
+import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;
@@ -87,6 +88,9 @@ public class ApplicationServiceImpl implements ApplicationService {
             resumeUrl = seeker.getCvUrl();
         } else {
             resumeUrl = seeker.getCvUrl();
+            if (resumeUrl == null || resumeUrl.isBlank()) {
+                throw new AppException(ErrorCode.SEEKER_CV_REQUIRED);
+            }
         }
 
         // 5. Tạo mới đơn ứng tuyển
@@ -101,7 +105,16 @@ public class ApplicationServiceImpl implements ApplicationService {
                 .desiredLocations(request.getDesiredLocations())
                 .build();
 
-        return applicationMapper.toApplicationCreateResponse(applicationRepository.save(application));
+        Application savedApplication = applicationRepository.save(application);
+
+        // 6. Đồng bộ thông tin seeker để những lần ứng tuyển sau được prefill bằng dữ liệu mới nhất
+        seeker.setFullName(request.getFullName());
+        seeker.setPhoneNumber(request.getPhoneNumber());
+        seeker.setDesiredLocations(request.getDesiredLocations());
+        seeker.setCoverLetter(request.getCoverLetter());
+        seekerRepository.save(seeker);
+
+        return applicationMapper.toApplicationCreateResponse(savedApplication);
     }
 
     @Override
@@ -111,6 +124,26 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         // 2. Tìm tất cả đơn ứng tuyển của người xin việc đó
         return applicationMapper.toApplicationResponse(applicationRepository.findBySeeker(seeker));
+    }
+
+    @Override
+    public ApplicationCheckResponse hasAppliedToJob(Long id) {
+        Job job = jobRepository
+                .findByIdAndStatus(id, JobStatus.ACTIVE)
+                .orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
+
+        Seeker seeker = seekerService.getSeekerByCookie();
+
+        return applicationRepository
+                .findBySeekerAndJob(seeker, job)
+                .map(application -> ApplicationCheckResponse.builder()
+                        .applied(true)
+                        .createdAt(application.getCreatedAt())
+                        .build())
+                .orElseGet(() -> ApplicationCheckResponse.builder()
+                        .applied(false)
+                        .createdAt(null)
+                        .build());
     }
 
     @Override

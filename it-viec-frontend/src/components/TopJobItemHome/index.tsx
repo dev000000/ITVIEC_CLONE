@@ -6,28 +6,27 @@ import { CiLocationOn } from "react-icons/ci";
 import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { getJobTypeOptions, getCityLabel } from "@/constants";
-import { useEffect, useRef, useState } from "react";
-import { useUserStore } from "@/store/userStore";
+import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
+import { Link } from "react-router-dom";
+import { getLoginRouteByRole } from "@/utils/roleRedirect";
+import { ROLE } from "@/types/common.types";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
+import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
 
 interface TopJobItemProps {
   job: JobCardResponse;
+  isNotNavigate?: boolean; // Thêm prop để kiểm soát việc điều hướng khi click vào item
 }
 // Component hiển thị một item việc làm trong phần Top Job trên trang chủ
-const TopJobItemHome = ({ job }: TopJobItemProps) => {
+const TopJobItemHome = ({ job, isNotNavigate = false }: TopJobItemProps) => {
   console.log("job in TopJobItemHome component:", job);
 
-  // Lấy thông tin xác thực và vai trò người dùng từ store
-  const authenticated = useUserStore((state) => state.authenticated);
-  const role = useUserStore((state) => state.role);
-  // Kiểm tra nếu người dùng đã đăng nhập và có vai trò là "SEEKER"
-  const isSeekerLoggedIn = authenticated && role === "SEEKER";
+  const isSeekerLoggedIn = useIsSeekerLoggedIn();
+  const seekerLoginPath = getLoginRouteByRole(ROLE.SEEKER);
 
   const { t } = useTranslation("job");
-  // Sử dụng useRef để tham chiếu đến wrapper chứa các tag kỹ năng
-  const tagListRef = useRef<HTMLDivElement>(null);
 
   // Lấy nhãn loại công việc từ giá trị jobType (i18n)
   const jobTypeOptions = getJobTypeOptions(t);
@@ -40,35 +39,11 @@ const TopJobItemHome = ({ job }: TopJobItemProps) => {
   const sortedSkills = [...job.skills].sort(
     (a, b) => a.skillName.length - b.skillName.length
   );
-  const [visibleTagsCount, setVisibleTagsCount] = useState(sortedSkills.length);
-
-  // Sử dụng useEffect để tính toán số lượng tag kỹ năng hiển thị dựa trên kích thước của wrapper và kích thước của các tag kỹ năng
-  useEffect(() => {
-    const handleTagOverflow = () => {
-      const tagList = tagListRef.current;
-      if (!tagList) return;
-      const tagElements = tagList.getElementsByClassName("tag-skill");
-      const wrapperWidth = tagList.offsetWidth;
-      let totalWidth = 0;
-      let count = 0;
-      for (let i = 0; i < tagElements.length; i++) {
-        totalWidth += (tagElements[i] as HTMLElement).offsetWidth + 5;
-        if (totalWidth > wrapperWidth) {
-          break;
-        }
-        count++;
-      }
-      setVisibleTagsCount(count);
-      window.addEventListener("resize", handleTagOverflow);
-      return () => {
-        window.removeEventListener("resize", handleTagOverflow);
-      };
-    };
-    handleTagOverflow();
-  }, [sortedSkills.length]);
+  const { tagListRef, visibleTagsCount } = useVisibleTagCount(sortedSkills);
 
   // Hàm xử lý khi người dùng click vào item việc làm, mở trang chi tiết việc làm trong tab mới
   const handleNavigate = () => {
+    if(isNotNavigate) return; 
     return window.open(`/viec-lam-it/${job!.slug}`, "_blank");
   };
 
@@ -103,18 +78,24 @@ const TopJobItemHome = ({ job }: TopJobItemProps) => {
       >
         <ImCoinDollar />{" "}
         <span>
-          {isSeekerLoggedIn ? job.salary : t("loginToSeeSalary")}{" "}
+          {isSeekerLoggedIn ? (
+            job.salary
+          ) : (
+            <Link to={seekerLoginPath} onClick={(e) => e.stopPropagation()}>
+              {t("loginToSeeSalary")}
+            </Link>
+          )}{" "}
         </span>
       </div>
       <div className="job__location">
         <MdLocationCity className="job__location-icon" />
         {/* Hiển thị loại công việc */}
-        <span>{jobTypeLabel}</span>
+        <span>{jobTypeLabel || "--"}</span>
       </div>
       <div className="job__city">
         {/* Hiển thị thành phố */}
         <CiLocationOn className="job__city-icon" />
-        <span>{cityLabel}</span>
+        <span>{cityLabel || "--"}</span>
       </div>
       <div className="job__list-tag" ref={tagListRef}>
         {/* Hiển thị kỹ năng */}

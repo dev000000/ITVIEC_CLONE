@@ -3,6 +3,9 @@ import apiClient from "./apiClient";
 import {
   type AuthenticationRequest,
   type RegisterUserSeekerRequest,
+  type ResendActivationRequest,
+  type RegisterEmployerRequest,
+  type EmployerActivateRequest,
 } from "@/types/request.types";
 import {
   type AuthenticationResponse,
@@ -59,10 +62,40 @@ export const logoutApi = () => {
   return apiClient.post<APIResponse<void>>(url);
 };
 
+/**
+ * API xác thực tài khoản qua token nhận được trong email.
+ * @param token - Activation token từ link email
+ */
+export const activateAccountApi = (token: string) => {
+  return apiClient.get<APIResponse<string>>(API_PATH + "/activate", {
+    params: { token },
+  });
+};
+
+/**
+ * API gửi lại email kích hoạt tài khoản.
+ * @param request - Object chứa email cần gửi lại
+ */
+export const resendActivationApi = (request: ResendActivationRequest) => {
+  return apiClient.post<APIResponse<string>>(API_PATH + "/resend-activation", request);
+};
+
+export const registerEmployerApi = (request: RegisterEmployerRequest) => {
+  return apiClient.post<APIResponse<string>>(API_PATH + "/register/employers", request);
+};
+
+export const activateEmployerApi = (request: EmployerActivateRequest) => {
+  return apiClient.post<APIResponse<string>>(API_PATH + "/activate-employer", request);
+};
+
 export default {
   loginApi,
   getMeApi,
   registerSeekerApi,
   refreshTokenCookieApi,
   logoutApi,
+  activateAccountApi,
+  resendActivationApi,
+  registerEmployerApi,
+  activateEmployerApi,
 };

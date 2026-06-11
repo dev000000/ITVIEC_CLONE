@@ -7,57 +7,38 @@ import TagSkill from "@/components/TagSkill";
 import { getRelativeTime } from "@/helpers/formattedTime";
 import { getJobTypeOptions, getCityLabel } from "@/constants";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
+import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
 import TagStatus from "../TagStatus";
+import { useMemo } from "react";
 
 interface TopJobItemProps {
   job?: JobCardResponse;
 }
-
-function TopJobItemEmployer({ job }: TopJobItemProps) {
+// Component hiển thị thông tin công việc trong danh sách công việc của nhà tuyển dụng
+const TopJobItemEmployer = ({ job }: TopJobItemProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation("job");
+
   const authenticated = useUserStore((state) => state.authenticated);
   const jobTypeOptions = getJobTypeOptions(t);
   const jobTypeLabel = jobTypeOptions.find((opt) => opt.value === job.jobType)?.label || job.jobType;
   const cityLabel = getCityLabel(job.city?.cityName, t);
 
+  // Hàm xử lí khi click vào nút xem chi tiết
   const handleClick = () => {
     navigate(`${job!.id}`);
   };
+  
+  // Sắp xếp skills theo thứ tự độ dài trước khi hiển thị
+  const sortedSkills = useMemo(() => {
+    if (!job?.skills) return [];
+    return [...job.skills].sort((a, b) => a.skillName.length - b.skillName.length);
+  }, [job?.skills]);
 
-  const tagListRef = useRef<HTMLDivElement>(null);
-  const rawSkills = job.skills || [];
-  const sortedSkills = [...rawSkills].sort(
-    (a, b) => a.skillName.length - b.skillName.length
-  );
-  const [visibleTagsCount, setVisibleTagsCount] = useState(sortedSkills.length);
-  useEffect(() => {
-    const handleTagOverflow = () => {
-      const tagList = tagListRef.current;
-      if (!tagList) return;
-      const tagElements = tagList.getElementsByClassName("tag-skill");
-      const wrapperWidth = tagList.offsetWidth;
-      let totalWidth = 0;
-      let count = 0;
-      for (let i = 0; i < tagElements.length; i++) {
-        totalWidth += (tagElements[i] as HTMLElement).offsetWidth + 5;
-        if (totalWidth > wrapperWidth) {
-          break;
-        }
-        count++;
-      }
-      setVisibleTagsCount(count);
-      window.addEventListener("resize", handleTagOverflow);
-      return () => {
-        window.removeEventListener("resize", handleTagOverflow);
-      };
-    };
-    handleTagOverflow();
-  }, [sortedSkills.length]);
+  const { tagListRef, visibleTagsCount } = useVisibleTagCount(sortedSkills);
 
   return (
     <div className="job__item">
@@ -110,8 +91,6 @@ function TopJobItemEmployer({ job }: TopJobItemProps) {
       </div>
     </div>
   );
-
-
 }
 
 export default TopJobItemEmployer;

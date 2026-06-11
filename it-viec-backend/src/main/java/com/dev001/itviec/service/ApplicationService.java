@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
+import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;
@@ -17,6 +18,8 @@ public interface ApplicationService {
     ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request, MultipartFile cvFile);
 
     List<ApplicationResponse> getMyApplications();
+
+    ApplicationCheckResponse hasAppliedToJob(Long id);
 
     PageResponse<ApplicationResponse> getMyCompanyApplications(
             int page, int size, ApplicationStatus status, String jobTitle);
