@@ -64,6 +64,10 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/seekers")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/auth/activate")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/resend-activation")
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, PUBLIC_URLS_GET)
                         .permitAll()
 

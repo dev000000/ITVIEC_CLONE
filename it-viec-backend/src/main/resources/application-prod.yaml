@@ -17,6 +17,10 @@ spring:
 app:
   mail:
     from: ${MAIL_FROM:no-reply@itviec.com}
+  activation:
+    base-url: ${FRONTEND_BASE_URL:https://itviec.com}
+    expiry-hours: 24
+    resend-cooldown-minutes: 2
 application:
   security:
     jwt:

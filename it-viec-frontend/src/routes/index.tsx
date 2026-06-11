@@ -23,6 +23,8 @@ import JobSearch from '@/pages/Shared/JobSearch';
 import RouteDecider from './RouteDecider';
 import JobSearchDetail from '@/pages/Shared/JobSearchDetail';
 import { ROLE } from '@/types/common.types';
+import ActivateAccount from '@/pages/JobSeeker/ActivateAccount';
+import RegisterSuccess from '@/pages/JobSeeker/RegisterSuccess';
 
 /**
  * Main application routes configuration for React Router v6
@@ -35,6 +37,8 @@ export const routes: RouteObject[] = [
       { path: '/', element: <Home /> }, // Đã check
       { path: 'terms-conditions-vn', element: <Term /> }, // Đã check
       { path: 'quy-dinh-bao-mat', element: <Policy /> }, // Đã check
+      { path: 'activate', element: <ActivateAccount /> },
+      { path: 'register-success', element: <RegisterSuccess /> },
       {
         path: 'viec-lam-it', // Đã check
         children: [

@@ -115,7 +115,14 @@ public enum ErrorCode {
     JOB_NOT_SAVABLE(1097, "Job is not savable", HttpStatus.BAD_REQUEST),
     EMAIL_SEND_FAILED(1100, "Failed to send email", HttpStatus.INTERNAL_SERVER_ERROR),
     EMAIL_SUBJECT_REQUIRED(1101, "Email subject must not be blank", HttpStatus.BAD_REQUEST),
-    EMAIL_BODY_REQUIRED(1102, "Email body must not be blank", HttpStatus.BAD_REQUEST);
+    EMAIL_BODY_REQUIRED(1102, "Email body must not be blank", HttpStatus.BAD_REQUEST),
+    ACTIVATION_TOKEN_INVALID(1103, "Activation token is invalid or already used", HttpStatus.BAD_REQUEST),
+    ACTIVATION_TOKEN_EXPIRED(1104, "Activation token has expired", HttpStatus.BAD_REQUEST),
+    ACCOUNT_NOT_ACTIVATED(1105, "Account is not activated. Please check your email.", HttpStatus.FORBIDDEN),
+    ACCOUNT_ALREADY_ACTIVATED(1106, "Account is already activated", HttpStatus.BAD_REQUEST),
+    ACTIVATION_RESEND_TOO_SOON(
+            1107, "Please wait before requesting a new activation email", HttpStatus.TOO_MANY_REQUESTS),
+    ACCOUNT_DISABLED(1108, "Account has been disabled", HttpStatus.FORBIDDEN);
 
     private int code;
     private String message;

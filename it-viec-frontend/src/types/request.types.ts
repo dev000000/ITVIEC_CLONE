@@ -45,6 +45,10 @@ export interface RegisterUserSeekerRequest {
   fullName: string;
 }
 
+export interface ResendActivationRequest {
+  email: string;
+}
+
 export interface UserUpdateRequest {
   status: UserStatus;
 }

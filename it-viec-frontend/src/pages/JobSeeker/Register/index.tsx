@@ -76,7 +76,7 @@ function Register() {
   };
 
   // Xử lý submit form đăng ký:
-  // Gọi registerSeekerApi → hiển thị thông báo thành công → chuyển về trang đăng nhập
+  // Gọi registerSeekerApi → chuyển về trang register-success kèm email
   // Thất bại → lấy message + code lỗi từ response rồi hiển thị Swal
   const onFinish = async (values: RegisterFormValues) => {
     try {
@@ -85,12 +85,7 @@ function Register() {
         password: values.password,
         fullName: values.fullName,
       });
-      Swal.fire({
-        title: t("register.successTitle"),
-        icon: "success",
-        draggable: true,
-      });
-      navigate("/login");
+      navigate("/register-success", { state: { email: values.email } });
     } catch (error) {
       console.log('Lỗi khi đăng ký: ', error);
       Swal.fire({

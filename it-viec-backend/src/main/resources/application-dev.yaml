@@ -17,6 +17,10 @@ spring:
 app:
   mail:
     from: no-reply@itviec-dev.com
+  activation:
+    base-url: http://localhost:5173
+    expiry-hours: 24
+    resend-cooldown-minutes: 2
 application:
   security:
     jwt:

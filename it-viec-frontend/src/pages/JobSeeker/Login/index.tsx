@@ -2,17 +2,18 @@
 // Gồm: form email/mật khẩu, nút đăng nhập Google (UI chưa kết nối),
 // link sang trang đăng ký, và danh sách lợi ích khi tạo tài khoản
 // Sau khi đăng nhập thành công → lưu thông tin user+seeker vào Zustand store, chuyển về trang chủ
-import { Col, Form, Row, Input } from "antd";
+import { Alert, Col, Form, Row, Input } from "antd";
 import { IoMdCheckmark } from "react-icons/io";
 import "./Login.scss";
 import logo from "@/assets/images/logo_nhieuviec4.png";
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import ButtonSubmit from "@/components/Button";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import type { AuthenticationRequest } from "@/types/request.types";
-import { loginApi, logoutApi } from "@/services/authApi";
+import { loginApi, logoutApi, resendActivationApi } from "@/services/authApi";
 import { getMyProfileApi } from "@/services/seekerApi";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
@@ -22,7 +23,10 @@ import { ROLE } from "@/types/common.types";
 import { getDefaultRouteByRole } from "@/utils/roleRedirect";
 import { useCompanyStore } from "@/store/companyStore";
 import { isLoginRoleMatch } from "@/utils/loginRoleValidation";
+import type { AxiosError } from "axios";
 
+
+const ACCOUNT_NOT_ACTIVATED_CODE = 1105;
 
 function Login() {
   const navigate = useNavigate();
@@ -33,11 +37,19 @@ function Login() {
   const clearSeekerInfo = useSeekerStore((state) => state.clearSeekerInfo);
   const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
 
+  const [notActivatedEmail, setNotActivatedEmail] = useState<string | null>(null);
+  const [resending, setResending] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState(false);
+
   // Xử lý submit form đăng nhập:
   // 1. Gọi loginApi → lưu thông tin user (role, email, id...) vào userStore
   // 2. Gọi getMyProfileApi → lưu đầy đủ hồ sơ seeker vào seekerStore
   // 3. Hiển thị thông báo thành công → redirect về trang chủ
+  // Nếu lỗi 1105 (PENDING_ACTIVATION) → hiển thị inline alert + nút gửi lại email
   const onFinish = async (values: AuthenticationRequest) => {
+    setNotActivatedEmail(null);
+    setResendSuccess(false);
+
     try {
       const { data: apiData } = await loginApi(values);
       const user = apiData.result;
@@ -93,11 +105,33 @@ function Login() {
 
     } catch (error) {
       console.error("Lỗi khi đăng nhập: ", error);
+      const code = (error as AxiosError<{ code?: number }>)?.response?.data?.code;
+      if (code === ACCOUNT_NOT_ACTIVATED_CODE) {
+        setNotActivatedEmail(values.email);
+        return;
+      }
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: getApiErrorMessage(error, t),
       });
+    }
+  };
+
+  const handleResendActivation = async () => {
+    if (!notActivatedEmail) return;
+    setResending(true);
+    try {
+      await resendActivationApi({ email: notActivatedEmail });
+      setResendSuccess(true);
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: getApiErrorMessage(err, t),
+      });
+    } finally {
+      setResending(false);
     }
   };
   const onFinishFailed = () => {
@@ -143,6 +177,29 @@ function Login() {
                   <div> {t("login.or")} </div>
                   <hr className="login__divide-line"></hr>
                 </div>
+                {notActivatedEmail && (
+                  <div style={{ marginBottom: 16 }}>
+                    <Alert
+                      type="warning"
+                      showIcon
+                      message={t("login.notActivatedMessage")}
+                      description={
+                        resendSuccess ? (
+                          <span style={{ color: "#389e0d" }}>
+                            {t("login.resendActivationSuccess")}
+                          </span>
+                        ) : (
+                          <a
+                            onClick={resending ? undefined : handleResendActivation}
+                            style={{ cursor: resending ? "not-allowed" : "pointer", color: "#ed1b2f" }}
+                          >
+                            {resending ? t("login.resendingActivation") : t("login.resendActivationLink")}
+                          </a>
+                        )
+                      }
+                    />
+                  </div>
+                )}
                 <div className="login__form">
                   <Form
                     name="basic"
