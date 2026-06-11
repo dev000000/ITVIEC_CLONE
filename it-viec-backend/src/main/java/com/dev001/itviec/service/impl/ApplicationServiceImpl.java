@@ -134,7 +134,8 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Seeker seeker = seekerService.getSeekerByCookie();
 
-        return applicationRepository.findBySeekerAndJob(seeker, job)
+        return applicationRepository
+                .findBySeekerAndJob(seeker, job)
                 .map(application -> ApplicationCheckResponse.builder()
                         .applied(true)
                         .createdAt(application.getCreatedAt())

@@ -45,25 +45,22 @@ public class SavedJobServiceImpl implements SavedJobService {
     public SavedJobResponse saveJob(Long jobId) {
         Seeker seeker = seekerService.getSeekerByCookie();
 
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
+        Job job = jobRepository.findById(jobId).orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
 
         if (job.getStatus() == JobStatus.DRAFT) {
             throw new AppException(ErrorCode.JOB_NOT_SAVABLE);
         }
 
         // Idempotent: nếu đã lưu rồi thì trả về entity hiện có
-        return savedJobRepository.findBySeekerAndJob(seeker, job)
+        return savedJobRepository
+                .findBySeekerAndJob(seeker, job)
                 .map(savedJobMapper::toSavedJobResponse)
                 .orElseGet(() -> {
                     long current = savedJobRepository.countBySeeker(seeker);
                     if (current >= SAVED_JOBS_MAX) {
                         throw new AppException(ErrorCode.SAVED_JOBS_LIMIT_EXCEEDED);
                     }
-                    SavedJob saved = SavedJob.builder()
-                            .seeker(seeker)
-                            .job(job)
-                            .build();
+                    SavedJob saved = SavedJob.builder().seeker(seeker).job(job).build();
                     return savedJobMapper.toSavedJobResponse(savedJobRepository.save(saved));
                 });
     }
@@ -73,12 +70,10 @@ public class SavedJobServiceImpl implements SavedJobService {
     public void unsaveJob(Long jobId) {
         Seeker seeker = seekerService.getSeekerByCookie();
 
-        Job job = jobRepository.findById(jobId)
-                .orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
+        Job job = jobRepository.findById(jobId).orElseThrow(() -> new AppException(ErrorCode.JOB_NOT_FOUND));
 
         // Idempotent: nếu chưa lưu thì bỏ qua
-        savedJobRepository.findBySeekerAndJob(seeker, job)
-                .ifPresent(savedJobRepository::delete);
+        savedJobRepository.findBySeekerAndJob(seeker, job).ifPresent(savedJobRepository::delete);
     }
 
     @Override
@@ -115,9 +110,7 @@ public class SavedJobServiceImpl implements SavedJobService {
             return Sort.by(Sort.Direction.ASC, "job.expiresAt");
         }
         String[] parts = sort.split(",");
-        Sort.Direction direction = "desc".equalsIgnoreCase(parts[1])
-                ? Sort.Direction.DESC
-                : Sort.Direction.ASC;
+        Sort.Direction direction = "desc".equalsIgnoreCase(parts[1]) ? Sort.Direction.DESC : Sort.Direction.ASC;
         return Sort.by(direction, "job.expiresAt");
     }
 }

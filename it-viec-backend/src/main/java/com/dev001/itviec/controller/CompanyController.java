@@ -41,8 +41,7 @@ public class CompanyController {
     // trang chủ
     @GetMapping
     public ApiResponse<PageResponse<CompanyCardResponse>> getAllCompanies(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         return ApiResponse.<PageResponse<CompanyCardResponse>>builder()
                 .code(1000)
                 .result(companyService.getAllCompaniesWithJobCountActive(page, size))

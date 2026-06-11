@@ -6,6 +6,17 @@ spring:
     url: ${DBMS_CONNECTION}
     username: ${DBMS_USERNAME}
     password: ${DBMS_PASSWORD}
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: ${MAILTRAP_USERNAME}
+    password: ${MAILTRAP_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+app:
+  mail:
+    from: no-reply@itviec-dev.com
 application:
   security:
     jwt:

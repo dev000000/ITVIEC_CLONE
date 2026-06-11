@@ -1,9 +1,11 @@
+server:
+  port: 8080
 
 spring:
   application:
     name: identify
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MYSQL
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
@@ -15,3 +17,35 @@ spring:
       hibernate:
         format_sql: true
         use_sql_comments: true
+  mail:
+    host: localhost
+    port: 3025
+    username: test
+    password: test
+    properties:
+      mail.smtp.auth: true
+
+app:
+  mail:
+    from: no-reply@test.com
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 3600000
+      refresh-token:
+        expiration: 86400000
+    cookie:
+      secure: false
+      same-site: Lax
+
+cloud:
+  aws:
+    bucket:
+      name: test-bucket
+    region:
+      static: ap-southeast-1
+    credentials:
+      access-key: test-access-key
+      secret-key: test-secret-key

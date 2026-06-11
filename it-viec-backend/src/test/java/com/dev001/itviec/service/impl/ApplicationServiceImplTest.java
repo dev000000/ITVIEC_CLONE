@@ -111,7 +111,8 @@ class ApplicationServiceImplTest {
         when(applicationRepository.existsBySeekerAndJob(seeker, job)).thenReturn(false);
         when(applicationRepository.save(any(Application.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(seekerRepository.save(any(Seeker.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(applicationMapper.toApplicationCreateResponse(any(Application.class))).thenReturn(expectedResponse);
+        when(applicationMapper.toApplicationCreateResponse(any(Application.class)))
+                .thenReturn(expectedResponse);
 
         ApplicationCreateResponse result = applicationService.applyToJob(2L, request, null);
 

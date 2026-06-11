@@ -5,8 +5,7 @@ import java.util.Locale;
 
 public final class CitySlugUtils {
 
-    private CitySlugUtils() {
-    }
+    private CitySlugUtils() {}
 
     public static String toSlug(String value) {
         if (value == null) {

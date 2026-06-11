@@ -11,8 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.request.ApplicationUpdateRequest;
-import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApiResponse;
+import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;

@@ -44,12 +44,16 @@ class PopularTagServiceImplTest {
     @Test
     void createPopularTagShouldCreateSkillPopularTag() {
         Skill skill = Skill.builder().id(7L).skillName("Java").build();
-        PopularTag savedTag =
-                PopularTag.builder().id(1L).category(PopularTagCategory.SKILL_AND_EXPERTISE).skill(skill).build();
+        PopularTag savedTag = PopularTag.builder()
+                .id(1L)
+                .category(PopularTagCategory.SKILL_AND_EXPERTISE)
+                .skill(skill)
+                .build();
 
         when(skillRepository.findById(7L)).thenReturn(Optional.of(skill));
         when(popularTagRepository.existsBySkill(skill)).thenReturn(false);
-        when(popularTagRepository.save(org.mockito.ArgumentMatchers.any(PopularTag.class))).thenReturn(savedTag);
+        when(popularTagRepository.save(org.mockito.ArgumentMatchers.any(PopularTag.class)))
+                .thenReturn(savedTag);
 
         PopularTagResponse result = popularTagService.createPopularTag(PopularTagCreateRequest.builder()
                 .category("Skill and Expertise")
@@ -63,14 +67,21 @@ class PopularTagServiceImplTest {
 
     @Test
     void createPopularTagShouldCreateCompanyPopularTag() {
-        Company company =
-                Company.builder().id("company-1").companyName("MB Bank").slug("mb-bank").build();
-        PopularTag savedTag =
-                PopularTag.builder().id(2L).category(PopularTagCategory.COMPANY).company(company).build();
+        Company company = Company.builder()
+                .id("company-1")
+                .companyName("MB Bank")
+                .slug("mb-bank")
+                .build();
+        PopularTag savedTag = PopularTag.builder()
+                .id(2L)
+                .category(PopularTagCategory.COMPANY)
+                .company(company)
+                .build();
 
         when(companyRepository.findById("company-1")).thenReturn(Optional.of(company));
         when(popularTagRepository.existsByCompany(company)).thenReturn(false);
-        when(popularTagRepository.save(org.mockito.ArgumentMatchers.any(PopularTag.class))).thenReturn(savedTag);
+        when(popularTagRepository.save(org.mockito.ArgumentMatchers.any(PopularTag.class)))
+                .thenReturn(savedTag);
 
         PopularTagResponse result = popularTagService.createPopularTag(PopularTagCreateRequest.builder()
                 .category("Company")
@@ -100,8 +111,11 @@ class PopularTagServiceImplTest {
     @Test
     void getPopularTagsShouldReturnGroupedResponses() {
         Skill skill = Skill.builder().id(5L).skillName("Java").build();
-        Company company =
-                Company.builder().id("company-2").companyName("Andpad").slug("andpad").build();
+        Company company = Company.builder()
+                .id("company-2")
+                .companyName("Andpad")
+                .slug("andpad")
+                .build();
 
         when(popularTagRepository.findAllByOrderByIdAsc())
                 .thenReturn(List.of(
@@ -119,12 +133,15 @@ class PopularTagServiceImplTest {
         List<PopularTagResponse> result = popularTagService.getPopularTags();
 
         assertThat(result).hasSize(2);
-        assertThat(result).extracting(PopularTagResponse::getCategory).containsExactly("Company", "Skill and Expertise");
+        assertThat(result)
+                .extracting(PopularTagResponse::getCategory)
+                .containsExactly("Company", "Skill and Expertise");
     }
 
     @Test
     void deletePopularTagShouldDeleteExistingTag() {
-        PopularTag popularTag = PopularTag.builder().id(9L).category(PopularTagCategory.COMPANY).build();
+        PopularTag popularTag =
+                PopularTag.builder().id(9L).category(PopularTagCategory.COMPANY).build();
         when(popularTagRepository.findById(9L)).thenReturn(Optional.of(popularTag));
 
         popularTagService.deletePopularTag(9L);

@@ -12,9 +12,10 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(
         name = "saved_jobs",
-        uniqueConstraints = @UniqueConstraint(
-                name = "uk_saved_jobs_seeker_job",
-                columnNames = {"seeker_id", "job_id"}))
+        uniqueConstraints =
+                @UniqueConstraint(
+                        name = "uk_saved_jobs_seeker_job",
+                        columnNames = {"seeker_id", "job_id"}))
 @Getter
 @Setter
 @Builder

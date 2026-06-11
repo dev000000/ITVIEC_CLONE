@@ -35,9 +35,7 @@ public class SavedJobController {
     @DeleteMapping("/{jobId}")
     public ApiResponse<Void> unsaveJob(@PathVariable Long jobId) {
         savedJobService.unsaveJob(jobId);
-        return ApiResponse.<Void>builder()
-                .code(1000)
-                .build();
+        return ApiResponse.<Void>builder().code(1000).build();
     }
 
     // 3. Lấy danh sách việc làm đã lưu (phân trang, sắp xếp theo expiresAt)

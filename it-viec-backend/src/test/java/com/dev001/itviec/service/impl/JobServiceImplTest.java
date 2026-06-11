@@ -151,8 +151,13 @@ class JobServiceImplTest {
 
     @Test
     void searchJobsShouldReturnPaginatedCards() {
-        Job job = Job.builder().id(5L).title("Java Developer").status(JobStatus.ACTIVE).build();
-        JobCardResponse response = JobCardResponse.builder().id(5L).title("Java Developer").build();
+        Job job = Job.builder()
+                .id(5L)
+                .title("Java Developer")
+                .status(JobStatus.ACTIVE)
+                .build();
+        JobCardResponse response =
+                JobCardResponse.builder().id(5L).title("Java Developer").build();
 
         when(jobRepository.findAll(org.mockito.ArgumentMatchers.<Specification<Job>>any(), any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(job), Pageable.ofSize(10).withPage(0), 1));
@@ -168,10 +173,15 @@ class JobServiceImplTest {
 
     @Test
     void getJobBySlugShouldOnlyFetchActiveJob() {
-        Job job = Job.builder().id(6L).title("Data Engineer").status(JobStatus.ACTIVE).build();
+        Job job = Job.builder()
+                .id(6L)
+                .title("Data Engineer")
+                .status(JobStatus.ACTIVE)
+                .build();
         JobDetailResponse response = JobDetailResponse.builder().id(6L).build();
 
-        when(jobRepository.findBySlugAndStatus("data-engineer", JobStatus.ACTIVE)).thenReturn(Optional.of(job));
+        when(jobRepository.findBySlugAndStatus("data-engineer", JobStatus.ACTIVE))
+                .thenReturn(Optional.of(job));
         when(jobMapper.toJobDetailResponse(job)).thenReturn(response);
 
         JobDetailResponse result = jobService.getJobBySlug("data-engineer");

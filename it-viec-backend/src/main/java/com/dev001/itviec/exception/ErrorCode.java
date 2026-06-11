@@ -112,7 +112,10 @@ public enum ErrorCode {
     POPULAR_TAG_SOURCE_ID_REQUIRED(1094, "Popular tag source id is required", HttpStatus.BAD_REQUEST),
     SAVED_JOBS_LIMIT_EXCEEDED(1095, "You can save up to 20 jobs", HttpStatus.BAD_REQUEST),
     SAVED_JOB_NOT_FOUND(1096, "Saved job not found", HttpStatus.NOT_FOUND),
-    JOB_NOT_SAVABLE(1097, "Job is not savable", HttpStatus.BAD_REQUEST);
+    JOB_NOT_SAVABLE(1097, "Job is not savable", HttpStatus.BAD_REQUEST),
+    EMAIL_SEND_FAILED(1100, "Failed to send email", HttpStatus.INTERNAL_SERVER_ERROR),
+    EMAIL_SUBJECT_REQUIRED(1101, "Email subject must not be blank", HttpStatus.BAD_REQUEST),
+    EMAIL_BODY_REQUIRED(1102, "Email body must not be blank", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;
