@@ -70,3 +70,11 @@ project-itviec/
 - Run the smallest relevant validation for the files changed.
 - If you cannot run validation, state that explicitly in the final response.
 - Do not modify lockfiles or generated files unless required by the task.
+
+## Skills
+
+| Skill | Path | When to use |
+|-------|------|-------------|
+| `plan-and-implement` | `.cursor/skills/plan-and-implement/SKILL.md` | Add a new feature using the 3-agent pipeline: Opus 4.6 high plans, Composer 2.5 fast does backend, Sonnet 4.6 high does frontend |
+| `add-api-endpoint` | `.cursor/skills/add-api-endpoint/SKILL.md` | Add a single REST endpoint across backend + frontend |
+| `frontend-page` | `.cursor/skills/frontend-page/SKILL.md` | Create/modify React pages with routing, i18n, Ant Design |
