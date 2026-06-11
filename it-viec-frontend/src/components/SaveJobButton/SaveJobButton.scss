@@ -20,4 +20,30 @@
     fill: red;
     stroke: red;
   }
+
+  &__toast {
+    text-align: left;
+    padding: 0 4px;
+
+    &-message {
+      margin: 0 0 4px;
+      font-size: 14px;
+      color: #121212;
+    }
+
+    &-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: #1677ff;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+
+      &:hover {
+        color: #4096ff;
+      }
+    }
+  }
 }
