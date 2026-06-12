@@ -162,8 +162,16 @@ public class SeekerController {
                 .body(cv.getData());
     }
 
-    // 6b.API cho phép seeker lấy metadata CV của mình (fileName, contentType, size,
-    // updatedAt) (PRIVATE)
+    @GetMapping("/me/cvs")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<List<SeekerCvMetadataResponse>> getMyCvsMetadata() {
+        return ApiResponse.<List<SeekerCvMetadataResponse>>builder()
+                .code(1000)
+                .result(seekerService.getMyCvsMetadata())
+                .build();
+    }
+
+    // 6b.API cho phép seeker lấy metadata CV chính (backward-compatible)
     @GetMapping("/me/cv/metadata")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerCvMetadataResponse> getMyCvMetadata() {
@@ -181,6 +189,25 @@ public class SeekerController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + cv.getFileName() + "\"")
                 .contentType(MediaType.parseMediaType(cv.getContentType()))
                 .body(cv.getData());
+    }
+
+    @GetMapping("/me/cvs/{cvId}/preview")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ResponseEntity<byte[]> previewMyCvById(@PathVariable String cvId) {
+        SeekerCvContent cv = seekerService.getCvBySeekerCvId(cvId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + cv.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(cv.getContentType()))
+                .body(cv.getData());
+    }
+
+    @PutMapping("/me/cvs/{cvId}/primary")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<SeekerResponse> setPrimaryCv(@PathVariable String cvId) {
+        return ApiResponse.<SeekerResponse>builder()
+                .code(1000)
+                .result(seekerService.setPrimaryCv(cvId))
+                .build();
     }
 
     // 7.API cho phép employer/admin download CV của seeker theo id (PRIVATE)
@@ -206,7 +233,16 @@ public class SeekerController {
                 .body(cv.getData());
     }
 
-    // 8.API cho phép seeker xóa CV của mình (PRIVATE)
+    @DeleteMapping("/me/cvs/{cvId}")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ApiResponse<SeekerResponse> deleteMyCvById(@PathVariable String cvId) {
+        return ApiResponse.<SeekerResponse>builder()
+                .code(1000)
+                .result(seekerService.deleteMyCv(cvId))
+                .build();
+    }
+
+    // 8.API cho phép seeker xóa CV chính (backward-compatible)
     @DeleteMapping("/me/cv")
     @PreAuthorize("hasRole('SEEKER')")
     public ApiResponse<SeekerResponse> deleteMyCv() {

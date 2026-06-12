@@ -130,7 +130,10 @@ public enum ErrorCode {
     SALARY_RANGE_INVALID(1112, "Salary min must be less than or equal to max", HttpStatus.BAD_REQUEST),
     SALARY_CURRENCY_REQUIRED(1113, "Salary currency is required when salary is not negotiable", HttpStatus.BAD_REQUEST),
     SALARY_MIN_REQUIRED(1114, "Salary min is required when salary is not negotiable", HttpStatus.BAD_REQUEST),
-    SALARY_MAX_REQUIRED(1115, "Salary max is required when salary is not negotiable", HttpStatus.BAD_REQUEST);
+    SALARY_MAX_REQUIRED(1115, "Salary max is required when salary is not negotiable", HttpStatus.BAD_REQUEST),
+    SEEKER_CV_LIMIT_REACHED(1116, "You can upload up to 3 CVs", HttpStatus.BAD_REQUEST),
+    SEEKER_CV_NOT_OWNED(1117, "CV does not belong to this seeker", HttpStatus.FORBIDDEN),
+    SEEKER_CV_PRIMARY_REQUIRED(1118, "At least one primary CV is required when CVs remain", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

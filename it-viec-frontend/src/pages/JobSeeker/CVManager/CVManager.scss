@@ -94,18 +94,102 @@
     margin: 12px 0 4px;
   }
 
+  // Số lượng CV hiện có (x/3)
+  &__cv-count {
+    font-size: 14px;
+    color: #414240;
+    margin-bottom: 12px;
+  }
+
+  // Danh sách CV cards
+  &__cv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  // Mỗi card CV
+  &__cv-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: #fafafa;
+  }
+
+  &__cv-card-img {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  &__cv-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__cv-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+
+  // Badge "CV chính"
+  &__cv-primary-badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 10px;
+    background: #ed1b2f;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__cv-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+
+  // Nút "Đặt làm CV chính"
+  &__set-primary-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border: 1px solid #ed1b2f;
+    border-radius: 4px;
+    background: transparent;
+    color: #ed1b2f;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: #ed1b2f;
+      color: #fff;
+    }
+  }
+
   // Nút xóa CV
   &__delete-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: 8px;
-    padding: 4px 10px;
+    padding: 3px 10px;
     border: 1px solid #ff4d4f;
     border-radius: 4px;
     background: transparent;
     color: #ff4d4f;
-    font-size: 13px;
+    font-size: 12px;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 
@@ -115,8 +199,20 @@
     }
 
     svg {
-      font-size: 13px;
+      font-size: 12px;
     }
+  }
+
+  // Thông báo đã đạt giới hạn 3 CV
+  &__limit-msg {
+    display: inline-block;
+    margin: 10px 0 4px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    color: #856404;
+    font-size: 13px;
   }
 }
 

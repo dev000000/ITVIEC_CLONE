@@ -15,9 +15,10 @@ import heathcareImg from "@/assets/images/healthcare.svg";
 import mailImg from "@/assets/images/mail.svg";
 import { useTranslation } from "react-i18next";
 import {
-  getMyCvMetadataApi,
-  getMyCvPreviewUrl,
+  getCvPreviewUrl,
+  getMyCvsMetadataApi,
 } from "../../../services/seekerCvApi";
+import type { SeekerCvMetadataResponse } from "@/types/seekerCv.types";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useUserStore } from "@/store/userStore";
 import { useEffect, useState } from "react";
@@ -37,12 +38,7 @@ function ProfileOverview() {
   const email = useUserStore((state) => state.email);
   const [jobApplicationsCount, setJobApplicationsCount] = useState(0);
   const { t, i18n } = useTranslation("jobseeker");
-  const [cvMetadata, setCvMetadata] = useState<{
-    fileName: string;
-    contentType: string;
-    size: number;
-    updatedAt: string;
-  } | null>(null);
+  const [primaryCv, setPrimaryCv] = useState<SeekerCvMetadataResponse | null>(null);
   const [isCvMetadataLoading, setIsCvMetadataLoading] = useState(true);
 
   useEffect(() => {
@@ -61,23 +57,21 @@ function ProfileOverview() {
   }, [t]);
 
   useEffect(() => {
-    const fetchMyCvMetadata = async () => {
+    const fetchCvList = async () => {
       try {
-        const response = await getMyCvMetadataApi();
-        setCvMetadata(response.result);
+        const response = await getMyCvsMetadataApi();
+        const list = response.result ?? [];
+        const primary = list.find((cv) => cv.isPrimary) ?? list[0] ?? null;
+        setPrimaryCv(primary);
       } catch (error) {
-        if ((error as { response?: { status?: number } })?.response?.status === 404) {
-          setCvMetadata(null);
-          return;
-        }
-
-        console.error("Failed to load CV metadata:", error);
+        console.error("Failed to load CV list:", error);
+        setPrimaryCv(null);
       } finally {
         setIsCvMetadataLoading(false);
       }
     };
 
-    fetchMyCvMetadata();
+    fetchCvList();
   }, []);
 
   const formatCvUpdatedAt = (updatedAt: string) => {
@@ -89,8 +83,6 @@ function ProfileOverview() {
       year: "numeric",
     }).format(new Date(updatedAt));
   };
-
-  const previewCvUrl = getMyCvPreviewUrl();
 
   return (
     <div className="profile-overview">
@@ -154,19 +146,19 @@ function ProfileOverview() {
                     defaultValue: "Loading CV...",
                   })}
                 </span>
-              ) : cvMetadata ? (
+              ) : primaryCv ? (
                 <>
                   <a
-                    href={previewCvUrl}
+                    href={getCvPreviewUrl(primaryCv.id)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="update-cv__link-file"
                   >
-                    <span>{cvMetadata.fileName}</span>
+                    <span>{primaryCv.fileName}</span>
                   </a>
                   <div className="update-cv__file-date">
                     {`${t("profileOverview.lastUpdated")}: ${formatCvUpdatedAt(
-                      cvMetadata.updatedAt
+                      primaryCv.updatedAt
                     )}`}
                   </div>
                 </>

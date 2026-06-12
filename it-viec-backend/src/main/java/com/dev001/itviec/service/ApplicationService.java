@@ -15,7 +15,7 @@ import com.dev001.itviec.enums.ApplicationStatus;
 public interface ApplicationService {
     List<ApplicationResponse> getAllApplications();
 
-    ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request, MultipartFile cvFile);
+    ApplicationCreateResponse applyToJob(Long id, ApplicationRequest request, MultipartFile cvFile, String cvId);
 
     List<ApplicationResponse> getMyApplications();
 

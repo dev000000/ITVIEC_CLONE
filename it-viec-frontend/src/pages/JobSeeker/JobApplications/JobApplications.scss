@@ -211,13 +211,64 @@
   }
 
   &__cv-meta {
-    margin-top: 8px;
+    margin-top: 4px;
     color: #7A7A7A;
     font-size: 14px;
+    padding-left: 24px;
 
     &--empty {
       font-style: italic;
+      padding-left: 0;
     }
+  }
+
+  // Danh sách CV có sẵn để chọn
+  &__cv-select-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__cv-select-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    cursor: pointer;
+    padding: 8px 10px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    background: #fff;
+    transition: border-color 0.15s;
+
+    &:hover {
+      border-color: #ed1b2f;
+    }
+
+    &:has(input:checked) {
+      border-color: #ed1b2f;
+      background: #fff5f5;
+    }
+  }
+
+  &__cv-select-radio {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+  }
+
+  // Badge "CV chính" bên trong danh sách ứng tuyển
+  &__cv-primary-badge {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 10px;
+    background: #ed1b2f;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   &__upload-row {

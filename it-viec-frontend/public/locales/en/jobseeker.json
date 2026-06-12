@@ -55,11 +55,16 @@
     "uploading": "Uploading...",
     "previewCV": "Preview CV",
     "previewNotAvailable": "Preview is only available for PDF files. DOCX file will be downloaded.",
+    "primaryCV": "Primary CV",
+    "setPrimary": "Set as primary",
+    "limitReached": "You have reached the maximum of 3 CVs",
+    "cvCount": "{{count}}/3 CVs",
     "success": {
       "updateProfile": "Profile updated successfully!",
       "updateLetter": "Cover letter updated successfully!",
       "uploadCV": "CV uploaded successfully!",
-      "deleteCV": "CV deleted successfully!"
+      "deleteCV": "CV deleted successfully!",
+      "setPrimary": "Primary CV updated successfully!"
     },
     "error": {
       "updateFailed": "Update failed!",
@@ -186,6 +191,7 @@
     "invalidJob": "Invalid job",
     "cvTitle": "Application CV",
     "useCurrentCv": "Use current CV",
+    "useExistingCv": "Use existing CV",
     "uploadNewCv": "Upload a new CV",
     "chooseFile": "Choose file",
     "noFileSelected": "No file selected yet",

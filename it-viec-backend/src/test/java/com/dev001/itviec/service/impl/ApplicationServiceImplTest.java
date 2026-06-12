@@ -22,8 +22,10 @@ import com.dev001.itviec.dto.request.ApplicationRequest;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.entity.application.Application;
 import com.dev001.itviec.entity.city.City;
+import com.dev001.itviec.entity.cvfile.CvFile;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.seeker.Seeker;
+import com.dev001.itviec.entity.seeker.SeekerCv;
 import com.dev001.itviec.enums.ApplicationStatus;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.exception.AppException;
@@ -32,6 +34,7 @@ import com.dev001.itviec.mapper.ApplicationMapper;
 import com.dev001.itviec.repository.ApplicationRepository;
 import com.dev001.itviec.repository.CompanyRepository;
 import com.dev001.itviec.repository.JobRepository;
+import com.dev001.itviec.repository.SeekerCvRepository;
 import com.dev001.itviec.repository.SeekerRepository;
 import com.dev001.itviec.service.EmployerService;
 import com.dev001.itviec.service.SeekerService;
@@ -52,6 +55,9 @@ class ApplicationServiceImplTest {
     private SeekerRepository seekerRepository;
 
     @Mock
+    private SeekerCvRepository seekerCvRepository;
+
+    @Mock
     private SeekerService seekerService;
 
     @Mock
@@ -64,15 +70,16 @@ class ApplicationServiceImplTest {
     private ApplicationServiceImpl applicationService;
 
     @Test
-    void applyToJobShouldRequireCvWhenSeekerHasNoCurrentCvAndNoUpload() {
+    void applyToJobShouldRequireCvWhenSeekerHasNoPrimaryCvAndNoUpload() {
         Job job = Job.builder().id(1L).status(JobStatus.ACTIVE).build();
         Seeker seeker = Seeker.builder().id("seeker-1").cvUrl(null).build();
 
         when(jobRepository.findByIdAndStatus(1L, JobStatus.ACTIVE)).thenReturn(Optional.of(job));
         when(seekerService.getSeekerByCookie()).thenReturn(seeker);
         when(applicationRepository.existsBySeekerAndJob(seeker, job)).thenReturn(false);
+        when(seekerCvRepository.findBySeekerIdAndIsPrimaryTrue("seeker-1")).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> applicationService.applyToJob(1L, buildRequest(), null))
+        assertThatThrownBy(() -> applicationService.applyToJob(1L, buildRequest(), null, null))
                 .isInstanceOf(AppException.class)
                 .satisfies(exception ->
                         assertThat(((AppException) exception).getErrorCode()).isEqualTo(ErrorCode.SEEKER_CV_REQUIRED));
@@ -94,7 +101,19 @@ class ApplicationServiceImplTest {
                 .fullName("Old Name")
                 .phoneNumber("0988888888")
                 .coverLetter("Old letter")
-                .cvUrl("/api/v1/seekers/seeker-2/cv")
+                .cvUrl("/api/v1/cv-files/cv-file-1")
+                .build();
+        CvFile cvFile = CvFile.builder()
+                .id("cv-file-1")
+                .fileName("resume.pdf")
+                .contentType("application/pdf")
+                .size(1024L)
+                .build();
+        SeekerCv primaryCv = SeekerCv.builder()
+                .id("cv-1")
+                .seeker(seeker)
+                .cvFile(cvFile)
+                .isPrimary(true)
                 .build();
 
         ApplicationRequest request = new ApplicationRequest();
@@ -109,12 +128,14 @@ class ApplicationServiceImplTest {
         when(jobRepository.findByIdAndStatus(2L, JobStatus.ACTIVE)).thenReturn(Optional.of(job));
         when(seekerService.getSeekerByCookie()).thenReturn(seeker);
         when(applicationRepository.existsBySeekerAndJob(seeker, job)).thenReturn(false);
+        when(seekerCvRepository.findBySeekerIdAndIsPrimaryTrue("seeker-2")).thenReturn(Optional.of(primaryCv));
+        when(seekerService.buildCvUrl("cv-file-1")).thenReturn("/api/v1/cv-files/cv-file-1");
         when(applicationRepository.save(any(Application.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(seekerRepository.save(any(Seeker.class))).thenAnswer(invocation -> invocation.getArgument(0));
         when(applicationMapper.toApplicationCreateResponse(any(Application.class)))
                 .thenReturn(expectedResponse);
 
-        ApplicationCreateResponse result = applicationService.applyToJob(2L, request, null);
+        ApplicationCreateResponse result = applicationService.applyToJob(2L, request, null, null);
 
         ArgumentCaptor<Application> applicationCaptor = ArgumentCaptor.forClass(Application.class);
         verify(applicationRepository).save(applicationCaptor.capture());
@@ -124,7 +145,8 @@ class ApplicationServiceImplTest {
         assertThat(savedApplication.getFullName()).isEqualTo("New Name");
         assertThat(savedApplication.getPhoneNumber()).isEqualTo("0912345678");
         assertThat(savedApplication.getCoverLetter()).isEqualTo("New cover letter");
-        assertThat(savedApplication.getResumeUrl()).isEqualTo("/api/v1/seekers/seeker-2/cv");
+        assertThat(savedApplication.getResumeUrl()).isEqualTo("/api/v1/cv-files/cv-file-1");
+        assertThat(savedApplication.getCvFile()).isSameAs(cvFile);
         assertThat(savedApplication.getStatus()).isEqualTo(ApplicationStatus.PENDING);
         assertThat(savedApplication.getDesiredLocations()).containsExactlyInAnyOrderElementsOf(desiredLocations);
 

@@ -20,6 +20,7 @@ public class ApplicationCreateResponse {
     String fullName;
     String phoneNumber;
     String resumeUrl;
+    String cvFileId;
     String resumePreviewUrl;
     String coverLetter;
     ApplicationStatus status;

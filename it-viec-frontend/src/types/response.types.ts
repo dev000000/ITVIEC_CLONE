@@ -232,6 +232,7 @@ export interface ApplicationResponse {
   phoneNumber: string;
   resumeUrl: string;
   resumePreviewUrl?: string;
+  cvFileId?: string;
   coverLetter: string;
   status: ApplicationStatus;
   employerMessage: string;
@@ -247,6 +248,7 @@ export interface ApplicationCreateResponse {
   phoneNumber: string;
   resumeUrl: string;
   resumePreviewUrl?: string;
+  cvFileId?: string;
   coverLetter: string;
   status: ApplicationStatus;
   createdAt: string;

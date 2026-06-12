@@ -17,8 +17,9 @@ import Swal from "sweetalert2";
 import { updateMyCoverLetterApi, updateMyBasicInfoApi } from "@/services/seekerApi";
 import {
   deleteMyCvApi,
-  getMyCvMetadataApi,
-  getMyCvPreviewUrl,
+  getCvPreviewUrl,
+  getMyCvsMetadataApi,
+  setPrimaryCvApi,
   uploadMyCvApi,
 } from "@/services/seekerCvApi";
 import { PHONE_NUMBER_REGEX } from "@/constants";
@@ -83,34 +84,31 @@ function CVManager() {
   const [cities, setCities] = useState<CityResponse[]>([]);
   const { t, i18n } = useTranslation("jobseeker");
 
-  // CV state
-  const [cvMetadata, setCvMetadata] = useState<SeekerCvMetadataResponse | null>(null);
+  // CV state — list of up to 3 CVs
+  const [cvs, setCvs] = useState<SeekerCvMetadataResponse[]>([]);
   const [isCvLoading, setIsCvLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const originalCoverLetter = useRef("");
 
-  // Fetch CV metadata on mount
-  const fetchCvMetadata = useCallback(async () => {
+  // Fetch full CV list
+  const fetchCvList = useCallback(async () => {
     setIsCvLoading(true);
     try {
-      const data = await getMyCvMetadataApi();
-      setCvMetadata(data.result);
+      const data = await getMyCvsMetadataApi();
+      setCvs(data.result ?? []);
     } catch (error) {
-      if ((error as { response?: { status?: number } })?.response?.status === 404) {
-        setCvMetadata(null);
-      } else {
-        console.error("Failed to load CV metadata:", error);
-      }
+      console.error("Failed to load CV list:", error);
+      setCvs([]);
     } finally {
       setIsCvLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchCvMetadata();
-  }, [fetchCvMetadata]);
+    fetchCvList();
+  }, [fetchCvList]);
 
   // Format ngày cập nhật CV
   const formatUpdatedAt = (updatedAt: string) => {
@@ -227,45 +225,30 @@ function CVManager() {
 
   // ================== CV HANDLERS ==================
 
-  // Kích hoạt file input ẩn khi bấm nút Upload
   const handleUploadClick = () => {
     fileInputRef.current?.click();
   };
 
-  // Helper: lấy extension của file (lowercase, không có dấu chấm)
   const getFileExtension = (fileName: string) =>
     fileName.split(".").pop()?.toLowerCase() ?? "";
 
-  // Validate file CV theo MIME type và extension (fallback cho Windows DOCX trả type rỗng)
   const isValidCvFile = (file: File): boolean => {
     if (ACCEPTED_CV_TYPES.includes(file.type)) return true;
-    // Fallback khi Windows không detect được MIME type
     const ext = getFileExtension(file.name);
     return ["pdf", "doc", "docx"].includes(ext);
   };
 
-  // Xử lý khi user chọn file
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Capture file trước, reset input sau để có thể chọn lại cùng 1 file
     const file = e.target.files?.[0];
     if (!file) return;
-
-    // Reset sau khi đã capture file reference
     e.target.value = "";
 
-    // Validate client-side
     if (!isValidCvFile(file)) {
-      Swal.fire({
-        icon: "error",
-        title: t("cvManager.error.invalidFileType"),
-      });
+      Swal.fire({ icon: "error", title: t("cvManager.error.invalidFileType") });
       return;
     }
     if (file.size > MAX_CV_SIZE_BYTES) {
-      Swal.fire({
-        icon: "error",
-        title: t("cvManager.error.fileTooLarge"),
-      });
+      Swal.fire({ icon: "error", title: t("cvManager.error.fileTooLarge") });
       return;
     }
 
@@ -275,12 +258,8 @@ function CVManager() {
       if (result.result) {
         setSeekerFullInfo(result.result);
       }
-      await fetchCvMetadata();
-      Swal.fire({
-        title: t("cvManager.success.uploadCV"),
-        icon: "success",
-        draggable: true,
-      });
+      await fetchCvList();
+      Swal.fire({ title: t("cvManager.success.uploadCV"), icon: "success", draggable: true });
     } catch (error) {
       console.error("CV upload error:", error);
       Swal.fire({
@@ -293,15 +272,11 @@ function CVManager() {
     }
   };
 
-  // Xem preview CV (mở tab mới)
-  const handlePreviewCv = () => {
-    if (!cvMetadata) return;
-    const previewUrl = getMyCvPreviewUrl();
-    window.open(previewUrl, "_blank", "noopener,noreferrer");
+  const handlePreviewCv = (cvId: string) => {
+    window.open(getCvPreviewUrl(cvId), "_blank", "noopener,noreferrer");
   };
 
-  // Xóa CV
-  const handleDeleteCv = async () => {
+  const handleDeleteCv = async (cvId: string) => {
     const result = await Swal.fire({
       title: t("cvManager.deleteConfirm"),
       icon: "warning",
@@ -314,22 +289,30 @@ function CVManager() {
     if (!result.isConfirmed) return;
 
     try {
-      const response = await deleteMyCvApi();
-      if (response.result) {
-        setSeekerFullInfo(response.result);
-      }
-      setCvMetadata(null);
-      Swal.fire({
-        title: t("cvManager.success.deleteCV"),
-        icon: "success",
-        draggable: true,
-      });
+      await deleteMyCvApi(cvId);
+      await fetchCvList();
+      Swal.fire({ title: t("cvManager.success.deleteCV"), icon: "success", draggable: true });
     } catch (error) {
       console.error("CV delete error:", error);
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: getApiErrorMessage(error, t) || t("cvManager.error.deleteFailed"),
+      });
+    }
+  };
+
+  const handleSetPrimary = async (cvId: string) => {
+    try {
+      await setPrimaryCvApi(cvId);
+      await fetchCvList();
+      Swal.fire({ title: t("cvManager.success.setPrimary"), icon: "success", draggable: true });
+    } catch (error) {
+      console.error("Set primary CV error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: getApiErrorMessage(error, t),
       });
     }
   };
@@ -483,58 +466,84 @@ function CVManager() {
           <div className="cv-manager__block">
             <h3 className="cv-manager__main-title">{t("cvManager.yourCV")}</h3>
 
-            {/* Khu vực hiển thị CV hiện tại */}
-            <div className="update-cv update-cv--2">
-              <img
-                src={uploadImg}
-                alt="upload-resume"
-                className="update-cv__img update-cv__img--2"
-              />
-              <div className="update-cv__main-content">
-                {isCvLoading ? (
-                  <div className="cv-manager__cv-loading">
-                    <Spin size="small" />
-                    <span>{t("cvManager.uploading")}</span>
-                  </div>
-                ) : cvMetadata ? (
-                  <>
-                    {/* Tên file — click để preview */}
-                    <button
-                      className="update-cv__link-file update-cv__link-file--2 update-cv__link-file--clickable"
-                      onClick={handlePreviewCv}
-                      title={t("cvManager.previewCV")}
-                      type="button"
-                    >
-                      {cvMetadata.fileName}
-                    </button>
-                    {/* Ngày cập nhật cuối */}
-                    <div className="update-cv__file-date">
-                      {`${t("cvManager.lastUpdated")}: ${formatUpdatedAt(cvMetadata.updatedAt)}`}
-                    </div>
-                    {/* Nút xóa CV */}
-                    <button
-                      className="cv-manager__delete-btn"
-                      onClick={handleDeleteCv}
-                      type="button"
-                      title={t("cvManager.deleteCV")}
-                    >
-                      <FaRegTrashAlt />
-                      <span>{t("cvManager.deleteCV")}</span>
-                    </button>
-                  </>
-                ) : (
-                  <div className="update-cv__file-date update-cv__file-date--empty">
-                    {t("cvManager.noCV")}
-                  </div>
-                )}
-              </div>
+            {/* Đếm số CV */}
+            <div className="cv-manager__cv-count">
+              {t("cvManager.cvCount", { count: cvs.length })}
             </div>
 
-            {/* Nút upload — hiển thị spinner khi đang tải */}
+            {/* Danh sách CV */}
+            {isCvLoading ? (
+              <div className="cv-manager__cv-loading">
+                <Spin size="small" />
+                <span>{t("cvManager.uploading")}</span>
+              </div>
+            ) : cvs.length === 0 ? (
+              <div className="update-cv__file-date update-cv__file-date--empty">
+                {t("cvManager.noCV")}
+              </div>
+            ) : (
+              <div className="cv-manager__cv-list">
+                {cvs.map((cv) => (
+                  <div key={cv.id} className="cv-manager__cv-card">
+                    <img
+                      src={uploadImg}
+                      alt="upload-resume"
+                      className="cv-manager__cv-card-img"
+                    />
+                    <div className="cv-manager__cv-card-info">
+                      <div className="cv-manager__cv-card-header">
+                        <button
+                          className="update-cv__link-file update-cv__link-file--clickable"
+                          onClick={() => handlePreviewCv(cv.id)}
+                          title={t("cvManager.previewCV")}
+                          type="button"
+                        >
+                          {cv.fileName}
+                        </button>
+                        {cv.isPrimary && (
+                          <span className="cv-manager__cv-primary-badge">
+                            {t("cvManager.primaryCV")}
+                          </span>
+                        )}
+                      </div>
+                      <div className="update-cv__file-date">
+                        {`${t("cvManager.lastUpdated")}: ${formatUpdatedAt(cv.updatedAt)}`}
+                      </div>
+                      <div className="cv-manager__cv-card-actions">
+                        {!cv.isPrimary && (
+                          <button
+                            className="cv-manager__set-primary-btn"
+                            onClick={() => handleSetPrimary(cv.id)}
+                            type="button"
+                          >
+                            {t("cvManager.setPrimary")}
+                          </button>
+                        )}
+                        <button
+                          className="cv-manager__delete-btn"
+                          onClick={() => handleDeleteCv(cv.id)}
+                          type="button"
+                          title={t("cvManager.deleteCV")}
+                        >
+                          <FaRegTrashAlt />
+                          <span>{t("cvManager.deleteCV")}</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Upload — spinner khi đang tải, disabled khi đã có 3 CV */}
             {isUploading ? (
               <div className="cv-manager__uploading">
                 <Spin size="small" />
                 <span>{t("cvManager.uploading")}</span>
+              </div>
+            ) : cvs.length >= 3 ? (
+              <div className="cv-manager__limit-msg">
+                {t("cvManager.limitReached")}
               </div>
             ) : (
               <ButtonUpload

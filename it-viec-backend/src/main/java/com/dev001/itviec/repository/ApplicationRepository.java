@@ -32,4 +32,6 @@ public interface ApplicationRepository
 
     @Query("SELECT a FROM Application a JOIN a.job j WHERE j.company = :company AND j.id = :id")
     List<Application> findByJobIdAndCompany(@Param("id") Long id, @Param("company") Company company);
+
+    boolean existsByCvFileId(String cvFileId);
 }

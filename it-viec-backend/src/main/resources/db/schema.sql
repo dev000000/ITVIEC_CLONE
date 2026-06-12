@@ -66,6 +66,7 @@ CREATE TABLE seekers (
   personal_link VARCHAR(255),
   cover_letter VARCHAR(500),
   cv_url VARCHAR(500),
+  primary_cv_id VARCHAR(255),
   avatar_url VARCHAR(500),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -149,18 +150,29 @@ CREATE TABLE company_logos (
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_company_logos_company FOREIGN KEY (company_id) REFERENCES companies(id)
 );
--- Bảng CV của ứng viên (lưu file binary)
-CREATE TABLE seeker_cvs (
+-- Bảng file CV (blob thực tế, dùng chung cho profile và application)
+CREATE TABLE cv_files (
   id VARCHAR(255) PRIMARY KEY,
-  seeker_id VARCHAR(255) NOT NULL UNIQUE,
   file_name VARCHAR(255) NOT NULL,
   content_type VARCHAR(100) NOT NULL,
   size BIGINT NOT NULL,
   cv_data LONGBLOB NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_seeker_cvs_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id)
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+-- Bảng liên kết seeker ↔ cv_file (tối đa 3 CV / seeker)
+CREATE TABLE seeker_cvs (
+  id VARCHAR(255) PRIMARY KEY,
+  seeker_id VARCHAR(255) NOT NULL,
+  cv_file_id VARCHAR(255) NOT NULL,
+  is_primary BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_seeker_cvs_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id),
+  CONSTRAINT fk_seeker_cvs_cv_file FOREIGN KEY (cv_file_id) REFERENCES cv_files(id)
+);
+ALTER TABLE seekers
+  ADD CONSTRAINT fk_seekers_primary_cv FOREIGN KEY (primary_cv_id) REFERENCES seeker_cvs(id);
 -- Bảng avatar của ứng viên
 CREATE TABLE seeker_avatars (
   id VARCHAR(255) PRIMARY KEY,
@@ -216,13 +228,15 @@ CREATE TABLE applications (
   full_name VARCHAR(255) NOT NULL,
   phone_number VARCHAR(10),
   resume_url VARCHAR(255),
+  cv_file_id VARCHAR(255),
   cover_letter VARCHAR(500),
   status ENUM('PENDING', 'ACCEPTED', 'REJECTED') NOT NULL,
   employer_message MEDIUMTEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_applications_seeker FOREIGN KEY (seeker_id) REFERENCES seekers(id),
-  CONSTRAINT fk_applications_job FOREIGN KEY (job_id) REFERENCES jobs(id)
+  CONSTRAINT fk_applications_job FOREIGN KEY (job_id) REFERENCES jobs(id),
+  CONSTRAINT fk_applications_cv_file FOREIGN KEY (cv_file_id) REFERENCES cv_files(id)
 );
 -- Bảng application vs city ( địa điểm làm việc mong muốn )
 CREATE TABLE application_cities (

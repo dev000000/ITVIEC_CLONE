@@ -18,8 +18,8 @@ import {
 } from "@/services/applicationApi";
 import { getAllCitiesApi } from "@/services/cityApi";
 import {
-  getMyCvMetadataApi,
-  getMyCvPreviewUrl,
+  getCvPreviewUrl,
+  getMyCvsMetadataApi,
 } from "@/services/seekerCvApi";
 import { PHONE_NUMBER_REGEX } from "@/constants";
 import { useSeekerStore } from "@/store/seekerStore";
@@ -64,7 +64,8 @@ const JobApplications = () => {
   const [cities, setCities] = useState<CityResponse[]>([]);
   const [hasApplied, setHasApplied] = useState(false);
   const [appliedAt, setAppliedAt] = useState<string | null>(null);
-  const [cvMetadata, setCvMetadata] = useState<SeekerCvMetadataResponse | null>(null);
+  const [cvList, setCvList] = useState<SeekerCvMetadataResponse[]>([]);
+  const [selectedCvId, setSelectedCvId] = useState<string | null>(null);
   const [isCvMetadataLoading, setIsCvMetadataLoading] = useState(true);
   const [cvMode, setCvMode] = useState<CvMode>("upload");
   const [selectedCvFile, setSelectedCvFile] = useState<File | null>(null);
@@ -163,24 +164,25 @@ const JobApplications = () => {
         }
 
         try {
-          const cvResponse = await getMyCvMetadataApi();
+          const cvResponse = await getMyCvsMetadataApi();
           if (!isMounted) {
             return;
           }
 
-          setCvMetadata(cvResponse.result);
-          setCvMode("current");
+          const list = cvResponse.result ?? [];
+          setCvList(list);
+          if (list.length > 0) {
+            const primary = list.find((cv) => cv.isPrimary) ?? list[0];
+            setSelectedCvId(primary.id);
+            setCvMode("current");
+          } else {
+            setCvMode("upload");
+          }
         } catch (error) {
           if (!isMounted) {
             return;
           }
-
-          if ((error as { response?: { status?: number } })?.response?.status === 404) {
-            setCvMetadata(null);
-            setCvMode("upload");
-          } else {
-            console.error("Error fetching CV metadata:", error);
-          }
+          console.error("Error fetching CV list:", error);
         }
       } catch (error) {
         console.error("Error loading application context:", error);
@@ -236,15 +238,14 @@ const JobApplications = () => {
     return ["pdf", "doc", "docx"].includes(getFileExtension(file.name));
   };
 
-  const handleCurrentCvPreview = () => {
-    window.open(getMyCvPreviewUrl(), "_blank", "noopener,noreferrer");
+  const handleCvPreview = (cvId: string) => {
+    window.open(getCvPreviewUrl(cvId), "_blank", "noopener,noreferrer");
   };
 
   const handleSelectCvMode = (mode: CvMode) => {
-    if (mode === "current" && !cvMetadata) {
+    if (mode === "current" && cvList.length === 0) {
       return;
     }
-
     setCvMode(mode);
   };
 
@@ -306,18 +307,12 @@ const JobApplications = () => {
     }
 
     if (cvMode === "upload" && !selectedCvFile) {
-      Swal.fire({
-        icon: "error",
-        title: t("jobApplications.cvRequired"),
-      });
+      Swal.fire({ icon: "error", title: t("jobApplications.cvRequired") });
       return;
     }
 
-    if (cvMode === "current" && !cvMetadata) {
-      Swal.fire({
-        icon: "error",
-        title: t("jobApplications.cvRequired"),
-      });
+    if (cvMode === "current" && !selectedCvId) {
+      Swal.fire({ icon: "error", title: t("jobApplications.cvRequired") });
       return;
     }
 
@@ -334,7 +329,9 @@ const JobApplications = () => {
       const response = await applyToJobApi(
         jobId,
         applicationData,
-        cvMode === "upload" ? selectedCvFile : null,
+        cvMode === "upload"
+          ? { cvFile: selectedCvFile }
+          : { cvId: selectedCvId },
       );
 
       const refreshedProfile = await getMyProfileApi();
@@ -418,16 +415,17 @@ const JobApplications = () => {
               </h3>
 
               <div className="job-applications__cv-options">
+                {/* Option 1: chọn CV có sẵn */}
                 <div
                   className={`job-applications__cv-option ${
                     cvMode === "current" ? "job-applications__cv-option--active" : ""
-                  } ${!cvMetadata ? "job-applications__cv-option--disabled" : ""}`}
+                  } ${cvList.length === 0 ? "job-applications__cv-option--disabled" : ""}`}
                 >
                   <button
                     type="button"
                     className="job-applications__cv-option-trigger"
                     onClick={() => handleSelectCvMode("current")}
-                    disabled={!cvMetadata}
+                    disabled={cvList.length === 0}
                   >
                     <span
                       className={`job-applications__cv-radio ${
@@ -435,7 +433,7 @@ const JobApplications = () => {
                       }`}
                     />
                     <span className="job-applications__cv-option-title">
-                      {t("jobApplications.useCurrentCv")}
+                      {t("jobApplications.useExistingCv")}
                     </span>
                   </button>
 
@@ -445,32 +443,43 @@ const JobApplications = () => {
                         <Spin size="small" />
                         <span>{t("jobApplications.loadingCv")}</span>
                       </div>
-                    ) : cvMetadata ? (
-                      <>
-                        <div className="job-applications__cv-file-row">
-                          <IoDocumentTextOutline />
-                          <button
-                            type="button"
-                            className="job-applications__cv-link"
-                            onClick={handleCurrentCvPreview}
-                          >
-                            {cvMetadata.fileName}
-                          </button>
-                          <button
-                            type="button"
-                            className="job-applications__cv-preview"
-                            onClick={handleCurrentCvPreview}
-                            title={t("jobApplications.previewCurrentCv")}
-                          >
-                            <IoEyeOutline />
-                          </button>
-                        </div>
-                        <div className="job-applications__cv-meta">
-                          {t("jobApplications.currentCvUpdatedAt", {
-                            date: formatUpdatedAt(cvMetadata.updatedAt),
-                          })}
-                        </div>
-                      </>
+                    ) : cvList.length > 0 ? (
+                      <div className="job-applications__cv-select-list">
+                        {cvList.map((cv) => (
+                          <label key={cv.id} className="job-applications__cv-select-item">
+                            <input
+                              type="radio"
+                              name="selectedCv"
+                              value={cv.id}
+                              checked={selectedCvId === cv.id}
+                              onChange={() => setSelectedCvId(cv.id)}
+                              className="job-applications__cv-select-radio"
+                            />
+                            <div className="job-applications__cv-file-row">
+                              <IoDocumentTextOutline />
+                              <span className="job-applications__cv-link">{cv.fileName}</span>
+                              {cv.isPrimary && (
+                                <span className="job-applications__cv-primary-badge">
+                                  {t("cvManager.primaryCV")}
+                                </span>
+                              )}
+                              <button
+                                type="button"
+                                className="job-applications__cv-preview"
+                                onClick={() => handleCvPreview(cv.id)}
+                                title={t("jobApplications.previewCurrentCv")}
+                              >
+                                <IoEyeOutline />
+                              </button>
+                            </div>
+                            <div className="job-applications__cv-meta">
+                              {t("jobApplications.currentCvUpdatedAt", {
+                                date: formatUpdatedAt(cv.updatedAt),
+                              })}
+                            </div>
+                          </label>
+                        ))}
+                      </div>
                     ) : (
                       <div className="job-applications__cv-meta job-applications__cv-meta--empty">
                         {t("jobApplications.noCurrentCv")}
@@ -479,6 +488,7 @@ const JobApplications = () => {
                   </div>
                 </div>
 
+                {/* Option 2: upload CV mới */}
                 <div
                   className={`job-applications__cv-option ${
                     cvMode === "upload" ? "job-applications__cv-option--active" : ""

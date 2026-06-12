@@ -19,6 +19,7 @@ import com.dev001.itviec.dto.response.SeekerAvatarContent;
 import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
+import com.dev001.itviec.entity.cvfile.CvFile;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.entity.seeker.SeekerAvatar;
 import com.dev001.itviec.entity.seeker.SeekerCv;
@@ -26,6 +27,8 @@ import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.SeekerMapper;
+import com.dev001.itviec.repository.ApplicationRepository;
+import com.dev001.itviec.repository.CvFileRepository;
 import com.dev001.itviec.repository.SeekerAvatarRepository;
 import com.dev001.itviec.repository.SeekerCvRepository;
 import com.dev001.itviec.repository.SeekerRepository;
@@ -40,10 +43,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SeekerServiceImpl implements SeekerService {
 
-    private static final long MAX_AVATAR_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB
+    private static final int MAX_CV_COUNT = 3;
+    private static final long MAX_AVATAR_SIZE_BYTES = 2 * 1024 * 1024;
     private static final Set<String> ALLOWED_AVATAR_TYPES =
             Set.of(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, "image/webp");
-    private static final long MAX_CV_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+    private static final long MAX_CV_SIZE_BYTES = 5 * 1024 * 1024;
     private static final Set<String> ALLOWED_CV_TYPES = Set.of(
             "application/pdf",
             "application/msword",
@@ -53,6 +57,8 @@ public class SeekerServiceImpl implements SeekerService {
     private final SeekerRepository seekerRepository;
     private final SeekerAvatarRepository seekerAvatarRepository;
     private final SeekerCvRepository seekerCvRepository;
+    private final CvFileRepository cvFileRepository;
+    private final ApplicationRepository applicationRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -101,8 +107,6 @@ public class SeekerServiceImpl implements SeekerService {
         return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
     }
 
-    // ===================== Partial Update =====================
-
     @Transactional
     @Override
     public SeekerResponse updateMyCoverLetter(SeekerCoverLetterUpdateRequest request) {
@@ -135,8 +139,6 @@ public class SeekerServiceImpl implements SeekerService {
         seeker.setAddress(request.getAddress());
         return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
     }
-
-    // ===================== Avatar =====================
 
     @Transactional
     @Override
@@ -184,62 +186,43 @@ public class SeekerServiceImpl implements SeekerService {
         return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
     }
 
-    // ===================== CV =====================
-
     @Transactional
     @Override
     public SeekerResponse uploadMyCv(MultipartFile file) {
         validateCvFile(file);
 
         Seeker seeker = getSeekerByCookie();
-
-        // Upsert: tìm CV cũ hoặc tạo mới
-        SeekerCv seekerCv = seekerCvRepository
-                .findBySeekerId(seeker.getId())
-                .orElse(SeekerCv.builder().seeker(seeker).build());
-
-        try {
-            seekerCv.setFileName(file.getOriginalFilename() != null ? file.getOriginalFilename() : "cv");
-            seekerCv.setContentType(file.getContentType());
-            seekerCv.setSize(file.getSize());
-            seekerCv.setData(file.getBytes());
-        } catch (IOException e) {
-            log.error("Failed to read CV file for seekerId={}", seeker.getId(), e);
-            throw new AppException(ErrorCode.SEEKER_CV_UPLOAD_FAILED);
+        long currentCount = seekerCvRepository.countBySeekerId(seeker.getId());
+        if (currentCount >= MAX_CV_COUNT) {
+            throw new AppException(ErrorCode.SEEKER_CV_LIMIT_REACHED);
         }
 
+        CvFile cvFile = createCvFileFromMultipart(file);
+        cvFileRepository.save(cvFile);
+
+        boolean isPrimary = currentCount == 0;
+        SeekerCv seekerCv = SeekerCv.builder()
+                .seeker(seeker)
+                .cvFile(cvFile)
+                .isPrimary(isPrimary)
+                .build();
         seekerCvRepository.save(seekerCv);
 
-        // Cập nhật cvUrl trỏ tới endpoint download
-        seeker.setCvUrl(buildCvUrl(seeker.getId()));
-        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public SeekerCvContent getMyCv() {
-        Seeker seeker = getSeekerByCookie();
-        return getCvBySeekerId(seeker.getId());
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public SeekerCvContent getCvBySeekerId(String seekerId) {
-        SeekerCv cv = seekerCvRepository
-                .findBySeekerId(seekerId)
-                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
-        return new SeekerCvContent(cv.getFileName(), cv.getContentType(), cv.getData());
-    }
-
-    @Transactional
-    @Override
-    public SeekerResponse deleteMyCv() {
-        Seeker seeker = getSeekerByCookie();
-        if (seekerCvRepository.existsBySeekerId(seeker.getId())) {
-            seekerCvRepository.deleteBySeekerId(seeker.getId());
+        if (isPrimary) {
+            seeker.setPrimaryCv(seekerCv);
+            syncSeekerCvUrl(seeker);
         }
-        seeker.setCvUrl(null);
+
         return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<SeekerCvMetadataResponse> getMyCvsMetadata() {
+        Seeker seeker = getSeekerByCookie();
+        return seekerCvRepository.findBySeekerIdOrderByUpdatedAtDesc(seeker.getId()).stream()
+                .map(this::toCvMetadataResponse)
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -247,17 +230,210 @@ public class SeekerServiceImpl implements SeekerService {
     public SeekerCvMetadataResponse getMyCvMetadata() {
         Seeker seeker = getSeekerByCookie();
         SeekerCv cv = seekerCvRepository
-                .findBySeekerId(seeker.getId())
+                .findBySeekerIdAndIsPrimaryTrue(seeker.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
+        return toCvMetadataResponse(cv);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SeekerCvContent getMyCv() {
+        Seeker seeker = getSeekerByCookie();
+        return getPrimaryCvContentBySeekerId(seeker.getId());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SeekerCvContent getCvBySeekerId(String seekerId) {
+        return getPrimaryCvContentBySeekerId(seekerId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SeekerCvContent getCvBySeekerCvId(String cvId) {
+        Seeker seeker = getSeekerByCookie();
+        SeekerCv seekerCv = seekerCvRepository
+                .findByIdAndSeekerId(cvId, seeker.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_OWNED));
+        return toCvContent(seekerCv.getCvFile());
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public SeekerCvContent getCvFileContent(String cvFileId) {
+        CvFile cvFile =
+                cvFileRepository.findById(cvFileId).orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
+        return toCvContent(cvFile);
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse deleteMyCv(String cvId) {
+        Seeker seeker = getSeekerByCookie();
+        SeekerCv seekerCv = seekerCvRepository
+                .findByIdAndSeekerId(cvId, seeker.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_OWNED));
+
+        String cvFileId = seekerCv.getCvFile().getId();
+        boolean wasPrimary = seekerCv.isPrimary();
+        seekerCvRepository.delete(seekerCv);
+
+        if (wasPrimary) {
+            promoteNewPrimary(seeker);
+        }
+
+        cleanupOrphanCvFile(cvFileId);
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse deleteMyCv() {
+        Seeker seeker = getSeekerByCookie();
+        SeekerCv primaryCv = seekerCvRepository
+                .findBySeekerIdAndIsPrimaryTrue(seeker.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
+        return deleteMyCv(primaryCv.getId());
+    }
+
+    @Transactional
+    @Override
+    public SeekerResponse setPrimaryCv(String cvId) {
+        Seeker seeker = getSeekerByCookie();
+        SeekerCv targetCv = seekerCvRepository
+                .findByIdAndSeekerId(cvId, seeker.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_OWNED));
+
+        List<SeekerCv> seekerCvs = seekerCvRepository.findBySeekerIdOrderByUpdatedAtDesc(seeker.getId());
+        for (SeekerCv cv : seekerCvs) {
+            cv.setPrimary(cv.getId().equals(targetCv.getId()));
+            seekerCvRepository.save(cv);
+        }
+
+        seeker.setPrimaryCv(targetCv);
+        syncSeekerCvUrl(seeker);
+        return seekerMapper.toSeekerResponse(seekerRepository.save(seeker));
+    }
+
+    @Transactional
+    @Override
+    public CvFile uploadCvFileForApplication(MultipartFile file) {
+        validateCvFile(file);
+
+        Seeker seeker = getSeekerByCookie();
+        CvFile cvFile = createCvFileFromMultipart(file);
+        cvFileRepository.save(cvFile);
+
+        long currentCount = seekerCvRepository.countBySeekerId(seeker.getId());
+        if (currentCount < MAX_CV_COUNT) {
+            boolean isPrimary = currentCount == 0;
+            SeekerCv seekerCv = SeekerCv.builder()
+                    .seeker(seeker)
+                    .cvFile(cvFile)
+                    .isPrimary(isPrimary)
+                    .build();
+            seekerCvRepository.save(seekerCv);
+
+            if (isPrimary) {
+                seeker.setPrimaryCv(seekerCv);
+                syncSeekerCvUrl(seeker);
+                seekerRepository.save(seeker);
+            }
+        }
+
+        return cvFile;
+    }
+
+    @Override
+    public String buildCvUrl(String cvFileId) {
+        String relativePath = "/api/v1/cv-files/" + cvFileId;
+        try {
+            return ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(relativePath)
+                    .toUriString();
+        } catch (IllegalStateException exception) {
+            return relativePath;
+        }
+    }
+
+    @Override
+    public String buildCvPreviewUrl(String cvFileId) {
+        String relativePath = "/api/v1/cv-files/" + cvFileId + "/preview";
+        try {
+            return ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path(relativePath)
+                    .toUriString();
+        } catch (IllegalStateException exception) {
+            return relativePath;
+        }
+    }
+
+    private SeekerCvContent getPrimaryCvContentBySeekerId(String seekerId) {
+        SeekerCv cv = seekerCvRepository
+                .findBySeekerIdAndIsPrimaryTrue(seekerId)
+                .orElseThrow(() -> new AppException(ErrorCode.SEEKER_CV_NOT_FOUND));
+        return toCvContent(cv.getCvFile());
+    }
+
+    private SeekerCvMetadataResponse toCvMetadataResponse(SeekerCv cv) {
+        CvFile cvFile = cv.getCvFile();
         return SeekerCvMetadataResponse.builder()
-                .fileName(cv.getFileName())
-                .contentType(cv.getContentType())
-                .size(cv.getSize())
+                .id(cv.getId())
+                .cvFileId(cvFile.getId())
+                .fileName(cvFile.getFileName())
+                .contentType(cvFile.getContentType())
+                .size(cvFile.getSize())
+                .isPrimary(cv.isPrimary())
                 .updatedAt(cv.getUpdatedAt())
                 .build();
     }
 
-    // ===================== Helpers =====================
+    private SeekerCvContent toCvContent(CvFile cvFile) {
+        return new SeekerCvContent(cvFile.getFileName(), cvFile.getContentType(), cvFile.getData());
+    }
+
+    private CvFile createCvFileFromMultipart(MultipartFile file) {
+        try {
+            return CvFile.builder()
+                    .fileName(file.getOriginalFilename() != null ? file.getOriginalFilename() : "cv")
+                    .contentType(file.getContentType())
+                    .size(file.getSize())
+                    .data(file.getBytes())
+                    .build();
+        } catch (IOException exception) {
+            log.error("Failed to read CV file", exception);
+            throw new AppException(ErrorCode.SEEKER_CV_UPLOAD_FAILED);
+        }
+    }
+
+    private void promoteNewPrimary(Seeker seeker) {
+        List<SeekerCv> remaining = seekerCvRepository.findBySeekerIdOrderByUpdatedAtDesc(seeker.getId());
+        if (remaining.isEmpty()) {
+            seeker.setPrimaryCv(null);
+            seeker.setCvUrl(null);
+            return;
+        }
+
+        SeekerCv newPrimary = remaining.get(0);
+        newPrimary.setPrimary(true);
+        seekerCvRepository.save(newPrimary);
+        seeker.setPrimaryCv(newPrimary);
+        syncSeekerCvUrl(seeker);
+    }
+
+    private void syncSeekerCvUrl(Seeker seeker) {
+        if (seeker.getPrimaryCv() != null && seeker.getPrimaryCv().getCvFile() != null) {
+            seeker.setCvUrl(buildCvUrl(seeker.getPrimaryCv().getCvFile().getId()));
+        } else {
+            seeker.setCvUrl(null);
+        }
+    }
+
+    private void cleanupOrphanCvFile(String cvFileId) {
+        if (!seekerCvRepository.existsByCvFileId(cvFileId) && !applicationRepository.existsByCvFileId(cvFileId)) {
+            cvFileRepository.deleteById(cvFileId);
+        }
+    }
 
     private void validateAvatarFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
@@ -300,30 +476,6 @@ public class SeekerServiceImpl implements SeekerService {
                     .path(relativePath)
                     .toUriString();
         } catch (IllegalStateException exception) {
-            return relativePath;
-        }
-    }
-
-    public String buildCvUrl(String seekerId) {
-        // Trả về URL download (dùng cho seeker.cvUrl và application.resumeUrl)
-        String relativePath = "/api/v1/seekers/" + seekerId + "/cv";
-        try {
-            return ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(relativePath)
-                    .toUriString();
-        } catch (IllegalStateException e) {
-            return relativePath;
-        }
-    }
-
-    public String buildCvPreviewUrl(String seekerId) {
-        // Trả về URL preview inline (FE dùng để embed trong <iframe> hoặc <embed>)
-        String relativePath = "/api/v1/seekers/" + seekerId + "/cv/preview";
-        try {
-            return ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path(relativePath)
-                    .toUriString();
-        } catch (IllegalStateException e) {
             return relativePath;
         }
     }

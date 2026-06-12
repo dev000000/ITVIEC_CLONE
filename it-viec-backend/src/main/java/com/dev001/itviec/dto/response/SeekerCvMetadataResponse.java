@@ -11,8 +11,11 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SeekerCvMetadataResponse {
+    String id;
+    String cvFileId;
     String fileName;
     String contentType;
     long size;
+    boolean isPrimary;
     LocalDateTime updatedAt;
 }

@@ -28,7 +28,11 @@ public interface ApplicationMapper {
 
     @AfterMapping
     default void setResumePreviewUrl(Application application, @MappingTarget ApplicationResponse response) {
-        if (application.getSeeker() != null && application.getResumeUrl() != null) {
+        if (application.getCvFile() != null) {
+            String cvFileId = application.getCvFile().getId();
+            response.setCvFileId(cvFileId);
+            response.setResumePreviewUrl("/api/v1/cv-files/" + cvFileId + "/preview");
+        } else if (application.getSeeker() != null && application.getResumeUrl() != null) {
             String seekerId = application.getSeeker().getId();
             response.setResumePreviewUrl("/api/v1/seekers/" + seekerId + "/cv/preview");
         }
@@ -36,7 +40,11 @@ public interface ApplicationMapper {
 
     @AfterMapping
     default void setResumePreviewUrl(Application application, @MappingTarget ApplicationCreateResponse response) {
-        if (application.getSeeker() != null && application.getResumeUrl() != null) {
+        if (application.getCvFile() != null) {
+            String cvFileId = application.getCvFile().getId();
+            response.setCvFileId(cvFileId);
+            response.setResumePreviewUrl("/api/v1/cv-files/" + cvFileId + "/preview");
+        } else if (application.getSeeker() != null && application.getResumeUrl() != null) {
             String seekerId = application.getSeeker().getId();
             response.setResumePreviewUrl("/api/v1/seekers/" + seekerId + "/cv/preview");
         }

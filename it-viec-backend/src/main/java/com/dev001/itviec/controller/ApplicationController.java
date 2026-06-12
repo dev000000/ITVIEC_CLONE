@@ -36,10 +36,11 @@ public class ApplicationController {
     public ApiResponse<ApplicationCreateResponse> applyToJob(
             @PathVariable Long jobId,
             @RequestPart("request") @Valid ApplicationRequest request,
-            @RequestPart(value = "cvFile", required = false) MultipartFile cvFile) {
+            @RequestPart(value = "cvFile", required = false) MultipartFile cvFile,
+            @RequestPart(value = "cvId", required = false) String cvId) {
         return ApiResponse.<ApplicationCreateResponse>builder()
                 .code(1000)
-                .result(applicationService.applyToJob(jobId, request, cvFile))
+                .result(applicationService.applyToJob(jobId, request, cvFile, cvId))
                 .build();
     }
 

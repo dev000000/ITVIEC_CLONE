@@ -65,6 +65,10 @@ public class Seeker extends BaseEntity {
     @Column(name = "cv_url", columnDefinition = "VARCHAR(500)")
     String cvUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "primary_cv_id")
+    SeekerCv primaryCv;
+
     @Column(name = "avatar_url", columnDefinition = "VARCHAR(500)")
     String avatarUrl;
 

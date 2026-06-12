@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 
 import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.city.City;
+import com.dev001.itviec.entity.cvfile.CvFile;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.seeker.Seeker;
 import com.dev001.itviec.enums.ApplicationStatus;
@@ -44,6 +45,10 @@ public class Application extends BaseEntity {
 
     @Column(name = "resume_url", columnDefinition = "VARCHAR(255)")
     String resumeUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cv_file_id")
+    CvFile cvFile;
 
     @Column(name = "cover_letter", columnDefinition = "VARCHAR(500)")
     String coverLetter;

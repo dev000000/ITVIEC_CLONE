@@ -12,6 +12,7 @@ import com.dev001.itviec.dto.response.SeekerAvatarContent;
 import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.dto.response.SeekerCvMetadataResponse;
 import com.dev001.itviec.dto.response.SeekerResponse;
+import com.dev001.itviec.entity.cvfile.CvFile;
 import com.dev001.itviec.entity.seeker.Seeker;
 
 public interface SeekerService {
@@ -26,28 +27,41 @@ public interface SeekerService {
 
     SeekerResponse updateMyProfile(SeekerUpdateRequest request);
 
-    // Partial update methods
     SeekerResponse updateMyCoverLetter(SeekerCoverLetterUpdateRequest request);
 
     SeekerResponse updateMyBasicInfo(SeekerBasicInfoUpdateRequest request);
 
     SeekerResponse updateMyPersonalInfo(SeekerPersonalInfoUpdateRequest request);
 
-    // Avatar
     SeekerResponse uploadMyAvatar(MultipartFile file);
 
     SeekerAvatarContent getSeekerAvatar(String seekerId);
 
     SeekerResponse deleteMyAvatar();
 
-    // CV
     SeekerResponse uploadMyCv(MultipartFile file);
+
+    List<SeekerCvMetadataResponse> getMyCvsMetadata();
+
+    SeekerCvMetadataResponse getMyCvMetadata();
 
     SeekerCvContent getMyCv();
 
     SeekerCvContent getCvBySeekerId(String seekerId);
 
+    SeekerCvContent getCvBySeekerCvId(String cvId);
+
+    SeekerCvContent getCvFileContent(String cvFileId);
+
+    SeekerResponse deleteMyCv(String cvId);
+
     SeekerResponse deleteMyCv();
 
-    SeekerCvMetadataResponse getMyCvMetadata();
+    SeekerResponse setPrimaryCv(String cvId);
+
+    CvFile uploadCvFileForApplication(MultipartFile file);
+
+    String buildCvUrl(String cvFileId);
+
+    String buildCvPreviewUrl(String cvFileId);
 }

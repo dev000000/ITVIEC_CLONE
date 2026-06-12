@@ -55,11 +55,16 @@
     "uploading": "Đang tải lên...",
     "previewCV": "Xem trước CV",
     "previewNotAvailable": "Chỉ hỗ trợ xem trước file PDF. File DOCX sẽ được tải về.",
+    "primaryCV": "CV chính",
+    "setPrimary": "Đặt làm CV chính",
+    "limitReached": "Bạn đã tải tối đa 3 CV",
+    "cvCount": "{{count}}/3 CV",
     "success": {
       "updateProfile": "Cập nhật hồ sơ thành công!",
       "updateLetter": "Cập nhật thư xin việc thành công!",
       "uploadCV": "Tải CV lên thành công!",
-      "deleteCV": "Xóa CV thành công!"
+      "deleteCV": "Xóa CV thành công!",
+      "setPrimary": "Đặt CV chính thành công!"
     },
     "error": {
       "updateFailed": "Cập nhật thất bại!",
@@ -186,7 +191,8 @@
     "invalidJob": "Công việc không hợp lệ",
     "cvTitle": "CV ứng tuyển",
     "useCurrentCv": "Sử dụng CV hiện tại",
-    "uploadNewCv": "Tải lên CV mới",
+    "useExistingCv": "Dùng CV có sẵn",
+    "uploadNewCv": "Tải CV mới",
     "chooseFile": "Chọn file",
     "noFileSelected": "Chưa có file nào được chọn",
     "noCurrentCv": "Bạn chưa có CV hiện tại. Vui lòng tải CV mới để ứng tuyển.",
