@@ -195,7 +195,7 @@ CREATE TABLE jobs (
   job_description MEDIUMTEXT,
   job_requirements MEDIUMTEXT,
   why_join_us MEDIUMTEXT,
-  location VARCHAR(255),
+  location VARCHAR(500),
   city_id BIGINT,
   salary VARCHAR(100),
   salary_min BIGINT,

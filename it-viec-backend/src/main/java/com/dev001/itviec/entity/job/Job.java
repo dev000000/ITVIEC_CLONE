@@ -53,7 +53,7 @@ public class Job extends BaseEntity {
     @Column(name = "why_join_us", columnDefinition = "MEDIUMTEXT")
     String whyJoinUs;
 
-    @Column(columnDefinition = "VARCHAR(255)")
+    @Column(columnDefinition = "VARCHAR(500)")
     String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
