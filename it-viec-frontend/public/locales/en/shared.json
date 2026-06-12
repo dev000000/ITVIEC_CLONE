@@ -11,11 +11,16 @@
     "allJobs": "all jobs",
     "loading": "Loading jobs...",
     "filters": {
-      "experienceLevel": "Filter by experience",
-      "jobType": "Filter by job type",
+      "experienceLevel": "Level",
+      "jobType": "Working Model",
       "salary": "Salary",
+      "jobDomain": "Job Domain",
+      "filterButton": "Filter",
       "applySalary": "Apply",
-      "clearSalary": "Clear filter"
+      "clearSalary": "Clear filter",
+      "searchDomain": "Search industry",
+      "clearDomain": "Clear",
+      "selected": "{{count}} selected"
     }
   },
   "jobSearchDetail": {

@@ -54,18 +54,28 @@ public class JobController {
     @GetMapping("/jobs/search")
     public ApiResponse<PageResponse<JobCardResponse>> searchJobs(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long cityId,
-            @RequestParam(required = false) JobType jobType,
-            @RequestParam(required = false) ExperienceLevel experienceLevel,
+            @RequestParam(required = false) List<JobType> jobType,
+            @RequestParam(required = false) List<ExperienceLevel> experienceLevel,
+            @RequestParam(required = false) Long jobDomainId,
             @RequestParam(required = false) Long salaryMin,
             @RequestParam(required = false) Long salaryMax,
             @RequestParam(required = false) SalaryCurrency salaryCurrency) {
         return ApiResponse.<PageResponse<JobCardResponse>>builder()
                 .code(1000)
                 .result(jobService.searchJobs(
-                        page, size, keyword, cityId, jobType, experienceLevel, salaryMin, salaryMax, salaryCurrency))
+                        page,
+                        size,
+                        keyword,
+                        cityId,
+                        jobType,
+                        experienceLevel,
+                        jobDomainId,
+                        salaryMin,
+                        salaryMax,
+                        salaryCurrency))
                 .build();
     }
 

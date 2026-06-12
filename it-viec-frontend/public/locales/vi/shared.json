@@ -11,11 +11,16 @@
     "allJobs": "tất cả công việc",
     "loading": "Đang tải việc làm...",
     "filters": {
-      "experienceLevel": "Lọc theo kinh nghiệm",
-      "jobType": "Lọc theo hình thức",
+      "experienceLevel": "Cấp bậc",
+      "jobType": "Hình thức",
       "salary": "Mức lương",
+      "jobDomain": "Lĩnh vực",
+      "filterButton": "Bộ lọc",
       "applySalary": "Áp dụng",
-      "clearSalary": "Xóa lọc"
+      "clearSalary": "Xóa bộ lọc",
+      "searchDomain": "Tìm lĩnh vực",
+      "clearDomain": "Xóa",
+      "selected": "{{count}} đã chọn"
     }
   },
   "jobSearchDetail": {

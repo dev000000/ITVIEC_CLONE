@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { Button, Popover, Slider } from "antd";
+import { FiChevronDown } from "react-icons/fi";
 import { useTranslation } from "react-i18next";
 import type { SalaryCurrency } from "@/types/common.types";
 import {
@@ -115,6 +116,7 @@ const SalaryRangeFilter = ({ value, onChange }: SalaryRangeFilterProps) => {
         }
       >
         {displayLabel}
+        <FiChevronDown />
       </button>
     </Popover>
   );

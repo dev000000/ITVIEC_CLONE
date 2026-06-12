@@ -1,4 +1,4 @@
-.salary-range-filter {
+.checkbox-popover-filter {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -10,7 +10,7 @@
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
-  white-space: nowrap;
+
   &:hover {
     border-color: #ed1b2f;
     color: #ed1b2f;
@@ -22,21 +22,12 @@
   }
 
   &__popover {
-    width: 320px;
-    padding: 4px 0;
-  }
+    min-width: 200px;
 
-  &__value {
-    margin-bottom: 12px;
-    font-weight: 600;
-    color: #121212;
-  }
-
-  &__actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
+    .ant-checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
   }
 }

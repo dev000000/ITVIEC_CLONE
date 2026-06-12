@@ -170,15 +170,16 @@ public class JobServiceImpl implements JobService {
             int size,
             String keyword,
             Long cityId,
-            JobType jobType,
-            ExperienceLevel experienceLevel,
+            List<JobType> jobTypes,
+            List<ExperienceLevel> experienceLevels,
+            Long jobDomainId,
             Long salaryMin,
             Long salaryMax,
             SalaryCurrency salaryCurrency) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("postedAt"), Sort.Order.desc("id")));
         Page<Job> jobPage = jobRepository.findAll(
                 buildPublicJobSearchSpecification(
-                        keyword, cityId, jobType, experienceLevel, salaryMin, salaryMax, salaryCurrency),
+                        keyword, cityId, jobTypes, experienceLevels, jobDomainId, salaryMin, salaryMax, salaryCurrency),
                 pageable);
         List<JobCardResponse> jobCardResponses = jobMapper.toJobCardResponse(jobPage.getContent());
 
@@ -277,8 +278,9 @@ public class JobServiceImpl implements JobService {
     Specification<Job> buildPublicJobSearchSpecification(
             String keyword,
             Long cityId,
-            JobType jobType,
-            ExperienceLevel experienceLevel,
+            List<JobType> jobTypes,
+            List<ExperienceLevel> experienceLevels,
+            Long jobDomainId,
             Long salaryMin,
             Long salaryMax,
             SalaryCurrency salaryCurrency) {
@@ -326,12 +328,16 @@ public class JobServiceImpl implements JobService {
                 predicates.add(cb.equal(root.get("city").get("id"), cityId));
             }
 
-            if (jobType != null) {
-                predicates.add(cb.equal(root.get("jobType"), jobType));
+            if (jobTypes != null && !jobTypes.isEmpty()) {
+                predicates.add(root.get("jobType").in(jobTypes));
             }
 
-            if (experienceLevel != null) {
-                predicates.add(cb.equal(root.get("experienceLevel"), experienceLevel));
+            if (experienceLevels != null && !experienceLevels.isEmpty()) {
+                predicates.add(root.get("experienceLevel").in(experienceLevels));
+            }
+
+            if (jobDomainId != null) {
+                predicates.add(cb.equal(root.get("jobDomain").get("id"), jobDomainId));
             }
 
             if (salaryCurrency != null && salaryMin != null && salaryMax != null) {

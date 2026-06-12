@@ -181,8 +181,9 @@ export interface GetAdminCompaniesParams extends PaginationParams {
 export interface SearchJobsParams extends PaginationParams {
   keyword?: string;
   cityId?: number;
-  jobType?: JobType;
-  experienceLevel?: ExperienceLevel;
+  jobType?: JobType | JobType[];
+  experienceLevel?: ExperienceLevel | ExperienceLevel[];
+  jobDomainId?: number;
   salaryMin?: number;
   salaryMax?: number;
   salaryCurrency?: SalaryCurrency;

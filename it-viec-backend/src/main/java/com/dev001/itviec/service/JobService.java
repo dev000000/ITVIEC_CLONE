@@ -28,8 +28,9 @@ public interface JobService {
             int size,
             String keyword,
             Long cityId,
-            JobType jobType,
-            ExperienceLevel experienceLevel,
+            List<JobType> jobTypes,
+            List<ExperienceLevel> experienceLevels,
+            Long jobDomainId,
             Long salaryMin,
             Long salaryMax,
             SalaryCurrency salaryCurrency);

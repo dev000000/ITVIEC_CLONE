@@ -39,7 +39,20 @@ export const getAdminJobsApi = (params?: GetAdminJobsParams) => {
 
 export const searchJobsApi = (params?: SearchJobsParams) => {
   const url = `${API_PATH}/jobs/search`;
-  return apiClient.get<APIResponse<PageResponse<JobCardResponse>>>(url, { params });
+  return apiClient.get<APIResponse<PageResponse<JobCardResponse>>>(url, {
+    params,
+    paramsSerializer: (p) => {
+      const searchParams = new URLSearchParams();
+      Object.entries(p).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((v) => searchParams.append(key, String(v)));
+        } else if (value !== undefined && value !== null) {
+          searchParams.append(key, String(value));
+        }
+      });
+      return searchParams.toString();
+    },
+  });
 };
 
 export const getAllAdminJobsApi = async (
