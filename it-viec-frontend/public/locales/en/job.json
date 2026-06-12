@@ -59,5 +59,6 @@
   "topJobsTitle": "{{count}} IT Jobs for Quality Developers",
   "viewMore": "View {{count}} more jobs",
   "topEmployers": "Top Employers",
-  "jobCount": "{{count}} Jobs"
+  "jobCount": "{{count}} Jobs",
+  "viewCompany": "View company"
 }

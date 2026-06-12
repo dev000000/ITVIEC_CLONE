@@ -68,9 +68,18 @@ const TopCompanies = ({ companyList }: TopCompaniesProps) => {
                       <div className="top-companies__footer">
                         <div>{company.address}</div>
                         <div className="top-companies__view-more">
-                          <RiRadioButtonLine className="top-companies__icon-live" />
-                          <div>{t("jobCount", { count: company.numberOfJobsActive })}</div>
-                          <MdOutlineKeyboardArrowRight />
+                          {company.numberOfJobsActive > 0 ? (
+                            <>
+                              <RiRadioButtonLine className="top-companies__icon-live" />
+                              <div>{t("jobCount", { count: company.numberOfJobsActive })}</div>
+                              <MdOutlineKeyboardArrowRight />
+                            </>
+                          ) : (
+                            <>
+                              <div>{t("viewCompany")}</div>
+                              <MdOutlineKeyboardArrowRight />
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>

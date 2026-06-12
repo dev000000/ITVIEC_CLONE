@@ -59,5 +59,6 @@
   "topJobsTitle": "{{count}} Việc làm IT cho Developer \"Chất\"",
   "viewMore": "Xem thêm {{count}} công việc khác",
   "topEmployers": "Nhà tuyển dụng hàng đầu",
-  "jobCount": "{{count}} Việc làm"
+  "jobCount": "{{count}} Việc làm",
+  "viewCompany": "Xem công ty"
 }
