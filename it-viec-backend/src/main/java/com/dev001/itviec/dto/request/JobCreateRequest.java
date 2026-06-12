@@ -44,11 +44,6 @@ public class JobCreateRequest {
 
     City city;
 
-    /** @deprecated Legacy text field; use structured salary fields instead */
-    String salary;
-
-    Boolean salaryNegotiable;
-
     Long salaryMin;
 
     Long salaryMax;

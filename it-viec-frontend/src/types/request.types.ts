@@ -121,12 +121,9 @@ export interface CompanyUpdateRequest {
 }
 
 export interface JobSalaryRequest {
-  salaryNegotiable?: boolean;
   salaryMin?: number;
   salaryMax?: number;
   salaryCurrency?: SalaryCurrency;
-  /** @deprecated legacy text salary */
-  salary?: string;
 }
 
 export interface JobCreateRequest extends JobSalaryRequest {

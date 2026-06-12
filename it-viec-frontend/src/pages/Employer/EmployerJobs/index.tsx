@@ -165,16 +165,16 @@ const EmployerJobs = () => {
   // Xử lý submit form tạo job mới
   // Map giá trị form → định dạng API, gọi API tạo job, sau đó refresh lại danh sách
   const onFinish = async (values: JobsFormValues) => {
+    const { salaryNegotiable: _neg, ...rest } = values;
     const data: JobCreateRequest = {
-      ...values,
+      ...rest,
       city: cities.find((city) => city.id === values.city) || null!,
       skills: skills.filter((skill) => values.skills.includes(skill.id)),
       postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
       expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
-      salaryNegotiable: Boolean(values.salaryNegotiable),
-      salaryMin: values.salaryNegotiable ? undefined : values.salaryMin,
-      salaryMax: values.salaryNegotiable ? undefined : values.salaryMax,
-      salaryCurrency: values.salaryNegotiable ? undefined : values.salaryCurrency,
+      salaryMin: _neg ? undefined : values.salaryMin,
+      salaryMax: _neg ? undefined : values.salaryMax,
+      salaryCurrency: _neg ? undefined : values.salaryCurrency,
     };
     try {
       await createJobApi(data);

@@ -20,8 +20,6 @@ public class JobCardResponse {
     String title;
     String slug;
     CityResponse city;
-    String salary;
-    Boolean salaryNegotiable;
     Long salaryMin;
     Long salaryMax;
     SalaryCurrency salaryCurrency;

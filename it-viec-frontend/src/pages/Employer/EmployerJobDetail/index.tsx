@@ -125,7 +125,7 @@ const EmployerJobDetail = () => {
             companyId: company.id,
             title: jobInfo.title,
             location: jobInfo.location,
-            salaryNegotiable: jobInfo.salaryNegotiable ?? false,
+            salaryNegotiable: jobInfo.salaryMin == null && jobInfo.salaryMax == null,
             salaryMin: jobInfo.salaryMin ?? undefined,
             salaryMax: jobInfo.salaryMax ?? undefined,
             salaryCurrency: jobInfo.salaryCurrency ?? "VND",
@@ -197,16 +197,16 @@ const EmployerJobDetail = () => {
   // Xử lý submit form cập nhật job
   // Map giá trị form → định dạng API, cập nhật state job sau khi thành công
   const onFinish = async (values: JobsFormValues) => {
+    const { salaryNegotiable: _neg, ...rest } = values;
     const data: JobUpdateRequest = {
-      ...values,
+      ...rest,
       city: cities.find((city) => city.id === values.city) || null!,
       skills: skills.filter((skill) => values.skills.includes(skill.id)),
       postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
       expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
-      salaryNegotiable: Boolean(values.salaryNegotiable),
-      salaryMin: values.salaryNegotiable ? undefined : values.salaryMin,
-      salaryMax: values.salaryNegotiable ? undefined : values.salaryMax,
-      salaryCurrency: values.salaryNegotiable ? undefined : values.salaryCurrency,
+      salaryMin: _neg ? undefined : values.salaryMin,
+      salaryMax: _neg ? undefined : values.salaryMax,
+      salaryCurrency: _neg ? undefined : values.salaryCurrency,
     };
     try {
       const {data: jobData} = await updateJobApi(String(id), data);

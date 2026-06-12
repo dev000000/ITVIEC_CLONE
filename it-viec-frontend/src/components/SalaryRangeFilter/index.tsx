@@ -3,6 +3,7 @@ import { Button, Popover, Slider } from "antd";
 import { useTranslation } from "react-i18next";
 import type { SalaryCurrency } from "@/types/common.types";
 import {
+  formatSalaryAmount,
   formatSalaryRangeForFilter,
   getSalaryCurrencyByLocale,
   SALARY_RANGE_LIMITS,
@@ -79,6 +80,10 @@ const SalaryRangeFilter = ({ value, onChange }: SalaryRangeFilterProps) => {
         step={limits.step}
         value={draftRange}
         onChange={(next) => setDraftRange(next as [number, number])}
+        tooltip={{
+          formatter: (val) =>
+            val != null ? formatSalaryAmount(val, currency) : "",
+        }}
       />
       <div className="salary-range-filter__actions">
         {isActive && (

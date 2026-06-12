@@ -169,8 +169,6 @@ export interface CompanyDetailResponse {
 // --- Job Types ---
 
 export interface JobSalaryResponse {
-  salary?: string | null;
-  salaryNegotiable?: boolean;
   salaryMin?: number | null;
   salaryMax?: number | null;
   salaryCurrency?: SalaryCurrency | null;

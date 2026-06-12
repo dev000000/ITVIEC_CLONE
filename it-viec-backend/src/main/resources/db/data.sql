@@ -1236,7 +1236,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1258,7 +1260,7 @@ VALUES -- (1) Test Manager (MB)
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), '20-30m', 'ONSITE', 'SENIOR', '2025-05-04 07:00:00', '2025-06-03 07:00:00', 'ACTIVE'
+    ), 20000000, 30000000, 'VND', 'ONSITE', 'SENIOR', '2025-05-04 07:00:00', '2025-06-03 07:00:00', 'ACTIVE'
   ), -- (2) Java Fullstack (MB)
   (
     'a1b2c3d4-e5f6-11ee-c0mp-000000000001', '[Middle, Senior] Java FullStack Developer (Spring)', 'middle-senior-java-fullstack-developer-spring-mb-bank-2', '<ul><li>Mức lương cạnh tranh, hấp dẫn</li><li>Môi trường làm việc chuyên nghiệp, thân thiện</li><li>Được làm việc với các hệ thống hiện đại, tiên tiến</li></ul>', '<ul><li>Phát triển hệ thống quy mô 30M users...</li><li>API Gateway, tích hợp đối tác</li><li>R&D: GraphQL, Docker/K8s, CI/CD, CQRS, NoSQL...</li><li>Lead nhóm 3-6 thành viên</li></ul>', '<ul><li>Tối thiểu 2 năm Backend (ưu tiên Java)</li><li>1-2 năm Microservice</li><li>Thành thạo Spring (core/security/boot)</li><li>DB: Oracle/SQLServer/PostgreSQL/MongoDB</li><li>Kafka, Redis...</li></ul>', '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>', 'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội', (
@@ -1266,7 +1268,7 @@ VALUES -- (1) Test Manager (MB)
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), '1000 - 2000 USD', 'ONSITE', 'SENIOR', '2025-04-23 07:00:00', '2025-05-23 07:00:00', 'ACTIVE'
+    ), 1000, 2000, 'USD', 'ONSITE', 'SENIOR', '2025-04-23 07:00:00', '2025-05-23 07:00:00', 'ACTIVE'
   ), -- (3) Python Backend (MB)
   (
     'a1b2c3d4-e5f6-11ee-c0mp-000000000001', '[Middle, Senior] Python Backend Developer (Django)', 'middle-senior-python-backend-developer-django-mb-bank-3', '<ul><li>Mức lương hấp dẫn, cạnh tranh</li><li>Môi trường năng động, sáng tạo</li><li>Dự án công nghệ tiên tiến</li></ul>', '<ul><li>Phát triển backend Python/Django</li><li>Thiết kế/ tối ưu API cho T24/CRM/CIC</li><li>Docker/K8s, CI/CD</li><li>Lead 3-5 thành viên</li></ul>', '<ul><li>≥ 2 năm Python Backend</li><li>Thành thạo Django & REST</li><li>DB: PostgreSQL/MySQL/MongoDB</li><li>Microservice & Cloud</li><li>Ưu tiên DevOps</li></ul>', '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>', 'Tòa nhà MB, số 23 Trần Duy Hưng, Quận Cầu Giấy, Hà Nội', (
@@ -1274,7 +1276,7 @@ VALUES -- (1) Test Manager (MB)
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), 'Cạnh tranh dựa trên năng lực', 'ONSITE', 'SENIOR', '2025-04-22 07:00:00', '2025-05-22 07:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'SENIOR', '2025-04-22 07:00:00', '2025-05-22 07:00:00', 'ACTIVE'
   ), -- (4) Fullstack SE - Data Engineer (MB)
   (
     'a1b2c3d4-e5f6-11ee-c0mp-000000000001', 'Fullstack Software Engineer - Data Engineer', 'fullstack-software-engineer-data-engineer-mb-bank-4', '<ul><li>Mức lương cạnh tranh, hấp dẫn</li><li>Môi trường làm việc chuyên nghiệp, thân thiện</li><li>Hệ thống hiện đại</li></ul>', '<ul><li>Web cho Big Data products</li><li>API tích hợp hiệu năng cao</li><li>Phối hợp BU/BA/DE/DS</li></ul>', '<ul><li>≥ 2 năm vị trí tương đương</li><li>BE: Java(Spring Boot), Python(FastAPI/Flask)</li><li>FE: HTML/CSS/JS – Angular</li><li>DB: Oracle/PostgreSQL/MongoDB/Redis</li><li>Kafka/RabbitMQ/K8s/WebSocket/gRPC/ELK/OAuth2/OIDC/SSO</li></ul>', '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>', 'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội', (
@@ -1282,7 +1284,7 @@ VALUES -- (1) Test Manager (MB)
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), '2,000 - 3,000 USD', 'ONSITE', 'MID', '2025-05-05 07:00:00', '2025-06-04 07:00:00', 'ACTIVE'
+    ), 2000, 3000, 'USD', 'ONSITE', 'MID', '2025-05-05 07:00:00', '2025-06-04 07:00:00', 'ACTIVE'
   ), -- (5) Business Customer Data Analyst (MB)
   (
     'a1b2c3d4-e5f6-11ee-c0mp-000000000001', 'Business Customer Data Analyst', 'business-customer-data-analyst-mb-bank-5', '<ul><li>Mức lương cạnh tranh, hấp dẫn</li><li>Môi trường chuyên nghiệp</li><li>Hệ thống hiện đại</li></ul>', '<ul><li>Thu thập & báo cáo dữ liệu kinh doanh KHDN</li><li>Xây dựng báo cáo tự động</li><li>Hỗ trợ chương trình kinh doanh</li></ul>', '<ul><li>ĐH Thống kê/DS/Kinh tế/Tài chính/Ngân hàng</li><li>≥ 1 năm phân tích dữ liệu tài chính</li><li>SQL, Tableau/Power BI, Oracle, DataViz</li><li>TOEIC ≥ 500</li></ul>', '<p><strong>Trải nghiệm Thu nhập hấp dẫn...</strong> ...</p>', 'Tòa nhà MB, số 18 Lê Văn Lương, Quận Cầu Giấy, Hà Nội', (
@@ -1290,7 +1292,7 @@ VALUES -- (1) Test Manager (MB)
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), '10m-20m', 'ONSITE', 'JUNIOR', '2025-05-05 07:00:00', '2025-06-04 07:00:00', 'ACTIVE'
+    ), 10000000, 20000000, 'VND', 'ONSITE', 'JUNIOR', '2025-05-05 07:00:00', '2025-06-04 07:00:00', 'ACTIVE'
   ), -- (6) Viedoc - Senior Fullstack .NET (Scandinavian)
   (
     'a1b2c3d4-e5f6-11ee-c0mp-000000000002', 'Viedoc - Senior Fullstack .NET Developer (C#,SQL,Azure)', 'viedoc-senior-fullstack-net-developer-c-sql-azure-scandinavian-software-park-6', '<ul><li>Global growth with experienced engineers</li><li>Innovative, balanced, creative culture</li><li>Competitive salary, benefits, training</li></ul>', '<p>Lead thiết kế/phát triển hệ thống web, clean architecture, mentoring...</p>', '<ul><li>Expert C#, ASP.NET Core, kiến trúc, Azure/AWS CI/CD, Docker/K8s</li><li>SQL Server, EF, tuning</li><li>FE: HTML/CSS/JS/React</li><li>Testing (xUnit/NUnit), Git, Agile/Scrum</li></ul>', '<p>Bạn sẽ tham gia phát triển SaaS EDC – Clinical Trial Platform... Scandinavian culture...</p>', 'Tầng 19, Peakview Tower, 36 Hoàng Cầu, Đống Đa, Hà Nội', (
@@ -1298,7 +1300,7 @@ VALUES -- (1) Test Manager (MB)
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'SENIOR', '2025-04-29 07:00:00', '2025-05-29 07:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'SENIOR', '2025-04-29 07:00:00', '2025-05-29 07:00:00', 'ACTIVE'
   );
 -- (7) Trapets – Fullstack .NET Developer
 INSERT INTO jobs (
@@ -1311,7 +1313,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1332,7 +1336,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'MID', '2025-04-29 07:00:00', '2025-05-29 07:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'MID', '2025-04-29 07:00:00', '2025-05-29 07:00:00', 'ACTIVE'
   );
 -- (8) Milient – QA Automation Engineer
 INSERT INTO jobs (
@@ -1345,7 +1349,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1366,7 +1372,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), '1,500 - 2,500 USD', 'ONSITE', 'MID', '2025-04-28 07:00:00', '2025-05-28 07:00:00', 'ACTIVE'
+    ), 1500, 2500, 'USD', 'ONSITE', 'MID', '2025-04-28 07:00:00', '2025-05-28 07:00:00', 'ACTIVE'
   );
 -- (9) OTSV – Technical Architect
 INSERT INTO jobs (
@@ -1379,7 +1385,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1400,7 +1408,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), '2,000 - 4,000 USD', 'FLEXIBLE', 'SENIOR', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
+    ), 2000, 4000, 'USD', 'FLEXIBLE', 'SENIOR', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
   );
 -- (10) OTSV – Product Owner
 INSERT INTO jobs (
@@ -1413,7 +1421,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1434,7 +1444,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'MID', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'MID', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
   );
 -- (11) OTSV – UI/UX Designer
 INSERT INTO jobs (
@@ -1447,7 +1457,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1468,7 +1480,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'MID', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'MID', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
   );
 -- (12) OTSV – Full-Stack (React/Node)
 INSERT INTO jobs (
@@ -1481,7 +1493,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1502,7 +1516,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'MID', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'MID', '2025-05-06 09:00:00', '2025-06-05 09:00:00', 'ACTIVE'
   );
 -- (13) MCredit – Tester (Manual/Automation)
 INSERT INTO jobs (
@@ -1515,7 +1529,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1536,7 +1552,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), '500 - 2,000 USD', 'ONSITE', 'JUNIOR', '2025-04-23 09:00:00', '2025-05-23 09:00:00', 'ACTIVE'
+    ), 500, 2000, 'USD', 'ONSITE', 'JUNIOR', '2025-04-23 09:00:00', '2025-05-23 09:00:00', 'ACTIVE'
   );
 -- (14) MCredit – Senior Java Developer
 INSERT INTO jobs (
@@ -1549,7 +1565,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1570,7 +1588,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), '1,000 - 3,000 USD', 'ONSITE', 'SENIOR', '2025-04-23 09:00:00', '2025-05-23 09:00:00', 'ACTIVE'
+    ), 1000, 3000, 'USD', 'ONSITE', 'SENIOR', '2025-04-23 09:00:00', '2025-05-23 09:00:00', 'ACTIVE'
   );
 -- (15) TYME(X) – Java API Engineer
 INSERT INTO jobs (
@@ -1583,7 +1601,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1604,7 +1624,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'MID', '2025-05-05 09:00:00', '2025-06-04 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'MID', '2025-05-05 09:00:00', '2025-06-04 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #16
@@ -1619,7 +1639,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1640,7 +1662,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-04-22 09:00:00', '2025-05-22 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-04-22 09:00:00', '2025-05-22 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #17
@@ -1655,7 +1677,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1676,7 +1700,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'LEAD', '2025-04-04 09:00:00', '2025-05-04 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'LEAD', '2025-04-04 09:00:00', '2025-05-04 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #18
@@ -1691,7 +1715,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1712,7 +1738,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-04-03 09:00:00', '2025-05-03 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-04-03 09:00:00', '2025-05-03 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #19
@@ -1727,7 +1753,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1748,7 +1776,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-04-18 09:00:00', '2025-05-18 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-04-18 09:00:00', '2025-05-18 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #20
@@ -1763,7 +1791,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1784,7 +1814,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-04-11 09:00:00', '2025-05-11 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-04-11 09:00:00', '2025-05-11 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #21
@@ -1799,7 +1829,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1820,7 +1852,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-04-18 09:00:00', '2025-05-18 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-04-18 09:00:00', '2025-05-18 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #22
@@ -1835,7 +1867,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1856,7 +1890,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #23
@@ -1871,7 +1905,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1892,7 +1928,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'REMOTE', 'MID', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'REMOTE', 'MID', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #24
@@ -1907,7 +1943,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1928,7 +1966,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'REMOTE', 'MID', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'REMOTE', 'MID', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #25
@@ -1943,7 +1981,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -1964,7 +2004,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'Hà Nội'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'SENIOR', '2025-04-30 09:00:00', '2025-05-31 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'SENIOR', '2025-04-30 09:00:00', '2025-05-31 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #26
@@ -1979,7 +2019,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -2000,7 +2042,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'MANAGER', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'MANAGER', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #27
@@ -2015,7 +2057,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -2036,7 +2080,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'SENIOR', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'SENIOR', '2025-05-06 09:00:00', '2025-06-06 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #28
@@ -2051,7 +2095,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -2072,7 +2118,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'FLEXIBLE', 'SENIOR', '2025-04-10 09:00:00', '2025-05-11 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'FLEXIBLE', 'SENIOR', '2025-04-10 09:00:00', '2025-05-11 09:00:00', 'ACTIVE'
   );
 -- =========================================
 -- JOB #29
@@ -2087,7 +2133,9 @@ INSERT INTO jobs (
     why_join_us,
     location,
     city_id,
-    salary,
+    salary_min,
+    salary_max,
+    salary_currency,
     job_type,
     experience_level,
     posted_at,
@@ -2108,7 +2156,7 @@ VALUES (
       FROM cities
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
-    ), 'You''ll love it', 'ONSITE', 'JUNIOR', '2025-04-24 09:00:00', '2025-05-25 09:00:00', 'ACTIVE'
+    ), NULL, NULL, NULL, 'ONSITE', 'JUNIOR', '2025-04-24 09:00:00', '2025-05-25 09:00:00', 'ACTIVE'
   );
 -- Test Manager
 INSERT INTO job_skills (job_id, skill_id)

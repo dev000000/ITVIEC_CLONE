@@ -19,8 +19,6 @@ import { formatJobSalary } from "@/utils/formatSalary";
 interface ApplicationJob {
   slug?: string;
   title?: string;
-  salary?: string;
-  salaryNegotiable?: boolean;
   salaryMin?: number | null;
   salaryMax?: number | null;
   salaryCurrency?: string | null;
@@ -131,7 +129,7 @@ const CardApplication = ({ application }: CardApplicationProps) => {
   const openModal = () => {
     form.setFieldsValue({
       title: application.job?.title || "",
-      salary: application.job?.salary || "",
+      salary: application.job ? formatJobSalary(application.job, tJob("card.negotiable")) : "",
       companyName: application.company?.companyName || "",
       fullName: application.fullName || "",
       phoneNumber: application.phoneNumber || "",

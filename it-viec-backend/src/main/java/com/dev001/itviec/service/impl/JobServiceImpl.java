@@ -85,7 +85,6 @@ public class JobServiceImpl implements JobService {
                 .whyJoinUs(request.getWhyJoinUs())
                 .location(request.getLocation())
                 .city(request.getCity())
-                .salary(null)
                 .jobType(request.getJobType())
                 .experienceLevel(request.getExperienceLevel())
                 .postedAt(request.getPostedAt() == null ? LocalDateTime.now() : request.getPostedAt())
@@ -94,12 +93,7 @@ public class JobServiceImpl implements JobService {
                 .skills(request.getSkills() == null ? new HashSet<>() : new HashSet<>(request.getSkills()))
                 .build();
 
-        applySalaryFields(
-                job,
-                request.getSalaryNegotiable(),
-                request.getSalaryMin(),
-                request.getSalaryMax(),
-                request.getSalaryCurrency());
+        applySalaryFields(job, request.getSalaryMin(), request.getSalaryMax(), request.getSalaryCurrency());
 
         job = jobRepository.save(job);
         job.setSlug(generateSlug(job.getTitle(), company.getCompanyName(), job.getId()));
@@ -206,12 +200,7 @@ public class JobServiceImpl implements JobService {
         job.setWhyJoinUs(request.getWhyJoinUs());
         job.setLocation(request.getLocation());
         job.setCity(request.getCity());
-        applySalaryFields(
-                job,
-                request.getSalaryNegotiable(),
-                request.getSalaryMin(),
-                request.getSalaryMax(),
-                request.getSalaryCurrency());
+        applySalaryFields(job, request.getSalaryMin(), request.getSalaryMax(), request.getSalaryCurrency());
         job.setJobType(request.getJobType());
         job.setExperienceLevel(request.getExperienceLevel());
         job.setPostedAt(request.getPostedAt());
@@ -341,7 +330,6 @@ public class JobServiceImpl implements JobService {
 
             if (salaryCurrency != null && salaryMin != null && salaryMax != null) {
                 predicates.add(cb.equal(root.get("salaryCurrency"), salaryCurrency));
-                predicates.add(cb.isFalse(root.get("salaryNegotiable")));
                 predicates.add(cb.isNotNull(root.get("salaryMin")));
                 predicates.add(cb.isNotNull(root.get("salaryMax")));
                 predicates.add(cb.lessThanOrEqualTo(root.get("salaryMin"), salaryMax));
@@ -352,16 +340,11 @@ public class JobServiceImpl implements JobService {
         };
     }
 
-    private void applySalaryFields(
-            Job job, Boolean salaryNegotiable, Long salaryMin, Long salaryMax, SalaryCurrency salaryCurrency) {
-        boolean isNegotiable = Boolean.TRUE.equals(salaryNegotiable);
-
-        if (isNegotiable) {
-            job.setSalaryNegotiable(true);
+    private void applySalaryFields(Job job, Long salaryMin, Long salaryMax, SalaryCurrency salaryCurrency) {
+        if (salaryMin == null && salaryMax == null && salaryCurrency == null) {
             job.setSalaryMin(null);
             job.setSalaryMax(null);
             job.setSalaryCurrency(null);
-            job.setSalary(null);
             return;
         }
 
@@ -378,11 +361,9 @@ public class JobServiceImpl implements JobService {
             throw new AppException(ErrorCode.SALARY_RANGE_INVALID);
         }
 
-        job.setSalaryNegotiable(false);
         job.setSalaryMin(salaryMin);
         job.setSalaryMax(salaryMax);
         job.setSalaryCurrency(salaryCurrency);
-        job.setSalary(null);
     }
 
     Specification<Job> buildJobFilterSpecification(

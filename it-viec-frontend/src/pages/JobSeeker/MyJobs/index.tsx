@@ -14,7 +14,13 @@ import { useSavedJobsStore } from "@/store/savedJobsStore";
 // Kiểu dữ liệu cho một đơn ứng tuyển sau khi đã map từ API response
 interface ApplicationItem {
   appliedAt: string;
-  job?: { slug?: string; title?: string; salary?: string; salaryNegotiable?: boolean; salaryMin?: number | null; salaryMax?: number | null; salaryCurrency?: string | null };
+  job?: {
+    slug?: string;
+    title?: string;
+    salaryMin?: number | null;
+    salaryMax?: number | null;
+    salaryCurrency?: string | null;
+  };
   company?: { companyName?: string; slug?: string; logoUrl?: string | null };
   fullName: string;
   phoneNumber: string;
@@ -33,7 +39,10 @@ interface PaginationState {
 
 // Mở rộng ApplicationResponse để bao gồm thông tin job liên kết (nếu backend trả về)
 type ApplicationWithRelations = ApplicationResponse & {
-  job?: Pick<JobDetailResponse, "slug" | "title" | "salary" | "company">;
+  job?: Pick<
+    JobDetailResponse,
+    "slug" | "title" | "salaryMin" | "salaryMax" | "salaryCurrency" | "company"
+  >;
 };
 
 // Context được truyền xuống các Outlet con (AppliedJobs, SavedJobs, RecentlyViewed)

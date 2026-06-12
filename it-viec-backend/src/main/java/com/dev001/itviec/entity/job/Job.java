@@ -60,9 +60,6 @@ public class Job extends BaseEntity {
     @JoinColumn(name = "city_id")
     City city;
 
-    @Column(columnDefinition = "VARCHAR(100)")
-    String salary;
-
     @Column(name = "salary_min")
     Long salaryMin;
 
@@ -73,9 +70,10 @@ public class Job extends BaseEntity {
     @Column(name = "salary_currency")
     SalaryCurrency salaryCurrency;
 
-    @Column(name = "salary_negotiable", nullable = false)
-    @Builder.Default
-    Boolean salaryNegotiable = false;
+    @Transient
+    public boolean isNegotiable() {
+        return salaryMin == null && salaryMax == null;
+    }
 
     @Enumerated(EnumType.STRING)
     @Column(name = "job_type")

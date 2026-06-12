@@ -80,7 +80,6 @@ public enum ErrorCode {
     JOB_REQUIREMENTS_REQUIRED(1062, "Job requirements must not be blank", HttpStatus.BAD_REQUEST),
     WHY_JOIN_US_REQUIRED(1063, "Why join us must not be blank", HttpStatus.BAD_REQUEST),
     LOCATION_REQUIRED(1064, "Location must not be blank", HttpStatus.BAD_REQUEST),
-    SALARY_REQUIRED(1065, "Salary must not be blank", HttpStatus.BAD_REQUEST),
     JOB_TYPE_REQUIRED(1066, "Job type must not be null", HttpStatus.BAD_REQUEST),
     EXPERIENCE_LEVEL_REQUIRED(1067, "Experience level must not be null", HttpStatus.BAD_REQUEST),
     POSTED_AT_REQUIRED(1068, "Posted at must not be blank", HttpStatus.BAD_REQUEST),
