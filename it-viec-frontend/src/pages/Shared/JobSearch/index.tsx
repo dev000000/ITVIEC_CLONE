@@ -49,7 +49,7 @@ const defaultFilters: SearchFilters = {
   jobTypes: [],
 };
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 
 const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
   const { t } = useTranslation("shared");
@@ -327,18 +327,6 @@ const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
                           ),
                         )}
                       </div>
-                      {totalJobs > PAGE_SIZE && (
-                        <div className="job-search__pagination">
-                          <Pagination
-                            current={currentPage}
-                            total={totalJobs}
-                            pageSize={PAGE_SIZE}
-                            align="center"
-                            onChange={(page) => setCurrentPage(page)}
-                            showSizeChanger={false}
-                          />
-                        </div>
-                      )}
                     </Col>
                     <Col xxl={14} xl={14} lg={24} md={24} sm={24} xs={24}>
                       <div className="job-search__detail-job">
@@ -352,6 +340,18 @@ const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
                       </div>
                     </Col>
                   </Row>
+                  {totalJobs > PAGE_SIZE && (
+                    <div className="job-search__pagination">
+                      <Pagination
+                        current={currentPage}
+                        total={totalJobs}
+                        pageSize={PAGE_SIZE}
+                        align="center"
+                        onChange={(page) => setCurrentPage(page)}
+                        showSizeChanger={false}
+                      />
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="job-search__no-results">
