@@ -2,26 +2,25 @@ package com.dev001.itviec.service;
 
 import java.util.List;
 
+import com.dev001.itviec.dto.response.MergeSkillResponse;
+import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.dto.response.SkillAdminResponse;
 import com.dev001.itviec.dto.response.SkillResponse;
+import com.dev001.itviec.enums.SkillStatus;
 
-/**
- * Service interface quản lý các skill trong hệ thống.
- * Cung cấp chức năng lấy danh sách và tạo mới skill.
- */
 public interface SkillService {
 
-    /**
-     * Lấy danh sách toàn bộ skill.
-     *
-     * @return danh sách SkillResponse
-     */
     List<SkillResponse> getAllSkills();
 
-    /**
-     * Tạo mới một skill trong hệ thống.
-     *
-     * @param skillName tên skill cần tạo (đã được validate không rỗng ở tầng controller)
-     * @return thông tin skill vừa được tạo
-     */
-    SkillResponse createSkill(String skillName);
+    PageResponse<SkillAdminResponse> getAdminSkills(SkillStatus status, String search, int page, int size);
+
+    SkillAdminResponse createSkillAdmin(String skillName);
+
+    SkillAdminResponse updateSkill(Long id, String skillName);
+
+    SkillAdminResponse deprecateSkill(Long id);
+
+    MergeSkillResponse mergeSkill(Long sourceId, Long targetSkillId);
+
+    SkillAdminResponse restoreSkill(Long id);
 }

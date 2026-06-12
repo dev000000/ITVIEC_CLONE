@@ -5,7 +5,7 @@ import MenuItem from "@/components/SiderBar/MenuItem";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
-import { FiUsers, FiPieChart, FiTag, FiUserCheck } from "react-icons/fi";
+import { FiUsers, FiPieChart, FiTag, FiUserCheck, FiCpu } from "react-icons/fi";
 import { BsBriefcase } from "react-icons/bs";
 import { IoIosLogOut } from "react-icons/io";
 import Swal from "sweetalert2";
@@ -80,6 +80,13 @@ function LayoutAdmin() {
                 link: "popular-tags",
                 name: t("admin:menu.popularTags"),
                 icon: <FiTag />,
+              }}
+            />
+            <MenuItem
+              props={{
+                link: "skills",
+                name: t("admin:menu.skills"),
+                icon: <FiCpu />,
               }}
             />
             <MenuItem

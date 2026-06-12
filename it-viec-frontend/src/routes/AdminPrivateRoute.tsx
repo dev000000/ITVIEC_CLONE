@@ -5,6 +5,7 @@ import AdminDashboard from "@/pages/Admin/AdminDashboard";
 import AdminUsers from "@/pages/Admin/AdminUsers";
 import AdminJobs from "@/pages/Admin/AdminJobs";
 import AdminPopularTags from "@/pages/Admin/AdminPopularTags";
+import AdminSkills from "@/pages/Admin/AdminSkills";
 import AdminReport from "@/pages/Admin/AdminReport";
 import AdminEmployerRegistrations from "@/pages/Admin/AdminEmployerRegistrations";
 
@@ -18,6 +19,7 @@ const AdminPrivateRoutes: RouteObject = {
         { path: "users", element: <AdminUsers /> },
         { path: "job", element: <AdminJobs /> },
         { path: "popular-tags", element: <AdminPopularTags /> },
+        { path: "skills", element: <AdminSkills /> },
         { path: "report", element: <AdminReport /> },
         { path: "employer-registrations", element: <AdminEmployerRegistrations /> },
       ],

@@ -214,6 +214,32 @@ export interface SkillCreateRequest {
   skillName: string;
 }
 
+export interface SkillUpdateRequest {
+  skillName: string;
+}
+
+export interface SkillMergeRequest {
+  targetSkillId: number;
+}
+
+export interface GetAdminSkillsParams extends PaginationParams {
+  status?: "ACTIVE" | "DEPRECATED";
+  search?: string;
+}
+
+export interface SkillUpdateRequest {
+  skillName: string;
+}
+
+export interface SkillMergeRequest {
+  targetSkillId: number;
+}
+
+export interface GetAdminSkillsParams extends PaginationParams {
+  status?: "ACTIVE" | "DEPRECATED";
+  search?: string;
+}
+
 export interface RegisterEmployerRequest {
   fullName: string;
   jobTitle: string;

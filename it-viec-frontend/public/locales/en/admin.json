@@ -19,6 +19,7 @@
     "jobs": "Jobs",
     "report": "Reports",
     "popularTags": "Popular tags",
+    "skills": "Skills",
     "employerRegistrations": "Employer registrations"
   },
   "employerRegistrations": {
@@ -148,6 +149,74 @@
     "columns": {
       "label": "Label",
       "count": "Count"
+    }
+  },
+  "skills": {
+    "title": "Skill management",
+    "addButton": "Add skill",
+    "searchPlaceholder": "Search skills...",
+    "filters": {
+      "all": "All statuses",
+      "active": "Active",
+      "deprecated": "Deprecated"
+    },
+    "columns": {
+      "name": "Skill name",
+      "status": "Status",
+      "usage": "In use",
+      "action": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "deprecated": "Deprecated",
+      "mergedInto": "→ {{name}}"
+    },
+    "usage": {
+      "none": "—",
+      "summary": "{{jobs}} jobs · {{seekers}} seekers · {{companies}} companies",
+      "jobs": "{{count}} jobs",
+      "seekers": "{{count}} seekers",
+      "companies": "{{count}} companies",
+      "jobsTooltip": "Jobs using this skill",
+      "seekersTooltip": "Seekers using this skill",
+      "companiesTooltip": "Companies using this skill"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Hide skill",
+      "restore": "Restore",
+      "merge": "Merge skill"
+    },
+    "create": {
+      "title": "Add new skill",
+      "label": "Skill name",
+      "placeholder": "Enter skill name",
+      "submit": "Add"
+    },
+    "delete": {
+      "confirmTitle": "Hide skill \"{{name}}\"?",
+      "confirmText": "The skill will be hidden from public listings. Related data is preserved. It can be restored if it has not been merged into another skill.",
+      "confirmButton": "Confirm hide"
+    },
+    "merge": {
+      "title": "Merge skill",
+      "inUseText": "Skill \"{{name}}\" is currently in use:",
+      "selectLabel": "Merge into",
+      "selectPlaceholder": "Select target skill",
+      "preview": "{{jobs}} jobs, {{seekers}} seekers, {{companies}} companies will be re-assigned to the target skill.",
+      "confirmButton": "Merge and hide"
+    },
+    "restore": {
+      "confirmTitle": "Restore this skill?",
+      "confirmText": "\"{{name}}\" will become active again.",
+      "confirmButton": "Restore"
+    },
+    "notifications": {
+      "created": "Skill added",
+      "updated": "Skill updated",
+      "deprecated": "Skill hidden",
+      "merged": "Skills merged",
+      "restored": "Skill restored"
     }
   },
   "popularTags": {

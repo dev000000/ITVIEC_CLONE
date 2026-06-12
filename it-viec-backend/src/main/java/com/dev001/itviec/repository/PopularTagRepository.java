@@ -22,4 +22,6 @@ public interface PopularTagRepository extends JpaRepository<PopularTag, Long> {
     boolean existsBySkill(Skill skill);
 
     boolean existsByCompany(Company company);
+
+    void deleteBySkillId(Long skillId);
 }

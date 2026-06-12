@@ -5,8 +5,12 @@ USE itviec_db;
 -- Bảng kỹ năng
 CREATE TABLE skills (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  skill_name VARCHAR(100) NOT NULL
+  skill_name VARCHAR(100) NOT NULL,
+  status ENUM('ACTIVE', 'DEPRECATED') NOT NULL DEFAULT 'ACTIVE',
+  merged_into_id BIGINT NULL,
+  CONSTRAINT fk_skills_merged_into FOREIGN KEY (merged_into_id) REFERENCES skills(id)
 );
+CREATE INDEX idx_skills_status ON skills(status);
 -- Bảng thành phố
 CREATE TABLE cities (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,

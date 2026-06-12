@@ -19,6 +19,7 @@
     "jobs": "Job",
     "report": "Report",
     "popularTags": "Popular tags",
+    "skills": "Quản lý skill",
     "employerRegistrations": "Đăng ký nhà tuyển dụng"
   },
   "employerRegistrations": {
@@ -148,6 +149,74 @@
     "columns": {
       "label": "Nhãn",
       "count": "Số lượng"
+    }
+  },
+  "skills": {
+    "title": "Quản lý skill",
+    "addButton": "Thêm skill",
+    "searchPlaceholder": "Tìm kiếm skill...",
+    "filters": {
+      "all": "Tất cả trạng thái",
+      "active": "Đang hoạt động",
+      "deprecated": "Đã ngừng dùng"
+    },
+    "columns": {
+      "name": "Tên skill",
+      "status": "Trạng thái",
+      "usage": "Đang được dùng",
+      "action": "Thao tác"
+    },
+    "status": {
+      "active": "Đang hoạt động",
+      "deprecated": "Đã ngừng dùng",
+      "mergedInto": "→ {{name}}"
+    },
+    "usage": {
+      "none": "—",
+      "summary": "{{jobs}} việc làm · {{seekers}} ứng viên · {{companies}} công ty",
+      "jobs": "{{count}} việc làm",
+      "seekers": "{{count}} ứng viên",
+      "companies": "{{count}} công ty",
+      "jobsTooltip": "Số việc làm đang dùng skill này",
+      "seekersTooltip": "Số ứng viên đang dùng skill này",
+      "companiesTooltip": "Số công ty đang dùng skill này"
+    },
+    "actions": {
+      "edit": "Sửa",
+      "delete": "Ẩn skill",
+      "restore": "Khôi phục",
+      "merge": "Gộp skill"
+    },
+    "create": {
+      "title": "Thêm skill mới",
+      "label": "Tên skill",
+      "placeholder": "Nhập tên skill",
+      "submit": "Thêm"
+    },
+    "delete": {
+      "confirmTitle": "Ẩn skill \"{{name}}\"?",
+      "confirmText": "Skill sẽ bị ẩn khỏi danh sách công khai. Dữ liệu liên quan được giữ nguyên. Có thể khôi phục nếu chưa gộp sang skill khác.",
+      "confirmButton": "Xác nhận ẩn"
+    },
+    "merge": {
+      "title": "Gộp skill",
+      "inUseText": "Skill \"{{name}}\" đang được sử dụng:",
+      "selectLabel": "Gộp vào skill",
+      "selectPlaceholder": "Chọn skill đích",
+      "preview": "{{jobs}} việc làm, {{seekers}} ứng viên, {{companies}} công ty sẽ được chuyển sang skill đích.",
+      "confirmButton": "Gộp và ẩn"
+    },
+    "restore": {
+      "confirmTitle": "Khôi phục skill này?",
+      "confirmText": "Skill \"{{name}}\" sẽ được kích hoạt trở lại.",
+      "confirmButton": "Khôi phục"
+    },
+    "notifications": {
+      "created": "Đã thêm skill",
+      "updated": "Đã cập nhật skill",
+      "deprecated": "Đã ẩn skill",
+      "merged": "Đã gộp skill",
+      "restored": "Đã khôi phục skill"
     }
   },
   "popularTags": {

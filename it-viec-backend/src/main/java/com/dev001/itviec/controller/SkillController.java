@@ -2,16 +2,10 @@ package com.dev001.itviec.controller;
 
 import java.util.List;
 
-import jakarta.validation.Valid;
-
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev001.itviec.dto.request.SkillCreateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.SkillResponse;
 import com.dev001.itviec.service.SkillService;
@@ -27,20 +21,11 @@ public class SkillController {
 
     private final SkillService skillService;
 
-    // 1.API trả về toàn bộ skill có trong hệ thống, để hiển thị trong select box (PUBLIC)
     @GetMapping
     public ApiResponse<List<SkillResponse>> getAllSkills() {
         return ApiResponse.<List<SkillResponse>>builder()
                 .code(1000)
                 .result(skillService.getAllSkills())
                 .build();
-    }
-
-    // 2.API cho phép admin tạo mới một skill (PRIVATE)
-    @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ApiResponse<SkillResponse> createSkill(@RequestBody @Valid SkillCreateRequest request) {
-        SkillResponse newSkill = skillService.createSkill(request.getSkillName());
-        return ApiResponse.<SkillResponse>builder().code(1000).result(newSkill).build();
     }
 }

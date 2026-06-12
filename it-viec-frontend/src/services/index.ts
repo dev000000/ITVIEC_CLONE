@@ -9,6 +9,7 @@ import jobApi from "./jobApi";
 import savedJobApi from "./savedJobApi";
 import seekerApi from "./seekerApi";
 import skillApi from "./skillApi";
+import adminSkillApi from "./adminSkillApi";
 import userApi from "./userApi";
 
 export {
@@ -23,6 +24,7 @@ export {
   savedJobApi,
   seekerApi,
   skillApi,
+  adminSkillApi,
   userApi,
 };
 
@@ -38,6 +40,7 @@ const services = {
   savedJobApi,
   seekerApi,
   skillApi,
+  adminSkillApi,
   userApi,
 };
 

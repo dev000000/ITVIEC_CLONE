@@ -55,6 +55,50 @@ export interface SkillResponse {
   skillName: string;
 }
 
+export interface SkillUsageCountResponse {
+  jobs: number;
+  seekers: number;
+  companies: number;
+}
+
+export interface SkillAdminResponse {
+  id: number;
+  skillName: string;
+  status: "ACTIVE" | "DEPRECATED";
+  mergedIntoId: number | null;
+  mergedIntoName: string | null;
+  usageCount: SkillUsageCountResponse;
+}
+
+export interface MergeSkillResponse {
+  message: string;
+  migratedRecords: SkillUsageCountResponse;
+  sourceSkill: SkillAdminResponse;
+  targetSkill: SkillAdminResponse;
+}
+
+export interface SkillUsageCountResponse {
+  jobs: number;
+  seekers: number;
+  companies: number;
+}
+
+export interface SkillAdminResponse {
+  id: number;
+  skillName: string;
+  status: "ACTIVE" | "DEPRECATED";
+  mergedIntoId: number | null;
+  mergedIntoName: string | null;
+  usageCount: SkillUsageCountResponse;
+}
+
+export interface MergeSkillResponse {
+  message: string;
+  migratedRecords: SkillUsageCountResponse;
+  sourceSkill: SkillAdminResponse;
+  targetSkill: SkillAdminResponse;
+}
+
 // --- Auth & User Types ---
 
 export interface AuthenticationResponse {
