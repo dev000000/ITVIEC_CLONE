@@ -261,6 +261,16 @@ export interface EmployerActivateRequest {
   confirmPassword: string;
 }
 
+export interface JobPublishRequest {
+  postedAt?: IsoDateTimeString;
+  expiresAt?: IsoDateTimeString;
+}
+
+export interface JobRepostRequest {
+  postedAt: IsoDateTimeString;
+  expiresAt?: IsoDateTimeString;
+}
+
 // --- Taxonomy Admin Requests (JobDomain & Industry) ---
 
 export interface JobDomainCreateRequest {

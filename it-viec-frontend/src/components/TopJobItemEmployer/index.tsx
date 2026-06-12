@@ -12,11 +12,11 @@ import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
 import { formatJobSalary } from "@/utils/formatSalary";
 import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
-import TagStatus from "../TagStatus";
+import JobStatusBadge from "@/components/JobStatusBadge";
 import { useMemo } from "react";
 
 interface TopJobItemProps {
-  job?: JobCardResponse;
+  job?: JobCardResponse & { effectiveStatus?: string | null };
 }
 // Component hiển thị thông tin công việc trong danh sách công việc của nhà tuyển dụng
 const TopJobItemEmployer = ({ job }: TopJobItemProps) => {
@@ -42,13 +42,15 @@ const TopJobItemEmployer = ({ job }: TopJobItemProps) => {
   const { tagListRef, visibleTagsCount } = useVisibleTagCount(sortedSkills);
 
   return (
-    <div className="job__item">
+    <div className="employer-job__item">
       <div className="job__label job__label--hot">
         <span>HOT</span>
       </div>
-      <div className="job__time">{getRelativeTime(job.postedAt, t)}</div>
-      <TagStatus status={job.status} />
       <div className="job__name">{job.title}</div>
+      <div className="job__meta-row">
+        <JobStatusBadge status={job.status} effectiveStatus={job.effectiveStatus} />
+        <span className="job__time">{getRelativeTime(job.postedAt, t)}</span>
+      </div>
       <div
         className={
           authenticated

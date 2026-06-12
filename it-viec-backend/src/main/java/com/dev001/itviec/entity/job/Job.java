@@ -94,10 +94,16 @@ public class Job extends BaseEntity {
     @Column(name = "expires_at", columnDefinition = "DATETIME")
     LocalDateTime expiresAt;
 
+    @Column(name = "published_at", columnDefinition = "DATETIME")
+    LocalDateTime publishedAt;
+
+    @Column(name = "closed_at", columnDefinition = "DATETIME")
+    LocalDateTime closedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     @Builder.Default
-    JobStatus status = JobStatus.ACTIVE;
+    JobStatus status = JobStatus.DRAFT;
 
     @ManyToMany
     @JoinTable(

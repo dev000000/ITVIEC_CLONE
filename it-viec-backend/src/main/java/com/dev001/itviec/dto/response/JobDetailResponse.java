@@ -32,7 +32,10 @@ public class JobDetailResponse {
     ExperienceLevel experienceLevel;
     LocalDateTime postedAt;
     LocalDateTime expiresAt;
+    LocalDateTime publishedAt;
+    LocalDateTime closedAt;
     JobStatus status;
+    String effectiveStatus;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     Set<SkillResponse> skills;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./EmployerJobDetail.scss";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteJobApi, getMyJobsApi, updateJobApi } from "@/services/jobApi";
+import { closeJobApi, deleteJobApi, getMyJobsApi, publishJobApi, repostJobApi, updateJobApi } from "@/services/jobApi";
 import { getAllSkillsApi } from "@/services/skillApi";
 import { getAllCitiesApi } from "@/services/cityApi";
 import { getAllJobDomainsApi } from "@/services/jobDomainApi";
@@ -17,12 +17,14 @@ import CardJobContent from "@/components/CardJobDetail/CardJobContent";
 import { isObjectEmpty } from "@/helpers/checkObject";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { TbEdit } from "react-icons/tb";
+import { MdClose, MdPublish, MdRefresh } from "react-icons/md";
 import Modal from "react-modal";
 import { Button, Form, Input } from "antd";
 import { IoClose } from "react-icons/io5";
 import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 import { useCompanyStore } from "@/store/companyStore";
 import { useUserStore } from "@/store/userStore";
 import ButtonAction from "@/components/ButtonAction";
@@ -53,6 +55,11 @@ interface JobsFormValues extends Omit<JobUpdateRequest, "city" | "skills" | "job
   jobDomain?: number;
 }
 
+interface RepostFormValues {
+  postedAt: Dayjs;
+  expiresAt?: Dayjs;
+}
+
 const EmployerJobDetail = () => {
   const { t } = useTranslation();
   // Thông tin công ty từ Zustand store, hiển thị trong CardInforEmployer
@@ -60,8 +67,10 @@ const EmployerJobDetail = () => {
   const clearCompanyInfo = useCompanyStore((state) => state.clearCompanyInfo);
   const logout = useUserStore((state) => state.logout);
   const [form] = Form.useForm();
+  const [repostForm] = Form.useForm();
   // Trạng thái mở/đóng modal form chỉnh sửa job
   const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [repostModalOpen, setRepostModalOpen] = useState<boolean>(false);
   // ID của job lấy từ URL params (route: /employer/jobs/:id)
   const { id } = useParams<{ id: string }>();
   // Thông tin đầy đủ của job hiện tại
@@ -85,6 +94,7 @@ const EmployerJobDetail = () => {
   };
   // Các tùy chọn cho Select dropdown trong form chỉnh sửa job
   const postedAtValue = Form.useWatch("postedAt", form);
+  const repostPostedAtValue = Form.useWatch("postedAt", repostForm);
   const jobTypeOptions = getJobTypeOptions(t);
   const experienceLevelOptions = getExperienceLevelOptions(t);
   const jobStatusOptions = getJobStatusOptions(t);
@@ -206,6 +216,64 @@ const EmployerJobDetail = () => {
   function openModal() {
     setIsOpen(true);
   }
+
+  const handlePublish = async () => {
+    const result = await Swal.fire({
+      title: t("employer:jobs.notifications.publishConfirmTitle"),
+      text: t("employer:jobs.notifications.publishConfirmText"),
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: t("employer:jobs.notifications.publishConfirmButton"),
+    });
+    if (result.isConfirmed) {
+      try {
+        const { data } = await publishJobApi(id!);
+        setJob(data.result);
+        Swal.fire({ title: t("employer:jobs.notifications.publishSuccess"), icon: "success" });
+      } catch (error) {
+        Swal.fire({ icon: "error", title: t("employer:jobs.notifications.oops"), text: getApiErrorMessage(error, t) });
+      }
+    }
+  };
+
+  const handleClose = async () => {
+    const result = await Swal.fire({
+      title: t("employer:jobs.notifications.closeConfirmTitle"),
+      text: t("employer:jobs.notifications.closeConfirmText"),
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: t("employer:jobs.notifications.closeConfirmButton"),
+    });
+    if (result.isConfirmed) {
+      try {
+        const { data } = await closeJobApi(id!);
+        setJob(data.result);
+        Swal.fire({ title: t("employer:jobs.notifications.closeSuccess"), icon: "success" });
+      } catch (error) {
+        Swal.fire({ icon: "error", title: t("employer:jobs.notifications.oops"), text: getApiErrorMessage(error, t) });
+      }
+    }
+  };
+
+  const handleRepost = () => {
+    repostForm.resetFields();
+    setRepostModalOpen(true);
+  };
+
+  const handleRepostSubmit = async (values: RepostFormValues) => {
+    try {
+      const { data } = await repostJobApi(id!, {
+        postedAt: dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss"),
+        expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
+      });
+      setJob(data.result);
+      setRepostModalOpen(false);
+      repostForm.resetFields();
+      Swal.fire({ title: t("employer:jobs.notifications.repostSuccess"), icon: "success" });
+    } catch (error) {
+      Swal.fire({ icon: "error", title: t("employer:jobs.notifications.oops"), text: getApiErrorMessage(error, t) });
+    }
+  };
   // Xử lý submit form cập nhật job
   // Map giá trị form → định dạng API, cập nhật state job sau khi thành công
   const onFinish = async (values: JobsFormValues) => {
@@ -496,19 +564,132 @@ const EmployerJobDetail = () => {
           </Form>
         </div>
       </Modal>
+      {/* Repost Modal */}
+      <Modal
+        isOpen={repostModalOpen}
+        onRequestClose={() => setRepostModalOpen(false)}
+        style={customStyles}
+        contentLabel={t("employer:jobs.repostModal.title")}
+      >
+        <div className="job-form__title-wrap">
+          <div className="job-form__title">{t("employer:jobs.repostModal.title")}</div>
+          <div className="job-form__close-button" onClick={() => setRepostModalOpen(false)}>
+            <IoClose />
+          </div>
+        </div>
+        <div className="job-form">
+          <Form
+            form={repostForm}
+            layout="vertical"
+            onFinish={handleRepostSubmit}
+            style={{ padding: "20px", width: "420px", maxWidth: "88vw" }}
+          >
+            <Row gutter={[10, 10]}>
+              <Col span={24}>
+                <Form.Item
+                  name="postedAt"
+                  label={t("employer:jobs.repostModal.postedAt")}
+                  rules={[
+                    { required: true, message: t("employer:jobs.repostModal.postedAtRequired") },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+                        if (value.isBefore(dayjs().subtract(1, "minute"))) {
+                          return Promise.reject(new Error(t("employer:jobs.form.dateNotPast")));
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    disabledDate={(current) => current && current < dayjs().startOf("day")}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item
+                  name="expiresAt"
+                  label={t("employer:jobs.repostModal.expiresAt")}
+                  rules={[
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+                        if (value.isBefore(dayjs())) {
+                          return Promise.reject(new Error(t("employer:jobs.form.dateNotPast")));
+                        }
+                        if (repostPostedAtValue && value.isBefore(repostPostedAtValue)) {
+                          return Promise.reject(new Error(t("employer:jobs.form.expiresBeforePosted")));
+                        }
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
+                >
+                  <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    disabledDate={(current) => {
+                      if (current && current < dayjs().startOf("day")) return true;
+                      if (repostPostedAtValue && current && current < dayjs(repostPostedAtValue).startOf("day"))
+                        return true;
+                      return false;
+                    }}
+                  />
+                </Form.Item>
+              </Col>
+              <Col>
+                <Form.Item label={null}>
+                  <Button type="primary" htmlType="submit">
+                    {t("employer:jobs.repostModal.submit")}
+                  </Button>
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </div>
+      </Modal>
+
       <div className="employer-job">
         <EmployerStart content={t("employer:jobs.jobDetail")} handleBack={handleBack} />
         <div className="employer-job__button-wrap">
-          <ButtonAction
-            text={t("employer:jobs.edit")}
-            icon={<TbEdit />}
-            handle={handleEdit}
-          ></ButtonAction>
-          <ButtonAction
-            text={t("employer:jobs.delete")}
-            icon={<RiDeleteBin5Line />}
-            handle={handleDelete}
-          ></ButtonAction>
+          {job?.status === "DRAFT" && (
+            <ButtonAction
+              text={t("employer:jobs.publish")}
+              icon={<MdPublish />}
+              handle={handlePublish}
+            />
+          )}
+          {job?.status === "ACTIVE" && (
+            <ButtonAction
+              text={t("employer:jobs.close")}
+              icon={<MdClose />}
+              handle={handleClose}
+            />
+          )}
+          {(job?.status === "CLOSED" || job?.status === "EXPIRED") && (
+            <ButtonAction
+              text={t("employer:jobs.repost")}
+              icon={<MdRefresh />}
+              handle={handleRepost}
+            />
+          )}
+          {(job?.status === "DRAFT" || job?.status === "ACTIVE") && (
+            <ButtonAction
+              text={t("employer:jobs.edit")}
+              icon={<TbEdit />}
+              handle={handleEdit}
+            />
+          )}
+          {job?.status === "DRAFT" && (
+            <ButtonAction
+              text={t("employer:jobs.delete")}
+              icon={<RiDeleteBin5Line />}
+              handle={handleDelete}
+            />
+          )}
         </div>
         <div className="employer-job__form">
           {job && (

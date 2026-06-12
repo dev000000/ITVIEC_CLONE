@@ -30,6 +30,9 @@
     "create": "Đăng việc làm mới",
     "edit": "Chỉnh sửa việc làm",
     "delete": "Xóa việc làm",
+    "publish": "Đăng tuyển",
+    "close": "Đóng việc",
+    "repost": "Đăng lại",
     "noJobs": "Chưa có việc làm nào",
     "addTitle": "Thêm việc làm",
     "editTitle": "Chỉnh sửa việc làm",
@@ -45,7 +48,17 @@
       "active": "Đang tuyển",
       "closed": "Đã đóng",
       "draft": "Nháp",
-      "expired": "Hết hạn"
+      "expired": "Hết hạn",
+      "scheduled": "Đã lên lịch",
+      "active_visible": "Đang tuyển"
+    },
+    "repostModal": {
+      "title": "Đăng lại việc làm",
+      "postedAt": "Ngày bắt đầu mới",
+      "expiresAt": "Ngày kết thúc mới",
+      "postedAtRequired": "Vui lòng chọn ngày bắt đầu",
+      "expiresAtRequired": "Vui lòng chọn ngày kết thúc",
+      "submit": "Đăng lại"
     },
     "form": {
       "jobId": "Job id",
@@ -107,7 +120,20 @@
       "deleteSuccess": "Đã xóa!",
       "deleteSuccessText": "Việc làm đã được xóa.",
       "loadError": "Không thể tải dữ liệu!",
-      "oops": "Ôi!"
+      "oops": "Ôi!",
+      "publishConfirmTitle": "Đăng tuyển công việc này?",
+      "publishConfirmText": "Công việc sẽ hiển thị cho ứng viên dựa trên ngày bắt đầu.",
+      "publishConfirmButton": "Đăng tuyển",
+      "publishSuccess": "Đăng tuyển thành công!",
+      "closeConfirmTitle": "Đóng công việc này?",
+      "closeConfirmText": "Công việc sẽ không còn hiển thị cho ứng viên.",
+      "closeConfirmButton": "Đóng",
+      "closeSuccess": "Đã đóng công việc!",
+      "repostConfirmTitle": "Đăng lại công việc này?",
+      "repostConfirmText": "Vui lòng chọn ngày bắt đầu và kết thúc mới.",
+      "repostConfirmButton": "Đăng lại",
+      "repostSuccess": "Đăng lại thành công!",
+      "repostFail": "Đăng lại thất bại!"
     }
   },
   "applications": {

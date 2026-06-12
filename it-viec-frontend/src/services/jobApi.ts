@@ -4,6 +4,8 @@ import {
   type AdminJobStatusUpdateRequest,
   type GetAdminJobsParams,
   type JobCreateRequest,
+  type JobPublishRequest,
+  type JobRepostRequest,
   type JobUpdateRequest,
   type SearchJobsParams,
 } from "@/types/request.types";
@@ -155,6 +157,48 @@ export const deleteJobApi = (id: number | string) => {
   return apiClient.delete<APIResponse<void>>(url);
 };
 
+/**
+ * Publish a DRAFT job → ACTIVE.
+ * PATCH /api/v1/companies/me/jobs/:id/publish
+ */
+export const publishJobApi = (
+  id: number | string,
+  request?: JobPublishRequest,
+) => {
+  const url = `${API_PATH}/companies/me/jobs/${id}/publish`;
+  return apiClient.patch<APIResponse<JobDetailResponse>>(url, request ?? {});
+};
+
+/**
+ * Close an ACTIVE job → CLOSED.
+ * PATCH /api/v1/companies/me/jobs/:id/close
+ */
+export const closeJobApi = (id: number | string) => {
+  const url = `${API_PATH}/companies/me/jobs/${id}/close`;
+  return apiClient.patch<APIResponse<JobDetailResponse>>(url);
+};
+
+/**
+ * Repost a CLOSED/EXPIRED job → ACTIVE.
+ * PATCH /api/v1/companies/me/jobs/:id/repost
+ */
+export const repostJobApi = (
+  id: number | string,
+  request: JobRepostRequest,
+) => {
+  const url = `${API_PATH}/companies/me/jobs/${id}/repost`;
+  return apiClient.patch<APIResponse<JobDetailResponse>>(url, request);
+};
+
+/**
+ * Admin: manually expire an ACTIVE job → EXPIRED.
+ * PATCH /api/v1/admin/jobs/:id/expire
+ */
+export const expireAdminJobApi = (id: number | string) => {
+  const url = `${API_PATH}/admin/jobs/${id}/expire`;
+  return apiClient.patch<APIResponse<JobDetailResponse>>(url);
+};
+
 export default {
   getAllJobsApi,
   getAdminJobsApi,
@@ -168,4 +212,8 @@ export default {
   createJobApi,
   updateJobApi,
   deleteJobApi,
+  publishJobApi,
+  closeJobApi,
+  repostJobApi,
+  expireAdminJobApi,
 };

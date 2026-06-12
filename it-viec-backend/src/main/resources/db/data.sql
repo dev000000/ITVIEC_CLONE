@@ -2244,6 +2244,32 @@ VALUES (
       LIMIT 1
     ), NULL, NULL, NULL, 'ONSITE', 'JUNIOR', '2025-04-24 09:00:00', '2025-05-25 09:00:00', 'ACTIVE'
   );
+-- Normalize job dates relative to seed load time (legacy fixed dates are in the past)
+-- Seeker visibility: ACTIVE + posted_at <= NOW() + (expires_at IS NULL OR expires_at > NOW())
+UPDATE jobs j
+SET posted_at = DATE_SUB(NOW(), INTERVAL ((j.id % 25) + 1) DAY),
+  expires_at = DATE_ADD(NOW(), INTERVAL ((j.id % 45) + 30) DAY),
+  published_at = DATE_SUB(NOW(), INTERVAL ((j.id % 25) + 1) DAY),
+  closed_at = NULL
+WHERE j.status = 'ACTIVE';
+UPDATE jobs j
+SET posted_at = DATE_ADD(NOW(), INTERVAL ((j.id % 7) + 3) DAY),
+  expires_at = DATE_ADD(NOW(), INTERVAL ((j.id % 30) + 60) DAY),
+  published_at = NULL,
+  closed_at = NULL
+WHERE j.status = 'DRAFT';
+UPDATE jobs j
+SET posted_at = DATE_SUB(NOW(), INTERVAL ((j.id % 20) + 10) DAY),
+  expires_at = DATE_SUB(NOW(), INTERVAL ((j.id % 5) + 1) DAY),
+  published_at = DATE_SUB(NOW(), INTERVAL ((j.id % 20) + 10) DAY),
+  closed_at = DATE_SUB(NOW(), INTERVAL ((j.id % 7) + 1) DAY)
+WHERE j.status = 'EXPIRED';
+UPDATE jobs j
+SET posted_at = DATE_SUB(NOW(), INTERVAL ((j.id % 30) + 15) DAY),
+  expires_at = DATE_ADD(NOW(), INTERVAL ((j.id % 20) + 10) DAY),
+  published_at = DATE_SUB(NOW(), INTERVAL ((j.id % 30) + 15) DAY),
+  closed_at = DATE_SUB(NOW(), INTERVAL ((j.id % 10) + 3) DAY)
+WHERE j.status = 'CLOSED';
 -- Assign job domains to seeded jobs
 UPDATE jobs
 SET job_domain_id = (

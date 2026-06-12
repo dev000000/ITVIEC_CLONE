@@ -30,6 +30,9 @@
     "create": "Post a New Job",
     "edit": "Edit Job",
     "delete": "Delete Job",
+    "publish": "Publish Job",
+    "close": "Close Job",
+    "repost": "Repost Job",
     "noJobs": "No jobs posted yet",
     "addTitle": "Add Job",
     "editTitle": "Edit Job",
@@ -45,7 +48,17 @@
       "active": "Active",
       "closed": "Closed",
       "draft": "Draft",
-      "expired": "Expired"
+      "expired": "Expired",
+      "scheduled": "Scheduled",
+      "active_visible": "Active"
+    },
+    "repostModal": {
+      "title": "Repost Job",
+      "postedAt": "New Start Date",
+      "expiresAt": "New End Date",
+      "postedAtRequired": "Please select a start date",
+      "expiresAtRequired": "Please select an end date",
+      "submit": "Repost"
     },
     "form": {
       "jobId": "Job id",
@@ -107,7 +120,20 @@
       "deleteSuccess": "Deleted!",
       "deleteSuccessText": "Your job has been deleted.",
       "loadError": "Failed to load data!",
-      "oops": "Oops!"
+      "oops": "Oops!",
+      "publishConfirmTitle": "Publish this job?",
+      "publishConfirmText": "This job will become visible to seekers based on its start date.",
+      "publishConfirmButton": "Yes, publish",
+      "publishSuccess": "Job published successfully!",
+      "closeConfirmTitle": "Close this job?",
+      "closeConfirmText": "This job will no longer be visible to seekers.",
+      "closeConfirmButton": "Yes, close it",
+      "closeSuccess": "Job closed successfully!",
+      "repostConfirmTitle": "Repost this job?",
+      "repostConfirmText": "Please set a new start and end date.",
+      "repostConfirmButton": "Repost",
+      "repostSuccess": "Job reposted successfully!",
+      "repostFail": "Failed to repost job!"
     }
   },
   "applications": {

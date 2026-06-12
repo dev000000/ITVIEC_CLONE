@@ -1,4 +1,4 @@
-.job {
+.employer-job {
   &__item {
     background-color: #FFFFFF;
     padding: 10px 10px 15px;
@@ -62,21 +62,27 @@
       }
     }
   }
-  &__time {
-    margin-bottom: 10px;
-    color: #838285;
-  }
   &__name {
     font-weight: 600;
     font-size: 18px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
     min-height: 2.5em;
-
+  }
+  &__meta-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 10px 0px;
+  }
+  &__time {
+    color: #838285;
+    font-size: 13px;
+    white-space: nowrap;
   }
   &__salary {
     font-size: 16px;

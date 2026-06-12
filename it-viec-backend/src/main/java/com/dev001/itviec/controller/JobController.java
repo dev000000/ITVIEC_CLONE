@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dev001.itviec.dto.request.AdminJobStatusUpdateRequest;
 import com.dev001.itviec.dto.request.JobCreateRequest;
+import com.dev001.itviec.dto.request.JobPublishRequest;
+import com.dev001.itviec.dto.request.JobRepostRequest;
 import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.ApiResponse;
 import com.dev001.itviec.dto.response.JobCardResponse;
@@ -170,5 +172,46 @@ public class JobController {
     public ApiResponse<Void> deleteJob(@PathVariable Long id) {
         jobService.deleteJobByCurrentEmployer(id);
         return ApiResponse.<Void>builder().code(1000).build();
+    }
+
+    @PatchMapping("/companies/me/jobs/{id}/publish")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<JobDetailResponse> publishJob(
+            @PathVariable Long id, @RequestBody(required = false) @Valid JobPublishRequest request) {
+        if (request == null) {
+            request = new JobPublishRequest();
+        }
+        return ApiResponse.<JobDetailResponse>builder()
+                .code(1000)
+                .result(jobService.publishJob(id, request))
+                .build();
+    }
+
+    @PatchMapping("/companies/me/jobs/{id}/close")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<JobDetailResponse> closeJob(@PathVariable Long id) {
+        return ApiResponse.<JobDetailResponse>builder()
+                .code(1000)
+                .result(jobService.closeJob(id))
+                .build();
+    }
+
+    @PatchMapping("/companies/me/jobs/{id}/repost")
+    @PreAuthorize("hasRole('EMPLOYER')")
+    public ApiResponse<JobDetailResponse> repostJob(
+            @PathVariable Long id, @RequestBody @Valid JobRepostRequest request) {
+        return ApiResponse.<JobDetailResponse>builder()
+                .code(1000)
+                .result(jobService.repostJob(id, request))
+                .build();
+    }
+
+    @PatchMapping("/admin/jobs/{id}/expire")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<JobDetailResponse> expireJobByAdmin(@PathVariable Long id) {
+        return ApiResponse.<JobDetailResponse>builder()
+                .code(1000)
+                .result(jobService.expireJobByAdmin(id))
+                .build();
     }
 }

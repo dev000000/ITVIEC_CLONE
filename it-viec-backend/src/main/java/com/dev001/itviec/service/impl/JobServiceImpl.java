@@ -30,6 +30,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
+import com.dev001.itviec.dto.request.JobPublishRequest;
+import com.dev001.itviec.dto.request.JobRepostRequest;
 import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
@@ -72,13 +74,21 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobDetailResponse getJobBySlug(String slug) {
-        Job job = jobRepository.findBySlugAndStatus(slug, ACTIVE).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+        Job job = jobRepository
+                .findPublicVisibleBySlug(slug, LocalDateTime.now())
+                .orElseThrow(() -> new AppException(JOB_NOT_FOUND));
         return jobMapper.toJobDetailResponse(job);
     }
 
     @Override
+    @Transactional
     public JobDetailResponse createJob(JobCreateRequest request) {
         Company company = getCurrentEmployerCompany();
+
+        JobStatus status = request.getStatus();
+        if (status != JobStatus.DRAFT && status != JobStatus.ACTIVE) {
+            throw new AppException(ErrorCode.JOB_TRANSITION_NOT_ALLOWED);
+        }
 
         Job job = Job.builder()
                 .company(company)
@@ -92,11 +102,26 @@ public class JobServiceImpl implements JobService {
                 .jobDomain(resolveActiveJobDomain(request.getJobDomain()))
                 .jobType(request.getJobType())
                 .experienceLevel(request.getExperienceLevel())
-                .postedAt(request.getPostedAt() == null ? LocalDateTime.now() : request.getPostedAt())
                 .expiresAt(request.getExpiresAt())
-                .status(request.getStatus())
+                .status(status)
                 .skills(request.getSkills() == null ? new HashSet<>() : new HashSet<>(request.getSkills()))
                 .build();
+
+        LocalDateTime now = LocalDateTime.now();
+        if (status == JobStatus.DRAFT) {
+            job.setPostedAt(request.getPostedAt());
+        } else {
+            LocalDateTime postedAt = request.getPostedAt() != null ? request.getPostedAt() : now;
+            if (postedAt.isBefore(now.minusMinutes(1))) {
+                throw new AppException(ErrorCode.JOB_POSTED_AT_MUST_BE_FUTURE);
+            }
+            LocalDateTime expiresAt = request.getExpiresAt();
+            if (expiresAt != null && !expiresAt.isAfter(postedAt)) {
+                throw new AppException(ErrorCode.JOB_EXPIRES_AT_MUST_BE_AFTER_POSTED);
+            }
+            job.setPostedAt(postedAt);
+            job.setPublishedAt(now);
+        }
 
         applySalaryFields(job, request.getSalaryMin(), request.getSalaryMax(), request.getSalaryCurrency());
 
@@ -148,8 +173,8 @@ public class JobServiceImpl implements JobService {
     @Transactional(readOnly = true)
     @Override
     public PageResponse<JobCardResponse> getJobCards(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Job> jobPage = jobRepository.findByStatus(ACTIVE, pageable);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("postedAt"), Sort.Order.desc("id")));
+        Page<Job> jobPage = jobRepository.findAll(buildPublicVisibilitySpecification(), pageable);
         List<JobCardResponse> jobCardResponseList = jobMapper.toJobCardResponse(jobPage.getContent());
 
         return PageResponse.<JobCardResponse>builder()
@@ -210,9 +235,11 @@ public class JobServiceImpl implements JobService {
         applySalaryFields(job, request.getSalaryMin(), request.getSalaryMax(), request.getSalaryCurrency());
         job.setJobType(request.getJobType());
         job.setExperienceLevel(request.getExperienceLevel());
+        if (request.getStatus() != null && request.getStatus() != job.getStatus()) {
+            throw new AppException(ErrorCode.JOB_TRANSITION_NOT_ALLOWED);
+        }
         job.setPostedAt(request.getPostedAt());
         job.setExpiresAt(request.getExpiresAt());
-        job.setStatus(request.getStatus());
         job.setSkills(request.getSkills());
         job.setSlug(generateSlug(job.getTitle(), company.getCompanyName(), job.getId()));
 
@@ -233,18 +260,128 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @Transactional
     public void deleteJobByCurrentEmployer(Long id) {
         Company company = getCurrentEmployerCompany();
         Job job = jobRepository.findByIdAndCompany(id, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
         job.setStatus(CLOSED);
+        job.setClosedAt(LocalDateTime.now());
         jobRepository.save(job);
     }
 
     @Override
+    @Transactional
     public void deleteJobByAdmin(Long id) {
         Job job = jobRepository.findById(id).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
         job.setStatus(CLOSED);
+        job.setClosedAt(LocalDateTime.now());
         jobRepository.save(job);
+    }
+
+    @Override
+    @Transactional
+    public JobDetailResponse publishJob(Long jobId, JobPublishRequest request) {
+        Company company = getCurrentEmployerCompany();
+        Job job = jobRepository.findByIdAndCompany(jobId, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+
+        if (job.getStatus() != JobStatus.DRAFT) {
+            throw new AppException(ErrorCode.JOB_NOT_PUBLISHABLE);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime postedAt = request.getPostedAt() != null ? request.getPostedAt() : now;
+
+        if (postedAt.isBefore(now.minusMinutes(1))) {
+            throw new AppException(ErrorCode.JOB_POSTED_AT_MUST_BE_FUTURE);
+        }
+
+        LocalDateTime expiresAt = request.getExpiresAt() != null ? request.getExpiresAt() : job.getExpiresAt();
+
+        if (expiresAt != null && !expiresAt.isAfter(postedAt)) {
+            throw new AppException(ErrorCode.JOB_EXPIRES_AT_MUST_BE_AFTER_POSTED);
+        }
+
+        job.setStatus(JobStatus.ACTIVE);
+        job.setPostedAt(postedAt);
+        job.setExpiresAt(expiresAt);
+        job.setPublishedAt(now);
+        job.setClosedAt(null);
+
+        return jobMapper.toJobDetailResponse(jobRepository.save(job));
+    }
+
+    @Override
+    @Transactional
+    public JobDetailResponse closeJob(Long jobId) {
+        Company company = getCurrentEmployerCompany();
+        Job job = jobRepository.findByIdAndCompany(jobId, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+
+        if (job.getStatus() != JobStatus.ACTIVE) {
+            throw new AppException(ErrorCode.JOB_NOT_CLOSABLE);
+        }
+
+        job.setStatus(JobStatus.CLOSED);
+        job.setClosedAt(LocalDateTime.now());
+
+        return jobMapper.toJobDetailResponse(jobRepository.save(job));
+    }
+
+    @Override
+    @Transactional
+    public JobDetailResponse repostJob(Long jobId, JobRepostRequest request) {
+        Company company = getCurrentEmployerCompany();
+        Job job = jobRepository.findByIdAndCompany(jobId, company).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+
+        if (job.getStatus() != JobStatus.CLOSED && job.getStatus() != JobStatus.EXPIRED) {
+            throw new AppException(ErrorCode.JOB_NOT_REPOSTABLE);
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime postedAt = request.getPostedAt();
+        LocalDateTime expiresAt = request.getExpiresAt();
+
+        if (postedAt.isBefore(now.minusMinutes(1))) {
+            throw new AppException(ErrorCode.JOB_POSTED_AT_MUST_BE_FUTURE);
+        }
+        if (expiresAt != null && !expiresAt.isAfter(now)) {
+            throw new AppException(ErrorCode.JOB_EXPIRES_AT_STILL_IN_PAST);
+        }
+        if (expiresAt != null && !expiresAt.isAfter(postedAt)) {
+            throw new AppException(ErrorCode.JOB_EXPIRES_AT_MUST_BE_AFTER_POSTED);
+        }
+
+        job.setStatus(JobStatus.ACTIVE);
+        job.setPostedAt(postedAt);
+        job.setExpiresAt(expiresAt);
+        job.setPublishedAt(now);
+        job.setClosedAt(null);
+
+        return jobMapper.toJobDetailResponse(jobRepository.save(job));
+    }
+
+    @Override
+    @Transactional
+    public int expireOverdueJobs() {
+        int count = jobRepository.expireOverdueJobs(LocalDateTime.now());
+        if (count > 0) {
+            log.info("Auto-expired {} overdue jobs", count);
+        }
+        return count;
+    }
+
+    @Override
+    @Transactional
+    public JobDetailResponse expireJobByAdmin(Long jobId) {
+        Job job = jobRepository.findById(jobId).orElseThrow(() -> new AppException(JOB_NOT_FOUND));
+
+        if (job.getStatus() != JobStatus.ACTIVE) {
+            throw new AppException(ErrorCode.JOB_NOT_CLOSABLE);
+        }
+
+        job.setStatus(JobStatus.EXPIRED);
+        job.setClosedAt(LocalDateTime.now());
+
+        return jobMapper.toJobDetailResponse(jobRepository.save(job));
     }
 
     @Override
@@ -292,7 +429,7 @@ public class JobServiceImpl implements JobService {
                 query.distinct(true);
             }
 
-            predicates.add(cb.equal(root.get("status"), ACTIVE));
+            addPublicVisibilityPredicates(predicates, root, cb, LocalDateTime.now());
 
             if (keyword != null && !keyword.isBlank()) {
                 String normalizedKeyword = keyword.trim().toLowerCase(Locale.ROOT);
@@ -350,6 +487,24 @@ public class JobServiceImpl implements JobService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    Specification<Job> buildPublicVisibilitySpecification() {
+        return (root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            addPublicVisibilityPredicates(predicates, root, cb, LocalDateTime.now());
+            return cb.and(predicates.toArray(new Predicate[0]));
+        };
+    }
+
+    private void addPublicVisibilityPredicates(
+            List<Predicate> predicates,
+            jakarta.persistence.criteria.Root<Job> root,
+            jakarta.persistence.criteria.CriteriaBuilder cb,
+            LocalDateTime now) {
+        predicates.add(cb.equal(root.get("status"), ACTIVE));
+        predicates.add(cb.lessThanOrEqualTo(root.get("postedAt"), now));
+        predicates.add(cb.or(cb.isNull(root.get("expiresAt")), cb.greaterThan(root.get("expiresAt"), now)));
     }
 
     private void applySalaryFields(Job job, Long salaryMin, Long salaryMax, SalaryCurrency salaryCurrency) {

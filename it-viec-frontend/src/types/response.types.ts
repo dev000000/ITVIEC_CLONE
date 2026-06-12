@@ -255,6 +255,9 @@ export interface JobDetailResponse extends JobSalaryResponse {
   postedAt: string;
   expiresAt: string;
   status: JobStatus;
+  publishedAt?: string | null;
+  closedAt?: string | null;
+  effectiveStatus?: string | null;
   createdAt: string;
   updatedAt: string;
   skills: SkillResponse[];

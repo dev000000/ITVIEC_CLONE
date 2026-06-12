@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.dev001.itviec.dto.request.JobCreateRequest;
+import com.dev001.itviec.dto.request.JobPublishRequest;
+import com.dev001.itviec.dto.request.JobRepostRequest;
 import com.dev001.itviec.dto.request.JobUpdateRequest;
 import com.dev001.itviec.dto.response.JobCardResponse;
 import com.dev001.itviec.dto.response.JobDetailResponse;
@@ -55,6 +57,16 @@ public interface JobService {
     void deleteJobByCurrentEmployer(Long id);
 
     void deleteJobByAdmin(Long id);
+
+    JobDetailResponse publishJob(Long jobId, JobPublishRequest request);
+
+    JobDetailResponse closeJob(Long jobId);
+
+    JobDetailResponse repostJob(Long jobId, JobRepostRequest request);
+
+    int expireOverdueJobs();
+
+    JobDetailResponse expireJobByAdmin(Long jobId);
 
     String normalizeToSlug(String input);
 

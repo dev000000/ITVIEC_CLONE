@@ -238,6 +238,8 @@ CREATE TABLE jobs (
   ),
   posted_at DATETIME,
   expires_at DATETIME,
+  published_at DATETIME NULL,
+  closed_at DATETIME NULL,
   status ENUM('ACTIVE', 'CLOSED', 'DRAFT', 'EXPIRED') NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -330,3 +332,8 @@ CREATE TABLE popular_tags (
   CONSTRAINT fk_popular_tags_skill FOREIGN KEY (skill_id) REFERENCES skills(id),
   CONSTRAINT fk_popular_tags_company FOREIGN KEY (company_id) REFERENCES companies(id)
 );
+
+
+-- Indexes for scheduler and visibility queries
+CREATE INDEX idx_jobs_status_expires ON jobs(status, expires_at);
+CREATE INDEX idx_jobs_status_posted ON jobs(status, posted_at);
