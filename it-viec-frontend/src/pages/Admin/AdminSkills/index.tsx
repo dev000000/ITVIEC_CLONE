@@ -210,8 +210,8 @@ function AdminSkills() {
   // ---- Deprecate ----
   const handleDeprecate = async (record: SkillAdminResponse) => {
     const result = await Swal.fire({
-      title: t("admin:skills.delete.confirmTitle"),
-      text: t("admin:skills.delete.confirmText", { name: record.skillName }),
+      title: t("admin:skills.delete.confirmTitle", { name: record.skillName }),
+      text: t("admin:skills.delete.confirmText"),
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#dc2626",

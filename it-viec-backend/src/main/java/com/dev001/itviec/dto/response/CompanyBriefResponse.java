@@ -23,6 +23,6 @@ public class CompanyBriefResponse {
     CountryResponse country;
     WorkingHours workingHours;
     OvertimePolicy overtimePolicy;
-    String industry;
+    IndustryResponse industry;
     CompanySize companySize;
 }

@@ -37,17 +37,20 @@ import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.employer.Employer;
 import com.dev001.itviec.entity.job.Job;
+import com.dev001.itviec.entity.jobdomain.JobDomain;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
 import com.dev001.itviec.enums.SalaryCurrency;
+import com.dev001.itviec.enums.SkillStatus;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.JobMapper;
 import com.dev001.itviec.repository.CompanyRepository;
 import com.dev001.itviec.repository.EmployerRepository;
+import com.dev001.itviec.repository.JobDomainRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.repository.UserRepository;
 import com.dev001.itviec.service.JobService;
@@ -62,6 +65,7 @@ public class JobServiceImpl implements JobService {
 
     private final JobMapper jobMapper;
     private final JobRepository jobRepository;
+    private final JobDomainRepository jobDomainRepository;
     private final CompanyRepository companyRepository;
     private final UserRepository userRepository;
     private final EmployerRepository employerRepository;
@@ -85,6 +89,7 @@ public class JobServiceImpl implements JobService {
                 .whyJoinUs(request.getWhyJoinUs())
                 .location(request.getLocation())
                 .city(request.getCity())
+                .jobDomain(resolveActiveJobDomain(request.getJobDomain()))
                 .jobType(request.getJobType())
                 .experienceLevel(request.getExperienceLevel())
                 .postedAt(request.getPostedAt() == null ? LocalDateTime.now() : request.getPostedAt())
@@ -200,6 +205,7 @@ public class JobServiceImpl implements JobService {
         job.setWhyJoinUs(request.getWhyJoinUs());
         job.setLocation(request.getLocation());
         job.setCity(request.getCity());
+        job.setJobDomain(resolveActiveJobDomain(request.getJobDomain()));
         applySalaryFields(job, request.getSalaryMin(), request.getSalaryMax(), request.getSalaryCurrency());
         job.setJobType(request.getJobType());
         job.setExperienceLevel(request.getExperienceLevel());
@@ -419,6 +425,22 @@ public class JobServiceImpl implements JobService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private JobDomain resolveActiveJobDomain(JobDomain jobDomain) {
+        if (jobDomain == null || jobDomain.getId() == null) {
+            throw new AppException(ErrorCode.JOB_DOMAIN_REQUIRED);
+        }
+
+        JobDomain found = jobDomainRepository
+                .findById(jobDomain.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.JOB_DOMAIN_NOT_FOUND));
+
+        if (found.getStatus() == SkillStatus.DEPRECATED) {
+            throw new AppException(ErrorCode.JOB_DOMAIN_DEPRECATED);
+        }
+
+        return found;
     }
 
     private Company getCurrentEmployerCompany() {

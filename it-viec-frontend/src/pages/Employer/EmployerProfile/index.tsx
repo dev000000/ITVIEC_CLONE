@@ -17,9 +17,10 @@ import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor
 import { deleteMyCompanyLogoApi, updateMyCompanyApi, uploadMyCompanyLogoApi } from "@/services/companyApi";
 import { getAllSkillsApi } from "@/services/skillApi";
 import { getAllCountriesApi } from "@/services/countryApi";
+import { getAllIndustriesApi } from "@/services/industryApi";
 import Swal from "sweetalert2";
 import { isObjectEmpty } from "@/helpers/checkObject";
-import type { CountryResponse, SkillResponse } from "@/types/response.types";
+import type { CountryResponse, IndustryResponse, SkillResponse } from "@/types/response.types";
 import TopJobItemHome from "@/components/TopJobItemHome";
 import { useCompanyStore } from "@/store/companyStore";
 import {
@@ -27,13 +28,15 @@ import {
   getCompanySizeOptions,
   getWorkingHoursOptions,
   getOvertimePolicyOptions,
+  getIndustryLabel,
 } from "@/constants";
 import type { CompanyUpdateRequest } from "@/types/request.types";
 import { getApiErrorMessage } from "@/utils/apiError";
 
-interface CompanyFormValues extends Omit<CompanyUpdateRequest, "country" | "companySkills"> {
+interface CompanyFormValues extends Omit<CompanyUpdateRequest, "country" | "companySkills" | "industry"> {
   country: number;
   companySkills: number[];
+  industry: number;
 }
 
 
@@ -68,9 +71,10 @@ const EmployerProfile = () => {
   const setCompanyFullInfo = useCompanyStore((state) => state.setCompanyFullInfo);
   const updateCompanyField = useCompanyStore((state) => state.updateCompanyField);
 
-  // Danh sách skills và countries từ API, dùng cho Select dropdown trong form
+  // Danh sách skills, countries, và industries từ API, dùng cho Select dropdown trong form
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [countries, setCountries] = useState<CountryResponse[]>([]);
+  const [industries, setIndustries] = useState<IndustryResponse[]>([]);
 
   // Logo pending: file mới chờ upload, flag xóa, và preview URL tạm thời
   const [pendingLogoFile, setPendingLogoFile] = useState<File | null>(null);
@@ -114,6 +118,11 @@ const EmployerProfile = () => {
     return { value: country.id, label: <span>{country.countryName}</span> };
   });
 
+  const industryOptions = industries.map((industry) => ({
+    value: industry.id,
+    label: getIndustryLabel(industry.industryName, t),
+  }));
+
   // Kích hoạt modal chỉnh sửa khi người dùng nhấn nút Edit
   const handleEdit = () => {
     openModal();
@@ -126,7 +135,7 @@ const EmployerProfile = () => {
       description: companyInfor.description,
       address: companyInfor.address,
       companyModel: companyInfor.companyModel,
-      industry: companyInfor.industry,
+      industry: companyInfor.industry?.id,
       companySize: companyInfor.companySize,
       country: companyInfor.country?.id,
       workingHours: companyInfor.workingHours,
@@ -161,6 +170,7 @@ const EmployerProfile = () => {
         ...values,
         country: fullCountry!,
         companySkills: fullSkills,
+        industry: { id: values.industry },
       };
       const { data: companyData } = await updateMyCompanyApi(requestData);
       const company = companyData.result;
@@ -199,16 +209,18 @@ const EmployerProfile = () => {
   const onFinishFailed = (errorInfo: unknown) => {
     console.log("Failed:", errorInfo);
   };
-  // Fetch song song danh sách skills và countries khi mount, cần thiết cho Select dropdown trong modal
+  // Fetch song song danh sách skills, countries và industries khi mount, cần thiết cho Select dropdown trong modal
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [skillsResponse, countriesResponse] = await Promise.all([
+        const [skillsResponse, countriesResponse, industriesResponse] = await Promise.all([
           getAllSkillsApi(),
           getAllCountriesApi(),
+          getAllIndustriesApi(),
         ]);
         setSkills(skillsResponse.data.result || []);
         setCountries(countriesResponse.data.result || []);
+        setIndustries(industriesResponse.data.result || []);
       } catch (error) {
         console.error("Error fetching data:", error);
         Swal.fire({
@@ -332,7 +344,12 @@ const EmployerProfile = () => {
                   </Col>
                   <Col span={12}>
                     <Form.Item label={t("employer:profile.form.industry")} name="industry">
-                      <Input />
+                      <Select
+                        showSearch
+                        optionFilterProp="label"
+                        placeholder={t("employer:profile.form.selectIndustryPlaceholder")}
+                        options={industryOptions}
+                      />
                     </Form.Item>
                   </Col>
                   <Col span={12}>

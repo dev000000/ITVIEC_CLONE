@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { deleteJobApi, getMyJobsApi, updateJobApi } from "@/services/jobApi";
 import { getAllSkillsApi } from "@/services/skillApi";
 import { getAllCitiesApi } from "@/services/cityApi";
+import { getAllJobDomainsApi } from "@/services/jobDomainApi";
 import EmployerStart from "@/components/EmployerStart";
 import { Col, DatePicker, Row, Select } from "antd";
 import CardInforEmployer from "@/components/CardInforEmployer";
@@ -30,23 +31,26 @@ import {
   getExperienceLevelOptions,
   getJobStatusOptions,
   getJobTypeOptions,
+  getJobDomainLabel,
 } from "@/constants";
 import type {
   CityResponse,
   JobDetailResponse,
+  JobDomainResponse,
   SkillResponse,
 } from "@/types/response.types";
 import type { JobUpdateRequest } from "@/types/request.types";
 import type { SalaryCurrency } from "@/types/common.types";
 import SalaryFormFields from "@/components/SalaryFormFields";
 
-interface JobsFormValues extends Omit<JobUpdateRequest, "city" | "skills"> {
+interface JobsFormValues extends Omit<JobUpdateRequest, "city" | "skills" | "jobDomain"> {
   city: number;
   skills: number[];
   salaryNegotiable?: boolean;
   salaryMin?: number;
   salaryMax?: number;
   salaryCurrency?: SalaryCurrency;
+  jobDomain?: number;
 }
 
 const EmployerJobDetail = () => {
@@ -62,9 +66,10 @@ const EmployerJobDetail = () => {
   const { id } = useParams<{ id: string }>();
   // Thông tin đầy đủ của job hiện tại
   const [job, setJob] = useState<JobDetailResponse | null>(null);
-  // Danh sách skills và cities lấy từ API, dùng cho Select dropdown trong form
+  // Danh sách skills, cities và job domains lấy từ API, dùng cho Select dropdown trong form
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
+  const [jobDomains, setJobDomains] = useState<JobDomainResponse[]>([]);
   const navigate = useNavigate();
   const customStyles = {
     content: {
@@ -83,7 +88,7 @@ const EmployerJobDetail = () => {
   const jobTypeOptions = getJobTypeOptions(t);
   const experienceLevelOptions = getExperienceLevelOptions(t);
   const jobStatusOptions = getJobStatusOptions(t);
-  // Chuyển đổi skills và cities từ API sang định dạng Select options của Ant Design
+  // Chuyển đổi skills, cities và jobDomains từ API sang định dạng Select options của Ant Design
   const skillList = skills.map((skill) => {
     return {
       value: skill.id,
@@ -94,21 +99,27 @@ const EmployerJobDetail = () => {
     value: city.id,
     label: <span>{city.cityName}</span>,
   }));
+  const jobDomainList = jobDomains.map((domain) => ({
+    value: domain.id,
+    label: getJobDomainLabel(domain.domainName, t),
+  }));
   const handleBack = () => {
     navigate(-1);
   };
-  // Fetch song song: skills, cities và danh sách job của công ty
+  // Fetch song song: skills, cities, jobDomains và danh sách job của công ty
   // Lọc job theo id từ URL và điền vào form; nếu không tìm thấy thì logout và redirect về "/"
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const [skillsResponse, citiesResponse, jobsResponse] = await Promise.all([
+        const [skillsResponse, citiesResponse, jobsResponse, domainsResponse] = await Promise.all([
           getAllSkillsApi(),
           getAllCitiesApi(),
           getMyJobsApi(),
+          getAllJobDomainsApi(),
         ]);
         setSkills(skillsResponse.data.result || []);
         setCities(citiesResponse.data.result || []);
+        setJobDomains(domainsResponse.data.result || []);
         const jobInfo = jobsResponse.data.result.find(
           (item) => String(item.id) === String(id),
         );
@@ -136,6 +147,7 @@ const EmployerJobDetail = () => {
             status: jobInfo.status,
             city: jobInfo.city?.id,
             skills: jobInfo.skills?.map((skill) => skill.id) || [],
+            jobDomain: jobInfo.jobDomain?.id ?? undefined,
             jobReason: jobInfo.jobReason || "",
             jobDescription: jobInfo.jobDescription || "",
             jobRequirements: jobInfo.jobRequirements || "",
@@ -207,6 +219,7 @@ const EmployerJobDetail = () => {
       salaryMin: _neg ? undefined : values.salaryMin,
       salaryMax: _neg ? undefined : values.salaryMax,
       salaryCurrency: _neg ? undefined : values.salaryCurrency,
+      jobDomain: values.jobDomain != null ? { id: values.jobDomain } : null,
     };
     try {
       const {data: jobData} = await updateJobApi(String(id), data);
@@ -305,6 +318,20 @@ const EmployerJobDetail = () => {
                   <Select
                     placeholder={t("employer:jobs.form.selectCityPlaceholder")}
                     options={cityList}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
+                <Form.Item
+                  label={t("employer:jobs.form.jobDomain")}
+                  name="jobDomain"
+                >
+                  <Select
+                    showSearch
+                    optionFilterProp="label"
+                    allowClear
+                    placeholder={t("employer:jobs.form.selectJobDomainPlaceholder")}
+                    options={jobDomainList}
                   />
                 </Form.Item>
               </Col>

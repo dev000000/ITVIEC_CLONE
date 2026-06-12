@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.city.City;
 import com.dev001.itviec.entity.company.Company;
+import com.dev001.itviec.entity.jobdomain.JobDomain;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
@@ -59,6 +60,10 @@ public class Job extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     City city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_domain_id")
+    JobDomain jobDomain;
 
     @Column(name = "salary_min")
     Long salaryMin;

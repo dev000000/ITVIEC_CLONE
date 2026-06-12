@@ -5,7 +5,7 @@ import MenuItem from "@/components/SiderBar/MenuItem";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import logo from "@/assets/images/nhieu viec (355 x 85 px).png";
 import { MdOutlineSpaceDashboard } from "react-icons/md";
-import { FiUsers, FiPieChart, FiTag, FiUserCheck, FiCpu } from "react-icons/fi";
+import { FiUsers, FiPieChart, FiTag, FiUserCheck, FiCpu, FiLayers, FiBriefcase } from "react-icons/fi";
 import { BsBriefcase } from "react-icons/bs";
 import { IoIosLogOut } from "react-icons/io";
 import Swal from "sweetalert2";
@@ -87,6 +87,20 @@ function LayoutAdmin() {
                 link: "skills",
                 name: t("admin:menu.skills"),
                 icon: <FiCpu />,
+              }}
+            />
+            <MenuItem
+              props={{
+                link: "job-domains",
+                name: t("admin:menu.jobDomains"),
+                icon: <FiLayers />,
+              }}
+            />
+            <MenuItem
+              props={{
+                link: "industries",
+                name: t("admin:menu.industries"),
+                icon: <FiBriefcase />,
               }}
             />
             <MenuItem

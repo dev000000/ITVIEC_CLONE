@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.dev001.itviec.entity.city.City;
+import com.dev001.itviec.entity.jobdomain.JobDomain;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
@@ -43,6 +44,9 @@ public class JobCreateRequest {
     String location;
 
     City city;
+
+    @NotNull(message = "JOB_DOMAIN_REQUIRED")
+    JobDomain jobDomain;
 
     Long salaryMin;
 

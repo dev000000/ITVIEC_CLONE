@@ -20,7 +20,9 @@
     "report": "Reports",
     "popularTags": "Popular tags",
     "skills": "Skills",
-    "employerRegistrations": "Employer registrations"
+    "employerRegistrations": "Employer registrations",
+    "jobDomains": "Job domains",
+    "industries": "Industries"
   },
   "employerRegistrations": {
     "title": "Pending employer registrations",
@@ -218,6 +220,36 @@
       "merged": "Skills merged",
       "restored": "Skill restored"
     }
+  },
+  "jobDomains": {
+    "title": "Job domain management",
+    "searchPlaceholder": "Search job domains...",
+    "addButton": "Add job domain",
+    "filters": { "all": "All statuses", "active": "Active", "deprecated": "Deprecated" },
+    "columns": { "name": "Domain name", "status": "Status", "usage": "Usage", "action": "Action" },
+    "status": { "active": "Active", "deprecated": "Hidden", "mergedInto": "→ {{name}}" },
+    "usage": { "jobs": "{{count}} jobs", "jobsTooltip": "Jobs using this domain" },
+    "actions": { "delete": "Hide", "restore": "Restore" },
+    "create": { "title": "Add job domain", "label": "Domain name", "placeholder": "Enter domain name", "submit": "Add" },
+    "delete": { "confirmTitle": "Hide job domain \"{{name}}\"?", "confirmText": "This domain will be hidden from public listings. Related data is preserved.", "confirmButton": "Confirm hide" },
+    "restore": { "confirmTitle": "Restore this job domain?", "confirmText": "\"{{name}}\" will become active again.", "confirmButton": "Restore" },
+    "inUse": { "title": "Job domain in use", "text": "\"{{name}}\" is used by {{count}} job(s). Reassign jobs before hiding." },
+    "notifications": { "created": "Job domain added", "updated": "Job domain updated", "deprecated": "Job domain hidden", "restored": "Job domain restored" }
+  },
+  "industries": {
+    "title": "Industry management",
+    "searchPlaceholder": "Search industries...",
+    "addButton": "Add industry",
+    "filters": { "all": "All statuses", "active": "Active", "deprecated": "Deprecated" },
+    "columns": { "name": "Industry name", "status": "Status", "usage": "Usage", "action": "Action" },
+    "status": { "active": "Active", "deprecated": "Hidden", "mergedInto": "→ {{name}}" },
+    "usage": { "companies": "{{count}} companies", "companiesTooltip": "Companies in this industry" },
+    "actions": { "delete": "Hide", "restore": "Restore" },
+    "create": { "title": "Add industry", "label": "Industry name", "placeholder": "Enter industry name", "submit": "Add" },
+    "delete": { "confirmTitle": "Hide industry \"{{name}}\"?", "confirmText": "This industry will be hidden from public listings. Related data is preserved.", "confirmButton": "Confirm hide" },
+    "restore": { "confirmTitle": "Restore this industry?", "confirmText": "\"{{name}}\" will become active again.", "confirmButton": "Restore" },
+    "inUse": { "title": "Industry in use", "text": "\"{{name}}\" is used by {{count}} company(ies). Reassign companies before hiding." },
+    "notifications": { "created": "Industry added", "updated": "Industry updated", "deprecated": "Industry hidden", "restored": "Industry restored" }
   },
   "popularTags": {
     "title": "Popular tag management",

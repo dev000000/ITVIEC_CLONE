@@ -11,6 +11,10 @@ import seekerApi from "./seekerApi";
 import skillApi from "./skillApi";
 import adminSkillApi from "./adminSkillApi";
 import userApi from "./userApi";
+import jobDomainApi from "./jobDomainApi";
+import industryApi from "./industryApi";
+import adminJobDomainApi from "./adminJobDomainApi";
+import adminIndustryApi from "./adminIndustryApi";
 
 export {
   apiClient,
@@ -26,6 +30,10 @@ export {
   skillApi,
   adminSkillApi,
   userApi,
+  jobDomainApi,
+  industryApi,
+  adminJobDomainApi,
+  adminIndustryApi,
 };
 
 const services = {
@@ -42,6 +50,10 @@ const services = {
   skillApi,
   adminSkillApi,
   userApi,
+  jobDomainApi,
+  industryApi,
+  adminJobDomainApi,
+  adminIndustryApi,
 };
 
 export default services;

@@ -14,6 +14,7 @@ import type {
 import type {
   CityResponse,
   CountryResponse,
+  IndustryResponse,
   SkillResponse,
 } from "./response.types";
 
@@ -109,7 +110,7 @@ export interface CompanyUpdateRequest {
   logoUrl?: string;
   address: string;
   companyModel: CompanyModel;
-  industry: string;
+  industry: Pick<IndustryResponse, "id">;
   companySize: CompanySize;
   country: CountryResponse;
   workingHours: WorkingHours;
@@ -140,6 +141,7 @@ export interface JobCreateRequest extends JobSalaryRequest {
   expiresAt: IsoDateTimeString;
   status: JobStatus;
   skills: SkillResponse[];
+  jobDomain?: { id: number } | null;
 }
 
 export interface JobUpdateRequest extends JobSalaryRequest {
@@ -156,6 +158,7 @@ export interface JobUpdateRequest extends JobSalaryRequest {
   expiresAt: IsoDateTimeString;
   status: JobStatus;
   skills: SkillResponse[];
+  jobDomain?: { id: number } | null;
 }
 
 export interface GetAdminJobsParams extends PaginationParams {
@@ -255,4 +258,32 @@ export interface EmployerActivateRequest {
   token: string;
   password: string;
   confirmPassword: string;
+}
+
+// --- Taxonomy Admin Requests (JobDomain & Industry) ---
+
+export interface JobDomainCreateRequest {
+  domainName: string;
+}
+
+export interface JobDomainUpdateRequest {
+  domainName: string;
+}
+
+export interface GetAdminJobDomainsParams extends PaginationParams {
+  status?: "ACTIVE" | "DEPRECATED";
+  search?: string;
+}
+
+export interface IndustryCreateRequest {
+  industryName: string;
+}
+
+export interface IndustryUpdateRequest {
+  industryName: string;
+}
+
+export interface GetAdminIndustriesParams extends PaginationParams {
+  status?: "ACTIVE" | "DEPRECATED";
+  search?: string;
 }

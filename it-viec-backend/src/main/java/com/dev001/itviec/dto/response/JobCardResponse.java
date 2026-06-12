@@ -26,6 +26,7 @@ public class JobCardResponse {
     JobType jobType;
     JobStatus status;
     LocalDateTime postedAt;
+    JobDomainResponse jobDomain;
     Set<SkillResponse> skills;
     CompanyBaseResponse company;
 }

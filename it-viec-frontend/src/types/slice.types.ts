@@ -1,5 +1,5 @@
 import type { CompanyModel, CompanySize, Gender, OvertimePolicy, Role, UserStatus, WorkingHours } from "./common.types";
-import type { CityResponse, CountryResponse, JobCardResponse, SkillResponse } from "./response.types";
+import type { CityResponse, CountryResponse, IndustryResponse, JobCardResponse, SkillResponse } from "./response.types";
 
 export interface UserState {
   authenticated: boolean;
@@ -37,7 +37,7 @@ export interface CompanyState {
   logoUrl: string | undefined;
   address: string | undefined;
   companyModel: CompanyModel | undefined;
-  industry: string | undefined;
+  industry: IndustryResponse | undefined;
   companySize: CompanySize | undefined;
   country: CountryResponse | undefined;
   workingHours: WorkingHours | undefined;

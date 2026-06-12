@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 import com.dev001.itviec.entity.base.BaseEntity;
 import com.dev001.itviec.entity.country.Country;
 import com.dev001.itviec.entity.employer.Employer;
+import com.dev001.itviec.entity.industry.Industry;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.CompanyModel;
@@ -60,8 +61,9 @@ public class Company extends BaseEntity {
     @Column(name = "company_model")
     CompanyModel companyModel;
 
-    @Column(columnDefinition = "VARCHAR(100)")
-    String industry;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "industry_id")
+    Industry industry;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "company_size")

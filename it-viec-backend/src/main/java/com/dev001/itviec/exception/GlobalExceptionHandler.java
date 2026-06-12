@@ -54,6 +54,28 @@ public class GlobalExceptionHandler {
                         .build());
     }
 
+    @ExceptionHandler(value = JobDomainInUseException.class)
+    ResponseEntity<ApiResponse> handleJobDomainInUse(JobDomainInUseException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .result(exception.getUsageCount())
+                        .build());
+    }
+
+    @ExceptionHandler(value = IndustryInUseException.class)
+    ResponseEntity<ApiResponse> handleIndustryInUse(IndustryInUseException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
+        return ResponseEntity.status(errorCode.getStatusCode())
+                .body(ApiResponse.builder()
+                        .code(errorCode.getCode())
+                        .message(errorCode.getMessage())
+                        .result(exception.getUsageCount())
+                        .build());
+    }
+
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse> handleAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();

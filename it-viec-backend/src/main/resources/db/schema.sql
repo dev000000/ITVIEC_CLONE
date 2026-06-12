@@ -11,6 +11,26 @@ CREATE TABLE skills (
   CONSTRAINT fk_skills_merged_into FOREIGN KEY (merged_into_id) REFERENCES skills(id)
 );
 CREATE INDEX idx_skills_status ON skills(status);
+-- Bảng lĩnh vực công việc (job domain)
+CREATE TABLE job_domains (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  domain_name VARCHAR(150) NOT NULL,
+  status ENUM('ACTIVE', 'DEPRECATED') NOT NULL DEFAULT 'ACTIVE',
+  merged_into_id BIGINT NULL,
+  CONSTRAINT fk_job_domains_merged_into FOREIGN KEY (merged_into_id) REFERENCES job_domains(id),
+  CONSTRAINT uk_job_domains_name UNIQUE (domain_name)
+);
+CREATE INDEX idx_job_domains_status ON job_domains(status);
+-- Bảng ngành nghề công ty (industry)
+CREATE TABLE industries (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  industry_name VARCHAR(150) NOT NULL,
+  status ENUM('ACTIVE', 'DEPRECATED') NOT NULL DEFAULT 'ACTIVE',
+  merged_into_id BIGINT NULL,
+  CONSTRAINT fk_industries_merged_into FOREIGN KEY (merged_into_id) REFERENCES industries(id),
+  CONSTRAINT uk_industries_name UNIQUE (industry_name)
+);
+CREATE INDEX idx_industries_status ON industries(status);
 -- Bảng thành phố
 CREATE TABLE cities (
   id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -108,7 +128,7 @@ CREATE TABLE companies (
     'CLOUD_PLATFORM',
     'RESEARCH_LAB'
   ),
-  industry VARCHAR(100),
+  industry_id BIGINT,
   company_size ENUM(
     'SIZE_1_10',
     'SIZE_11_50',
@@ -140,7 +160,8 @@ CREATE TABLE companies (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_companies_employer FOREIGN KEY (employer_id) REFERENCES employers(id),
-  CONSTRAINT fk_companies_country FOREIGN KEY (country_id) REFERENCES countries(id)
+  CONSTRAINT fk_companies_country FOREIGN KEY (country_id) REFERENCES countries(id),
+  CONSTRAINT fk_companies_industry FOREIGN KEY (industry_id) REFERENCES industries(id)
 );
 -- Bảng logo công ty
 CREATE TABLE company_logos (
@@ -201,6 +222,7 @@ CREATE TABLE jobs (
   why_join_us MEDIUMTEXT,
   location VARCHAR(500),
   city_id BIGINT,
+  job_domain_id BIGINT,
   salary_min BIGINT,
   salary_max BIGINT,
   salary_currency ENUM('VND', 'USD'),
@@ -220,7 +242,8 @@ CREATE TABLE jobs (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   CONSTRAINT fk_jobs_company FOREIGN KEY (company_id) REFERENCES companies(id),
-  CONSTRAINT fk_jobs_city FOREIGN KEY (city_id) REFERENCES cities(id)
+  CONSTRAINT fk_jobs_city FOREIGN KEY (city_id) REFERENCES cities(id),
+  CONSTRAINT fk_jobs_job_domain FOREIGN KEY (job_domain_id) REFERENCES job_domains(id)
 );
 -- Bảng đơn ứng tuyển
 CREATE TABLE applications (

@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { createJobApi, getMyJobsApi } from "@/services/jobApi";
 import { getAllSkillsApi } from "@/services/skillApi";
 import { getAllCitiesApi } from "@/services/cityApi";
+import { getAllJobDomainsApi } from "@/services/jobDomainApi";
 import "./EmployerJobs.scss";
 import ButtonAction from "@/components/ButtonAction";
 import { MdAdd } from "react-icons/md";
@@ -22,12 +23,14 @@ import TopJobItemEmployer from "@/components/TopJobItemEmployer";
 import type {
   CityResponse,
   JobDetailResponse,
+  JobDomainResponse,
   SkillResponse,
 } from "@/types/response.types";
 import {
   getExperienceLevelOptions,
   getJobStatusOptions,
   getJobTypeOptions,
+  getJobDomainLabel,
 } from "@/constants";
 import type { JobCreateRequest } from "@/types/request.types";
 import type { SalaryCurrency } from "@/types/common.types";
@@ -47,13 +50,14 @@ const customStyles = {
   },
 };
 
-interface JobsFormValues extends Omit<JobCreateRequest, "city" | "skills"> {
+interface JobsFormValues extends Omit<JobCreateRequest, "city" | "skills" | "jobDomain"> {
   city: number;
   skills: number[];
   salaryNegotiable?: boolean;
   salaryMin?: number;
   salaryMax?: number;
   salaryCurrency?: SalaryCurrency;
+  jobDomain?: number;
 }
 
 const EmployerJobs = () => {
@@ -66,9 +70,10 @@ const EmployerJobs = () => {
 
   const [form] = Form.useForm();
 
-  // Danh sách skills và cities từ API, dùng cho Select dropdown trong form tạo job
+  // Danh sách skills, cities và job domains từ API, dùng cho Select dropdown trong form tạo job
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
+  const [jobDomains, setJobDomains] = useState<JobDomainResponse[]>([]);
 
   // Giá trị filter tìm kiếm job
   const [filterTitle, setFilterTitle] = useState<string>("");
@@ -90,7 +95,7 @@ const EmployerJobs = () => {
   const postedAtValue = Form.useWatch("postedAt", form);
 
 
-  // Chuyển đổi skills và cities từ API sang định dạng Select options của Ant Design
+  // Chuyển đổi skills, cities và jobDomains từ API sang định dạng Select options của Ant Design
   const skillList = skills.map((skill) => ({
     value: skill.id,
     label: <span>{skill.skillName}</span>,
@@ -99,20 +104,26 @@ const EmployerJobs = () => {
     value: city.id,
     label: <span>{city.cityName}</span>,
   }));
+  const jobDomainList = jobDomains.map((domain) => ({
+    value: domain.id,
+    label: getJobDomainLabel(domain.domainName, t),
+  }));
 
 
-  // Fetch song song skills, cities và danh sách job của công ty khi component mount
+  // Fetch song song skills, cities, jobDomains và danh sách job của công ty khi component mount
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [skillsResponse, citiesResponse, jobsResponse] = await Promise.all([
+        const [skillsResponse, citiesResponse, jobsResponse, domainsResponse] = await Promise.all([
           getAllSkillsApi(),
           getAllCitiesApi(),
           getMyJobsApi(),
+          getAllJobDomainsApi(),
         ]);
         setSkills(skillsResponse.data.result || []);
         setCities(citiesResponse.data.result || []);
         setJobs(jobsResponse.data.result || []);
+        setJobDomains(domainsResponse.data.result || []);
       } catch (error) {
         console.error("Error fetching data:", error);
         Swal.fire({
@@ -175,6 +186,7 @@ const EmployerJobs = () => {
       salaryMin: _neg ? undefined : values.salaryMin,
       salaryMax: _neg ? undefined : values.salaryMax,
       salaryCurrency: _neg ? undefined : values.salaryCurrency,
+      jobDomain: values.jobDomain != null ? { id: values.jobDomain } : null,
     };
     try {
       await createJobApi(data);
@@ -266,7 +278,35 @@ const EmployerJobs = () => {
                 </Form.Item>
               </Col>
               <Col span={24}>
+                <Form.Item
+                  label={t("employer:jobs.form.jobDomain")}
+                  name="jobDomain"
+                >
+                  <Select
+                    showSearch
+                    optionFilterProp="label"
+                    allowClear
+                    placeholder={t("employer:jobs.form.selectJobDomainPlaceholder")}
+                    options={jobDomainList}
+                  />
+                </Form.Item>
+              </Col>
+              <Col span={24}>
                 <SalaryFormFields />
+              </Col>
+              <Col span={24}>
+                <Form.Item
+                  label={t("employer:jobs.form.jobDomain")}
+                  name="jobDomain"
+                  rules={[{ required: true, message: t("employer:jobs.form.jobDomainRequired") }]}
+                >
+                  <Select
+                    showSearch
+                    optionFilterProp="label"
+                    placeholder={t("employer:jobs.form.selectJobDomainPlaceholder")}
+                    options={jobDomainList}
+                  />
+                </Form.Item>
               </Col>
               <Col span={24}>
                 <Form.Item

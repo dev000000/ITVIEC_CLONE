@@ -139,6 +139,66 @@ export const getCityLabel = (cityName: string | undefined, t: TFunction): string
   return t(`common:cities.${key}`, { defaultValue: cityName });
 };
 
+// Job domain name → i18n key mapping (English DB value → translation key)
+const jobDomainNameToKeyMap: Record<string, string> = {
+  "Blockchain & Web3 Services": "blockchainWeb3",
+  "Food and Beverage": "foodAndBeverage",
+  "Tourism and Hospitality Services": "tourismHospitality",
+  "Insurance": "insurance",
+  "Consumer Goods": "consumerGoods",
+  "E-commerce": "eCommerce",
+  "Education and Training": "educationAndTraining",
+  "Banking": "banking",
+  "Game": "game",
+  "Government": "government",
+  "IT Hardware and Computing": "itHardwareComputing",
+  "Non-Profit and Social Services": "nonProfitSocial",
+  "Manufacturing and Engineering": "manufacturingEngineering",
+  "Media, Advertising and Entertainment": "mediaAdvertisingEntertainment",
+  "Environment": "environment",
+  "Pharmaceuticals": "pharmaceuticals",
+  "Real Estate, Property and Construction": "realEstateConstruction",
+  "Retail and Wholesale": "retailWholesale",
+  "IT Services and IT Consulting": "itServicesConsulting",
+  "Telecommunication": "telecommunication",
+  "Transportation, Logistics and Warehouse": "transportationLogistics",
+  "Cyber Security": "cyberSecurity",
+  "Trading and Commercial": "tradingCommercial",
+  "Network and Infrastructure": "networkInfrastructure",
+  "Software Development Outsourcing": "softwareOutsourcing",
+  "Software Products and Web Services": "softwareProductsWebServices",
+  "Agriculture": "agriculture",
+  "Sports and Fitness": "sportsAndFitness",
+  "Apparel and Fashion": "apparelFashion",
+  "Creative and Design": "creativeDesign",
+  "Staffing and Recruiting": "staffingRecruiting",
+  "Publishing and Printing": "publishingPrinting",
+  "Facility Management": "facilityManagement",
+  "Research Services": "researchServices",
+  "Healthcare": "healthcare",
+  "Materials and Mining": "materialsMining",
+  "Utilities": "utilities",
+  "Professional Services": "professionalServices",
+  "Securities & Investment": "securitiesInvestment",
+  "Financial Services": "financialServices",
+  "Emerging Tech R&D": "emergingTechRD",
+  "AI Software & Services": "aiSoftwareServices",
+};
+
+export const getJobDomainLabel = (domainName: string | undefined, t: TFunction): string => {
+  if (!domainName) return "";
+  const key = jobDomainNameToKeyMap[domainName];
+  if (!key) return domainName;
+  return t(`common:jobDomains.${key}`, { defaultValue: domainName });
+};
+
+export const getIndustryLabel = (industryName: string | undefined, t: TFunction): string => {
+  if (!industryName) return "";
+  const key = jobDomainNameToKeyMap[industryName];
+  if (!key) return industryName;
+  return t(`common:industries.${key}`, { defaultValue: industryName });
+};
+
 export const COMPANY_IMAGE_URL: CompanyImageItem[] = [
   { name: "mb-bank", url: "MBLOGO.webp" },
   { name: "scandinavian-software-park", url: "ScandinavianLOGO.webp" },

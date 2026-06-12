@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import com.dev001.itviec.entity.country.Country;
+import com.dev001.itviec.entity.industry.Industry;
 import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
@@ -37,8 +38,8 @@ public class CompanyUpdateRequest {
     @NotNull(message = "COMPANY_MODEL_REQUIRED")
     CompanyModel companyModel;
 
-    @NotBlank(message = "INDUSTRY_REQUIRED")
-    String industry;
+    @NotNull(message = "INDUSTRY_REQUIRED")
+    Industry industry;
 
     @NotNull(message = "COMPANY_SIZE_REQUIRED")
     CompanySize companySize;

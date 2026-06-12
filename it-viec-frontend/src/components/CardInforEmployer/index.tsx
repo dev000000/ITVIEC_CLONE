@@ -6,6 +6,7 @@ import {
   getCompanySizeOptions,
   getWorkingHoursOptions,
   getOvertimePolicyOptions,
+  getIndustryLabel,
 } from "@/constants";
 import type { CompanyBriefResponse } from "@/types/response.types";
 import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
@@ -14,7 +15,7 @@ interface CardInforEmployerProps {
   company: CompanyBriefResponse
 };
 const CardInforEmployer = ({ company }: CardInforEmployerProps) => {
-  const { t } = useTranslation("shared");
+  const { t } = useTranslation(["shared", "common"]);
 
   // Translated enum labels
   const companyModelOptions = getCompanyModelOptions(t);
@@ -59,7 +60,7 @@ const CardInforEmployer = ({ company }: CardInforEmployerProps) => {
             {t("employerDetailInfo.companyField")}
           </div>
           {/* Hiển thị lĩnh vực công ty */}
-          <div className="card-infor-employer__item-content">{company?.industry || "--"}</div>
+          <div className="card-infor-employer__item-content">{getIndustryLabel(company?.industry?.industryName, t) || "--"}</div>
         </div>
         <div className="card-infor-employer__item">
           <div className="card-infor-employer__item-title">{t("employerDetailInfo.companySize")}</div>

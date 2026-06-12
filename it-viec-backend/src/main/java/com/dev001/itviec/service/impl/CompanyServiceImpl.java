@@ -31,15 +31,18 @@ import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.company.CompanyLogo;
 import com.dev001.itviec.entity.employer.Employer;
+import com.dev001.itviec.entity.industry.Industry;
 import com.dev001.itviec.entity.job.Job;
 import com.dev001.itviec.enums.CompanyModel;
 import com.dev001.itviec.enums.CompanySize;
 import com.dev001.itviec.enums.JobStatus;
+import com.dev001.itviec.enums.SkillStatus;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.CompanyMapper;
 import com.dev001.itviec.repository.CompanyLogoRepository;
 import com.dev001.itviec.repository.CompanyRepository;
+import com.dev001.itviec.repository.IndustryRepository;
 import com.dev001.itviec.repository.JobRepository;
 import com.dev001.itviec.service.CompanyService;
 import com.dev001.itviec.service.EmployerService;
@@ -58,6 +61,7 @@ public class CompanyServiceImpl implements CompanyService {
     private final CompanyMapper companyMapper;
     private final CompanyLogoRepository companyLogoRepository;
     private final CompanyRepository companyRepository;
+    private final IndustryRepository industryRepository;
     private final JobRepository jobRepository;
     private final EmployerService employerService;
 
@@ -163,7 +167,7 @@ public class CompanyServiceImpl implements CompanyService {
         }
         company.setAddress(request.getAddress());
         company.setCompanyModel(request.getCompanyModel());
-        company.setIndustry(request.getIndustry());
+        company.setIndustry(resolveActiveIndustry(request.getIndustry()));
         company.setCompanySize(request.getCompanySize());
         company.setCountry(request.getCountry());
         company.setWorkingHours(request.getWorkingHours());
@@ -258,7 +262,7 @@ public class CompanyServiceImpl implements CompanyService {
         if (company.getCompanyModel() == null) {
             missing.add("companyModel");
         }
-        if (company.getIndustry() == null || company.getIndustry().isBlank()) {
+        if (company.getIndustry() == null) {
             missing.add("industry");
         }
         if (company.getCompanySize() == null) {
@@ -303,6 +307,22 @@ public class CompanyServiceImpl implements CompanyService {
 
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private Industry resolveActiveIndustry(Industry industry) {
+        if (industry == null || industry.getId() == null) {
+            throw new AppException(ErrorCode.INDUSTRY_REQUIRED);
+        }
+
+        Industry found = industryRepository
+                .findById(industry.getId())
+                .orElseThrow(() -> new AppException(ErrorCode.INDUSTRY_NOT_FOUND));
+
+        if (found.getStatus() == SkillStatus.DEPRECATED) {
+            throw new AppException(ErrorCode.INDUSTRY_DEPRECATED);
+        }
+
+        return found;
     }
 
     private Company getCurrentEmployerCompany() {

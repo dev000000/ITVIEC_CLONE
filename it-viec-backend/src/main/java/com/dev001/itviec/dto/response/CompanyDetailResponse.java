@@ -26,7 +26,7 @@ public class CompanyDetailResponse {
     String logoUrl;
     String address;
     CompanyModel companyModel;
-    String industry;
+    IndustryResponse industry;
     CompanySize companySize;
     CountryResponse country;
     WorkingHours workingHours;

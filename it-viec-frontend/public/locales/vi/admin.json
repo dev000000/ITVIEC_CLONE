@@ -20,7 +20,9 @@
     "report": "Report",
     "popularTags": "Popular tags",
     "skills": "Quản lý skill",
-    "employerRegistrations": "Đăng ký nhà tuyển dụng"
+    "employerRegistrations": "Đăng ký nhà tuyển dụng",
+    "jobDomains": "Lĩnh vực công việc",
+    "industries": "Ngành nghề"
   },
   "employerRegistrations": {
     "title": "Đăng ký nhà tuyển dụng chờ duyệt",
@@ -218,6 +220,36 @@
       "merged": "Đã gộp skill",
       "restored": "Đã khôi phục skill"
     }
+  },
+  "jobDomains": {
+    "title": "Quản lý lĩnh vực công việc",
+    "searchPlaceholder": "Tìm lĩnh vực...",
+    "addButton": "Thêm lĩnh vực",
+    "filters": { "all": "Tất cả", "active": "Đang dùng", "deprecated": "Đã ẩn" },
+    "columns": { "name": "Tên lĩnh vực", "status": "Trạng thái", "usage": "Đang dùng", "action": "Thao tác" },
+    "status": { "active": "Đang dùng", "deprecated": "Đã ẩn", "mergedInto": "→ {{name}}" },
+    "usage": { "jobs": "{{count}} việc làm", "jobsTooltip": "Số việc làm thuộc lĩnh vực này" },
+    "actions": { "delete": "Ẩn", "restore": "Khôi phục" },
+    "create": { "title": "Thêm lĩnh vực", "label": "Tên lĩnh vực", "placeholder": "Nhập tên lĩnh vực", "submit": "Thêm" },
+    "delete": { "confirmTitle": "Ẩn lĩnh vực \"{{name}}\"?", "confirmText": "Lĩnh vực sẽ bị ẩn khỏi danh sách công khai. Dữ liệu liên quan được giữ nguyên.", "confirmButton": "Xác nhận ẩn" },
+    "restore": { "confirmTitle": "Khôi phục lĩnh vực?", "confirmText": "\"{{name}}\" sẽ được kích hoạt lại.", "confirmButton": "Khôi phục" },
+    "inUse": { "title": "Lĩnh vực đang được dùng", "text": "\"{{name}}\" đang có {{count}} việc làm. Hãy chuyển job sang lĩnh vực khác trước khi ẩn." },
+    "notifications": { "created": "Đã thêm lĩnh vực", "updated": "Đã cập nhật lĩnh vực", "deprecated": "Đã ẩn lĩnh vực", "restored": "Đã khôi phục lĩnh vực" }
+  },
+  "industries": {
+    "title": "Quản lý ngành nghề",
+    "searchPlaceholder": "Tìm ngành...",
+    "addButton": "Thêm ngành",
+    "filters": { "all": "Tất cả", "active": "Đang dùng", "deprecated": "Đã ẩn" },
+    "columns": { "name": "Tên ngành", "status": "Trạng thái", "usage": "Đang dùng", "action": "Thao tác" },
+    "status": { "active": "Đang dùng", "deprecated": "Đã ẩn", "mergedInto": "→ {{name}}" },
+    "usage": { "companies": "{{count}} công ty", "companiesTooltip": "Số công ty thuộc ngành này" },
+    "actions": { "delete": "Ẩn", "restore": "Khôi phục" },
+    "create": { "title": "Thêm ngành", "label": "Tên ngành", "placeholder": "Nhập tên ngành", "submit": "Thêm" },
+    "delete": { "confirmTitle": "Ẩn ngành \"{{name}}\"?", "confirmText": "Ngành sẽ bị ẩn khỏi danh sách công khai. Dữ liệu liên quan được giữ nguyên.", "confirmButton": "Xác nhận ẩn" },
+    "restore": { "confirmTitle": "Khôi phục ngành?", "confirmText": "\"{{name}}\" sẽ được kích hoạt lại.", "confirmButton": "Khôi phục" },
+    "inUse": { "title": "Ngành đang được dùng", "text": "\"{{name}}\" đang có {{count}} công ty. Hãy cập nhật công ty trước khi ẩn." },
+    "notifications": { "created": "Đã thêm ngành", "updated": "Đã cập nhật ngành", "deprecated": "Đã ẩn ngành", "restored": "Đã khôi phục ngành" }
   },
   "popularTags": {
     "title": "Quản lý popular tags",

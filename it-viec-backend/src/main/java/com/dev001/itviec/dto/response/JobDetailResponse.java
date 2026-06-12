@@ -24,6 +24,7 @@ public class JobDetailResponse {
     String whyJoinUs;
     String location;
     CityResponse city;
+    JobDomainResponse jobDomain;
     Long salaryMin;
     Long salaryMax;
     SalaryCurrency salaryCurrency;

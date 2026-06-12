@@ -13,6 +13,7 @@ import {
   WORKING_HOURS_EN,
   WORKING_HOURS_VI,
 } from "@/utils/displayValue";
+import { getIndustryLabel } from "@/constants";
 import { useTranslation } from "react-i18next";
 
 interface EmployerDetailOutletContext {
@@ -21,7 +22,7 @@ interface EmployerDetailOutletContext {
 // 1.5.1 Tab thông tin chi tiết của nhà tuyển dụng
 const EmployerDetailInfo = () => {
   const { companyInfor } = useOutletContext<EmployerDetailOutletContext>();
-  const { t, i18n } = useTranslation("shared");
+  const { t, i18n } = useTranslation(["shared", "common"]);
   const isEN = i18n.language === "en";
 
   const companyModelMap = isEN ? COMPANY_MODEL_EN : COMPANY_MODEL_VI;
@@ -48,7 +49,7 @@ const EmployerDetailInfo = () => {
                 {t("employerDetailInfo.companyField")}
               </div>
               <div className="empoyer-detail-infor__content">
-                {companyInfor?.industry || "???"}
+                {getIndustryLabel(companyInfor?.industry?.industryName, t) || "???"}
               </div>
             </div>
           </Col>

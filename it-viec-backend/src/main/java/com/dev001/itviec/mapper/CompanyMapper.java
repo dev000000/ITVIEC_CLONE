@@ -10,7 +10,7 @@ import com.dev001.itviec.entity.job.Job;
 
 @Mapper(
         componentModel = "spring",
-        uses = {EmployerMapper.class, CountryMapper.class, SkillMapper.class})
+        uses = {EmployerMapper.class, CountryMapper.class, SkillMapper.class, IndustryMapper.class})
 public interface CompanyMapper {
     List<CompanyDetailResponse> toCompanyDetailResponse(List<Company> companies);
 

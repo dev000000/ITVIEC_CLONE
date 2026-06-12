@@ -113,6 +113,92 @@ VALUES ('ABAP'),
   ('Unity'),
   ('VueJS'),
   ('Wordpress');
+INSERT INTO job_domains (domain_name)
+VALUES ('Blockchain & Web3 Services'),
+  ('Food and Beverage'),
+  ('Tourism and Hospitality Services'),
+  ('Insurance'),
+  ('Consumer Goods'),
+  ('E-commerce'),
+  ('Education and Training'),
+  ('Banking'),
+  ('Game'),
+  ('Government'),
+  ('IT Hardware and Computing'),
+  ('Non-Profit and Social Services'),
+  ('Manufacturing and Engineering'),
+  ('Media, Advertising and Entertainment'),
+  ('Environment'),
+  ('Pharmaceuticals'),
+  ('Real Estate, Property and Construction'),
+  ('Retail and Wholesale'),
+  ('IT Services and IT Consulting'),
+  ('Telecommunication'),
+  ('Transportation, Logistics and Warehouse'),
+  ('Cyber Security'),
+  ('Trading and Commercial'),
+  ('Network and Infrastructure'),
+  ('Software Development Outsourcing'),
+  ('Software Products and Web Services'),
+  ('Agriculture'),
+  ('Sports and Fitness'),
+  ('Apparel and Fashion'),
+  ('Creative and Design'),
+  ('Staffing and Recruiting'),
+  ('Publishing and Printing'),
+  ('Facility Management'),
+  ('Research Services'),
+  ('Healthcare'),
+  ('Materials and Mining'),
+  ('Utilities'),
+  ('Professional Services'),
+  ('Securities & Investment'),
+  ('Financial Services'),
+  ('Emerging Tech R&D'),
+  ('AI Software & Services');
+INSERT INTO industries (industry_name)
+VALUES ('Blockchain & Web3 Services'),
+  ('Food and Beverage'),
+  ('Tourism and Hospitality Services'),
+  ('Insurance'),
+  ('Consumer Goods'),
+  ('E-commerce'),
+  ('Education and Training'),
+  ('Banking'),
+  ('Game'),
+  ('Government'),
+  ('IT Hardware and Computing'),
+  ('Non-Profit and Social Services'),
+  ('Manufacturing and Engineering'),
+  ('Media, Advertising and Entertainment'),
+  ('Environment'),
+  ('Pharmaceuticals'),
+  ('Real Estate, Property and Construction'),
+  ('Retail and Wholesale'),
+  ('IT Services and IT Consulting'),
+  ('Telecommunication'),
+  ('Transportation, Logistics and Warehouse'),
+  ('Cyber Security'),
+  ('Trading and Commercial'),
+  ('Network and Infrastructure'),
+  ('Software Development Outsourcing'),
+  ('Software Products and Web Services'),
+  ('Agriculture'),
+  ('Sports and Fitness'),
+  ('Apparel and Fashion'),
+  ('Creative and Design'),
+  ('Staffing and Recruiting'),
+  ('Publishing and Printing'),
+  ('Facility Management'),
+  ('Research Services'),
+  ('Healthcare'),
+  ('Materials and Mining'),
+  ('Utilities'),
+  ('Professional Services'),
+  ('Securities & Investment'),
+  ('Financial Services'),
+  ('Emerging Tech R&D'),
+  ('AI Software & Services');
 INSERT INTO cities (city_name, slug)
 VALUES ('Tuyên Quang', 'tuyen-quang'),
   ('Lào Cai', 'lao-cai'),
@@ -984,7 +1070,7 @@ INSERT INTO companies (
     website,
     address,
     company_model,
-    industry,
+    industry_id,
     company_size,
     country_id,
     working_hours,
@@ -1003,7 +1089,7 @@ VALUES (
     'http://example.com',
     'Hà Nội - TP Hồ Chí Minh',
     'PRODUCT',
-    'Ngân Hàng',
+    (SELECT id FROM industries WHERE industry_name = 'Banking' LIMIT 1),
     'SIZE_11_50',
     1,
     'MON_FRI',
@@ -1022,7 +1108,7 @@ VALUES (
     'http://example.com',
     'Quận Đống Đa, Hà Nội',
     'PRODUCT',
-    'Sản Phẩm Phần Mềm và Dịch Vụ Web',
+    (SELECT id FROM industries WHERE industry_name = 'Software Products and Web Services' LIMIT 1),
     'SIZE_151_300',
     19,
     'MON_FRI',
@@ -1041,7 +1127,7 @@ VALUES (
     'http://example.com',    
     'Quận Hải Châu, Đà Nẵng',
     'PRODUCT',
-    'Dịch Vụ và Tư Vấn IT',
+    (SELECT id FROM industries WHERE industry_name = 'IT Services and IT Consulting' LIMIT 1),
     'SIZE_151_300',
     4,
     'MON_FRI',
@@ -1060,7 +1146,7 @@ VALUES (
     'http://example.com',
     'Quận Đống Đa, Hà Nội',
     'PRODUCT',
-    'Dịch Vụ Tài Chính',
+    (SELECT id FROM industries WHERE industry_name = 'Financial Services' LIMIT 1),
     'SIZE_1000_PLUS',
     1,
     'MON_FRI',
@@ -1079,7 +1165,7 @@ VALUES (
     'http://example.com',
     'TP Hồ Chí Minh - Hà Nội',
     'PRODUCT',
-    'Ngân Hàng',
+    (SELECT id FROM industries WHERE industry_name = 'Banking' LIMIT 1),
     'SIZE_301_500',
     4,
     'MON_FRI',
@@ -1098,7 +1184,7 @@ VALUES (
     'http://example.com',
     'TP Hồ Chí Minh - Hà Nội',
     'PRODUCT',
-    'Dịch Vụ và Tư Vấn IT',
+    (SELECT id FROM industries WHERE industry_name = 'IT Services and IT Consulting' LIMIT 1),
     'SIZE_51_150',
     2,
     'MON_FRI',
@@ -1117,7 +1203,7 @@ VALUES (
     'http://example.com',
     'Quận 10, TP Hồ Chí Minh',
     'PRODUCT',
-    'Sản Phẩm Phần Mềm và Dịch Vụ Web',
+    (SELECT id FROM industries WHERE industry_name = 'Software Products and Web Services' LIMIT 1),
     'SIZE_1000_PLUS',
     11,
     'MON_FRI',
@@ -1136,7 +1222,7 @@ VALUES (
     'http://example.com',
     'TP Hồ Chí Minh - Hà Nội',
     'PRODUCT',
-    'Dịch Vụ và Tư Vấn IT',
+    (SELECT id FROM industries WHERE industry_name = 'IT Services and IT Consulting' LIMIT 1),
     'SIZE_1000_PLUS',
     16,
     'MON_FRI',
@@ -1155,7 +1241,7 @@ VALUES (
     'http://example.com',
     'TP Hồ Chí Minh - Hà Nội',
     'PRODUCT',
-    'Dịch Vụ Tài Chính',
+    (SELECT id FROM industries WHERE industry_name = 'Financial Services' LIMIT 1),
     'SIZE_1000_PLUS',
     1,
     'MON_FRI',
@@ -2157,6 +2243,56 @@ VALUES (
       WHERE city_name = 'TP Hồ Chí Minh'
       LIMIT 1
     ), NULL, NULL, NULL, 'ONSITE', 'JUNIOR', '2025-04-24 09:00:00', '2025-05-25 09:00:00', 'ACTIVE'
+  );
+-- Assign job domains to seeded jobs
+UPDATE jobs
+SET job_domain_id = (
+    SELECT id
+    FROM job_domains
+    WHERE domain_name = 'IT Services and IT Consulting'
+    LIMIT 1
+  );
+UPDATE jobs j
+  JOIN companies c ON j.company_id = c.id
+SET j.job_domain_id = (
+    SELECT id
+    FROM job_domains
+    WHERE domain_name = 'Banking'
+    LIMIT 1
+  )
+WHERE c.industry_id = (
+    SELECT id
+    FROM industries
+    WHERE industry_name = 'Banking'
+    LIMIT 1
+  );
+UPDATE jobs j
+  JOIN companies c ON j.company_id = c.id
+SET j.job_domain_id = (
+    SELECT id
+    FROM job_domains
+    WHERE domain_name = 'Financial Services'
+    LIMIT 1
+  )
+WHERE c.industry_id = (
+    SELECT id
+    FROM industries
+    WHERE industry_name = 'Financial Services'
+    LIMIT 1
+  );
+UPDATE jobs j
+  JOIN companies c ON j.company_id = c.id
+SET j.job_domain_id = (
+    SELECT id
+    FROM job_domains
+    WHERE domain_name = 'Software Products and Web Services'
+    LIMIT 1
+  )
+WHERE c.industry_id = (
+    SELECT id
+    FROM industries
+    WHERE industry_name = 'Software Products and Web Services'
+    LIMIT 1
   );
 -- Test Manager
 INSERT INTO job_skills (job_id, skill_id)

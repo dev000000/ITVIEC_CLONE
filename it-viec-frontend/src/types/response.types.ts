@@ -77,26 +77,34 @@ export interface MergeSkillResponse {
   targetSkill: SkillAdminResponse;
 }
 
-export interface SkillUsageCountResponse {
-  jobs: number;
-  seekers: number;
-  companies: number;
+// --- Taxonomy Types (JobDomain & Industry) ---
+
+export interface JobDomainResponse {
+  id: number;
+  domainName: string;
 }
 
-export interface SkillAdminResponse {
+export interface IndustryResponse {
   id: number;
-  skillName: string;
+  industryName: string;
+}
+
+export interface JobDomainAdminResponse {
+  id: number;
+  domainName: string;
   status: "ACTIVE" | "DEPRECATED";
   mergedIntoId: number | null;
   mergedIntoName: string | null;
-  usageCount: SkillUsageCountResponse;
+  jobCount: number;
 }
 
-export interface MergeSkillResponse {
-  message: string;
-  migratedRecords: SkillUsageCountResponse;
-  sourceSkill: SkillAdminResponse;
-  targetSkill: SkillAdminResponse;
+export interface IndustryAdminResponse {
+  id: number;
+  industryName: string;
+  status: "ACTIVE" | "DEPRECATED";
+  mergedIntoId: number | null;
+  mergedIntoName: string | null;
+  companyCount: number;
 }
 
 // --- Auth & User Types ---
@@ -167,7 +175,7 @@ export interface CompanyBriefResponse {
   country: CountryResponse;
   workingHours: WorkingHours;
   overtimePolicy: OvertimePolicy;
-  industry: string;
+  industry: IndustryResponse | undefined;
   companySize: CompanySize;
 }
 
@@ -196,7 +204,7 @@ export interface CompanyDetailResponse {
   logoUrl: string;
   address: string;
   companyModel: CompanyModel;
-  industry: string;
+  industry: IndustryResponse | undefined;
   companySize: CompanySize;
   country: CountryResponse;
   workingHours: WorkingHours;
@@ -228,6 +236,7 @@ export interface JobCardResponse extends JobSalaryResponse {
   postedAt: string; // LocalDateTime
   skills: SkillResponse[];
   company: CompanyBaseResponse;
+  jobDomain?: JobDomainResponse | null;
 }
 
 export interface JobDetailResponse extends JobSalaryResponse {
@@ -249,6 +258,7 @@ export interface JobDetailResponse extends JobSalaryResponse {
   createdAt: string;
   updatedAt: string;
   skills: SkillResponse[];
+  jobDomain?: JobDomainResponse | null;
 }
 
 export interface PopularTagResponse {

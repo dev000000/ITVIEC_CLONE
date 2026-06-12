@@ -16,6 +16,7 @@ import com.dev001.itviec.entity.job.Job;
         uses = {
             CityMapper.class,
             SkillMapper.class,
+            JobDomainMapper.class,
         })
 public interface JobMapper {
     List<JobDetailResponse> toJobDetailResponse(List<Job> jobs);
