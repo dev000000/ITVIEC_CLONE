@@ -11,6 +11,7 @@ import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
 import { getLoginRouteByRole } from "@/utils/roleRedirect";
 import { ROLE } from "@/types/common.types";
 import { formatJobSalary } from "@/utils/formatSalary";
+import dayjs from "dayjs";
 
 interface CardJobHeadProps {
   job: JobDetailResponse;
@@ -91,7 +92,9 @@ const CardJobHead = ({ job }: CardJobHeadProps) => {
           <div className="card-job-head__applied">
             <IoMdCheckmarkCircleOutline />
             <span>{t("jobSearchDetail.applied")}</span>
-            <span>{applicationCheck.createdAt}</span>
+            {applicationCheck.createdAt && (
+              <span>{dayjs(applicationCheck.createdAt).format("DD-MM-YYYY")}</span>
+            )}
           </div>
         ) : (
           <>

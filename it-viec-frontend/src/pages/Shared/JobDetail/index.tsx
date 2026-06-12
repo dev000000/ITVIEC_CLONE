@@ -24,19 +24,31 @@ const JobDetail = ({ slug }: JobDetailProps) => {
     window.scrollTo(0, 0);
   }, []);
   useEffect(() => {
+    let isCancelled = false;
+
     const getData = async () => {
       try {
         const response = await getJobBySlugApi(slug);
-        console.log("Job detail response:", response);
-        setJob(response.data.result || null);
+        if (!isCancelled) {
+          setJob(response.data.result || null);
+        }
       } catch (error) {
         console.error("Error fetching job details:", error);
-        navigate("/")
+        if (!isCancelled) {
+          navigate("/");
+        }
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
+
     getData();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [slug]);
 
   if (isLoading) {

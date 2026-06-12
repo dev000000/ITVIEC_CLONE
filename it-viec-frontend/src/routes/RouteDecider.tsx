@@ -24,10 +24,13 @@ const RouteDecider: FC = () => {
 
   // Hàm check slug sẽ được gọi khi component mount hoặc khi param1 thay đổi
   useEffect(() => {
+    // Reset trước khi gọi API để tránh stale state từ lần check trước
+    setIsChecking(true);
+    setIsSlug(false);
+
     const checkSlug = async () => {
       if (!param1) {
         setIsChecking(false);
-        setIsSlug(false);
         return;
       }
 
