@@ -126,7 +126,11 @@ public enum ErrorCode {
     ACCOUNT_PENDING_ADMIN_REVIEW(1109, "Account is pending admin review", HttpStatus.FORBIDDEN),
     PASSWORD_MISMATCH(1110, "Passwords do not match", HttpStatus.BAD_REQUEST),
     EMPLOYER_REGISTRATION_ALREADY_EXISTS(
-            1111, "Employer registration already exists for this email", HttpStatus.BAD_REQUEST);
+            1111, "Employer registration already exists for this email", HttpStatus.BAD_REQUEST),
+    SALARY_RANGE_INVALID(1112, "Salary min must be less than or equal to max", HttpStatus.BAD_REQUEST),
+    SALARY_CURRENCY_REQUIRED(1113, "Salary currency is required when salary is not negotiable", HttpStatus.BAD_REQUEST),
+    SALARY_MIN_REQUIRED(1114, "Salary min is required when salary is not negotiable", HttpStatus.BAD_REQUEST),
+    SALARY_MAX_REQUIRED(1115, "Salary max is required when salary is not negotiable", HttpStatus.BAD_REQUEST);
 
     private int code;
     private String message;

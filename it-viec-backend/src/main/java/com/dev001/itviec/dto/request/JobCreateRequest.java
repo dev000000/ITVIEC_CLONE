@@ -12,6 +12,7 @@ import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+import com.dev001.itviec.enums.SalaryCurrency;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,8 +44,16 @@ public class JobCreateRequest {
 
     City city;
 
-    @NotBlank(message = "SALARY_REQUIRED")
+    /** @deprecated Legacy text field; use structured salary fields instead */
     String salary;
+
+    Boolean salaryNegotiable;
+
+    Long salaryMin;
+
+    Long salaryMax;
+
+    SalaryCurrency salaryCurrency;
 
     @NotNull(message = "JOB_TYPE_REQUIRED")
     JobType jobType;

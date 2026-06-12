@@ -14,8 +14,8 @@ import { useSavedJobsStore } from "@/store/savedJobsStore";
 // Kiểu dữ liệu cho một đơn ứng tuyển sau khi đã map từ API response
 interface ApplicationItem {
   appliedAt: string;
-  job?: { slug?: string; title?: string; salary?: string };
-  company?: { companyName?: string; slug?: string };
+  job?: { slug?: string; title?: string; salary?: string; salaryNegotiable?: boolean; salaryMin?: number | null; salaryMax?: number | null; salaryCurrency?: string | null };
+  company?: { companyName?: string; slug?: string; logoUrl?: string | null };
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
@@ -73,7 +73,11 @@ function MyJobs() {
           // Muc dich: hien thi job title, salary, company name trong tab My Jobs.
           // Tam thoi map relation neu backend tra ve, nguoc lai UI hien thi fallback `???`.
           job: application.job,
-          company: application.job?.company,
+          company: {
+            companyName: application.job?.company?.companyName,
+            slug: application.job?.company?.slug,
+            logoUrl: application.job?.company?.logoUrl,
+          },
           fullName: application.fullName,
           phoneNumber: application.phoneNumber,
           resumeUrl: application.resumeUrl,

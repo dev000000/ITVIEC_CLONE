@@ -12,7 +12,10 @@
     "loading": "Loading jobs...",
     "filters": {
       "experienceLevel": "Filter by experience",
-      "jobType": "Filter by job type"
+      "jobType": "Filter by job type",
+      "salary": "Salary",
+      "applySalary": "Apply",
+      "clearSalary": "Clear filter"
     }
   },
   "jobSearchDetail": {

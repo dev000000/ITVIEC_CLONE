@@ -4,12 +4,14 @@ import { getRelativeTime } from "@/helpers/formattedTime";
 import { useTranslation } from "react-i18next";
 import { getJobTypeOptions, getExperienceLevelOptions } from "@/constants";
 
-interface Job {
+import { formatJobSalary } from "@/utils/formatSalary";
+import type { JobSalaryResponse } from "@/types/response.types";
+
+interface Job extends JobSalaryResponse {
   id: number;
   title: string;
   status: string;
   postedAt: string;
-  salary: string;
   jobType: string;
   experienceLevel: string;
   requiredSkills: string[];
@@ -42,7 +44,7 @@ function CardJob({ job }: CardJobProps) {
       <div className="card-job__body">
         <div className="card-job__item">
           <div className="card-job__title-item">{t("card.salary")}:</div>
-          <div className="card-job__content-item">{job.salary}</div>
+          <div className="card-job__content-item">{formatJobSalary(job, t("card.negotiable"))}</div>
         </div>
         <div className="card-job__item">
           <div className="card-job__title-item">{t("card.jobType")}:</div>

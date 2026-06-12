@@ -25,6 +25,10 @@ public class JobDetailResponse {
     String location;
     CityResponse city;
     String salary;
+    Boolean salaryNegotiable;
+    Long salaryMin;
+    Long salaryMax;
+    SalaryCurrency salaryCurrency;
     JobType jobType;
     ExperienceLevel experienceLevel;
     LocalDateTime postedAt;

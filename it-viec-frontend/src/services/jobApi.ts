@@ -18,7 +18,6 @@ const API_PATH = Configs.API_ENDPOINT + "/api/v1";
 const ADMIN_JOBS_PAGE_SIZE = 100;
 
 type AdminJobCollectionParams = Omit<GetAdminJobsParams, "page" | "size">;
-type JobSearchCollectionParams = Omit<SearchJobsParams, "page" | "size">;
 
 /**
  * Lấy danh sách công việc đang active có phân trang (Hiển thị trang chủ/tìm kiếm).

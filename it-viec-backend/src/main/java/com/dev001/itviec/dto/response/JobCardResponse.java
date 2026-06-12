@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+import com.dev001.itviec.enums.SalaryCurrency;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,6 +21,10 @@ public class JobCardResponse {
     String slug;
     CityResponse city;
     String salary;
+    Boolean salaryNegotiable;
+    Long salaryMin;
+    Long salaryMax;
+    SalaryCurrency salaryCurrency;
     JobType jobType;
     JobStatus status;
     LocalDateTime postedAt;

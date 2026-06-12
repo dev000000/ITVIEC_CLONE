@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import { useUserStore } from "@/store/userStore";
+import { formatJobSalary } from "@/utils/formatSalary";
 import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
 import TagStatus from "../TagStatus";
 import { useMemo } from "react";
@@ -57,7 +58,7 @@ const TopJobItemEmployer = ({ job }: TopJobItemProps) => {
       >
         <ImCoinDollar />{" "}
         <span>
-          {authenticated ? job.salary : t("loginToSeeSalary")}{" "}
+          {authenticated ? formatJobSalary(job, t("card.negotiable")) : t("loginToSeeSalary")}{" "}
         </span>
       </div>
       <div className="job__location">

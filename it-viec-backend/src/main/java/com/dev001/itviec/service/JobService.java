@@ -11,6 +11,7 @@ import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+import com.dev001.itviec.enums.SalaryCurrency;
 
 public interface JobService {
 
@@ -23,7 +24,15 @@ public interface JobService {
     PageResponse<JobCardResponse> getJobCards(int page, int size);
 
     PageResponse<JobCardResponse> searchJobs(
-            int page, int size, String keyword, Long cityId, JobType jobType, ExperienceLevel experienceLevel);
+            int page,
+            int size,
+            String keyword,
+            Long cityId,
+            JobType jobType,
+            ExperienceLevel experienceLevel,
+            Long salaryMin,
+            Long salaryMax,
+            SalaryCurrency salaryCurrency);
 
     JobDetailResponse updateJob(Long id, JobUpdateRequest request);
 

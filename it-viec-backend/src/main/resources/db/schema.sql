@@ -186,6 +186,10 @@ CREATE TABLE jobs (
   location VARCHAR(255),
   city_id BIGINT,
   salary VARCHAR(100),
+  salary_min BIGINT,
+  salary_max BIGINT,
+  salary_currency ENUM('VND', 'USD'),
+  salary_negotiable BOOLEAN NOT NULL DEFAULT FALSE,
   job_type ENUM('ONSITE', 'HYBRID', 'REMOTE', 'FLEXIBLE'),
   experience_level ENUM(
     'INTERN',

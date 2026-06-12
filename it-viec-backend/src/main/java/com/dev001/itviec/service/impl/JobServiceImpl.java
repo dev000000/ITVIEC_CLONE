@@ -42,6 +42,7 @@ import com.dev001.itviec.entity.user.User;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+import com.dev001.itviec.enums.SalaryCurrency;
 import com.dev001.itviec.exception.AppException;
 import com.dev001.itviec.exception.ErrorCode;
 import com.dev001.itviec.mapper.JobMapper;
@@ -84,7 +85,7 @@ public class JobServiceImpl implements JobService {
                 .whyJoinUs(request.getWhyJoinUs())
                 .location(request.getLocation())
                 .city(request.getCity())
-                .salary(request.getSalary())
+                .salary(null)
                 .jobType(request.getJobType())
                 .experienceLevel(request.getExperienceLevel())
                 .postedAt(request.getPostedAt() == null ? LocalDateTime.now() : request.getPostedAt())
@@ -92,6 +93,13 @@ public class JobServiceImpl implements JobService {
                 .status(request.getStatus())
                 .skills(request.getSkills() == null ? new HashSet<>() : new HashSet<>(request.getSkills()))
                 .build();
+
+        applySalaryFields(
+                job,
+                request.getSalaryNegotiable(),
+                request.getSalaryMin(),
+                request.getSalaryMax(),
+                request.getSalaryCurrency());
 
         job = jobRepository.save(job);
         job.setSlug(generateSlug(job.getTitle(), company.getCompanyName(), job.getId()));
@@ -159,10 +167,20 @@ public class JobServiceImpl implements JobService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<JobCardResponse> searchJobs(
-            int page, int size, String keyword, Long cityId, JobType jobType, ExperienceLevel experienceLevel) {
+            int page,
+            int size,
+            String keyword,
+            Long cityId,
+            JobType jobType,
+            ExperienceLevel experienceLevel,
+            Long salaryMin,
+            Long salaryMax,
+            SalaryCurrency salaryCurrency) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.desc("postedAt"), Sort.Order.desc("id")));
         Page<Job> jobPage = jobRepository.findAll(
-                buildPublicJobSearchSpecification(keyword, cityId, jobType, experienceLevel), pageable);
+                buildPublicJobSearchSpecification(
+                        keyword, cityId, jobType, experienceLevel, salaryMin, salaryMax, salaryCurrency),
+                pageable);
         List<JobCardResponse> jobCardResponses = jobMapper.toJobCardResponse(jobPage.getContent());
 
         return PageResponse.<JobCardResponse>builder()
@@ -188,7 +206,12 @@ public class JobServiceImpl implements JobService {
         job.setWhyJoinUs(request.getWhyJoinUs());
         job.setLocation(request.getLocation());
         job.setCity(request.getCity());
-        job.setSalary(request.getSalary());
+        applySalaryFields(
+                job,
+                request.getSalaryNegotiable(),
+                request.getSalaryMin(),
+                request.getSalaryMax(),
+                request.getSalaryCurrency());
         job.setJobType(request.getJobType());
         job.setExperienceLevel(request.getExperienceLevel());
         job.setPostedAt(request.getPostedAt());
@@ -257,7 +280,13 @@ public class JobServiceImpl implements JobService {
     }
 
     Specification<Job> buildPublicJobSearchSpecification(
-            String keyword, Long cityId, JobType jobType, ExperienceLevel experienceLevel) {
+            String keyword,
+            Long cityId,
+            JobType jobType,
+            ExperienceLevel experienceLevel,
+            Long salaryMin,
+            Long salaryMax,
+            SalaryCurrency salaryCurrency) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             Join<Job, Skill> skillJoin = root.join("skills", JoinType.LEFT);
@@ -310,8 +339,50 @@ public class JobServiceImpl implements JobService {
                 predicates.add(cb.equal(root.get("experienceLevel"), experienceLevel));
             }
 
+            if (salaryCurrency != null && salaryMin != null && salaryMax != null) {
+                predicates.add(cb.equal(root.get("salaryCurrency"), salaryCurrency));
+                predicates.add(cb.isFalse(root.get("salaryNegotiable")));
+                predicates.add(cb.isNotNull(root.get("salaryMin")));
+                predicates.add(cb.isNotNull(root.get("salaryMax")));
+                predicates.add(cb.lessThanOrEqualTo(root.get("salaryMin"), salaryMax));
+                predicates.add(cb.greaterThanOrEqualTo(root.get("salaryMax"), salaryMin));
+            }
+
             return cb.and(predicates.toArray(new Predicate[0]));
         };
+    }
+
+    private void applySalaryFields(
+            Job job, Boolean salaryNegotiable, Long salaryMin, Long salaryMax, SalaryCurrency salaryCurrency) {
+        boolean isNegotiable = Boolean.TRUE.equals(salaryNegotiable);
+
+        if (isNegotiable) {
+            job.setSalaryNegotiable(true);
+            job.setSalaryMin(null);
+            job.setSalaryMax(null);
+            job.setSalaryCurrency(null);
+            job.setSalary(null);
+            return;
+        }
+
+        if (salaryMin == null) {
+            throw new AppException(ErrorCode.SALARY_MIN_REQUIRED);
+        }
+        if (salaryMax == null) {
+            throw new AppException(ErrorCode.SALARY_MAX_REQUIRED);
+        }
+        if (salaryCurrency == null) {
+            throw new AppException(ErrorCode.SALARY_CURRENCY_REQUIRED);
+        }
+        if (salaryMin > salaryMax) {
+            throw new AppException(ErrorCode.SALARY_RANGE_INVALID);
+        }
+
+        job.setSalaryNegotiable(false);
+        job.setSalaryMin(salaryMin);
+        job.setSalaryMax(salaryMax);
+        job.setSalaryCurrency(salaryCurrency);
+        job.setSalary(null);
     }
 
     Specification<Job> buildJobFilterSpecification(

@@ -30,6 +30,8 @@ import {
   getJobTypeOptions,
 } from "@/constants";
 import type { JobCreateRequest } from "@/types/request.types";
+import type { SalaryCurrency } from "@/types/common.types";
+import SalaryFormFields from "@/components/SalaryFormFields";
 import { getApiErrorMessage } from "@/utils/apiError";
 
 const customStyles = {
@@ -48,6 +50,10 @@ const customStyles = {
 interface JobsFormValues extends Omit<JobCreateRequest, "city" | "skills"> {
   city: number;
   skills: number[];
+  salaryNegotiable?: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: SalaryCurrency;
 }
 
 const EmployerJobs = () => {
@@ -159,13 +165,17 @@ const EmployerJobs = () => {
   // Xử lý submit form tạo job mới
   // Map giá trị form → định dạng API, gọi API tạo job, sau đó refresh lại danh sách
   const onFinish = async (values: JobsFormValues) => {
-    const data = {
+    const data: JobCreateRequest = {
       ...values,
-      city: cities.find((city) => city.id === values.city) || null,
+      city: cities.find((city) => city.id === values.city) || null!,
       skills: skills.filter((skill) => values.skills.includes(skill.id)),
-      postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
-      expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
-    }
+      postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
+      expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
+      salaryNegotiable: Boolean(values.salaryNegotiable),
+      salaryMin: values.salaryNegotiable ? undefined : values.salaryMin,
+      salaryMax: values.salaryNegotiable ? undefined : values.salaryMax,
+      salaryCurrency: values.salaryNegotiable ? undefined : values.salaryCurrency,
+    };
     try {
       await createJobApi(data);
       Swal.fire({
@@ -214,7 +224,11 @@ const EmployerJobs = () => {
               maxHeight: "70vh",
               overflow: "y",
             }}
-            initialValues={{ remember: true }}
+            initialValues={{
+              remember: true,
+              salaryNegotiable: true,
+              salaryCurrency: "VND",
+            }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -252,13 +266,7 @@ const EmployerJobs = () => {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item
-                  label={t("employer:jobs.form.salary")}
-                  name="salary"
-                  rules={[{ required: true, message: t("employer:jobs.form.salaryRequired") }]}
-                >
-                  <Input placeholder={t("employer:jobs.form.salaryPlaceholder")} />
-                </Form.Item>
+                <SalaryFormFields />
               </Col>
               <Col span={24}>
                 <Form.Item

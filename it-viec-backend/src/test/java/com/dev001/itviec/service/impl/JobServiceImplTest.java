@@ -164,7 +164,7 @@ class JobServiceImplTest {
         when(jobMapper.toJobCardResponse(List.of(job))).thenReturn(List.of(response));
 
         PageResponse<JobCardResponse> result =
-                jobService.searchJobs(0, 10, "java", 1L, JobType.REMOTE, ExperienceLevel.SENIOR);
+                jobService.searchJobs(0, 10, "java", 1L, JobType.REMOTE, ExperienceLevel.SENIOR, null, null, null);
 
         assertThat(result.getData()).containsExactly(response);
         assertThat(result.getTotalElements()).isEqualTo(1);

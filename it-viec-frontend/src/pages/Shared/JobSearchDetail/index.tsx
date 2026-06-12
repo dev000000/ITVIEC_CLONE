@@ -19,6 +19,7 @@ import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 import { type JobCardResponse, type JobDetailResponse } from "@/types/response.types";
 import { getJobTypeOptions } from "@/constants";
 import SaveJobButton from "@/components/SaveJobButton";
+import { formatJobSalary } from "@/utils/formatSalary";
 
 interface JobSearchDetailOutletContext {
   jobSelected: JobCardResponse;
@@ -27,6 +28,7 @@ interface JobSearchDetailOutletContext {
 // Component hiển thị chi tiết công việc đang được chọn trong JobSearch, nhận dữ liệu qua useOutletContext từ JobSearch
 const JobSearchDetail = () => {
   const { t } = useTranslation("shared");
+  const { t: tJob } = useTranslation("job");
 
   // Lấy jobSelected từ context của Outlet
   const { jobSelected } = useOutletContext<JobSearchDetailOutletContext>();
@@ -117,7 +119,7 @@ const JobSearchDetail = () => {
             >
               <ImCoinDollar />
               {isSeekerLoggedIn ? (
-                <span>{jobDetail?.salary || "???"}</span>
+                <span>{formatJobSalary(jobDetail ?? {}, tJob("card.negotiable"))}</span>
               ) : (
                 <Link to={seekerLoginPath} className="job-search-detail__head-salary-link">
                   {t("jobSearchDetail.loginToSeeSalary")}

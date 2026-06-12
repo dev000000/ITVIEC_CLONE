@@ -1,17 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./CardApplication.scss";
 import { AiOutlineDollarCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import MB from "@/assets/images/mb-bank.webp";
-import SCANDINAVIAN from "@/assets/images/scandinavian-software-park.webp";
-import OTSV from "@/assets/images/one-tech-stop-vietnam-company-ltd.webp";
-import MCREDIT from "@/assets/images/mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei.webp";
-import TYMEX from "@/assets/images/tymex.webp";
-import ANDPAD from "@/assets/images/andpad-vietnam-co-ltd.webp";
-import EMPLOYMENTHERO from "@/assets/images/employment-hero.webp";
-import BOSCH from "@/assets/images/bosch-global-software-technologies-company-limited.webp";
-import SSI from "@/assets/images/ssi-securities-corporation.webp";
+import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
 import { Badge, Form, Popover } from "antd";
 import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
@@ -22,16 +14,22 @@ import type { CityResponse } from "@/types/response.types";
 import DOMPurify from "dompurify";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
+import { formatJobSalary } from "@/utils/formatSalary";
 
 interface ApplicationJob {
   slug?: string;
   title?: string;
   salary?: string;
+  salaryNegotiable?: boolean;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  salaryCurrency?: string | null;
 }
 
 interface ApplicationCompany {
   companyName?: string;
   slug?: string;
+  logoUrl?: string | null;
 }
 
 interface Application {
@@ -51,17 +49,7 @@ interface CardApplicationProps {
   application: Application;
 }
 
-const logoMap: Record<string, string> = {
-  "mb-bank": MB,
-  "scandinavian-software-park": SCANDINAVIAN,
-  "one-tech-stop-vietnam-company-ltd": OTSV,
-  "mcredit-cong-ty-tai-chinh-tnhh-mb-shinsei": MCREDIT,
-  tymex: TYMEX,
-  "andpad-vietnam-co-ltd": ANDPAD,
-  "employment-hero": EMPLOYMENTHERO,
-  "bosch-global-software-technologies-company-limited": BOSCH,
-  "ssi-securities-corporation": SSI,
-};
+
 const customStyles = {
   content: {
     top: "50%",
@@ -74,22 +62,32 @@ const customStyles = {
     overflow: "hidden",
   },
 };
-const statusList = [
-  {
-    value: "Pending",
-    label: <Badge status="processing" text="Pending" />,
-  },
-  {
-    value: "Accepted",
-    label: <Badge status="success" text="Accepted" />,
-  },
-  {
-    value: "Rejected",
-    label: <Badge status="error" text="Rejected" />,
-  },
-];
-function CardApplication({ application }: CardApplicationProps) {
+const CardApplication = ({ application }: CardApplicationProps) => {
   const { t } = useTranslation("employer");
+  const { t: tJob } = useTranslation("job");
+  const statusList = useMemo(
+    () => [
+      {
+        value: "PENDING",
+        label: (
+          <Badge status="processing" text={t("applications.statusBadge.pending")} />
+        ),
+      },
+      {
+        value: "ACCEPTED",
+        label: (
+          <Badge status="success" text={t("applications.statusBadge.accepted")} />
+        ),
+      },
+      {
+        value: "REJECTED",
+        label: (
+          <Badge status="error" text={t("applications.statusBadge.rejected")} />
+        ),
+      },
+    ],
+    [t],
+  );
   const content = <div>{t("cardApplication.openNewTab")}</div>;
   const [modalIsOpen, setIsOpen] = useState(false);
   const [form] = Form.useForm();
@@ -141,7 +139,7 @@ function CardApplication({ application }: CardApplicationProps) {
       coverLetter: application.coverLetter || "",
       desiredLocations: application.desiredLocations || [],
       appliedAt: application.appliedAt ? dayjs(application.appliedAt) : null,
-      status: application.status,
+      status: application.status?.toUpperCase() ?? application.status,
       employerMessage: application.employerMessage || "",
     });
     setIsOpen(true);
@@ -221,14 +219,14 @@ function CardApplication({ application }: CardApplicationProps) {
                   rules={[
                     {
                       required: true,
-                      message: "Please select desired locations",
+                      message: t("applications.detail.desiredLocationsRequired"),
                       type: "array",
                     },
                   ]}
                 >
                   <Select
                     mode="multiple"
-                    placeholder="Please select desired locations"
+                    placeholder={t("applications.detail.desiredLocationsPlaceholder")}
                     options={cities.map((c) => ({ value: c.cityName, label: c.cityName }))}
                   ></Select>
                 </Form.Item>
@@ -241,7 +239,7 @@ function CardApplication({ application }: CardApplicationProps) {
               <Col span={7} xl={7} lg={7} md={12} sm={24} xs={24}>
                 <Form.Item label={t("applications.detail.status")} name="status">
                   <Select
-                    placeholder="Please select status"
+                    placeholder={t("applications.detail.statusPlaceholder")}
                     options={statusList}
                   ></Select>
                 </Form.Item>
@@ -269,7 +267,11 @@ function CardApplication({ application }: CardApplicationProps) {
       <div className="card-application__wrapper">
         <div className="card-application__left">
           <div className="card-application__img-wrap">
-            <img src={logoMap[application.company?.slug]} alt="Company Logo" />
+            <img
+              src={application.company?.logoUrl || IMAGE_NOT_FOUND}
+              alt={application.company?.companyName || "Company Logo"}
+              onError={(e) => { (e.currentTarget as HTMLImageElement).src = IMAGE_NOT_FOUND; }}
+            />
           </div>
           <div className="card-application__content-wrap">
             <h4 className="card-application__title">
@@ -283,7 +285,7 @@ function CardApplication({ application }: CardApplicationProps) {
             </Link>
             <div className="card-application__salary">
               <AiOutlineDollarCircle />
-              <span> {application.job?.salary || "???"} </span>
+              <span> {application.job ? formatJobSalary(application.job, tJob("card.negotiable")) : "???"} </span>
             </div>
           </div>
         </div>

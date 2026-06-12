@@ -37,10 +37,16 @@ import type {
   SkillResponse,
 } from "@/types/response.types";
 import type { JobUpdateRequest } from "@/types/request.types";
+import type { SalaryCurrency } from "@/types/common.types";
+import SalaryFormFields from "@/components/SalaryFormFields";
 
 interface JobsFormValues extends Omit<JobUpdateRequest, "city" | "skills"> {
   city: number;
   skills: number[];
+  salaryNegotiable?: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: SalaryCurrency;
 }
 
 const EmployerJobDetail = () => {
@@ -55,7 +61,7 @@ const EmployerJobDetail = () => {
   // ID của job lấy từ URL params (route: /employer/jobs/:id)
   const { id } = useParams<{ id: string }>();
   // Thông tin đầy đủ của job hiện tại
-  const [job, setJob] = useState<Partial<JobDetailResponse>>({});
+  const [job, setJob] = useState<JobDetailResponse | null>(null);
   // Danh sách skills và cities lấy từ API, dùng cho Select dropdown trong form
   const [skills, setSkills] = useState<SkillResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
@@ -119,7 +125,10 @@ const EmployerJobDetail = () => {
             companyId: company.id,
             title: jobInfo.title,
             location: jobInfo.location,
-            salary: jobInfo.salary,
+            salaryNegotiable: jobInfo.salaryNegotiable ?? false,
+            salaryMin: jobInfo.salaryMin ?? undefined,
+            salaryMax: jobInfo.salaryMax ?? undefined,
+            salaryCurrency: jobInfo.salaryCurrency ?? "VND",
             jobType: jobInfo.jobType,
             experienceLevel: jobInfo.experienceLevel,
             postedAt: jobInfo.postedAt ? dayjs(jobInfo.postedAt) : null,
@@ -133,7 +142,7 @@ const EmployerJobDetail = () => {
             whyJoinUs: jobInfo.whyJoinUs || "",
           });
         } else {
-          setJob({});
+          setJob(null);
         }
       } catch (error) {
         Swal.fire({
@@ -141,7 +150,7 @@ const EmployerJobDetail = () => {
           title: t("employer:jobs.notifications.oops"),
           text: getApiErrorMessage(error, t),
         });
-        setJob({});
+        setJob(null);
       }
     };
     fetchJob();
@@ -188,13 +197,17 @@ const EmployerJobDetail = () => {
   // Xử lý submit form cập nhật job
   // Map giá trị form → định dạng API, cập nhật state job sau khi thành công
   const onFinish = async (values: JobsFormValues) => {
-    const data = {
-          ...values,
-          city: cities.find((city) => city.id === values.city) || null,
-          skills: skills.filter((skill) => values.skills.includes(skill.id)),
-          postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
-          expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined,
-        }
+    const data: JobUpdateRequest = {
+      ...values,
+      city: cities.find((city) => city.id === values.city) || null!,
+      skills: skills.filter((skill) => values.skills.includes(skill.id)),
+      postedAt: values.postedAt ? dayjs(values.postedAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
+      expiresAt: values.expiresAt ? dayjs(values.expiresAt).format("YYYY-MM-DDTHH:mm:ss") : undefined!,
+      salaryNegotiable: Boolean(values.salaryNegotiable),
+      salaryMin: values.salaryNegotiable ? undefined : values.salaryMin,
+      salaryMax: values.salaryNegotiable ? undefined : values.salaryMax,
+      salaryCurrency: values.salaryNegotiable ? undefined : values.salaryCurrency,
+    };
     try {
       const {data: jobData} = await updateJobApi(String(id), data);
       const result = jobData.result;
@@ -296,13 +309,7 @@ const EmployerJobDetail = () => {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item
-                  label={t("employer:jobs.form.salary")}
-                  name="salary"
-                  rules={[{ required: true, message: t("employer:jobs.form.salaryRequired") }]}
-                >
-                  <Input />
-                </Form.Item>
+                <SalaryFormFields />
               </Col>
               <Col span={24}>
                 <Form.Item
@@ -477,6 +484,7 @@ const EmployerJobDetail = () => {
           ></ButtonAction>
         </div>
         <div className="employer-job__form">
+          {job && (
           <Row gutter={[{ xxl: 20, xl: 20, lg: 10, md: 0, sm: 0, xs: 0 }, 20]}>
             <Col xxl={16} xl={16} lg={24} md={24} sm={24} xs={24}>
               <CardJobHead job={job} />
@@ -487,6 +495,7 @@ const EmployerJobDetail = () => {
               <CardInforEmployer company={company} />
             </Col>
           </Row>
+          )}
         </div>
       </div>
     </>

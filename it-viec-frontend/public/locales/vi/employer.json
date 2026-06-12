@@ -66,6 +66,19 @@
       "locationRequired": "Vui lòng nhập địa điểm làm việc",
       "cityRequired": "Vui lòng chọn thành phố",
       "salaryRequired": "Vui lòng nhập mức lương",
+      "salaryNegotiable": "Thương lượng",
+      "salaryCurrencyLabel": "Loại tiền tệ",
+      "salaryCurrencyRequired": "Vui lòng chọn loại tiền tệ",
+      "salaryMin": "Lương tối thiểu",
+      "salaryMax": "Lương tối đa",
+      "salaryMinPlaceholder": "VD: 10000000",
+      "salaryMaxPlaceholder": "VD: 20000000",
+      "salaryMinRequired": "Vui lòng nhập lương tối thiểu",
+      "salaryMaxRequired": "Vui lòng nhập lương tối đa",
+      "salaryCurrency": {
+        "VND": "VND",
+        "USD": "USD ($)"
+      },
       "jobTypeRequired": "Vui lòng chọn hình thức làm việc",
       "levelRequired": "Vui lòng chọn trình độ chuyên môn",
       "statusRequired": "Vui lòng chọn trạng thái",
@@ -126,9 +139,9 @@
       "action": "Hành động"
     },
     "statusBadge": {
-      "pending": "Pending",
-      "accepted": "Accepted",
-      "rejected": "Rejected",
+      "pending": "Chờ xét duyệt",
+      "accepted": "Đã chấp nhận",
+      "rejected": "Đã từ chối",
       "unknown": "Không xác định"
     },
     "detail": {
@@ -141,6 +154,13 @@
       "resume": "Hồ sơ",
       "seekerCv": "CV hồ sơ ứng viên",
       "coverLetter": "Thư xin việc",
+      "desiredLocations": "Nơi làm việc mong muốn",
+      "appliedAt": "Thời gian nộp",
+      "status": "Trạng thái",
+      "employerMessage": "Phản hồi từ nhà tuyển dụng",
+      "desiredLocationsRequired": "Vui lòng chọn nơi làm việc mong muốn",
+      "desiredLocationsPlaceholder": "Chọn nơi làm việc mong muốn",
+      "statusPlaceholder": "Chọn trạng thái",
       "submit": "Submit"
     },
     "status": {

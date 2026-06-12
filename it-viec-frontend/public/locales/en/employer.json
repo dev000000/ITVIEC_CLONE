@@ -66,6 +66,19 @@
       "locationRequired": "Please enter work location",
       "cityRequired": "Please select a city",
       "salaryRequired": "Please enter salary",
+      "salaryNegotiable": "Negotiable",
+      "salaryCurrencyLabel": "Currency",
+      "salaryCurrencyRequired": "Please select currency",
+      "salaryMin": "Minimum salary",
+      "salaryMax": "Maximum salary",
+      "salaryMinPlaceholder": "e.g. 1000",
+      "salaryMaxPlaceholder": "e.g. 2000",
+      "salaryMinRequired": "Please enter minimum salary",
+      "salaryMaxRequired": "Please enter maximum salary",
+      "salaryCurrency": {
+        "VND": "VND",
+        "USD": "USD ($)"
+      },
       "jobTypeRequired": "Please select job type",
       "levelRequired": "Please select experience level",
       "statusRequired": "Please select status",
@@ -141,6 +154,13 @@
       "resume": "Resume",
       "seekerCv": "Seeker Profile CV",
       "coverLetter": "Cover Letter",
+      "desiredLocations": "Desired Locations",
+      "appliedAt": "Applied At",
+      "status": "Status",
+      "employerMessage": "Employer Reply",
+      "desiredLocationsRequired": "Please select desired locations",
+      "desiredLocationsPlaceholder": "Select desired locations",
+      "statusPlaceholder": "Select status",
       "submit": "Submit"
     },
     "status": {

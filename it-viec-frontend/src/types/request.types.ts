@@ -6,6 +6,7 @@ import type {
   Gender,
   JobStatus,
   JobType,
+  SalaryCurrency,
   OvertimePolicy,
   UserStatus,
   WorkingHours,
@@ -119,7 +120,16 @@ export interface CompanyUpdateRequest {
   companySkills?: SkillResponse[];
 }
 
-export interface JobCreateRequest {
+export interface JobSalaryRequest {
+  salaryNegotiable?: boolean;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: SalaryCurrency;
+  /** @deprecated legacy text salary */
+  salary?: string;
+}
+
+export interface JobCreateRequest extends JobSalaryRequest {
   title: string;
   jobReason: string;
   jobDescription: string;
@@ -127,7 +137,6 @@ export interface JobCreateRequest {
   whyJoinUs: string;
   location: string;
   city: CityResponse;
-  salary: string;
   jobType: JobType;
   experienceLevel: ExperienceLevel;
   postedAt: IsoDateTimeString;
@@ -136,7 +145,7 @@ export interface JobCreateRequest {
   skills: SkillResponse[];
 }
 
-export interface JobUpdateRequest {
+export interface JobUpdateRequest extends JobSalaryRequest {
   title: string;
   jobReason: string;
   jobDescription: string;
@@ -144,7 +153,6 @@ export interface JobUpdateRequest {
   whyJoinUs: string;
   location: string;
   city: CityResponse;
-  salary: string;
   jobType: JobType;
   experienceLevel: ExperienceLevel;
   postedAt: IsoDateTimeString;
@@ -175,6 +183,9 @@ export interface SearchJobsParams extends PaginationParams {
   cityId?: number;
   jobType?: JobType;
   experienceLevel?: ExperienceLevel;
+  salaryMin?: number;
+  salaryMax?: number;
+  salaryCurrency?: SalaryCurrency;
 }
 
 export interface PopularTagCreateRequest {

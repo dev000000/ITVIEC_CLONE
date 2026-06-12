@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Button, Form, Input, Result, Spin, Typography } from "antd";
+import { Button, Form, Input, Result, Typography } from "antd";
 import { useTranslation } from "react-i18next";
 import { activateEmployerApi } from "@/services/authApi";
 import { getApiErrorMessage } from "@/utils/apiError";

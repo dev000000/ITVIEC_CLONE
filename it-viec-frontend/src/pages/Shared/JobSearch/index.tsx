@@ -22,6 +22,9 @@ import { getPopularTagsApi } from "@/services/tagApi";
 import { getApiErrorMessage } from "@/utils/apiError";
 import Swal from "sweetalert2";
 import { searchJobsApi } from "@/services/jobApi";
+import SalaryRangeFilter, {
+  type SalaryRangeFilterValue,
+} from "@/components/SalaryRangeFilter";
 
 // Định nghĩa các interface cho props và state của component JobSearch
 interface JobSearchProps {
@@ -36,7 +39,7 @@ interface SearchFormValues {
 }
 
 // Định nghĩa interface cho các filter khi tìm kiếm việc làm
-interface SearchFilters {
+interface SearchFilters extends SalaryRangeFilterValue {
   experienceLevel?: ExperienceLevel;
   jobType?: JobType;
 }
@@ -134,6 +137,9 @@ const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
           cityId: citySegment ? cities.find((city) => city.slug === citySegment)?.id : undefined,
           experienceLevel: filters.experienceLevel,
           jobType: filters.jobType,
+          salaryMin: filters.salaryMin,
+          salaryMax: filters.salaryMax,
+          salaryCurrency: filters.salaryCurrency,
         });
 
         setListJob(response.data.result?.data ?? []);
@@ -283,8 +289,16 @@ const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
               <h2 className="job-search__total-jobs">
                 {totalJobs} <span></span> {t("jobSearch.jobsInVietnam")}
               </h2>
-              {/* Hiển thị filter để lọc thêm việc làm theo kinh nghiệm và loại hình công việc */}
-              {/* <div className="job-search__filter-wrap">
+              <div className="job-search__filter-wrap">
+                <SalaryRangeFilter
+                  value={filters}
+                  onChange={(salaryFilter) =>
+                    setFilters((prev) => ({
+                      ...prev,
+                      ...salaryFilter,
+                    }))
+                  }
+                />
                 <Select
                   allowClear
                   className="job-search__filter"
@@ -311,7 +325,7 @@ const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
                     }))
                   }
                 />
-              </div> */}
+              </div>
               {/* Hiển thị danh sách việc làm + việc làm đang được chọn */}
               <div className="job-search__main-content">
                 <Row gutter={[20, 20]}>

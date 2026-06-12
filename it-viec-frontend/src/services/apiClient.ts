@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 import { useUserStore } from "@/store/userStore";
 import { useSeekerStore } from "@/store/seekerStore";
 import { useCompanyStore } from "@/store/companyStore";

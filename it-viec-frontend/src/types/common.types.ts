@@ -67,6 +67,8 @@ export const JOB_TYPE_VALUES = [
 ] as const;
 export type JobType = (typeof JOB_TYPE_VALUES)[number];
 
+export const SALARY_CURRENCY_VALUES = ["VND", "USD"] as const;
+export type SalaryCurrency = (typeof SALARY_CURRENCY_VALUES)[number];
 
 export const OVERTIME_POLICY_VALUES = [
   "NO_OVERTIME",

@@ -6,6 +6,7 @@ import type {
   Gender,
   JobStatus,
   JobType,
+  SalaryCurrency,
   OvertimePolicy,
   Role,
   UserStatus,
@@ -167,12 +168,19 @@ export interface CompanyDetailResponse {
 
 // --- Job Types ---
 
-export interface JobCardResponse {
+export interface JobSalaryResponse {
+  salary?: string | null;
+  salaryNegotiable?: boolean;
+  salaryMin?: number | null;
+  salaryMax?: number | null;
+  salaryCurrency?: SalaryCurrency | null;
+}
+
+export interface JobCardResponse extends JobSalaryResponse {
   id: number;
   title: string;
   slug: string;
   city: CityResponse;
-  salary: string;
   jobType: JobType;
   status: JobStatus;
   postedAt: string; // LocalDateTime
@@ -180,7 +188,7 @@ export interface JobCardResponse {
   company: CompanyBaseResponse;
 }
 
-export interface JobDetailResponse {
+export interface JobDetailResponse extends JobSalaryResponse {
   id: number;
   company: CompanyBriefResponse;
   title: string;
@@ -191,7 +199,6 @@ export interface JobDetailResponse {
   whyJoinUs: string;
   location: string;
   city: CityResponse;
-  salary: string;
   jobType: JobType;
   experienceLevel: ExperienceLevel;
   postedAt: string;
@@ -254,12 +261,11 @@ export interface ApplicationCheckResponse {
 
 // --- Saved Job Types ---
 
-export interface SavedJobItemResponse {
+export interface SavedJobItemResponse extends JobSalaryResponse {
   id: number;
   title: string;
   slug: string;
   city: CityResponse;
-  salary: string;
   jobType: JobType;
   status: JobStatus;
   postedAt: string;

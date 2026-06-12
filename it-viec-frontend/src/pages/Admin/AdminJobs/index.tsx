@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import DOMPurify from "dompurify";
 import Swal from "sweetalert2";
 import EmployerStart from "@/components/EmployerStart";
+import { formatJobSalary } from "@/utils/formatSalary";
 import { getAllCitiesApi } from "@/services/cityApi";
 import {
   deleteAdminJobApi,
@@ -52,6 +53,7 @@ const formatDate = (value?: string): string => {
 
 function AdminJobs() {
   const { t } = useTranslation(["admin", "common"]);
+  const { t: tJob } = useTranslation("job");
   const [jobs, setJobs] = useState<JobDetailResponse[]>([]);
   const [cities, setCities] = useState<CityResponse[]>([]);
   const [filters, setFilters] = useState<JobFilters>(defaultFilters);
@@ -418,7 +420,7 @@ function AdminJobs() {
                 {formatDate(selectedJob.expiresAt)}
               </Descriptions.Item>
               <Descriptions.Item label={t("admin:jobs.salary")} span={2}>
-                {selectedJob.salary}
+                {selectedJob ? formatJobSalary(selectedJob, tJob("card.negotiable")) : "--"}
               </Descriptions.Item>
               <Descriptions.Item label={t("admin:jobs.location")} span={2}>
                 {selectedJob.location}

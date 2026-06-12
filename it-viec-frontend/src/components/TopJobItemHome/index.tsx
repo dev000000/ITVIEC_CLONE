@@ -13,6 +13,7 @@ import { ROLE } from "@/types/common.types";
 import type { JobCardResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
 import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
+import { formatJobSalary } from "@/utils/formatSalary";
 import { useVisibleTagCount } from "@/hooks/use-visible-tag-count";
 
 interface TopJobItemProps {
@@ -79,7 +80,7 @@ const TopJobItemHome = ({ job, isNotNavigate = false }: TopJobItemProps) => {
         <ImCoinDollar />{" "}
         <span>
           {isSeekerLoggedIn ? (
-            job.salary
+            formatJobSalary(job, t("card.negotiable"))
           ) : (
             <Link to={seekerLoginPath} onClick={(e) => e.stopPropagation()}>
               {t("loginToSeeSalary")}

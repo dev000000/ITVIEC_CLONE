@@ -90,6 +90,7 @@ export const GENDER_VI: Record<Gender, string> = {
 
 export const USER_STATUS_VI: Record<UserStatus, string> = {
   PENDING_ACTIVATION: "Chờ kích hoạt",
+  PENDING_ADMIN_REVIEW: "Chờ admin duyệt",
   ACTIVE: "Đang hoạt động",
   DISABLED: "Đã vô hiệu hóa",
 };

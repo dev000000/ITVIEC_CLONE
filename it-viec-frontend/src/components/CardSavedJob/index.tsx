@@ -15,6 +15,7 @@ import { getRelativeTime } from "@/helpers/formattedTime";
 import { getJobTypeOptions } from "@/constants";
 import { saveJobApi, unsaveJobApi } from "@/services/savedJobApi";
 import { useSavedJobsStore } from "@/store/savedJobsStore";
+import { formatJobSalary } from "@/utils/formatSalary";
 
 const UNSAVE_TOAST_UNDO_ID = "saved-jobs-undo-btn";
 
@@ -32,6 +33,7 @@ const CardSavedJob = ({
   onRestored,
 }: CardSavedJobProps) => {
   const { t } = useTranslation("jobseeker");
+  const { t: tJob } = useTranslation("job");
   const navigate = useNavigate();
   const jobTypeOptions = getJobTypeOptions(t as Parameters<typeof getJobTypeOptions>[0]);
   const jobTypeLabel =
@@ -201,12 +203,10 @@ const CardSavedJob = ({
                   {jobTypeLabel}
                 </span>
               )}
-              {item.salary && (
-                <span className="card-saved-job__meta-item card-saved-job__salary">
-                  <AiOutlineDollarCircle />
-                  {item.salary}
-                </span>
-              )}
+              <span className="card-saved-job__meta-item card-saved-job__salary">
+                <AiOutlineDollarCircle />
+                {formatJobSalary(item, tJob("card.negotiable"))}
+              </span>
               {item.postedAt && (
                 <span className="card-saved-job__meta-item">
                   <GoClock />

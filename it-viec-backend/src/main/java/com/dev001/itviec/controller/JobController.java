@@ -28,6 +28,7 @@ import com.dev001.itviec.dto.response.PageResponse;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+import com.dev001.itviec.enums.SalaryCurrency;
 import com.dev001.itviec.service.JobService;
 
 import lombok.RequiredArgsConstructor;
@@ -57,10 +58,14 @@ public class JobController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long cityId,
             @RequestParam(required = false) JobType jobType,
-            @RequestParam(required = false) ExperienceLevel experienceLevel) {
+            @RequestParam(required = false) ExperienceLevel experienceLevel,
+            @RequestParam(required = false) Long salaryMin,
+            @RequestParam(required = false) Long salaryMax,
+            @RequestParam(required = false) SalaryCurrency salaryCurrency) {
         return ApiResponse.<PageResponse<JobCardResponse>>builder()
                 .code(1000)
-                .result(jobService.searchJobs(page, size, keyword, cityId, jobType, experienceLevel))
+                .result(jobService.searchJobs(
+                        page, size, keyword, cityId, jobType, experienceLevel, salaryMin, salaryMax, salaryCurrency))
                 .build();
     }
 

@@ -10,6 +10,7 @@ import SaveJobButton from "@/components/SaveJobButton";
 import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
 import { getLoginRouteByRole } from "@/utils/roleRedirect";
 import { ROLE } from "@/types/common.types";
+import { formatJobSalary } from "@/utils/formatSalary";
 
 interface CardJobHeadProps {
   job: JobDetailResponse;
@@ -20,6 +21,7 @@ const SEEKER_LOGIN_PATH = getLoginRouteByRole(ROLE.SEEKER);
 // Phần đầu của card hiển thị chi tiết công việc, bao gồm tên công việc, tên công ty, mức lương và nút ứng tuyển
 const CardJobHead = ({ job }: CardJobHeadProps) => {
   const { t } = useTranslation("shared");
+  const { t: tJob } = useTranslation("job");
   const isSeekerLoggedIn = useIsSeekerLoggedIn();
 
   const [applicationCheck, setApplicationCheck] = useState<ApplicationCheckResponse>({
@@ -76,7 +78,7 @@ const CardJobHead = ({ job }: CardJobHeadProps) => {
       {isSeekerLoggedIn ? (
         <div className="card-job-head__salary">
           <AiOutlineDollarCircle />
-          <span> {job.salary || "--"} </span>
+          <span> {formatJobSalary(job, tJob("card.negotiable"))} </span>
         </div>
       ) : (
         <div className="card-job-head__salary card-job-head__salary-notLogin">

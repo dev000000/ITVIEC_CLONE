@@ -8,7 +8,7 @@
   },
   "card": {
     "salary": "Lương",
-    "negotiable": "Thỏa thuận",
+    "negotiable": "Thương lượng",
     "location": "Địa điểm",
     "deadline": "Hạn nộp",
     "posted": "Đăng {{time}} trước",

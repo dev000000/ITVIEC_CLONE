@@ -12,7 +12,10 @@
     "loading": "Đang tải việc làm...",
     "filters": {
       "experienceLevel": "Lọc theo kinh nghiệm",
-      "jobType": "Lọc theo hình thức"
+      "jobType": "Lọc theo hình thức",
+      "salary": "Mức lương",
+      "applySalary": "Áp dụng",
+      "clearSalary": "Xóa lọc"
     }
   },
   "jobSearchDetail": {

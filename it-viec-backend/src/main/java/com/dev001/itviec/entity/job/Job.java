@@ -13,6 +13,7 @@ import com.dev001.itviec.entity.skill.Skill;
 import com.dev001.itviec.enums.ExperienceLevel;
 import com.dev001.itviec.enums.JobStatus;
 import com.dev001.itviec.enums.JobType;
+import com.dev001.itviec.enums.SalaryCurrency;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -61,6 +62,20 @@ public class Job extends BaseEntity {
 
     @Column(columnDefinition = "VARCHAR(100)")
     String salary;
+
+    @Column(name = "salary_min")
+    Long salaryMin;
+
+    @Column(name = "salary_max")
+    Long salaryMax;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "salary_currency")
+    SalaryCurrency salaryCurrency;
+
+    @Column(name = "salary_negotiable", nullable = false)
+    @Builder.Default
+    Boolean salaryNegotiable = false;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "job_type")
