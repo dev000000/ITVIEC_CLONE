@@ -95,13 +95,16 @@ const EmployerDetailInfo = () => {
         <h2 className="empoyer-detail-infor__main-title">
           {t("employerDetailInfo.ourExpertise")}
         </h2>
-        <div className="empoyer-detail-infor__intro-skills">{t("employerDetailInfo.keySkills")}</div>
-        {/* Hiển thị danh sách kỹ năng của công ty */}
-        <div className="empoyer-detail-infor__list-tag">
-          {companyInfor?.companySkills?.map((skill) => (
-            <TagSkill key={skill.id} text={skill.skillName} />
-          ))}
-        </div>
+        {companyInfor?.companySkills?.length > 0 && (
+          <>
+            <div className="empoyer-detail-infor__intro-skills">{t("employerDetailInfo.keySkills")}</div>
+            <div className="empoyer-detail-infor__list-tag">
+              {companyInfor?.companySkills?.map((skill) => (
+                <TagSkill key={skill.id} text={skill.skillName} />
+              ))}
+            </div>
+          </>
+        )}
         <div
           className="preview-content"
           dangerouslySetInnerHTML={{
@@ -123,6 +126,6 @@ const EmployerDetailInfo = () => {
       </div>
     </div>
   );
-}
+};
 
 export default EmployerDetailInfo;

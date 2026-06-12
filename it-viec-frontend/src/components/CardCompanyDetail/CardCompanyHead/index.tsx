@@ -37,10 +37,12 @@ const CardCompanyHead = ({ companyInfor }: CardCompanyHeadProps) => {
                     <IoLocationOutline />
                     <span>{companyInfor.address || "--"}</span>
                   </div>
-                  <div className="card-company__head-item card-company__head-jobs">
-                    <LuBriefcase />
-                    <Link to={`/nha-tuyen-dung/${companyInfor.slug}`}>{t("employerDetail.jobsHiring", { count: companyInfor.jobs.length })}</Link>
-                  </div>
+                  {companyInfor.jobs.length > 0 && (
+                    <div className="card-company__head-item card-company__head-jobs">
+                      <LuBriefcase />
+                      <Link to={`/nha-tuyen-dung/${companyInfor.slug}`}>{t("employerDetail.jobsHiring", { count: companyInfor.jobs.length })}</Link>
+                    </div>
+                  )}
                 </div>
                 <div className="card-company__head-button-wrap">
                   <div className="card-company__head-button card-company__head-button--red">
