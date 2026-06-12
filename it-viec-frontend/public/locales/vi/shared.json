@@ -33,6 +33,7 @@
     "review": "Đánh giá",
     "blog": "Bài viết",
     "jobsHiring": "{{count}} việc làm đang tuyển dụng",
+    "noJobs": "Hiện tại {{companyName}} không có vị trí nào đang tuyển dụng.",
     "writeReview": "Viết đánh giá",
     "follow": "Theo dõi",
     "reviews": "đánh giá",

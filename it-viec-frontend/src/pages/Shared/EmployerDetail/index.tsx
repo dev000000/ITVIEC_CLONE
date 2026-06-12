@@ -8,6 +8,7 @@ import TopJobItemHome from "@/components/TopJobItemHome";
 import { getCompanyBySlugApi } from "@/services/companyApi";
 import type { CompanyDetailResponse } from "@/types/response.types";
 import { useTranslation } from "react-i18next";
+import emptyImage from "@/assets/images/everything-empty.svg";
 // 1.5 Trang hiển thị chi tiết nhà tuyển dụng
 const EmployerDetail = () => {
   // State để lưu thông tin chi tiết công ty 
@@ -77,7 +78,7 @@ const EmployerDetail = () => {
                     to={`/nha-tuyen-dung/${slug}/danh-gia`}
                   >
                     <span className="employer-detail__text">{t("employerDetail.review")}</span>
-                    <span className="employer-detail__count">80</span>
+                    {/* <span className="employer-detail__count"></span> */}
                   </NavLink>
                 </li>
                 <li className="employer-detail__item-wrapper">
@@ -90,7 +91,7 @@ const EmployerDetail = () => {
                     to={`/nha-tuyen-dung/${slug}/bai-viet`}
                   >
                     <span className="employer-detail__text">{t("employerDetail.blog")}</span>
-                    <span className="employer-detail__count">4</span>
+                    {/* <span className="employer-detail__count">0</span> */}
                   </NavLink>
                 </li>
               </ul>
@@ -103,16 +104,28 @@ const EmployerDetail = () => {
           {/* Hiển thị danh sách công việc của công ty đó */}
           <Col xxl={8} xl={8} lg={24} md={24} sm={24} xs={24}>
             <div className="employer-detail__jobs">
-              <h2>{t("employerDetail.jobsHiring", { count: companyInfor?.jobs.length || 0 })}</h2>
-              <div className="employer-detail__job-wrap">
-                {companyInfor?.jobs.map((job) => (
-                  <div className="employer-detail__job" key={job.id}>
-                    <TopJobItemHome
-                      job={job}
-                    />
+              {companyInfor?.jobs.length > 0 && (
+                <>
+                  <h2>{t("employerDetail.jobsHiring", { count: companyInfor.jobs.length })}</h2>
+                  <div className="employer-detail__job-wrap">
+                    {companyInfor.jobs.map((job) => (
+                      <div className="employer-detail__job" key={job.id}>
+                        <TopJobItemHome job={job} />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </>
+              )}
+              {companyInfor?.jobs.length === 0 && (
+                <div className="employer-box employer-box--empty employer-box--empty-row">
+                  <div className="employer-box__image">
+                    <img src={emptyImage} alt="No jobs" />
+                  </div>
+                  <div className="employer-box__content">
+                    <p>{t("employerDetail.noJobs", { companyName: companyInfor.companyName })}</p>
+                  </div>
+                </div>
+              )}
             </div>
           </Col>
         </Row>

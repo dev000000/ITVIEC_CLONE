@@ -54,7 +54,8 @@ const CardCompanyHead = ({ companyInfor }: CardCompanyHeadProps) => {
             </div>
           </Col>
           <Col xxl={8} xl={8} lg={24} md={24} sm={24} xs={24}>
-            <div className="card-company__head-right">
+            {/* Tạm thời comment phần đánh giá và phần tỷ lệ đề xuất vì chưa xử lý phần này */}
+            {/* <div className="card-company__head-right">
               <div className="card-company__head-rate-wrap">
                 <div className="card-company__head-rate">{MockData.rate}</div>
                 <div className="card-company__head-star">
@@ -66,7 +67,7 @@ const CardCompanyHead = ({ companyInfor }: CardCompanyHeadProps) => {
                 <div className="card-company__head-percent">{MockData.recommendPercent}<span>%</span></div>
                 <div className="card-company__head-percent-text">{t("employerDetail.recommendPercent")}</div>
               </div>
-            </div>
+            </div> */}
           </Col>
         </Row>
       </div>

@@ -33,6 +33,7 @@
     "review": "Reviews",
     "blog": "Posts",
     "jobsHiring": "{{count}} open positions",
+    "noJobs": "{{companyName}} currently has no open positions.",
     "writeReview": "Write a Review",
     "follow": "Follow",
     "reviews": "reviews",
