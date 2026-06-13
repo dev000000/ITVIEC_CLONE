@@ -131,6 +131,66 @@ export const getApplicationsByJobIdApi = (jobId: number) => {
   return apiClient.get<APIResponse<ApplicationResponse[]>>(url);
 };
 
+/**
+ * Trả về URL preview/download CV từ resumePreviewUrl (relative path từ API).
+ * Dùng cho Employer/Admin (truy cập qua /api/v1/cv-files/{id}/preview).
+ */
+export const getResumeFullUrl = (resumePreviewUrl: string) => {
+  if (!resumePreviewUrl) return "";
+  if (resumePreviewUrl.startsWith("http")) return resumePreviewUrl;
+  return Configs.API_ENDPOINT + resumePreviewUrl;
+};
+
+/**
+ * Trả về URL download CV (attachment) từ cvFileId.
+ * Dùng cho Employer/Admin.
+ */
+export const getCvFileDownloadUrl = (cvFileId: string) => {
+  return `${API_PATH}/cv-files/${cvFileId}`;
+};
+
+/**
+ * Trả về URL preview CV (inline PDF) từ cvFileId.
+ * Dùng cho Employer/Admin khi chỉ có `cvFileId` mà không có `resumePreviewUrl`.
+ */
+export const getCvFilePreviewUrl = (cvFileId: string) => {
+  return `${API_PATH}/cv-files/${cvFileId}/preview`;
+};
+
+/**
+ * Trích `cvFileId` từ `resumeUrl` cũ dạng `.../api/v1/cv-files/{id}`.
+ * Backend lưu `resumeUrl` qua `buildCvUrl(cvFileId)` nên luôn có pattern này
+ * đối với đơn ứng tuyển mới. Trả về null nếu không match.
+ */
+export const extractCvFileIdFromResumeUrl = (resumeUrl?: string | null): string | null => {
+  if (!resumeUrl) return null;
+  const match = resumeUrl.match(/\/cv-files\/([^/?#]+)(?:\/preview)?$/);
+  return match ? match[1] : null;
+};
+
+/**
+ * Trả về URL preview CV trong đơn ứng tuyển của seeker.
+ * Dùng cho Seeker xem CV mình đã nộp (PDF inline).
+ */
+export const getMyApplicationCvPreviewUrl = (applicationId: string) => {
+  return `${API_PATH}/seekers/me/applications/${applicationId}/cv/preview`;
+};
+
+/**
+ * Trả về URL download CV trong đơn ứng tuyển của seeker.
+ * Dùng cho Seeker tải về CV đã nộp (Word/doc attachment).
+ */
+export const getMyApplicationCvDownloadUrl = (applicationId: string) => {
+  return `${API_PATH}/seekers/me/applications/${applicationId}/cv/download`;
+};
+
+/**
+ * Kiểm tra URL/filename có phải file PDF không.
+ */
+export const isPdfFile = (fileNameOrUrl: string) => {
+  return /\.pdf($|\?)/i.test(fileNameOrUrl);
+};
+
 export default {
   applyToJobApi,
   getMyApplicationsApi,

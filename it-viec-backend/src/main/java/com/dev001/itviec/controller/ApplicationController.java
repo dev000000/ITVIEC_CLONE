@@ -4,7 +4,10 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +19,7 @@ import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.enums.ApplicationStatus;
 import com.dev001.itviec.service.ApplicationService;
 
@@ -127,5 +131,29 @@ public class ApplicationController {
                 .code(1000)
                 .result(applicationService.getApplicationsByJobId(id))
                 .build();
+    }
+
+    // 10.API cho phép seeker xem trước CV đã nộp trong đơn ứng tuyển của mình (PRIVATE)
+    @GetMapping("/seekers/me/applications/{id}/cv/preview")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ResponseEntity<byte[]> previewMyApplicationCv(@PathVariable String id) {
+        SeekerCvContent cv = applicationService.getMyApplicationCvContent(id);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + cv.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(cv.getContentType()))
+                .body(cv.getData());
+    }
+
+    // 11.API cho phép seeker tải về CV đã nộp trong đơn ứng tuyển của mình (PRIVATE)
+    @GetMapping("/seekers/me/applications/{id}/cv/download")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ResponseEntity<byte[]> downloadMyApplicationCv(@PathVariable String id) {
+        SeekerCvContent cv = applicationService.getMyApplicationCvContent(id);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(cv.getContentType()))
+                .body(cv.getData());
     }
 }

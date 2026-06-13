@@ -10,6 +10,7 @@ import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.enums.ApplicationStatus;
 
 public interface ApplicationService {
@@ -31,4 +32,6 @@ public interface ApplicationService {
     List<ApplicationResponse> getApplicationsByJobId(Long id);
 
     ApplicationResponse updateApplicationStatus(String id, ApplicationUpdateRequest request);
+
+    SeekerCvContent getMyApplicationCvContent(String applicationId);
 }

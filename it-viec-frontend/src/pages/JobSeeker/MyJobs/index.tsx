@@ -13,6 +13,7 @@ import { useSavedJobsStore } from "@/store/savedJobsStore";
 
 // Kiểu dữ liệu cho một đơn ứng tuyển sau khi đã map từ API response
 interface ApplicationItem {
+  id: string;
   appliedAt: string;
   job?: {
     slug?: string;
@@ -25,6 +26,7 @@ interface ApplicationItem {
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
+  resumeFileName?: string;
   coverLetter: string;
   desiredLocations: string[];
   status: string;
@@ -76,6 +78,7 @@ function MyJobs() {
         const response = await getMyApplicationsApi();
         const result = (response.data.result ?? []) as ApplicationWithRelations[];
         const mappedApplications = result.map((application) => ({
+          id: application.id,
           appliedAt: application.createdAt || application.updatedAt,
           // TODO(service-new-migration): ApplicationResponse hien tai co the chua tra relation `job/company`.
           // Legacy call: GET `applications?seekerId=...&_expand=job&_expand=company`.
@@ -90,6 +93,7 @@ function MyJobs() {
           fullName: application.fullName,
           phoneNumber: application.phoneNumber,
           resumeUrl: application.resumeUrl,
+          resumeFileName: application.resumeFileName,
           coverLetter: application.coverLetter,
           desiredLocations:
             application.desiredLocations?.map((city) => city.cityName) ?? [],

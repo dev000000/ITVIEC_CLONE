@@ -286,6 +286,7 @@ export interface ApplicationResponse {
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
+  resumeFileName?: string;
   resumePreviewUrl?: string;
   cvFileId?: string;
   coverLetter: string;

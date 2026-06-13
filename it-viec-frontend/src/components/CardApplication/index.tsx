@@ -4,6 +4,7 @@ import { AiOutlineDollarCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import IMAGE_NOT_FOUND from "@/assets/images/Image-not-found.png";
+import uploadImg from "@/assets/images/uploaded-resume.svg";
 import { Badge, Form, Popover } from "antd";
 import Modal from "react-modal";
 import { IoClose } from "react-icons/io5";
@@ -15,6 +16,7 @@ import DOMPurify from "dompurify";
 import { LuSquareArrowOutUpRight } from "react-icons/lu";
 import { useTranslation } from "react-i18next";
 import { formatJobSalary } from "@/utils/formatSalary";
+import { getMyApplicationCvPreviewUrl, getMyApplicationCvDownloadUrl, isPdfFile } from "@/services/applicationApi";
 
 interface ApplicationJob {
   slug?: string;
@@ -31,12 +33,14 @@ interface ApplicationCompany {
 }
 
 interface Application {
+  id: string;
   appliedAt: string;
   job?: ApplicationJob;
   company?: ApplicationCompany;
   fullName: string;
   phoneNumber: string;
   resumeUrl: string;
+  resumeFileName?: string;
   coverLetter: string;
   desiredLocations: string[];
   status: string;
@@ -133,7 +137,6 @@ const CardApplication = ({ application }: CardApplicationProps) => {
       companyName: application.company?.companyName || "",
       fullName: application.fullName || "",
       phoneNumber: application.phoneNumber || "",
-      resumeUrl: application.resumeUrl || "",
       coverLetter: application.coverLetter || "",
       desiredLocations: application.desiredLocations || [],
       appliedAt: application.appliedAt ? dayjs(application.appliedAt) : null,
@@ -201,8 +204,36 @@ const CardApplication = ({ application }: CardApplicationProps) => {
                 </Form.Item>
               </Col>
               <Col span={24} xl={24} lg={24} md={24} sm={24} xs={24}>
-                <Form.Item label={t("applications.detail.resume")} name="resumeUrl">
-                  <Input />
+                <Form.Item label={t("applications.detail.resume")}>
+                  {application.resumeUrl ? (
+                    <div className="card-application__cv-card">
+                      <img
+                        src={uploadImg}
+                        alt="resume"
+                        className="card-application__cv-card-img"
+                      />
+                      <div className="card-application__cv-card-info">
+                        <button
+                          className="card-application__cv-card-filename"
+                          type="button"
+                          title={application.resumeFileName}
+                          onClick={() => {
+                            const fileRef = application.resumeFileName || application.resumeUrl;
+                            const url = isPdfFile(fileRef)
+                              ? getMyApplicationCvPreviewUrl(application.id)
+                              : getMyApplicationCvDownloadUrl(application.id);
+                            window.open(url, "_blank", "noopener,noreferrer");
+                          }}
+                        >
+                          {application.resumeFileName || t("cardApplication.viewResume")}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <span style={{ color: "#999" }}>
+                      {t("cardApplication.noResume")}
+                    </span>
+                  )}
                 </Form.Item>
               </Col>
               <Col span={24} xl={24} lg={24} md={24} sm={24} xs={24}>

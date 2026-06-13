@@ -157,7 +157,10 @@
       "desiredLocations": "Nơi làm việc mong muốn",
       "appliedAt": "Thời gian nộp",
       "status": "Trạng thái",
-      "action": "Hành động"
+      "action": "Hành động",
+      "viewResume": "Xem hồ sơ",
+      "previewResume": "Xem trước",
+      "downloadResume": "Tải về"
     },
     "statusBadge": {
       "pending": "Chờ xét duyệt",
@@ -301,7 +304,11 @@
     "viewDetail": "Xem chi tiết",
     "detailTitle": "Chi tiết",
     "noReply": "Chưa có phản hồi từ nhà tuyển dụng.",
-    "openNewTab": "Mở trong tab mới"
+    "openNewTab": "Mở trong tab mới",
+    "previewResume": "Xem trước CV",
+    "downloadResume": "Tải CV",
+    "viewResume": "Xem CV",
+    "noResume": "Không có hồ sơ đính kèm"
   },
   "agreement": {
     "readAndAgree": "Tôi đã đọc và đồng ý với các",

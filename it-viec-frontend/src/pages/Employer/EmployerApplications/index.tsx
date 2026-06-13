@@ -14,11 +14,17 @@ import {
 } from "antd";
 import EmployerStart from "@/components/EmployerStart";
 import ButtonAction from "@/components/ButtonAction";
+import uploadImg from "@/assets/images/uploaded-resume.svg";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   getMyCompanyApplicationsApi,
   updateApplicationStatusApi,
+  getResumeFullUrl,
+  getCvFileDownloadUrl,
+  getCvFilePreviewUrl,
+  extractCvFileIdFromResumeUrl,
+  isPdfFile,
 } from "@/services/applicationApi";
 import { getAllCitiesApi } from "@/services/cityApi";
 import { Link } from "react-router-dom";
@@ -43,7 +49,10 @@ interface ApplicationRecord {
   job?: { id?: string | number; title?: string };
   fullName: string;
   phoneNumber: string;
+  resumeUrl: string;
+  resumeFileName?: string;
   resumePreviewUrl: string;
+  cvFileId?: string;
   coverLetter: string;
   desiredLocations: string[];
   appliedAt: string;
@@ -102,6 +111,51 @@ const EmployerApplications = () => {
   const getStatusLabel = (status: ApplicationStatus) =>
     statusOptions.find((option) => option.value === status)?.label ?? status;
 
+  // Tính toán thông tin hiển thị CV cho 1 đơn ứng tuyển:
+  // - Suy ra `cvFileId` từ `resumeUrl` nếu backend chưa trả về (đơn cũ / mapper chưa cập nhật)
+  // - Tên file ưu tiên `resumeFileName`, fallback theo URL khi backend chưa kèm tên file
+  // - URL: PDF → preview inline, DOCX/khác → download attachment
+  const getResumeDisplay = (record: {
+    resumeUrl?: string;
+    resumeFileName?: string;
+    resumePreviewUrl?: string;
+    cvFileId?: string;
+  }) => {
+    const cvFileId =
+      record.cvFileId || extractCvFileIdFromResumeUrl(record.resumeUrl) || null;
+
+    const fileNameOrUrl =
+      record.resumeFileName || record.resumeUrl || record.resumePreviewUrl || "";
+    const isPdf = isPdfFile(fileNameOrUrl);
+
+    let previewUrl = "";
+    if (record.resumePreviewUrl) {
+      previewUrl = getResumeFullUrl(record.resumePreviewUrl);
+    } else if (cvFileId) {
+      previewUrl = getCvFilePreviewUrl(cvFileId);
+    }
+
+    let downloadUrl = "";
+    if (cvFileId) {
+      downloadUrl = getCvFileDownloadUrl(cvFileId);
+    } else if (record.resumeUrl) {
+      downloadUrl = record.resumeUrl.startsWith("http")
+        ? record.resumeUrl
+        : getResumeFullUrl(record.resumeUrl);
+    } else {
+      downloadUrl = previewUrl;
+    }
+
+    const targetUrl = isPdf ? previewUrl || downloadUrl : downloadUrl || previewUrl;
+    const hasResume = Boolean(targetUrl);
+    const fallbackLabel = isPdf
+      ? t("employer:applications.columns.previewResume")
+      : t("employer:applications.columns.downloadResume");
+    const label = record.resumeFileName || fallbackLabel;
+
+    return { hasResume, isPdf, label, targetUrl, previewUrl, downloadUrl };
+  };
+
   const columns: TableColumnsType<ApplicationRecord> = [
     {
       title: t("employer:applications.columns.stt"),
@@ -130,13 +184,30 @@ const EmployerApplications = () => {
     },
     {
       title: t("employer:applications.columns.resume"),
-      dataIndex: "resumePreviewUrl",
-      key: "resumePreviewUrl",
-      render: (text: string) => (
-        <a href={text} target="_blank" rel="noopener noreferrer">
-          {text ? t("employer:applications.columns.viewResume") : "N/A"} 
-        </a>
-      ),
+      key: "resume",
+      render: (_: unknown, record: ApplicationRecord) => {
+        const { hasResume, label, targetUrl } = getResumeDisplay(record);
+        if (!hasResume) return "N/A";
+        return (
+          <Tooltip placement="topLeft" title={label}>
+            <a
+              href={targetUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-block",
+                maxWidth: 220,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                verticalAlign: "middle",
+              }}
+            >
+              {label}
+            </a>
+          </Tooltip>
+        );
+      },
     },
     {
       title: t("employer:applications.columns.coverLetter"),
@@ -247,13 +318,15 @@ const EmployerApplications = () => {
     });
   };
   // Mở modal và điền sẵn thông tin của đơn ứng tuyển được chọn vào form
+  const [selectedRecord, setSelectedRecord] = useState<ApplicationRecord | null>(null);
+
   const openModal = (record: ApplicationRecord) => {
+    setSelectedRecord(record);
     form.setFieldsValue({
       id: record.id,
       title: record.job?.title || "",
       fullName: record.fullName || "",
       phoneNumber: record.phoneNumber || "",
-      resumeUrl: record.resumePreviewUrl || "",
       coverLetter: record.coverLetter || "",
       desiredLocations: record.desiredLocations || [],
       appliedAt: record.appliedAt ? dayjs(record.appliedAt) : null,
@@ -297,12 +370,14 @@ const EmployerApplications = () => {
             fullName: app.fullName,
             phoneNumber: app.phoneNumber,
             resumeUrl: app.resumeUrl,
+            resumeFileName: app.resumeFileName,
+            resumePreviewUrl: app.resumePreviewUrl || "",
+            cvFileId: app.cvFileId,
             coverLetter: app.coverLetter,
-            desiredLocations: app.desiredLocations.map((loc) => loc.cityName),  
+            desiredLocations: app.desiredLocations.map((loc) => loc.cityName),
             appliedAt: app.createdAt,
             status: app.status,
             employerMessage: app.employerMessage,
-            resumePreviewUrl: app.resumeUrl, // Tạm thời dùng cùng URL cho preview
           })) || []
         );
         setTotal(applicationData.result?.totalElements || 0);
@@ -385,8 +460,61 @@ const EmployerApplications = () => {
                 </Form.Item>
               </Col>
               <Col span={24}>
-                <Form.Item label={t("employer:applications.detail.resume")} name="resumeUrl">
-                  <Input disabled />
+                <Form.Item label={t("employer:applications.detail.resume")}>
+                  {(() => {
+                    if (!selectedRecord) {
+                      return <span style={{ color: "#999" }}>N/A</span>;
+                    }
+                    const { hasResume, isPdf, label, targetUrl, previewUrl, downloadUrl } =
+                      getResumeDisplay(selectedRecord);
+                    if (!hasResume) {
+                      return <span style={{ color: "#999" }}>N/A</span>;
+                    }
+                    return (
+                      <div className="employer-applications__cv-card">
+                        <img
+                          src={uploadImg}
+                          alt="resume"
+                          className="employer-applications__cv-card-img"
+                        />
+                        <div className="employer-applications__cv-card-info">
+                          {/* <button
+                            className="employer-applications__cv-card-filename"
+                            type="button"
+                            title={label}
+                            onClick={() =>
+                              window.open(targetUrl, "_blank", "noopener,noreferrer")
+                            }
+                          >
+                            {label}
+                          </button> */}
+                          <div className="employer-applications__cv-card-actions">
+                            {isPdf && previewUrl && (
+                              <Button
+                                type="primary"
+                                size="small"
+                                onClick={() =>
+                                  window.open(previewUrl, "_blank", "noopener,noreferrer")
+                                }
+                              >
+                                {t("employer:applications.columns.previewResume")}
+                              </Button>
+                            )}
+                            {downloadUrl && (
+                              <Button
+                                size="small"
+                                onClick={() =>
+                                  window.open(downloadUrl, "_blank", "noopener,noreferrer")
+                                }
+                              >
+                                {t("employer:applications.columns.downloadResume")}
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </Form.Item>
               </Col>
               <Col span={24}>

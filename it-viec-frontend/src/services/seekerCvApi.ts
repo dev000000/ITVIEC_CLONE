@@ -69,10 +69,17 @@ export const setPrimaryCvApi = async (cvId: string) => {
 };
 
 /**
- * Trả về URL preview cho một CV cụ thể (dùng để mở tab mới).
+ * Trả về URL preview inline cho một CV cụ thể (dành cho PDF).
  */
 export const getCvPreviewUrl = (cvId: string) => {
   return `${CV_BASE}/me/cvs/${cvId}/preview`;
+};
+
+/**
+ * Trả về URL download (attachment) cho một CV cụ thể (dành cho DOCX/DOC).
+ */
+export const getCvDownloadUrl = (cvId: string) => {
+  return `${CV_BASE}/me/cvs/${cvId}/download`;
 };
 
 /**

@@ -85,6 +85,47 @@
     padding: 10px;
     border-radius: 2px;
   }
+  &__cv-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 6px;
+    padding: 12px 14px;
+    background: #fafafa;
+  }
+  &__cv-card-img {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  &__cv-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+  &__cv-card-filename {
+    display: inline-block;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1890ff;
+    cursor: pointer;
+    text-align: left;
+    word-break: break-all;
+    &:hover {
+      text-decoration: underline;
+      color: #096dd9;
+    }
+  }
+  &__cv-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
   &__date {
     &--top {
       padding: 0 20px;

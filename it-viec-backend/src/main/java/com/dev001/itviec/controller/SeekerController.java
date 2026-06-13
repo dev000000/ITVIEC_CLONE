@@ -196,7 +196,19 @@ public class SeekerController {
     public ResponseEntity<byte[]> previewMyCvById(@PathVariable String cvId) {
         SeekerCvContent cv = seekerService.getCvBySeekerCvId(cvId);
         return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + cv.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(cv.getContentType()))
+                .body(cv.getData());
+    }
+
+    @GetMapping("/me/cvs/{cvId}/download")
+    @PreAuthorize("hasRole('SEEKER')")
+    public ResponseEntity<byte[]> downloadMyCvById(@PathVariable String cvId) {
+        SeekerCvContent cv = seekerService.getCvBySeekerCvId(cvId);
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + cv.getFileName() + "\"")
                 .contentType(MediaType.parseMediaType(cv.getContentType()))
                 .body(cv.getData());
     }

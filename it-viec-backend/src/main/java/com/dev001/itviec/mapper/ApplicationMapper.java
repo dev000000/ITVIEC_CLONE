@@ -32,6 +32,7 @@ public interface ApplicationMapper {
             String cvFileId = application.getCvFile().getId();
             response.setCvFileId(cvFileId);
             response.setResumePreviewUrl("/api/v1/cv-files/" + cvFileId + "/preview");
+            response.setResumeFileName(application.getCvFile().getFileName());
         } else if (application.getSeeker() != null && application.getResumeUrl() != null) {
             String seekerId = application.getSeeker().getId();
             response.setResumePreviewUrl("/api/v1/seekers/" + seekerId + "/cv/preview");

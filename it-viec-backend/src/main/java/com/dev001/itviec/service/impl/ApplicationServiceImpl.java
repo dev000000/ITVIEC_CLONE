@@ -21,6 +21,7 @@ import com.dev001.itviec.dto.response.ApplicationCheckResponse;
 import com.dev001.itviec.dto.response.ApplicationCreateResponse;
 import com.dev001.itviec.dto.response.ApplicationResponse;
 import com.dev001.itviec.dto.response.PageResponse;
+import com.dev001.itviec.dto.response.SeekerCvContent;
 import com.dev001.itviec.entity.application.Application;
 import com.dev001.itviec.entity.company.Company;
 import com.dev001.itviec.entity.cvfile.CvFile;
@@ -248,5 +249,21 @@ public class ApplicationServiceImpl implements ApplicationService {
         application.setEmployerMessage(request.getEmployerMessage());
 
         return applicationMapper.toApplicationResponse(applicationRepository.save(application));
+    }
+
+    @Override
+    public SeekerCvContent getMyApplicationCvContent(String applicationId) {
+        Seeker seeker = seekerService.getSeekerByCookie();
+
+        Application application = applicationRepository
+                .findByIdAndSeeker(applicationId, seeker)
+                .orElseThrow(() -> new AppException(ErrorCode.APPLICATION_NOT_FOUND));
+
+        CvFile cvFile = application.getCvFile();
+        if (cvFile == null) {
+            throw new AppException(ErrorCode.SEEKER_CV_REQUIRED);
+        }
+
+        return seekerService.getCvFileContent(cvFile.getId());
     }
 }

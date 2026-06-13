@@ -157,7 +157,10 @@
       "desiredLocations": "Desired Locations",
       "appliedAt": "Applied At",
       "status": "Status",
-      "action": "Action"
+      "action": "Action",
+      "viewResume": "View Resume",
+      "previewResume": "Preview",
+      "downloadResume": "Download"
     },
     "statusBadge": {
       "pending": "Pending",
@@ -301,7 +304,11 @@
     "viewDetail": "View detail",
     "detailTitle": "Detail",
     "noReply": "No reply from employer yet.",
-    "openNewTab": "Open in new tab"
+    "openNewTab": "Open in new tab",
+    "previewResume": "Preview CV",
+    "downloadResume": "Download CV",
+    "viewResume": "View CV",
+    "noResume": "No resume attached"
   },
   "agreement": {
     "readAndAgree": "I have read and agree to the",
