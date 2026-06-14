@@ -30,4 +30,13 @@ public interface JobDomainRepository extends JpaRepository<JobDomain, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM jobs WHERE job_domain_id = :id", nativeQuery = true)
     long countJobUsage(@Param("id") Long id);
+
+    @Query(
+            """
+		SELECT jd FROM JobDomain jd
+		WHERE jd.status = com.dev001.itviec.enums.SkillStatus.ACTIVE
+		AND (SELECT COUNT(j) FROM Job j WHERE j.jobDomain = jd AND j.status = com.dev001.itviec.enums.JobStatus.ACTIVE) > 0
+		ORDER BY (SELECT COUNT(j) FROM Job j WHERE j.jobDomain = jd AND j.status = com.dev001.itviec.enums.JobStatus.ACTIVE) DESC, jd.domainName ASC
+		""")
+    List<JobDomain> findTopActiveDomainsByActiveJobCount(Pageable pageable);
 }

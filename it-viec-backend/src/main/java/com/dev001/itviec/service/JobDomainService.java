@@ -11,6 +11,8 @@ public interface JobDomainService {
 
     List<JobDomainResponse> getAllJobDomains();
 
+    List<JobDomainResponse> getTopJobDomains(int limit);
+
     PageResponse<JobDomainAdminResponse> getAdminJobDomains(SkillStatus status, String search, int page, int size);
 
     JobDomainAdminResponse createJobDomainAdmin(String domainName);

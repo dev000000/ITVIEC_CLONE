@@ -1,15 +1,20 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Col, Row, Select, Form, Button } from "antd";
 import "./SearchFormHome.scss";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import SearchKeywordInput from "@/components/SearchKeywordInput";
-import type { CityResponse, PopularTagResponse } from "@/types/response.types";
+import type {
+  CityResponse,
+  JobDomainResponse,
+  PopularTagResponse,
+} from "@/types/response.types";
 import { buildJobSearchPath } from "@/utils/jobSearch";
 import { getAllCitiesApi } from "@/services/cityApi";
 import { getPopularTagsApi } from "@/services/tagApi";
-import { getCityLabel } from "@/constants";
+import { getTopJobDomainsApi } from "@/services/jobDomainApi";
+import { getCityLabel, getJobDomainLabel } from "@/constants";
 
 interface SearchFormValues {
   city?: string;
@@ -26,43 +31,37 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
 
   // State lưu danh sách thành phố để hiển thị trong dropdown
   const [cities, setCities] = useState<CityResponse[]>([]);
-  // State lưu danh sách tag phổ biến để hiển thị gợi ý tìm kiếm
+  // State lưu danh sách tag phổ biến để hiển thị gợi ý trong ô input tìm kiếm
   const [popularTags, setPopularTags] = useState<PopularTagResponse[]>([]);
+  // State lưu danh sách job domain hot (nhiều job nhất) để hiển thị gợi ý tag bên dưới form
+  const [topJobDomains, setTopJobDomains] = useState<JobDomainResponse[]>([]);
 
   // Sử dụng Ant Design Form để quản lý form tìm kiếm
   const [form] = Form.useForm<SearchFormValues>();
 
-  
-  // Khi component được mount lên thì sẽ gọi API để lấy danh sách thành phố và tag phổ biến
-  useEffect(() => {
+  // Số lượng job domain hot hiển thị làm gợi ý
+  const TOP_JOB_DOMAIN_LIMIT = 6;
 
+  // Khi component được mount lên thì sẽ gọi API để lấy danh sách thành phố, tag phổ biến và job domain hot
+  useEffect(() => {
     const loadMetadata = async () => {
       try {
-        // Gọi API để lấy danh sách thành phố và tag phổ biến cùng lúc
-        const [citiesResponse, tagsResponse] = await Promise.all([
-          getAllCitiesApi(),
-          getPopularTagsApi(),
-        ]);
+        const [citiesResponse, tagsResponse, topDomainsResponse] =
+          await Promise.all([
+            getAllCitiesApi(),
+            getPopularTagsApi(),
+            getTopJobDomainsApi(TOP_JOB_DOMAIN_LIMIT),
+          ]);
 
-        // console.log("Cities API response:", citiesResponse);
-        // console.log("Popular Tags API response:", tagsResponse);
-
-        // Cập nhật state với dữ liệu nhận được từ API
         setCities(citiesResponse.data.result ?? []);
         setPopularTags(tagsResponse.data.result ?? []);
+        setTopJobDomains(topDomainsResponse.data.result ?? []);
       } catch (error) {
         console.error("Error loading search metadata:", error);
-      } 
+      }
     };
     loadMetadata();
   }, []);
-
-  // Sử dụng useMemo để tính toán danh sách tag gợi ý dựa trên danh sách tag phổ biến
-  const suggestedTags = useMemo(() => {
-    return popularTags
-      .filter((tag) => tag.category === "Skill and Expertise")
-      .slice(0, 4);
-  }, [popularTags]);
 
   // Hàm xử lý khi người dùng submit form tìm kiếm
   const handleSearchNavigation = (values: SearchFormValues) => {
@@ -74,7 +73,7 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
     );
   };
 
-  // Hàm xử lý khi người dùng click vào một tag gợi ý
+  // Hàm xử lý khi người dùng click vào một tag gợi ý trong ô input tìm kiếm (PopularTag)
   const handleTagNavigation = (tag: PopularTagResponse) => {
     switch (tag.category) {
       // Nếu ấn tag liên quan đến công ty thì sẽ điều hướng đến trang chi tiết công ty đó
@@ -92,6 +91,11 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
       default:
         break;
     }
+  };
+
+  // Khi click vào tag job domain thì điều hướng sang trang tìm kiếm việc làm và truyền jobDomainId qua query string
+  const handleJobDomainTagClick = (domain: JobDomainResponse) => {
+    navigate(`${buildJobSearchPath({})}?jobDomainId=${domain.id}`);
   };
 
   return (
@@ -164,22 +168,24 @@ const SearchFormHome = ({ totalJobs }: SearchFormHomeProps) => {
             </Col>
           </Row>
         </Form>
-        {/* Hiển thị danh sách tag gợi ý */}
-        <div className="search-form__suggest">
-          <span>{t("jobSearch.suggestions")}</span>
-          <div className="search-form__list-tag">
-            {suggestedTags.map((tag) => (
-              <button
-                type="button"
-                className="search-form__tag"
-                key={`${tag.id}-${tag.name}`}
-                onClick={() => handleTagNavigation(tag)}
-              >
-                {tag.name}
-              </button>
-            ))}
+        {/* Hiển thị danh sách job domain hot làm gợi ý — click sẽ điều hướng tới trang tìm việc kèm bộ lọc jobDomainId */}
+        {topJobDomains.length > 0 && (
+          <div className="search-form__suggest">
+            <span>{t("jobSearch.suggestions")}</span>
+            <div className="search-form__list-tag">
+              {topJobDomains.map((domain) => (
+                <button
+                  type="button"
+                  className="search-form__tag"
+                  key={domain.id}
+                  onClick={() => handleJobDomainTagClick(domain)}
+                >
+                  {getJobDomainLabel(domain.domainName, t)}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

@@ -24,7 +24,7 @@ function ContactEmployerForm() {
     { value: "Facebook", label: "Facebook" },
     { value: "Linkedin", label: "Linkedin" },
     { value: "Email", label: "Email" },
-    { value: "Đội ngũ tư vấn của ITviec", label: "Đội ngũ tư vấn của ITviec" },
+    { value: "Đội ngũ tư vấn của NHIEUviec", label: "Đội ngũ tư vấn của NHIEUviec" },
     { value: "Bạn bè giới thiệu", label: "Bạn bè giới thiệu" },
     { value: "Khác", label: "Khác" },
   ];

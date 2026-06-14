@@ -48,10 +48,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               1.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -72,10 +72,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               2.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -96,10 +96,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               3.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -120,10 +120,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               4.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -144,10 +144,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               5.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -168,10 +168,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               6.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -192,10 +192,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               7.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -216,10 +216,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               8.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -240,10 +240,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               9.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">
@@ -264,10 +264,10 @@ function SwiperFeedback() {
           <div className="swiper-feedbacks__itemSw">
             <p className="swiper-feedbacks__itemSw-content">
               10.Chúng tôi đã tuyển dụng được nhiều ứng viên đủ tiêu chuẩn thông
-              qua các tin đăng tuyển dụng trên ITviec. ITviec cực kỳ chuyên
-              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài trong
-              lĩnh vực IT. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
-              sóc khách hàng của ITviec
+              qua các tin đăng tuyển dụng trên NHIEUviec. NHIEUviec cực kỳ chuyên
+              nghiệp, hữu ích và thân thiện trong việc thu hút nhân tài đa
+              ngành. Thật tuyệt vời khi được làm việc cùng đội ngũ chăm
+              sóc khách hàng của NHIEUviec
             </p>
             <div className="swiper-feedbacks__itemSw-author">
               <div className="swiper-feedbacks__itemSw-left">

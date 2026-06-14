@@ -289,7 +289,7 @@
     "emailError": "Please provide your company email!",
     "phonePlaceholder": "Phone number",
     "phoneError": "Please provide your phone number!",
-    "sourcePlaceholder": "How did you hear about ITviec?",
+    "sourcePlaceholder": "How did you hear about NHIEUviec?",
     "companyNamePlaceholder": "Company name",
     "companyNameError": "Please enter your company name!",
     "companyAddressPlaceholder": "Company address",
@@ -319,65 +319,65 @@
   },
   "home": {
     "hero": {
-      "title": "Hire IT Talent in Vietnam with NHIEUviec",
-      "description": "With deep expertise in the IT field and specialized skills, we can help you reach and hire the best IT candidates.",
+      "title": "Hire Top Talent in Vietnam with NHIEUviec",
+      "description": "With deep expertise in the job market and specialized skills, we can help you reach and hire the best candidates.",
       "contactBtn": "Contact Us",
       "loginText": "Sign in to post jobs",
       "loginBtn": "Sign In"
     },
     "different": {
       "title": "What makes NHIEUviec different?",
-      "desc": "NHIEUviec is the leading recruitment platform and database for IT professionals in Vietnam.",
-      "stat1": "IT Companies and Enterprises",
+      "desc": "NHIEUviec is the leading multi-industry recruitment platform and talent database in Vietnam.",
+      "stat1": "Companies and Enterprises",
       "stat2": "Resumes sent to Employers",
       "stat3": "Senior Candidate Profiles"
     },
     "services": {
-      "title": "Premium Services for IT Employers",
+      "title": "Premium Services for Employers",
       "jobPosting": {
         "title": "Job Posting",
-        "desc": "Post IT job openings, easily manage candidate profiles with an intuitive interface, dedicated support team, and powerful tools from NHIEUviec",
-        "feature1": "Increase opportunities to reach quality IT candidates from ITviec",
-        "feature2": "Attract candidates matching your IT skill requirements"
+        "desc": "Post job openings, easily manage candidate profiles with an intuitive interface, dedicated support team, and powerful tools from NHIEUviec",
+        "feature1": "Increase opportunities to reach quality candidates from NHIEUviec",
+        "feature2": "Attract candidates matching your skill requirements"
       },
       "aiMatch": {
         "title": "AI Match Candidate Suggestions",
-        "desc": "Connect with a diverse, active pool of IT candidates. Easily reach candidates with simple actions. Unlock to help find the right candidates.",
+        "desc": "Connect with a diverse, active pool of candidates. Easily reach candidates with simple actions. Unlock to help find the right candidates.",
         "feature1": "The most suitable candidates are selected based on skills, experience, job requirements and more",
-        "feature2": "Only connects employers with IT talents who are actively looking for new opportunities",
+        "feature2": "Only connects employers with talents who are actively looking for new opportunities",
         "learnMore": "Learn more about AI Match"
       },
       "branding": {
         "title": "Employer Branding",
-        "desc": "Enhance your employer brand recognition, reach IT professionals on NHIEUviec through special touchpoints, and connect with top IT candidates in Vietnam",
+        "desc": "Enhance your employer brand recognition, reach professionals on NHIEUviec through special touchpoints, and connect with top candidates in Vietnam",
         "topEmployer": {
           "title": "Top Employer",
           "desc": "The most suitable candidates are selected based on skills, experience, job requirements and more"
         },
         "featuredEmployer": {
           "title": "Featured Employer",
-          "desc": "Only connects employers with IT talents who are actively looking for new opportunities"
+          "desc": "Only connects employers with talents who are actively looking for new opportunities"
         }
       },
-      "ctaText": "Experience ITviec services today",
+      "ctaText": "Experience NHIEUviec services today",
       "ctaBtn": "Contact Us"
     },
     "topEmployers": {
-      "title": "Top Companies at ITviec",
-      "desc": "Our employers and partners include leading IT companies and innovative startups",
+      "title": "Top Companies at NHIEUviec",
+      "desc": "Our employers and partners include leading companies across industries and innovative startups",
       "feedback": "What do our clients say about us?"
     },
     "contact": {
-      "title": "Find the Right IT Talent",
-      "desc": "Leave your contact information to receive consultation from ITviec's Customer Care team.",
+      "title": "Find the Right Talent",
+      "desc": "Leave your contact information to receive consultation from NHIEUviec's Customer Care team.",
       "hotlineHCM": "Ho Chi Minh Hotline",
       "hotlineHN": "Hanoi Hotline",
       "workingHours": "Working Hours",
       "workingHoursValue": "Mon - Fri | 8:30 - 17:00"
     },
     "excite": {
-      "title": "Ready to Excite the IT Industry in Vietnam with Quality Recruitment",
-      "desc": "Starting in 2013, ITviec's mission has always been to focus on quality IT recruitment. We help IT professionals advance their careers and help businesses find great candidates. Join us in exciting the IT industry in Vietnam with quality recruitment!"
+      "title": "Ready to Excite the Recruitment Industry in Vietnam",
+      "desc": "Starting in 2013, NHIEUviec's mission has always been to focus on quality recruitment across all industries. We help professionals advance their careers and help businesses find great candidates. Join us in transforming recruitment in Vietnam!"
     }
   }
 }

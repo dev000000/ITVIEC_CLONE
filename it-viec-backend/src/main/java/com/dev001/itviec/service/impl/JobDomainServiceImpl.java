@@ -43,6 +43,14 @@ public class JobDomainServiceImpl implements JobDomainService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<JobDomainResponse> getTopJobDomains(int limit) {
+        int safeLimit = Math.max(1, Math.min(limit, 20));
+        Pageable pageable = PageRequest.of(0, safeLimit);
+        return jobDomainMapper.toJobDomainResponse(jobDomainRepository.findTopActiveDomainsByActiveJobCount(pageable));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public PageResponse<JobDomainAdminResponse> getAdminJobDomains(
             SkillStatus status, String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

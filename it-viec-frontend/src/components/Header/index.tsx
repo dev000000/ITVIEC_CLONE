@@ -25,11 +25,11 @@ import { useTranslation } from "react-i18next";
 import { logoutApi } from "@/services/authApi";
 import { useIsSeekerLoggedIn } from "@/hooks/use-is-seeker-logged-in";
 const jobItemsStatic = {
-  header: "Việc làm IT",
+  header: "Việc làm",
   items: [
     {
       id: "skillchild1",
-      label: "Việc làm IT theo kỹ năng",
+      label: "Việc làm theo kỹ năng",
       link: "/tim-viec-lam-it",
       child: [
         {
@@ -173,7 +173,7 @@ const jobItemsStatic = {
     },
     {
       id: "rankchild1",
-      label: "Việc làm IT theo cấp bậc",
+      label: "Việc làm theo cấp bậc",
       link: "/viec-lam-it-theo-cap-bac",
       child: [
         {
@@ -232,7 +232,7 @@ const jobItemsStatic = {
     },
     {
       id: "companychild1",
-      label: "Việc làm IT theo công ty",
+      label: "Việc làm theo công ty",
       link: "/viec-lam-it-theo-ten-cong-ty",
       child: [
         {
@@ -291,7 +291,7 @@ const jobItemsStatic = {
     },
     {
       id: "citiechild1",
-      label: "Việc làm IT theo thành phố",
+      label: "Việc làm theo thành phố",
       link: "",
       child: [
         {
@@ -326,22 +326,22 @@ const blogItemsStatic = {
   items: [
     {
       id: "salaryreportchild1",
-      label: "Báo Cáo Lương IT",
+      label: "Báo Cáo Lương",
       link: "/bao-cao-luong-it",
       child: [
         {
           id: 1,
-          label: "Báo Cáo Lương IT 2024-2025",
+          label: "Báo Cáo Lương 2024-2025",
           link: "bao-cao/luong-it-va-thi-truong-tuyen-dung-it-vietnam",
         },
         {
           id: 2,
-          label: "Báo Cáo Lương IT 2023-2024",
+          label: "Báo Cáo Lương 2023-2024",
           link: "/bao-cao-luong-it-2023-2024/",
         },
         {
           id: 3,
-          label: "Báo Cáo Lương IT 2022-2023",
+          label: "Báo Cáo Lương 2022-2023",
           link: "/bao-cao-luong-it-2022-2023/",
         },
       ],
@@ -350,7 +350,7 @@ const blogItemsStatic = {
     },
     {
       id: "itcareerchild1",
-      label: "Sự Nghiệp IT",
+      label: "Sự Nghiệp",
       link: "/blog/category/su-nghiep-it/",
       child: [],
       type: 1,
@@ -366,7 +366,7 @@ const blogItemsStatic = {
     },
     {
       id: "expertisechild1",
-      label: "Chuyên Môn IT",
+      label: "Chuyên Môn",
       link: "/blog/category/chuyen-mon-it/",
       child: [],
       type: 1,
@@ -376,47 +376,47 @@ const blogItemsStatic = {
   link: "/blog/",
 };
 const companyItemsStatic = {
-  header: "Top Công ty IT",
+  header: "Top Công ty",
   link: "/cong-ty-it-tot-nhat-vietnam",
   items: [
     {
       id: "topcompanychild1",
-      label: "Công Ty IT tốt nhất",
+      label: "Công Ty tốt nhất",
       link: "/cong-ty-it-tot-nhat-vietnam",
       child: [
         {
           id: 1,
-          label: "Công ty IT tốt nhất 2025",
+          label: "Công ty tốt nhất 2025",
           link: "/cong-ty-it-tot-nhat-vietnam",
         },
         {
           id: 2,
-          label: "Công ty IT tốt nhất 2024",
+          label: "Công ty tốt nhất 2024",
           link: "/cong-ty-it-tot-nhat-vietnam-2024",
         },
         {
           id: 3,
-          label: "Công ty IT tốt nhất 2023",
+          label: "Công ty tốt nhất 2023",
           link: "/cong-ty-it-tot-nhat-vietnam-2023",
         },
         {
           id: 4,
-          label: "Công ty IT tốt nhất 2022",
+          label: "Công ty tốt nhất 2022",
           link: "/cong-ty-it-tot-nhat-vietnam-2022",
         },
         {
           id: 5,
-          label: "Công ty IT tốt nhất 2021",
+          label: "Công ty tốt nhất 2021",
           link: "/cong-ty-it-tot-nhat-vietnam-2021",
         },
         {
           id: 6,
-          label: "Công ty IT tốt nhất 2020",
+          label: "Công ty tốt nhất 2020",
           link: "/cong-ty-it-tot-nhat-vietnam-2020",
         },
         {
           id: 7,
-          label: "Công ty IT tốt nhất 2019",
+          label: "Công ty tốt nhất 2019",
           link: "/cong-ty-it-tot-nhat-vietnam-2019",
         },
       ],
@@ -541,7 +541,7 @@ const Header = ({ type }: HeaderProps) => {
           <div className="header__flex">
             <div className="header__logo">
               <Link to="/">
-                <img src={logo} alt="logo itviec" />
+                <img src={logo} alt="logo nhieuviec" />
               </Link>
             </div>
             <div className="header__nav">
@@ -747,7 +747,7 @@ const Header = ({ type }: HeaderProps) => {
             </div>
             <div className="header__logo">
               <Link to="/">
-                <img src={logo} alt="logo itviec" />
+                <img src={logo} alt="logo nhieuviec" />
               </Link>
             </div>
             <div className="header__login-mobile">

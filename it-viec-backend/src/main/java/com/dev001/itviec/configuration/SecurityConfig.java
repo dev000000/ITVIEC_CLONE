@@ -31,6 +31,7 @@ public class SecurityConfig {
         "/api/v1/cities",
         "/api/v1/skills",
         "/api/v1/job-domains",
+        "/api/v1/job-domains/top",
         "/api/v1/industries",
         "/api/v1/countries",
         "/api/v1/companies",

@@ -8,4 +8,10 @@ export const getAllJobDomainsApi = () => {
   return apiClient.get<APIResponse<JobDomainResponse[]>>(API_PATH);
 };
 
-export default { getAllJobDomainsApi };
+export const getTopJobDomainsApi = (limit: number = 6) => {
+  return apiClient.get<APIResponse<JobDomainResponse[]>>(`${API_PATH}/top`, {
+    params: { limit },
+  });
+};
+
+export default { getAllJobDomainsApi, getTopJobDomainsApi };

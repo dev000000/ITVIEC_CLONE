@@ -621,6 +621,14 @@ VALUES (
     '2025-06-22 10:10:41'
   ),
   (
+    'a1b2c3d4-e5f6-11ee-b1c9-0242ac120029',
+    'seeker20@example.com',
+    '$2b$10$dTX/bVkznNo72Fh3d.bz4uGglkSyM9QHSzk/uOoqzYfq3a7hA3ani',
+    'SEEKER',
+    'ACTIVE',
+    '2025-06-25 09:00:00'
+  ),
+  (
     '00000000-0000-0000-0000-000000000001',
     'admin@example.com',
     '$2b$10$jV0YhD2FctnfQcuuaCQWf.DjHIaIzmJUUK3QtXbFg3gRB/dg5SbPK',
@@ -646,7 +654,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130001',
     'a1b2c3d4-e5f6-11ee-b1a1-0242ac120001',
-    'Vuong Van A',
+    'Vương Đắc Tú',
     'Fullstack Developer',
     '0187127876',
     '2004-06-27',
@@ -660,7 +668,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130002',
     'a1b2c3d4-e5f6-11ee-b1b1-0242ac120011',
-    'Nguyễn Minh B',
+    'Nguyễn Minh Bách',
     'Backend Developer (Java)',
     '0912345678',
     '2002-02-14',
@@ -674,7 +682,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130003',
     'a1b2c3d4-e5f6-11ee-b1b2-0242ac120012',
-    'Trần Thu C',
+    'Trần Thu Trang',
     'Frontend Developer (React)',
     '0987654321',
     '2001-11-05',
@@ -688,7 +696,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130004',
     'a1b2c3d4-e5f6-11ee-b1b3-0242ac120013',
-    'Lê Hoàng D',
+    'Lê Hoàng Dư',
     'Fullstack JS (Node/React)',
     '0901122334',
     '2000-07-19',
@@ -702,7 +710,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130005',
     'a1b2c3d4-e5f6-11ee-b1b4-0242ac120014',
-    'Phạm Quỳnh E',
+    'Phạm Quỳnh Lan',
     'QA/QC Engineer',
     '0911223344',
     '2001-04-22',
@@ -716,7 +724,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130006',
     'a1b2c3d4-e5f6-11ee-b1b5-0242ac120015',
-    'Đỗ Văn F',
+    'Đỗ Văn Phúc',
     'DevOps/Cloud Engineer',
     '0933445566',
     '1999-09-09',
@@ -730,7 +738,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130007',
     'a1b2c3d4-e5f6-11ee-b1b6-0242ac120016',
-    'Bùi Thảo G',
+    'Bùi Thảo Giang',
     'Data Analyst',
     '0977112233',
     '2002-12-01',
@@ -744,7 +752,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130008',
     'a1b2c3d4-e5f6-11ee-b1b7-0242ac120017',
-    'Vũ Quốc H',
+    'Vũ Quốc Hưng',
     'Mobile Developer (Flutter)',
     '0966887799',
     '2003-03-03',
@@ -758,7 +766,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130009',
     'a1b2c3d4-e5f6-11ee-b1b8-0242ac120018',
-    'Hoàng Gia I',
+    'Hoàng Gia Linh',
     'Python Developer',
     '0955667788',
     '2001-06-10',
@@ -772,7 +780,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130010',
     'a1b2c3d4-e5f6-11ee-b1b9-0242ac120019',
-    'Phan Mỹ K',
+    'Phan Mỹ Khánh',
     'UI/UX Designer',
     '0944556677',
     '2000-01-28',
@@ -786,7 +794,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130011',
     'a1b2c3d4-e5f6-11ee-b1c0-0242ac120020',
-    'Ngô Đức L',
+    'Ngô Đức Linh',
     'Golang Backend',
     '0922334455',
     '1999-05-15',
@@ -800,7 +808,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130012',
     'a1b2c3d4-e5f6-11ee-b1c1-0242ac120021',
-    'Đinh Hà M',
+    'Đinh Hà Mạnh',
     'Android (Kotlin)',
     '0919001122',
     '2002-08-02',
@@ -814,7 +822,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130013',
     'a1b2c3d4-e5f6-11ee-b1c2-0242ac120022',
-    'Phùng Trọng ',
+    'Phùng Trọng Tú',
     'Rust/Systems Dev',
     '0933111444',
     '1998-10-20',
@@ -828,7 +836,7 @@ VALUES -- seeker1
   (
     'a1b2c3d4-e5f6-11ee-s1ek-0111ac130014',
     'a1b2c3d4-e5f6-11ee-b1c3-0242ac120023',
-    'Vũ Lan O',
+    'Vũ Lan Oanh',
     'NodeJS/NestJS Backend',
     '0909090909',
     '2001-03-30',
@@ -837,6 +845,20 @@ VALUES -- seeker1
     'Liên Chiểu, Đà Nẵng',
     'https://vu-lan.dev',
     'Ưu tiên REST/gRPC chuẩn hoá, testing và bảo trì lâu dài.'
+  ),
+  -- seeker20
+  (
+    'a1b2c3d4-e5f6-11ee-s1ek-0111ac130020',
+    'a1b2c3d4-e5f6-11ee-b1c9-0242ac120029',
+    'Trịnh Khánh Phú',
+    'Software Engineer',
+    '0888990011',
+    '2000-10-15',
+    'MALE',
+    24,
+    'Thanh Xuân, Hà Nội',
+    'https://github.com/khanhp-dev',
+    'Đang tìm kiếm cơ hội mới phù hợp với định hướng phát triển bản thân.'
   );
 INSERT INTO seeker_skills (seeker_id, skill_id)
 VALUES -- seeker1
@@ -4545,4 +4567,1309 @@ INSERT INTO popular_tags (category, company_id)
 SELECT 'COMPANY', id
 FROM companies;
 
+-- ========== DIVERSE DOMAIN JOBS (non-IT focus) ==========
+INSERT INTO jobs (
+    company_id,
+    title,
+    slug,
+    job_reason,
+    job_description,
+    job_requirements,
+    why_join_us,
+    location,
+    city_id,
+    job_domain_id,
+    salary_min,
+    salary_max,
+    salary_currency,
+    job_type,
+    experience_level,
+    posted_at,
+    expires_at,
+    status
+  )
+VALUES
+  -- (30) Food and Beverage - Quản lý nhà hàng
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000001',
+    'Quản lý Nhà hàng (Restaurant Manager)',
+    'quan-ly-nha-hang-restaurant-manager-30',
+    '', '', '', '',
+    'Quận Hoàn Kiếm, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Food and Beverage' LIMIT 1),
+    15000000, 25000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-01 08:00:00', '2025-07-01 08:00:00', 'ACTIVE'
+  ),
+  -- (31) Tourism and Hospitality - Hướng dẫn viên du lịch
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000002',
+    'Hướng dẫn viên Du lịch Quốc tế (International Tour Guide)',
+    'huong-dan-vien-du-lich-quoc-te-international-tour-guide-31',
+    '', '', '', '',
+    'Quận Hải Châu, Đà Nẵng',
+    (SELECT id FROM cities WHERE city_name = 'Đà Nẵng' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Tourism and Hospitality Services' LIMIT 1),
+    12000000, 20000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-02 08:00:00', '2025-07-02 08:00:00', 'ACTIVE'
+  ),
+  -- (32) Education and Training - Giảng viên tiếng Anh
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000003',
+    'Giảng viên Tiếng Anh (English Lecturer)',
+    'giang-vien-tieng-anh-english-lecturer-32',
+    '', '', '', '',
+    'Quận Cầu Giấy, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Education and Training' LIMIT 1),
+    18000000, 30000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-03 08:00:00', '2025-07-03 08:00:00', 'ACTIVE'
+  ),
+  -- (33) Healthcare - Dược sĩ
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000004',
+    'Dược sĩ Lâm sàng (Clinical Pharmacist)',
+    'duoc-si-lam-sang-clinical-pharmacist-33',
+    '', '', '', '',
+    'Quận Bình Thạnh, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Healthcare' LIMIT 1),
+    20000000, 35000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-04 08:00:00', '2025-07-04 08:00:00', 'ACTIVE'
+  ),
+  -- (34) Real Estate - Chuyên viên kinh doanh BĐS
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000005',
+    'Chuyên viên Kinh doanh Bất động sản (Real Estate Sales Executive)',
+    'chuyen-vien-kinh-doanh-bat-dong-san-real-estate-sales-34',
+    '', '', '', '',
+    'Quận 2, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Real Estate, Property and Construction' LIMIT 1),
+    10000000, 50000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-05 08:00:00', '2025-07-05 08:00:00', 'ACTIVE'
+  ),
+  -- (35) Manufacturing and Engineering - Kỹ sư cơ khí
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000006',
+    'Kỹ sư Cơ khí Chế tạo (Mechanical Engineer)',
+    'ky-su-co-khi-che-tao-mechanical-engineer-35',
+    '', '', '', '',
+    'KCN Thăng Long, Đông Anh, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Manufacturing and Engineering' LIMIT 1),
+    15000000, 28000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-06 08:00:00', '2025-07-06 08:00:00', 'ACTIVE'
+  ),
+  -- (36) Agriculture - Kỹ sư nông nghiệp
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000007',
+    'Kỹ sư Nông nghiệp Công nghệ cao (AgriTech Engineer)',
+    'ky-su-nong-nghiep-cong-nghe-cao-agritech-engineer-36',
+    '', '', '', '',
+    'Lâm Đồng',
+    (SELECT id FROM cities WHERE city_name = 'Đà Nẵng' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    12000000, 22000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-07 08:00:00', '2025-07-07 08:00:00', 'ACTIVE'
+  ),
+  -- (37) Media, Advertising and Entertainment - Content Creator
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000008',
+    'Chuyên viên Sáng tạo Nội dung (Content Creator)',
+    'chuyen-vien-sang-tao-noi-dung-content-creator-37',
+    '', '', '', '',
+    'Quận 1, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Media, Advertising and Entertainment' LIMIT 1),
+    10000000, 18000000, 'VND', 'HYBRID', 'FRESHER',
+    '2025-06-08 08:00:00', '2025-07-08 08:00:00', 'ACTIVE'
+  ),
+  -- (38) Retail and Wholesale - Trưởng ca bán hàng
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000009',
+    'Trưởng ca Bán hàng (Retail Shift Leader)',
+    'truong-ca-ban-hang-retail-shift-leader-38',
+    '', '', '', '',
+    'Quận Thanh Xuân, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Retail and Wholesale' LIMIT 1),
+    9000000, 14000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-09 08:00:00', '2025-07-09 08:00:00', 'ACTIVE'
+  ),
+  -- (39) Sports and Fitness - Huấn luyện viên thể hình
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000001',
+    'Huấn luyện viên Thể hình (Personal Trainer)',
+    'huan-luyen-vien-the-hinh-personal-trainer-39',
+    '', '', '', '',
+    'Quận Ba Đình, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Sports and Fitness' LIMIT 1),
+    8000000, 20000000, 'VND', 'ONSITE', 'FRESHER',
+    '2025-06-10 08:00:00', '2025-07-10 08:00:00', 'ACTIVE'
+  ),
+  -- (40) Insurance - Chuyên viên bồi thường bảo hiểm
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000004',
+    'Chuyên viên Bồi thường Bảo hiểm (Insurance Claims Specialist)',
+    'chuyen-vien-boi-thuong-bao-hiem-insurance-claims-specialist-40',
+    '', '', '', '',
+    'Quận Đống Đa, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Insurance' LIMIT 1),
+    14000000, 22000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-11 08:00:00', '2025-07-11 08:00:00', 'ACTIVE'
+  ),
+  -- (41) Apparel and Fashion - Thiết kế thời trang
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000005',
+    'Nhà Thiết kế Thời trang (Fashion Designer)',
+    'nha-thiet-ke-thoi-trang-fashion-designer-41',
+    '', '', '', '',
+    'Quận 3, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    15000000, 30000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-12 08:00:00', '2025-07-12 08:00:00', 'ACTIVE'
+  ),
+  -- (42) Transportation, Logistics - Quản lý kho
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000006',
+    'Quản lý Kho vận (Warehouse & Logistics Manager)',
+    'quan-ly-kho-van-warehouse-logistics-manager-42',
+    '', '', '', '',
+    'KCN Bắc Thăng Long, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Transportation, Logistics and Warehouse' LIMIT 1),
+    18000000, 30000000, 'VND', 'ONSITE', 'SENIOR',
+    '2025-06-13 08:00:00', '2025-07-13 08:00:00', 'ACTIVE'
+  ),
+  -- (43) E-commerce - Chuyên viên vận hành sàn
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000007',
+    'Chuyên viên Vận hành Sàn TMĐT (E-commerce Operations Specialist)',
+    'chuyen-vien-van-hanh-san-tmdt-ecommerce-operations-43',
+    '', '', '', '',
+    'Quận Cầu Giấy, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'E-commerce' LIMIT 1),
+    12000000, 20000000, 'VND', 'HYBRID', 'JUNIOR',
+    '2025-06-14 08:00:00', '2025-07-14 08:00:00', 'ACTIVE'
+  ),
+  -- (44) Pharmaceuticals - Trình dược viên
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000008',
+    'Trình Dược viên (Medical Representative)',
+    'trinh-duoc-vien-medical-representative-44',
+    '', '', '', '',
+    'Quận 7, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Pharmaceuticals' LIMIT 1),
+    12000000, 25000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-15 08:00:00', '2025-07-15 08:00:00', 'ACTIVE'
+  ),
+  -- (45) Creative and Design - Graphic Designer
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000009',
+    'Thiết kế Đồ hoạ (Graphic Designer)',
+    'thiet-ke-do-hoa-graphic-designer-45',
+    '', '', '', '',
+    'Quận Hai Bà Trưng, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Creative and Design' LIMIT 1),
+    10000000, 18000000, 'VND', 'HYBRID', 'FRESHER',
+    '2025-06-16 08:00:00', '2025-07-16 08:00:00', 'ACTIVE'
+  );
 
+-- Normalize dates for new diverse-domain jobs
+UPDATE jobs j
+SET posted_at = DATE_SUB(NOW(), INTERVAL ((j.id % 15) + 1) DAY),
+  expires_at = DATE_ADD(NOW(), INTERVAL ((j.id % 30) + 30) DAY),
+  published_at = DATE_SUB(NOW(), INTERVAL ((j.id % 15) + 1) DAY),
+  closed_at = NULL
+WHERE j.job_domain_id IS NOT NULL
+  AND j.status = 'ACTIVE'
+  AND j.job_reason = '';
+
+-- ========== NEW SKILLS FOR DIVERSE-DOMAIN JOBS ==========
+INSERT INTO skills (skill_name)
+VALUES ('Food Safety'),
+  ('Customer Service'),
+  ('Communication'),
+  ('Sales'),
+  ('Marketing'),
+  ('Accounting'),
+  ('Supply Chain'),
+  ('Adobe Photoshop'),
+  ('Adobe Illustrator'),
+  ('Video Editing'),
+  ('Social Media'),
+  ('TOEIC'),
+  ('Teaching'),
+  ('Pharmacy'),
+  ('AutoCAD'),
+  ('SolidWorks'),
+  ('Inventory Management'),
+  ('Negotiation'),
+  ('Nutrition'),
+  ('SEO'),
+  ('Excel'),
+  ('Leadership'),
+  ('Event Planning'),
+  ('First Aid'),
+  ('Fashion Design'),
+  ('Pattern Making');
+
+-- ========== JOB_SKILLS FOR DIVERSE-DOMAIN JOBS ==========
+-- (30) Quản lý Nhà hàng
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Food Safety', 'Customer Service', 'Leadership', 'English', 'Communication')
+WHERE j.slug = 'quan-ly-nha-hang-restaurant-manager-30';
+-- (31) Hướng dẫn viên Du lịch Quốc tế
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('English', 'Communication', 'Event Planning', 'Customer Service', 'Japanese')
+WHERE j.slug = 'huong-dan-vien-du-lich-quoc-te-international-tour-guide-31';
+-- (32) Giảng viên Tiếng Anh
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('English', 'Teaching', 'TOEIC', 'Communication')
+WHERE j.slug = 'giang-vien-tieng-anh-english-lecturer-32';
+-- (33) Dược sĩ Lâm sàng
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Pharmacy', 'English', 'Communication', 'Excel')
+WHERE j.slug = 'duoc-si-lam-sang-clinical-pharmacist-33';
+-- (34) Chuyên viên Kinh doanh BĐS
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Sales', 'Negotiation', 'Communication', 'Customer Service', 'Excel')
+WHERE j.slug = 'chuyen-vien-kinh-doanh-bat-dong-san-real-estate-sales-34';
+-- (35) Kỹ sư Cơ khí Chế tạo
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('AutoCAD', 'SolidWorks', 'English')
+WHERE j.slug = 'ky-su-co-khi-che-tao-mechanical-engineer-35';
+-- (36) Kỹ sư Nông nghiệp Công nghệ cao
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Python', 'Excel', 'English')
+WHERE j.slug = 'ky-su-nong-nghiep-cong-nghe-cao-agritech-engineer-36';
+-- (37) Chuyên viên Sáng tạo Nội dung
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Adobe Photoshop', 'Video Editing', 'Social Media', 'SEO', 'Communication')
+WHERE j.slug = 'chuyen-vien-sang-tao-noi-dung-content-creator-37';
+-- (38) Trưởng ca Bán hàng
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Customer Service', 'Sales', 'Inventory Management', 'Leadership')
+WHERE j.slug = 'truong-ca-ban-hang-retail-shift-leader-38';
+-- (39) Huấn luyện viên Thể hình
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Nutrition', 'First Aid', 'Communication', 'Customer Service')
+WHERE j.slug = 'huan-luyen-vien-the-hinh-personal-trainer-39';
+-- (40) Chuyên viên Bồi thường Bảo hiểm
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Excel', 'Communication', 'Negotiation', 'English')
+WHERE j.slug = 'chuyen-vien-boi-thuong-bao-hiem-insurance-claims-specialist-40';
+-- (41) Nhà Thiết kế Thời trang
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Fashion Design', 'Adobe Illustrator', 'Adobe Photoshop', 'Pattern Making')
+WHERE j.slug = 'nha-thiet-ke-thoi-trang-fashion-designer-41';
+-- (42) Quản lý Kho vận
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Supply Chain', 'Inventory Management', 'Excel', 'Leadership', 'English')
+WHERE j.slug = 'quan-ly-kho-van-warehouse-logistics-manager-42';
+-- (43) Chuyên viên Vận hành Sàn TMĐT
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('SEO', 'Marketing', 'Excel', 'Social Media', 'Customer Service')
+WHERE j.slug = 'chuyen-vien-van-hanh-san-tmdt-ecommerce-operations-43';
+-- (44) Trình Dược viên
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Pharmacy', 'Sales', 'Communication', 'English')
+WHERE j.slug = 'trinh-duoc-vien-medical-representative-44';
+-- (45) Thiết kế Đồ hoạ
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id
+FROM jobs j
+  JOIN skills s ON s.skill_name IN ('Adobe Photoshop', 'Adobe Illustrator', 'Figma', 'UI-UX')
+WHERE j.slug = 'thiet-ke-do-hoa-graphic-designer-45';
+
+-- ========== EXTRA JOBS: Agriculture (10), AI Software & Services (10), Apparel and Fashion (10) ==========
+INSERT INTO skills (skill_name)
+VALUES ('Agronomy'),
+  ('Soil Science'),
+  ('Irrigation'),
+  ('Crop Protection'),
+  ('Animal Husbandry'),
+  ('Aquaculture'),
+  ('Agricultural Economics'),
+  ('GIS'),
+  ('Organic Farming'),
+  ('Machine Learning'),
+  ('Deep Learning'),
+  ('NLP'),
+  ('Computer Vision'),
+  ('TensorFlow'),
+  ('PyTorch'),
+  ('MLOps'),
+  ('LLM'),
+  ('Prompt Engineering'),
+  ('Data Engineering'),
+  ('Textile Engineering'),
+  ('Garment Production'),
+  ('Quality Control'),
+  ('Merchandising'),
+  ('Sewing Technology'),
+  ('Fabric Sourcing'),
+  ('Visual Merchandising'),
+  ('Embroidery'),
+  ('Color Theory');
+
+-- ========== Agriculture — 10 jobs ==========
+INSERT INTO jobs (
+    company_id, title, slug,
+    job_reason, job_description, job_requirements, why_join_us,
+    location, city_id, job_domain_id,
+    salary_min, salary_max, salary_currency,
+    job_type, experience_level,
+    posted_at, expires_at, status
+  )
+VALUES
+  -- (46) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000001',
+    'Chuyên viên Trồng trọt (Crop Specialist)',
+    'chuyen-vien-trong-trot-crop-specialist-46',
+    '', '', '', '',
+    'Đồng Tháp',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    10000000, 18000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-01 08:00:00', '2025-07-01 08:00:00', 'ACTIVE'
+  ),
+  -- (47) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000002',
+    'Kỹ sư Thuỷ lợi Nông nghiệp (Agricultural Irrigation Engineer)',
+    'ky-su-thuy-loi-nong-nghiep-irrigation-engineer-47',
+    '', '', '', '',
+    'Cần Thơ',
+    (SELECT id FROM cities WHERE city_name = 'Đà Nẵng' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    14000000, 24000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-02 08:00:00', '2025-07-02 08:00:00', 'ACTIVE'
+  ),
+  -- (48) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000003',
+    'Chuyên viên Bảo vệ Thực vật (Crop Protection Specialist)',
+    'chuyen-vien-bao-ve-thuc-vat-crop-protection-48',
+    '', '', '', '',
+    'Bình Dương',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    12000000, 20000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-03 08:00:00', '2025-07-03 08:00:00', 'ACTIVE'
+  ),
+  -- (49) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000004',
+    'Quản lý Trang trại (Farm Manager)',
+    'quan-ly-trang-trai-farm-manager-49',
+    '', '', '', '',
+    'Lâm Đồng',
+    (SELECT id FROM cities WHERE city_name = 'Đà Nẵng' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    18000000, 30000000, 'VND', 'ONSITE', 'SENIOR',
+    '2025-06-04 08:00:00', '2025-07-04 08:00:00', 'ACTIVE'
+  ),
+  -- (50) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000005',
+    'Kỹ sư Chăn nuôi (Livestock Engineer)',
+    'ky-su-chan-nuoi-livestock-engineer-50',
+    '', '', '', '',
+    'Hà Nam',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    13000000, 22000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-05 08:00:00', '2025-07-05 08:00:00', 'ACTIVE'
+  ),
+  -- (51) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000006',
+    'Chuyên viên Thuỷ sản (Aquaculture Specialist)',
+    'chuyen-vien-thuy-san-aquaculture-specialist-51',
+    '', '', '', '',
+    'Cà Mau',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    11000000, 19000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-06 08:00:00', '2025-07-06 08:00:00', 'ACTIVE'
+  ),
+  -- (52) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000007',
+    'Nhà nghiên cứu Đất (Soil Scientist)',
+    'nha-nghien-cuu-dat-soil-scientist-52',
+    '', '', '', '',
+    'Quận Cầu Giấy, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    16000000, 28000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-07 08:00:00', '2025-07-07 08:00:00', 'ACTIVE'
+  ),
+  -- (53) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000008',
+    'Chuyên viên Nông nghiệp Hữu cơ (Organic Farming Specialist)',
+    'chuyen-vien-nong-nghiep-huu-co-organic-farming-53',
+    '', '', '', '',
+    'Đà Lạt, Lâm Đồng',
+    (SELECT id FROM cities WHERE city_name = 'Đà Nẵng' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    10000000, 18000000, 'VND', 'ONSITE', 'FRESHER',
+    '2025-06-08 08:00:00', '2025-07-08 08:00:00', 'ACTIVE'
+  ),
+  -- (54) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000009',
+    'Chuyên viên Kinh tế Nông nghiệp (Agricultural Economist)',
+    'chuyen-vien-kinh-te-nong-nghiep-agricultural-economist-54',
+    '', '', '', '',
+    'Quận Ba Đình, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    15000000, 25000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-09 08:00:00', '2025-07-09 08:00:00', 'ACTIVE'
+  ),
+  -- (55) Agriculture
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000001',
+    'Kỹ sư GIS Nông nghiệp (Agricultural GIS Engineer)',
+    'ky-su-gis-nong-nghiep-agricultural-gis-engineer-55',
+    '', '', '', '',
+    'Quận Đống Đa, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Agriculture' LIMIT 1),
+    18000000, 30000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-10 08:00:00', '2025-07-10 08:00:00', 'ACTIVE'
+  );
+
+-- ========== AI Software & Services — 10 jobs ==========
+INSERT INTO jobs (
+    company_id, title, slug,
+    job_reason, job_description, job_requirements, why_join_us,
+    location, city_id, job_domain_id,
+    salary_min, salary_max, salary_currency,
+    job_type, experience_level,
+    posted_at, expires_at, status
+  )
+VALUES
+  -- (56) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000002',
+    'Kỹ sư Machine Learning (Machine Learning Engineer)',
+    'ky-su-machine-learning-ml-engineer-56',
+    '', '', '', '',
+    'Quận 1, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    25000000, 50000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-01 08:00:00', '2025-07-01 08:00:00', 'ACTIVE'
+  ),
+  -- (57) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000003',
+    'Chuyên viên Xử lý Ngôn ngữ Tự nhiên (NLP Engineer)',
+    'chuyen-vien-xu-ly-ngon-ngu-tu-nhien-nlp-engineer-57',
+    '', '', '', '',
+    'Quận Cầu Giấy, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    22000000, 45000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-02 08:00:00', '2025-07-02 08:00:00', 'ACTIVE'
+  ),
+  -- (58) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000004',
+    'Kỹ sư Computer Vision (Computer Vision Engineer)',
+    'ky-su-computer-vision-cv-engineer-58',
+    '', '', '', '',
+    'Quận 7, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    28000000, 55000000, 'VND', 'HYBRID', 'SENIOR',
+    '2025-06-03 08:00:00', '2025-07-03 08:00:00', 'ACTIVE'
+  ),
+  -- (59) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000005',
+    'Chuyên viên MLOps (MLOps Engineer)',
+    'chuyen-vien-mlops-mlops-engineer-59',
+    '', '', '', '',
+    'Quận Nam Từ Liêm, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    20000000, 40000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-04 08:00:00', '2025-07-04 08:00:00', 'ACTIVE'
+  ),
+  -- (60) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000006',
+    'Nghiên cứu viên AI (AI Research Scientist)',
+    'nghien-cuu-vien-ai-research-scientist-60',
+    '', '', '', '',
+    'Quận Bình Thạnh, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    35000000, 70000000, 'VND', 'HYBRID', 'SENIOR',
+    '2025-06-05 08:00:00', '2025-07-05 08:00:00', 'ACTIVE'
+  ),
+  -- (61) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000007',
+    'Kỹ sư Prompt & LLM (Prompt / LLM Engineer)',
+    'ky-su-prompt-llm-engineer-61',
+    '', '', '', '',
+    'Quận Hoàn Kiếm, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    18000000, 35000000, 'VND', 'REMOTE', 'JUNIOR',
+    '2025-06-06 08:00:00', '2025-07-06 08:00:00', 'ACTIVE'
+  ),
+  -- (62) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000008',
+    'Kỹ sư Dữ liệu AI (AI Data Engineer)',
+    'ky-su-du-lieu-ai-data-engineer-62',
+    '', '', '', '',
+    'Quận Tân Bình, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    22000000, 42000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-07 08:00:00', '2025-07-07 08:00:00', 'ACTIVE'
+  ),
+  -- (63) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000009',
+    'Chuyên viên Deep Learning (Deep Learning Engineer)',
+    'chuyen-vien-deep-learning-dl-engineer-63',
+    '', '', '', '',
+    'Quận Thanh Xuân, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    25000000, 48000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-08 08:00:00', '2025-07-08 08:00:00', 'ACTIVE'
+  ),
+  -- (64) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000001',
+    'AI Product Manager',
+    'ai-product-manager-64',
+    '', '', '', '',
+    'Quận 3, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    30000000, 55000000, 'VND', 'HYBRID', 'SENIOR',
+    '2025-06-09 08:00:00', '2025-07-09 08:00:00', 'ACTIVE'
+  ),
+  -- (65) AI Software & Services
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000003',
+    'Thực tập sinh AI (AI Intern)',
+    'thuc-tap-sinh-ai-intern-65',
+    '', '', '', '',
+    'Quận Hai Bà Trưng, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'AI Software & Services' LIMIT 1),
+    6000000, 10000000, 'VND', 'ONSITE', 'FRESHER',
+    '2025-06-10 08:00:00', '2025-07-10 08:00:00', 'ACTIVE'
+  );
+
+-- ========== Apparel and Fashion — 10 jobs ==========
+INSERT INTO jobs (
+    company_id, title, slug,
+    job_reason, job_description, job_requirements, why_join_us,
+    location, city_id, job_domain_id,
+    salary_min, salary_max, salary_currency,
+    job_type, experience_level,
+    posted_at, expires_at, status
+  )
+VALUES
+  -- (66) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000004',
+    'Quản lý Sản xuất May mặc (Garment Production Manager)',
+    'quan-ly-san-xuat-may-mac-garment-production-manager-66',
+    '', '', '', '',
+    'KCN Tân Tạo, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    20000000, 35000000, 'VND', 'ONSITE', 'SENIOR',
+    '2025-06-01 08:00:00', '2025-07-01 08:00:00', 'ACTIVE'
+  ),
+  -- (67) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000005',
+    'Chuyên viên Kiểm soát Chất lượng May (QC Inspector - Garment)',
+    'chuyen-vien-kiem-soat-chat-luong-may-qc-inspector-67',
+    '', '', '', '',
+    'KCN Nhơn Trạch, Đồng Nai',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    10000000, 16000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-02 08:00:00', '2025-07-02 08:00:00', 'ACTIVE'
+  ),
+  -- (68) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000006',
+    'Chuyên viên Merchandising Thời trang (Fashion Merchandiser)',
+    'chuyen-vien-merchandising-thoi-trang-fashion-merchandiser-68',
+    '', '', '', '',
+    'Quận 1, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    14000000, 25000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-03 08:00:00', '2025-07-03 08:00:00', 'ACTIVE'
+  ),
+  -- (69) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000007',
+    'Kỹ thuật viên Rập / Mẫu (Pattern Maker)',
+    'ky-thuat-vien-rap-mau-pattern-maker-69',
+    '', '', '', '',
+    'Quận Tân Phú, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    12000000, 20000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-04 08:00:00', '2025-07-04 08:00:00', 'ACTIVE'
+  ),
+  -- (70) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000008',
+    'Trưởng nhóm May (Sewing Line Leader)',
+    'truong-nhom-may-sewing-line-leader-70',
+    '', '', '', '',
+    'KCN Bình Dương',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    9000000, 15000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-05 08:00:00', '2025-07-05 08:00:00', 'ACTIVE'
+  ),
+  -- (71) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000009',
+    'Chuyên viên Thu mua Vải (Fabric Sourcing Specialist)',
+    'chuyen-vien-thu-mua-vai-fabric-sourcing-specialist-71',
+    '', '', '', '',
+    'Quận 5, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    13000000, 22000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-06 08:00:00', '2025-07-06 08:00:00', 'ACTIVE'
+  ),
+  -- (72) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000001',
+    'Thiết kế Kỹ thuật May (Technical Fashion Designer)',
+    'thiet-ke-ky-thuat-may-technical-fashion-designer-72',
+    '', '', '', '',
+    'Quận Hai Bà Trưng, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    14000000, 24000000, 'VND', 'HYBRID', 'MID',
+    '2025-06-07 08:00:00', '2025-07-07 08:00:00', 'ACTIVE'
+  ),
+  -- (73) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000002',
+    'Chuyên viên Visual Merchandising (Visual Merchandiser)',
+    'chuyen-vien-visual-merchandising-visual-merchandiser-73',
+    '', '', '', '',
+    'Quận Hoàn Kiếm, Hà Nội',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    12000000, 20000000, 'VND', 'ONSITE', 'JUNIOR',
+    '2025-06-08 08:00:00', '2025-07-08 08:00:00', 'ACTIVE'
+  ),
+  -- (74) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000003',
+    'Kỹ sư Dệt may (Textile Engineer)',
+    'ky-su-det-may-textile-engineer-74',
+    '', '', '', '',
+    'KCN Phố Nối, Hưng Yên',
+    (SELECT id FROM cities WHERE city_name = 'Hà Nội' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    15000000, 26000000, 'VND', 'ONSITE', 'MID',
+    '2025-06-09 08:00:00', '2025-07-09 08:00:00', 'ACTIVE'
+  ),
+  -- (75) Apparel and Fashion
+  (
+    'a1b2c3d4-e5f6-11ee-c0mp-000000000004',
+    'Chuyên viên Thêu & Hoàn thiện (Embroidery & Finishing Specialist)',
+    'chuyen-vien-theu-hoan-thien-embroidery-finishing-75',
+    '', '', '', '',
+    'Quận Gò Vấp, TP Hồ Chí Minh',
+    (SELECT id FROM cities WHERE city_name = 'TP Hồ Chí Minh' LIMIT 1),
+    (SELECT id FROM job_domains WHERE domain_name = 'Apparel and Fashion' LIMIT 1),
+    8000000, 14000000, 'VND', 'ONSITE', 'FRESHER',
+    '2025-06-10 08:00:00', '2025-07-10 08:00:00', 'ACTIVE'
+  );
+
+-- Normalize dates for extra 30 jobs
+UPDATE jobs j
+SET posted_at = DATE_SUB(NOW(), INTERVAL ((j.id % 15) + 1) DAY),
+  expires_at = DATE_ADD(NOW(), INTERVAL ((j.id % 30) + 30) DAY),
+  published_at = DATE_SUB(NOW(), INTERVAL ((j.id % 15) + 1) DAY),
+  closed_at = NULL
+WHERE j.slug IN (
+  'chuyen-vien-trong-trot-crop-specialist-46',
+  'ky-su-thuy-loi-nong-nghiep-irrigation-engineer-47',
+  'chuyen-vien-bao-ve-thuc-vat-crop-protection-48',
+  'quan-ly-trang-trai-farm-manager-49',
+  'ky-su-chan-nuoi-livestock-engineer-50',
+  'chuyen-vien-thuy-san-aquaculture-specialist-51',
+  'nha-nghien-cuu-dat-soil-scientist-52',
+  'chuyen-vien-nong-nghiep-huu-co-organic-farming-53',
+  'chuyen-vien-kinh-te-nong-nghiep-agricultural-economist-54',
+  'ky-su-gis-nong-nghiep-agricultural-gis-engineer-55',
+  'ky-su-machine-learning-ml-engineer-56',
+  'chuyen-vien-xu-ly-ngon-ngu-tu-nhien-nlp-engineer-57',
+  'ky-su-computer-vision-cv-engineer-58',
+  'chuyen-vien-mlops-mlops-engineer-59',
+  'nghien-cuu-vien-ai-research-scientist-60',
+  'ky-su-prompt-llm-engineer-61',
+  'ky-su-du-lieu-ai-data-engineer-62',
+  'chuyen-vien-deep-learning-dl-engineer-63',
+  'ai-product-manager-64',
+  'thuc-tap-sinh-ai-intern-65',
+  'quan-ly-san-xuat-may-mac-garment-production-manager-66',
+  'chuyen-vien-kiem-soat-chat-luong-may-qc-inspector-67',
+  'chuyen-vien-merchandising-thoi-trang-fashion-merchandiser-68',
+  'ky-thuat-vien-rap-mau-pattern-maker-69',
+  'truong-nhom-may-sewing-line-leader-70',
+  'chuyen-vien-thu-mua-vai-fabric-sourcing-specialist-71',
+  'thiet-ke-ky-thuat-may-technical-fashion-designer-72',
+  'chuyen-vien-visual-merchandising-visual-merchandiser-73',
+  'ky-su-det-may-textile-engineer-74',
+  'chuyen-vien-theu-hoan-thien-embroidery-finishing-75'
+);
+
+-- ========== JOB_SKILLS FOR EXTRA 30 JOBS ==========
+-- (46) Chuyên viên Trồng trọt
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Agronomy', 'Crop Protection', 'Excel', 'English')
+WHERE j.slug = 'chuyen-vien-trong-trot-crop-specialist-46';
+-- (47) Kỹ sư Thuỷ lợi Nông nghiệp
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Irrigation', 'AutoCAD', 'GIS', 'English')
+WHERE j.slug = 'ky-su-thuy-loi-nong-nghiep-irrigation-engineer-47';
+-- (48) Chuyên viên Bảo vệ Thực vật
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Crop Protection', 'Agronomy', 'Excel', 'Communication')
+WHERE j.slug = 'chuyen-vien-bao-ve-thuc-vat-crop-protection-48';
+-- (49) Quản lý Trang trại
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Leadership', 'Agronomy', 'Animal Husbandry', 'Excel', 'English')
+WHERE j.slug = 'quan-ly-trang-trai-farm-manager-49';
+-- (50) Kỹ sư Chăn nuôi
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Animal Husbandry', 'Nutrition', 'Excel', 'English')
+WHERE j.slug = 'ky-su-chan-nuoi-livestock-engineer-50';
+-- (51) Chuyên viên Thuỷ sản
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Aquaculture', 'Excel', 'Communication', 'English')
+WHERE j.slug = 'chuyen-vien-thuy-san-aquaculture-specialist-51';
+-- (52) Nhà nghiên cứu Đất
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Soil Science', 'GIS', 'Python', 'Excel')
+WHERE j.slug = 'nha-nghien-cuu-dat-soil-scientist-52';
+-- (53) Chuyên viên Nông nghiệp Hữu cơ
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Organic Farming', 'Agronomy', 'Communication', 'English')
+WHERE j.slug = 'chuyen-vien-nong-nghiep-huu-co-organic-farming-53';
+-- (54) Chuyên viên Kinh tế Nông nghiệp
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Agricultural Economics', 'Excel', 'Communication', 'English')
+WHERE j.slug = 'chuyen-vien-kinh-te-nong-nghiep-agricultural-economist-54';
+-- (55) Kỹ sư GIS Nông nghiệp
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('GIS', 'Python', 'Excel', 'Agronomy')
+WHERE j.slug = 'ky-su-gis-nong-nghiep-agricultural-gis-engineer-55';
+-- (56) Kỹ sư Machine Learning
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Machine Learning', 'Python', 'TensorFlow', 'PyTorch', 'English')
+WHERE j.slug = 'ky-su-machine-learning-ml-engineer-56';
+-- (57) Chuyên viên NLP
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('NLP', 'Python', 'Machine Learning', 'LLM', 'English')
+WHERE j.slug = 'chuyen-vien-xu-ly-ngon-ngu-tu-nhien-nlp-engineer-57';
+-- (58) Kỹ sư Computer Vision
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Computer Vision', 'Deep Learning', 'Python', 'PyTorch', 'English')
+WHERE j.slug = 'ky-su-computer-vision-cv-engineer-58';
+-- (59) Chuyên viên MLOps
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('MLOps', 'Python', 'Docker', 'Machine Learning', 'English')
+WHERE j.slug = 'chuyen-vien-mlops-mlops-engineer-59';
+-- (60) Nghiên cứu viên AI
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Machine Learning', 'Deep Learning', 'Python', 'TensorFlow', 'PyTorch')
+WHERE j.slug = 'nghien-cuu-vien-ai-research-scientist-60';
+-- (61) Kỹ sư Prompt & LLM
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('LLM', 'Prompt Engineering', 'Python', 'NLP', 'English')
+WHERE j.slug = 'ky-su-prompt-llm-engineer-61';
+-- (62) Kỹ sư Dữ liệu AI
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Data Engineering', 'Python', 'Machine Learning', 'Excel', 'English')
+WHERE j.slug = 'ky-su-du-lieu-ai-data-engineer-62';
+-- (63) Chuyên viên Deep Learning
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Deep Learning', 'PyTorch', 'TensorFlow', 'Python', 'English')
+WHERE j.slug = 'chuyen-vien-deep-learning-dl-engineer-63';
+-- (64) AI Product Manager
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Machine Learning', 'Communication', 'Leadership', 'English')
+WHERE j.slug = 'ai-product-manager-64';
+-- (65) Thực tập sinh AI
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Python', 'Machine Learning', 'TensorFlow', 'English')
+WHERE j.slug = 'thuc-tap-sinh-ai-intern-65';
+-- (66) Quản lý Sản xuất May mặc
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Garment Production', 'Quality Control', 'Leadership', 'Excel', 'English')
+WHERE j.slug = 'quan-ly-san-xuat-may-mac-garment-production-manager-66';
+-- (67) QC Inspector - Garment
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Quality Control', 'Garment Production', 'Excel', 'Communication')
+WHERE j.slug = 'chuyen-vien-kiem-soat-chat-luong-may-qc-inspector-67';
+-- (68) Fashion Merchandiser
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Merchandising', 'Fashion Design', 'Communication', 'Excel', 'English')
+WHERE j.slug = 'chuyen-vien-merchandising-thoi-trang-fashion-merchandiser-68';
+-- (69) Pattern Maker
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Pattern Making', 'Sewing Technology', 'AutoCAD', 'Fashion Design')
+WHERE j.slug = 'ky-thuat-vien-rap-mau-pattern-maker-69';
+-- (70) Sewing Line Leader
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Sewing Technology', 'Leadership', 'Quality Control', 'Communication')
+WHERE j.slug = 'truong-nhom-may-sewing-line-leader-70';
+-- (71) Fabric Sourcing Specialist
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Fabric Sourcing', 'Negotiation', 'Excel', 'English', 'Communication')
+WHERE j.slug = 'chuyen-vien-thu-mua-vai-fabric-sourcing-specialist-71';
+-- (72) Technical Fashion Designer
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Fashion Design', 'Adobe Illustrator', 'Pattern Making', 'Color Theory')
+WHERE j.slug = 'thiet-ke-ky-thuat-may-technical-fashion-designer-72';
+-- (73) Visual Merchandiser
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Visual Merchandising', 'Adobe Photoshop', 'Communication', 'Color Theory')
+WHERE j.slug = 'chuyen-vien-visual-merchandising-visual-merchandiser-73';
+-- (74) Kỹ sư Dệt may
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Textile Engineering', 'Quality Control', 'Excel', 'English')
+WHERE j.slug = 'ky-su-det-may-textile-engineer-74';
+-- (75) Chuyên viên Thêu & Hoàn thiện
+INSERT INTO job_skills (job_id, skill_id)
+SELECT j.id, s.id FROM jobs j JOIN skills s ON s.skill_name IN ('Embroidery', 'Sewing Technology', 'Quality Control', 'Communication')
+WHERE j.slug = 'chuyen-vien-theu-hoan-thien-embroidery-finishing-75';
+
+-- ========== POPULATE job_reason, job_description, job_requirements, why_join_us ==========
+
+-- (30) Quản lý Nhà hàng
+UPDATE jobs SET
+  job_reason = '<ul><li>Thu nhập hấp dẫn + thưởng doanh thu hàng tháng</li><li>Bảo hiểm sức khỏe toàn diện</li><li>Cơ hội thăng tiến lên vị trí Giám đốc vùng</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý toàn bộ hoạt động vận hành nhà hàng hàng ngày</li><li>Đào tạo, giám sát và đánh giá nhân viên phục vụ</li><li>Kiểm soát chất lượng món ăn, vệ sinh an toàn thực phẩm</li><li>Quản lý chi phí, tồn kho và lập báo cáo doanh thu</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Cao đẳng trở lên ngành Quản trị nhà hàng khách sạn hoặc tương đương</li><li>Tối thiểu 2 năm kinh nghiệm quản lý nhà hàng</li><li>Kỹ năng lãnh đạo, giao tiếp tốt</li><li>Có chứng chỉ VSATTP là lợi thế</li></ul>',
+  why_join_us = '<ul><li>Môi trường làm việc năng động, chuyên nghiệp</li><li>Thưởng doanh thu hấp dẫn theo tháng</li><li>Đào tạo nghiệp vụ quản lý bài bản</li></ul>'
+WHERE slug = 'quan-ly-nha-hang-restaurant-manager-30';
+
+-- (31) Hướng dẫn viên Du lịch Quốc tế
+UPDATE jobs SET
+  job_reason = '<ul><li>Được đi du lịch nhiều nước trên thế giới</li><li>Lương cứng + hoa hồng tour</li><li>Học hỏi đa văn hóa</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Dẫn đoàn khách quốc tế tham quan các điểm du lịch tại Việt Nam</li><li>Thuyết minh lịch sử, văn hóa bằng tiếng Anh hoặc tiếng Nhật</li><li>Lên kế hoạch lịch trình, đặt dịch vụ ăn uống, lưu trú</li><li>Xử lý các tình huống phát sinh trong tour</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Có thẻ hướng dẫn viên du lịch quốc tế</li><li>Tiếng Anh giao tiếp tốt (IELTS 6.0+ hoặc tương đương)</li><li>Yêu thích du lịch, ngoại giao, có sức khỏe tốt</li><li>Kinh nghiệm dẫn tour ít nhất 1 năm</li></ul>',
+  why_join_us = '<ul><li>Được tài trợ chi phí đi tour</li><li>Hoa hồng hấp dẫn theo số lượng khách</li><li>Cơ hội đi công tác nước ngoài</li></ul>'
+WHERE slug = 'huong-dan-vien-du-lich-quoc-te-international-tour-guide-31';
+
+-- (32) Giảng viên Tiếng Anh
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + phụ cấp giảng dạy</li><li>Môi trường học thuật quốc tế</li><li>Được đào tạo phương pháp giảng dạy hiện đại</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Giảng dạy tiếng Anh cho sinh viên đại học/cao đẳng</li><li>Xây dựng giáo trình, đề thi, tài liệu học tập</li><li>Tham gia hội thảo, nghiên cứu khoa học</li><li>Hướng dẫn sinh viên luyện thi TOEIC/IELTS</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Thạc sĩ ngành Ngôn ngữ Anh hoặc Sư phạm Anh</li><li>IELTS 7.0+ hoặc TOEFL iBT 90+</li><li>Ít nhất 2 năm kinh nghiệm giảng dạy</li><li>Kỹ năng truyền đạt, giao tiếp tốt</li></ul>',
+  why_join_us = '<ul><li>Môi trường học thuật, được nghiên cứu và phát triển chuyên môn</li><li>Phụ cấp nghiên cứu khoa học</li><li>Lịch giảng dạy linh hoạt</li></ul>'
+WHERE slug = 'giang-vien-tieng-anh-english-lecturer-32';
+
+-- (33) Dược sĩ Lâm sàng
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương tháng 13 + thưởng KPI</li><li>Bảo hiểm sức khỏe cho bản thân và gia đình</li><li>Cơ hội đào tạo chuyên sâu</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Tư vấn sử dụng thuốc cho bệnh nhân tại bệnh viện</li><li>Kiểm tra đơn thuốc, phát hiện tương tác thuốc</li><li>Phối hợp với bác sĩ trong điều trị lâm sàng</li><li>Quản lý kho dược phẩm, kiểm soát tồn kho</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học Dược chính quy</li><li>Có chứng chỉ hành nghề Dược sĩ</li><li>Kinh nghiệm 2 năm trong môi trường bệnh viện</li><li>Tiếng Anh chuyên ngành tốt</li></ul>',
+  why_join_us = '<ul><li>Được đào tạo cập nhật kiến thức dược lâm sàng quốc tế</li><li>Bảo hiểm sức khỏe cao cấp</li><li>Lộ trình thăng tiến rõ ràng</li></ul>'
+WHERE slug = 'duoc-si-lam-sang-clinical-pharmacist-33';
+
+-- (34) Chuyên viên Kinh doanh BĐS
+UPDATE jobs SET
+  job_reason = '<ul><li>Thu nhập không giới hạn (lương + hoa hồng)</li><li>Đào tạo kỹ năng bán hàng chuyên nghiệp</li><li>Thưởng nóng theo deal</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Tìm kiếm, tư vấn khách hàng mua bán bất động sản</li><li>Khảo sát thị trường, đánh giá giá trị tài sản</li><li>Đàm phán, hỗ trợ khách hàng hoàn tất thủ tục pháp lý</li><li>Chăm sóc khách hàng sau giao dịch</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Cao đẳng trở lên</li><li>Kỹ năng đàm phán, thuyết phục tốt</li><li>Ngoại hình ưa nhìn, giao tiếp lưu loát</li><li>Có kinh nghiệm BĐS là lợi thế lớn</li></ul>',
+  why_join_us = '<ul><li>Hoa hồng lên đến 40% giá trị giao dịch</li><li>Đào tạo bài bản về thị trường BĐS</li><li>Môi trường trẻ, năng động</li></ul>'
+WHERE slug = 'chuyen-vien-kinh-doanh-bat-dong-san-real-estate-sales-34';
+
+-- (35) Kỹ sư Cơ khí Chế tạo
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + phụ cấp KCN</li><li>Làm việc với máy móc, công nghệ hiện đại</li><li>Bảo hiểm đầy đủ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế, lập bản vẽ kỹ thuật bằng AutoCAD/SolidWorks</li><li>Giám sát quy trình sản xuất cơ khí chế tạo</li><li>Kiểm tra chất lượng sản phẩm theo tiêu chuẩn ISO</li><li>Bảo trì, sửa chữa máy móc thiết bị</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Cơ khí chế tạo máy</li><li>Thành thạo AutoCAD, SolidWorks</li><li>Kinh nghiệm 2-3 năm trong nhà máy sản xuất</li><li>Đọc hiểu tiếng Anh kỹ thuật</li></ul>',
+  why_join_us = '<ul><li>Được đào tạo công nghệ CNC tiên tiến</li><li>Xe đưa đón KCN</li><li>Thưởng sáng kiến cải tiến kỹ thuật</li></ul>'
+WHERE slug = 'ky-su-co-khi-che-tao-mechanical-engineer-35';
+
+-- (36) Kỹ sư Nông nghiệp Công nghệ cao
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc với nông nghiệp 4.0</li><li>Lương + nhà ở miễn phí tại nông trại</li><li>Phụ cấp đi lại</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Ứng dụng IoT, cảm biến vào giám sát cây trồng</li><li>Thu thập, phân tích dữ liệu nông nghiệp bằng Python</li><li>Quản lý hệ thống tưới tiêu tự động</li><li>Nghiên cứu giống cây trồng mới</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Nông nghiệp hoặc CNTT ứng dụng</li><li>Biết lập trình Python cơ bản</li><li>Sẵn sàng làm việc tại nông trại</li><li>Tiếng Anh đọc hiểu tài liệu kỹ thuật</li></ul>',
+  why_join_us = '<ul><li>Tiên phong trong lĩnh vực AgriTech tại Việt Nam</li><li>Được nghiên cứu và thực hành trực tiếp</li><li>Phụ cấp nhà ở, ăn uống tại nông trại</li></ul>'
+WHERE slug = 'ky-su-nong-nghiep-cong-nghe-cao-agritech-engineer-36';
+
+-- (37) Chuyên viên Sáng tạo Nội dung
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + thưởng sáng tạo</li><li>Làm việc Hybrid linh hoạt</li><li>Môi trường sáng tạo, trẻ trung</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Sản xuất nội dung hình ảnh, video cho các kênh mạng xã hội</li><li>Lên ý tưởng chiến dịch truyền thông, quảng cáo</li><li>Tối ưu SEO cho bài viết website</li><li>Phân tích hiệu quả nội dung qua các chỉ số engagement</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Thành thạo Adobe Photoshop, Premiere Pro hoặc CapCut</li><li>Có kiến thức về Social Media Marketing</li><li>Khả năng viết sáng tạo, storytelling tốt</li><li>Portfolio/kênh cá nhân là lợi thế</li></ul>',
+  why_join_us = '<ul><li>Tự do sáng tạo, không gò bó</li><li>Được tiếp cận các dự án lớn với nhiều thương hiệu</li><li>Cơ hội phát triển thành Creative Lead</li></ul>'
+WHERE slug = 'chuyen-vien-sang-tao-noi-dung-content-creator-37';
+
+-- (38) Trưởng ca Bán hàng
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + doanh số bán hàng</li><li>Chiết khấu nhân viên khi mua hàng</li><li>Thưởng tháng, quý</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý ca bán hàng, phân công nhân viên</li><li>Đảm bảo doanh số bán hàng theo chỉ tiêu</li><li>Kiểm kê hàng hóa, báo cáo tồn kho cuối ca</li><li>Xử lý khiếu nại, chăm sóc khách hàng tại cửa hàng</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp THPT trở lên</li><li>Ít nhất 1 năm kinh nghiệm bán hàng, bán lẻ</li><li>Kỹ năng quản lý nhóm, giao tiếp tốt</li><li>Chấp nhận làm ca xoay</li></ul>',
+  why_join_us = '<ul><li>Chiết khấu nhân viên hấp dẫn</li><li>Thưởng doanh số hàng tháng</li><li>Cơ hội thăng tiến lên Quản lý cửa hàng</li></ul>'
+WHERE slug = 'truong-ca-ban-hang-retail-shift-leader-38';
+
+-- (39) Huấn luyện viên Thể hình
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + hoa hồng PT sessions</li><li>Tập gym miễn phí</li><li>Môi trường năng động, khỏe mạnh</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Hướng dẫn, huấn luyện cá nhân cho hội viên</li><li>Xây dựng chương trình luyện tập và dinh dưỡng cá nhân hóa</li><li>Tư vấn, bán gói tập cho khách hàng mới</li><li>Đảm bảo an toàn tập luyện cho hội viên</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Có chứng chỉ PT (ACE, NASM hoặc tương đương)</li><li>Đam mê thể hình, sức khỏe</li><li>Có chứng chỉ sơ cấp cứu là lợi thế</li><li>Kỹ năng giao tiếp, truyền cảm hứng tốt</li></ul>',
+  why_join_us = '<ul><li>Tập gym miễn phí tại cơ sở</li><li>Hoa hồng hấp dẫn theo số buổi PT</li><li>Được đào tạo chứng chỉ quốc tế</li></ul>'
+WHERE slug = 'huan-luyen-vien-the-hinh-personal-trainer-39';
+
+-- (40) Chuyên viên Bồi thường Bảo hiểm
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương tháng 13 + thưởng cuối năm</li><li>Bảo hiểm sức khỏe cao cấp</li><li>Nghỉ phép 14+ ngày/năm</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Tiếp nhận, thẩm định hồ sơ yêu cầu bồi thường</li><li>Khảo sát hiện trường, đánh giá mức độ tổn thất</li><li>Đàm phán, giải quyết bồi thường với khách hàng</li><li>Lập báo cáo bồi thường định kỳ</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Tài chính, Bảo hiểm hoặc Luật</li><li>Kinh nghiệm 2 năm trong lĩnh vực bảo hiểm</li><li>Thành thạo Excel, kỹ năng phân tích tốt</li><li>Tiếng Anh giao tiếp</li></ul>',
+  why_join_us = '<ul><li>Gói bảo hiểm cao cấp cho nhân viên và gia đình</li><li>Lộ trình thăng tiến rõ ràng</li><li>Đào tạo chuyên môn bảo hiểm quốc tế</li></ul>'
+WHERE slug = 'chuyen-vien-boi-thuong-bao-hiem-insurance-claims-specialist-40';
+
+-- (41) Nhà Thiết kế Thời trang
+UPDATE jobs SET
+  job_reason = '<ul><li>Được sáng tạo bộ sưu tập riêng</li><li>Làm việc Hybrid linh hoạt</li><li>Cơ hội tham gia Fashion Week</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế bộ sưu tập theo mùa/trend</li><li>Nghiên cứu xu hướng thời trang, chất liệu mới</li><li>Phối hợp với bộ phận sản xuất để hiện thực hóa mẫu thiết kế</li><li>Sử dụng Adobe Illustrator, Photoshop để vẽ phác thảo</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Thiết kế Thời trang</li><li>Thành thạo Adobe Illustrator, Photoshop</li><li>Có portfolio thiết kế ấn tượng</li><li>Kinh nghiệm 2 năm trong ngành thời trang</li></ul>',
+  why_join_us = '<ul><li>Được sáng tạo tự do trong thiết kế</li><li>Cơ hội tham gia các tuần lễ thời trang</li><li>Chiết khấu sản phẩm thời trang nội bộ</li></ul>'
+WHERE slug = 'nha-thiet-ke-thoi-trang-fashion-designer-41';
+
+-- (42) Quản lý Kho vận
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + phụ cấp KCN</li><li>Bảo hiểm toàn diện</li><li>Xe đưa đón nhân viên</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý toàn bộ hoạt động kho vận, logistics</li><li>Lên kế hoạch nhập/xuất hàng, kiểm soát tồn kho</li><li>Quản lý đội ngũ nhân viên kho (10-20 người)</li><li>Tối ưu quy trình vận chuyển, giảm chi phí logistics</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Logistics, Quản trị kinh doanh</li><li>Ít nhất 3 năm kinh nghiệm quản lý kho</li><li>Thành thạo WMS, Excel nâng cao</li><li>Tiếng Anh giao tiếp tốt</li></ul>',
+  why_join_us = '<ul><li>Xe đưa đón KCN miễn phí</li><li>Cơm trưa miễn phí</li><li>Thưởng cải tiến quy trình</li></ul>'
+WHERE slug = 'quan-ly-kho-van-warehouse-logistics-manager-42';
+
+-- (43) Chuyên viên Vận hành Sàn TMĐT
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + thưởng doanh số sàn</li><li>Làm việc Hybrid</li><li>Được đào tạo bài bản về TMĐT</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Vận hành gian hàng trên Shopee, Lazada, TikTok Shop</li><li>Tối ưu listing sản phẩm, SEO sàn</li><li>Lên kế hoạch flash sale, voucher, chiến dịch marketing</li><li>Phân tích dữ liệu bán hàng, báo cáo hiệu quả</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm vận hành sàn TMĐT ít nhất 1 năm</li><li>Biết sử dụng các công cụ phân tích sàn</li><li>Thành thạo Excel, Google Sheets</li><li>Tư duy số liệu, nhạy bén với trend thị trường</li></ul>',
+  why_join_us = '<ul><li>Thưởng doanh số sàn hấp dẫn</li><li>Được đào tạo các nền tảng TMĐT mới nhất</li><li>Cơ hội phát triển lên E-commerce Manager</li></ul>'
+WHERE slug = 'chuyen-vien-van-hanh-san-tmdt-ecommerce-operations-43';
+
+-- (44) Trình Dược viên
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + hoa hồng doanh số</li><li>Xe công tác + điện thoại công ty</li><li>Bảo hiểm sức khỏe cao cấp</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Giới thiệu sản phẩm dược tới bác sĩ, nhà thuốc</li><li>Xây dựng mối quan hệ với các bệnh viện, phòng khám</li><li>Đạt chỉ tiêu doanh số theo tháng/quý</li><li>Báo cáo thông tin thị trường, đối thủ cạnh tranh</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học/Cao đẳng Dược</li><li>Kỹ năng bán hàng, thuyết trình tốt</li><li>Có xe máy và bằng lái</li><li>Tiếng Anh đọc hiểu tài liệu y khoa</li></ul>',
+  why_join_us = '<ul><li>Hoa hồng doanh số hấp dẫn</li><li>Hỗ trợ xăng xe, điện thoại</li><li>Cơ hội thăng tiến lên Trưởng vùng</li></ul>'
+WHERE slug = 'trinh-duoc-vien-medical-representative-44';
+
+-- (45) Thiết kế Đồ hoạ
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc Hybrid linh hoạt</li><li>Được sáng tạo tự do</li><li>Thiết bị làm việc hiện đại (iMac, Wacom)</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế ấn phẩm truyền thông: banner, poster, brochure</li><li>Thiết kế giao diện UI cho website, app</li><li>Chỉnh sửa hình ảnh, retouch sản phẩm</li><li>Phối hợp với team Marketing triển khai chiến dịch</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Thành thạo Adobe Photoshop, Illustrator, Figma</li><li>Có portfolio thiết kế (Behance/Dribbble là lợi thế)</li><li>Hiểu biết về UI-UX cơ bản</li><li>Tư duy thẩm mỹ, sáng tạo</li></ul>',
+  why_join_us = '<ul><li>Cung cấp thiết bị thiết kế cao cấp</li><li>Tự do sáng tạo, không gò bó style</li><li>Cơ hội thăng tiến lên Art Director</li></ul>'
+WHERE slug = 'thiet-ke-do-hoa-graphic-designer-45';
+
+-- (46) Chuyên viên Trồng trọt
+UPDATE jobs SET
+  job_reason = '<ul><li>Phụ cấp nông trại + nhà ở</li><li>Làm việc gần thiên nhiên</li><li>Bảo hiểm đầy đủ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý quy trình canh tác cây trồng theo mùa vụ</li><li>Theo dõi sâu bệnh, đề xuất phương án phòng trừ</li><li>Thu thập dữ liệu năng suất, lập báo cáo mùa vụ</li><li>Hướng dẫn kỹ thuật cho nông dân địa phương</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Nông học, Trồng trọt</li><li>Sẵn sàng làm việc tại vùng nông thôn</li><li>Kiến thức về bảo vệ thực vật, phân bón</li><li>Sử dụng Excel cơ bản</li></ul>',
+  why_join_us = '<ul><li>Hỗ trợ nhà ở tại nông trại</li><li>Phụ cấp sinh hoạt vùng sâu</li><li>Được đào tạo kỹ thuật canh tác hiện đại</li></ul>'
+WHERE slug = 'chuyen-vien-trong-trot-crop-specialist-46';
+
+-- (47) Kỹ sư Thuỷ lợi Nông nghiệp
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh ngành thuỷ lợi</li><li>Phụ cấp công trình</li><li>Bảo hiểm toàn diện</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế hệ thống tưới tiêu cho vùng nông nghiệp</li><li>Giám sát thi công công trình thuỷ lợi</li><li>Sử dụng AutoCAD, GIS để lập bản đồ thuỷ văn</li><li>Đánh giá nguồn nước, đề xuất giải pháp tiết kiệm nước</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Thuỷ lợi, Kỹ thuật Nông nghiệp</li><li>Thành thạo AutoCAD, phần mềm GIS</li><li>Kinh nghiệm 2 năm thiết kế hệ thống tưới</li><li>Đọc hiểu tài liệu kỹ thuật tiếng Anh</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp công trình hấp dẫn</li><li>Được đi thực địa nhiều vùng miền</li><li>Đóng góp trực tiếp vào phát triển nông nghiệp bền vững</li></ul>'
+WHERE slug = 'ky-su-thuy-loi-nong-nghiep-irrigation-engineer-47';
+
+-- (48) Chuyên viên Bảo vệ Thực vật
+UPDATE jobs SET
+  job_reason = '<ul><li>Phụ cấp độc hại</li><li>Bảo hiểm sức khỏe nâng cao</li><li>Cơ hội nghiên cứu thực địa</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Khảo sát, chẩn đoán dịch hại trên cây trồng</li><li>Đề xuất biện pháp phòng trừ sâu bệnh an toàn</li><li>Hướng dẫn sử dụng thuốc BVTV đúng cách</li><li>Lập báo cáo tình hình dịch bệnh theo vùng</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Bảo vệ Thực vật hoặc Nông học</li><li>Kiến thức vững về côn trùng học, bệnh cây</li><li>Sẵn sàng đi công tác vùng nông thôn</li><li>Kỹ năng phân tích, báo cáo tốt</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp độc hại theo quy định</li><li>Được tham gia hội thảo khoa học nông nghiệp</li><li>Lộ trình phát triển chuyên gia BVTV</li></ul>'
+WHERE slug = 'chuyen-vien-bao-ve-thuc-vat-crop-protection-48';
+
+-- (49) Quản lý Trang trại
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cao + nhà ở miễn phí tại trang trại</li><li>Quản lý đội ngũ 20-50 người</li><li>Thưởng năng suất mùa vụ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý toàn bộ hoạt động trang trại (trồng trọt/chăn nuôi)</li><li>Lập kế hoạch sản xuất, kiểm soát chi phí</li><li>Quản lý nhân sự, phân công công việc</li><li>Đảm bảo tiêu chuẩn chất lượng, ATVSTP</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Nông nghiệp, Chăn nuôi</li><li>Ít nhất 3 năm kinh nghiệm quản lý trang trại</li><li>Kỹ năng lãnh đạo, quản lý nhân sự tốt</li><li>Thành thạo Excel, có kiến thức tài chính cơ bản</li></ul>',
+  why_join_us = '<ul><li>Nhà ở, ăn uống miễn phí tại trang trại</li><li>Thưởng năng suất hấp dẫn</li><li>Được tự chủ trong quản lý vận hành</li></ul>'
+WHERE slug = 'quan-ly-trang-trai-farm-manager-49';
+
+-- (50) Kỹ sư Chăn nuôi
+UPDATE jobs SET
+  job_reason = '<ul><li>Phụ cấp vùng + nhà ở</li><li>Bảo hiểm sức khỏe</li><li>Thưởng sản lượng</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý kỹ thuật chăn nuôi gia súc, gia cầm</li><li>Xây dựng khẩu phần dinh dưỡng cho vật nuôi</li><li>Theo dõi sức khỏe đàn, phòng chống dịch bệnh</li><li>Báo cáo sản lượng, chi phí thức ăn chăn nuôi</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Chăn nuôi, Thú y</li><li>Kinh nghiệm 2 năm trong trang trại chăn nuôi</li><li>Kiến thức về dinh dưỡng động vật</li><li>Sử dụng Excel quản lý dữ liệu</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp vùng sâu hấp dẫn</li><li>Nhà ở miễn phí</li><li>Lộ trình lên Trưởng trại</li></ul>'
+WHERE slug = 'ky-su-chan-nuoi-livestock-engineer-50';
+
+-- (51) Chuyên viên Thuỷ sản
+UPDATE jobs SET
+  job_reason = '<ul><li>Phụ cấp vùng biển</li><li>Bảo hiểm toàn diện</li><li>Thưởng sản lượng nuôi trồng</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý kỹ thuật nuôi trồng thuỷ sản (tôm, cá)</li><li>Kiểm tra chất lượng nước, xử lý môi trường ao nuôi</li><li>Theo dõi tăng trưởng, phòng bệnh cho vật nuôi</li><li>Lập báo cáo sản lượng, chi phí vụ nuôi</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Nuôi trồng Thuỷ sản</li><li>Kinh nghiệm nuôi tôm/cá ít nhất 1 năm</li><li>Kiến thức về xử lý nước, vi sinh</li><li>Sẵn sàng làm việc tại vùng ven biển</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp vùng biển hấp dẫn</li><li>Thưởng vụ nuôi đạt sản lượng</li><li>Được đào tạo kỹ thuật nuôi trồng tiên tiến</li></ul>'
+WHERE slug = 'chuyen-vien-thuy-san-aquaculture-specialist-51';
+
+-- (52) Nhà nghiên cứu Đất
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc Hybrid</li><li>Phụ cấp nghiên cứu</li><li>Cơ hội công bố khoa học</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Phân tích mẫu đất, đánh giá chất lượng đất canh tác</li><li>Sử dụng GIS, viễn thám để lập bản đồ đất</li><li>Đề xuất cải tạo đất, sử dụng phân bón hợp lý</li><li>Viết báo cáo nghiên cứu, công bố khoa học</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Thạc sĩ ngành Khoa học Đất hoặc Nông học</li><li>Thành thạo phần mềm GIS, Python phân tích dữ liệu</li><li>Có bài báo khoa học là lợi thế</li><li>Tiếng Anh học thuật tốt</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp nghiên cứu hấp dẫn</li><li>Cơ hội tham gia hội thảo quốc tế</li><li>Tự do định hướng nghiên cứu</li></ul>'
+WHERE slug = 'nha-nghien-cuu-dat-soil-scientist-52';
+
+-- (53) Chuyên viên Nông nghiệp Hữu cơ
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc gần thiên nhiên</li><li>Phụ cấp nông trại</li><li>Đóng góp cho nông nghiệp sạch</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Xây dựng quy trình canh tác hữu cơ đạt chuẩn</li><li>Hướng dẫn nông dân chuyển đổi từ canh tác truyền thống sang hữu cơ</li><li>Kiểm tra, giám sát chất lượng sản phẩm hữu cơ</li><li>Hỗ trợ xin chứng nhận hữu cơ (USDA, EU Organic)</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Nông nghiệp</li><li>Hiểu biết về tiêu chuẩn nông nghiệp hữu cơ</li><li>Kỹ năng giao tiếp, làm việc với nông dân</li><li>Đọc hiểu tiếng Anh tài liệu kỹ thuật</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp đi lại, ăn ở tại nông trại</li><li>Sản phẩm hữu cơ miễn phí cho nhân viên</li><li>Đóng góp trực tiếp vào phát triển nông nghiệp bền vững</li></ul>'
+WHERE slug = 'chuyen-vien-nong-nghiep-huu-co-organic-farming-53';
+
+-- (54) Chuyên viên Kinh tế Nông nghiệp
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc Hybrid</li><li>Lương cạnh tranh</li><li>Tham gia dự án quốc tế</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Phân tích thị trường nông sản, dự báo giá cả</li><li>Đánh giá hiệu quả kinh tế các mô hình canh tác</li><li>Xây dựng báo cáo chính sách nông nghiệp</li><li>Tư vấn chiến lược phát triển nông nghiệp cho địa phương</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Kinh tế Nông nghiệp</li><li>Thành thạo Excel, phần mềm thống kê</li><li>Kỹ năng viết báo cáo, phân tích tốt</li><li>Tiếng Anh giao tiếp tốt</li></ul>',
+  why_join_us = '<ul><li>Cơ hội tham gia các dự án quốc tế (FAO, World Bank)</li><li>Lộ trình phát triển chuyên gia chính sách</li><li>Môi trường học thuật, nghiên cứu</li></ul>'
+WHERE slug = 'chuyen-vien-kinh-te-nong-nghiep-agricultural-economist-54';
+
+-- (55) Kỹ sư GIS Nông nghiệp
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc Hybrid</li><li>Tiếp cận công nghệ viễn thám hiện đại</li><li>Phụ cấp công nghệ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Xây dựng bản đồ GIS phục vụ quản lý nông nghiệp</li><li>Phân tích dữ liệu viễn thám, ảnh vệ tinh cho giám sát cây trồng</li><li>Lập trình Python xử lý dữ liệu không gian</li><li>Đề xuất ứng dụng công nghệ vào nông nghiệp chính xác</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành GIS, Trắc địa hoặc Nông nghiệp</li><li>Thành thạo ArcGIS/QGIS, Python (geopandas, rasterio)</li><li>Kinh nghiệm 2 năm làm GIS</li><li>Đọc hiểu tiếng Anh kỹ thuật</li></ul>',
+  why_join_us = '<ul><li>Được tiếp cận dữ liệu vệ tinh cao cấp</li><li>Phụ cấp thiết bị công nghệ</li><li>Cơ hội tham gia dự án nghiên cứu quốc tế</li></ul>'
+WHERE slug = 'ky-su-gis-nong-nghiep-agricultural-gis-engineer-55';
+
+-- (56) Kỹ sư Machine Learning
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh top thị trường AI</li><li>Làm việc Hybrid linh hoạt</li><li>Thiết bị GPU cao cấp</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Xây dựng, huấn luyện mô hình Machine Learning cho sản phẩm thực tế</li><li>Xử lý dữ liệu lớn, feature engineering</li><li>Triển khai model lên production (serving, monitoring)</li><li>Nghiên cứu, thử nghiệm các thuật toán mới</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành CNTT, Toán ứng dụng, hoặc AI</li><li>Thành thạo Python, TensorFlow/PyTorch</li><li>Kinh nghiệm 2 năm với ML pipeline end-to-end</li><li>Tiếng Anh đọc paper, viết documentation tốt</li></ul>',
+  why_join_us = '<ul><li>Cung cấp GPU server cao cấp cho R&D</li><li>Budget tham gia conference quốc tế (NeurIPS, ICML)</li><li>Team AI nhỏ gọn, chất lượng cao</li></ul>'
+WHERE slug = 'ky-su-machine-learning-ml-engineer-56';
+
+-- (57) Chuyên viên NLP
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương hấp dẫn + ESOP</li><li>Làm việc Hybrid</li><li>Nghiên cứu LLM tiên tiến</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Xây dựng hệ thống xử lý ngôn ngữ tự nhiên (chatbot, tóm tắt, phân loại)</li><li>Fine-tune các mô hình LLM cho tiếng Việt</li><li>Xử lý dữ liệu văn bản, xây dựng dataset</li><li>Viết tài liệu kỹ thuật, chia sẻ kiến thức trong team</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 2 năm với NLP/LLM</li><li>Thành thạo Python, HuggingFace Transformers</li><li>Hiểu biết sâu về attention mechanism, fine-tuning</li><li>Tiếng Anh đọc paper tốt</li></ul>',
+  why_join_us = '<ul><li>Được nghiên cứu LLM/GenAI tiên tiến</li><li>Chế độ ESOP hấp dẫn</li><li>Team nhỏ, tự chủ cao trong nghiên cứu</li></ul>'
+WHERE slug = 'chuyen-vien-xu-ly-ngon-ngu-tu-nhien-nlp-engineer-57';
+
+-- (58) Kỹ sư Computer Vision
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương gross cao + review 2 lần/năm</li><li>Dự án ứng dụng thực tế</li><li>Budget học tập hàng năm</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Phát triển hệ thống nhận diện hình ảnh, video</li><li>Xây dựng pipeline CV: detection, segmentation, tracking</li><li>Tối ưu model để chạy trên edge device</li><li>Thu thập, đánh nhãn dữ liệu hình ảnh</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Thạc sĩ hoặc kinh nghiệm 3 năm với Computer Vision</li><li>Thành thạo PyTorch, OpenCV</li><li>Hiểu sâu về CNN, YOLO, Transformer-based models</li><li>Kinh nghiệm deploy model trên edge/mobile là lợi thế</li></ul>',
+  why_join_us = '<ul><li>Dự án CV ứng dụng thực tế (y tế, giao thông, sản xuất)</li><li>Budget học tập $1,000/năm</li><li>Được publish paper tại conference quốc tế</li></ul>'
+WHERE slug = 'ky-su-computer-vision-cv-engineer-58';
+
+-- (59) Chuyên viên MLOps
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + bonus quý</li><li>Làm việc Hybrid</li><li>Hạ tầng cloud hiện đại</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Xây dựng CI/CD pipeline cho ML models</li><li>Quản lý hạ tầng training/serving (Docker, K8s, cloud)</li><li>Monitoring model performance, data drift</li><li>Tối ưu chi phí cloud, tự động hóa quy trình</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 2 năm với DevOps/MLOps</li><li>Thành thạo Docker, Kubernetes, CI/CD</li><li>Biết Python, có kiến thức ML cơ bản</li><li>Kinh nghiệm với AWS/GCP/Azure</li></ul>',
+  why_join_us = '<ul><li>Hạ tầng cloud budget không giới hạn cho R&D</li><li>Bonus quý theo hiệu quả hệ thống</li><li>Được training certification cloud miễn phí</li></ul>'
+WHERE slug = 'chuyen-vien-mlops-mlops-engineer-59';
+
+-- (60) Nghiên cứu viên AI
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương top thị trường AI Việt Nam</li><li>Tự do nghiên cứu</li><li>Budget conference quốc tế</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Nghiên cứu thuật toán ML/DL mới, đề xuất ứng dụng thực tế</li><li>Công bố paper tại top-tier conference</li><li>Mentor cho junior researchers và interns</li><li>Phối hợp engineering team đưa research vào sản phẩm</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tiến sĩ hoặc Thạc sĩ AI/ML có publication</li><li>Thành thạo PyTorch/TensorFlow</li><li>Có paper tại NeurIPS, ICML, CVPR, ACL hoặc tương đương</li><li>Tiếng Anh academic xuất sắc</li></ul>',
+  why_join_us = '<ul><li>Tự do chọn hướng nghiên cứu</li><li>Tài trợ toàn bộ chi phí tham gia conference quốc tế</li><li>GPU cluster chuyên dụng cho research</li></ul>'
+WHERE slug = 'nghien-cuu-vien-ai-research-scientist-60';
+
+-- (61) Kỹ sư Prompt & LLM
+UPDATE jobs SET
+  job_reason = '<ul><li>Lĩnh vực GenAI hot nhất hiện nay</li><li>Làm việc Remote</li><li>Lương hấp dẫn cho vị trí mới</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế, tối ưu prompt cho các ứng dụng LLM</li><li>Fine-tune LLM cho use case cụ thể (tiếng Việt)</li><li>Xây dựng RAG pipeline, agent framework</li><li>Đánh giá chất lượng output LLM, xây dựng evaluation benchmark</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm làm việc với GPT, Claude, Llama hoặc tương đương</li><li>Thành thạo Python, LangChain/LlamaIndex</li><li>Hiểu biết về NLP, embedding, vector database</li><li>Tiếng Anh đọc documentation tốt</li></ul>',
+  why_join_us = '<ul><li>100% Remote, giờ làm việc linh hoạt</li><li>Được tiếp cận API LLM mới nhất</li><li>Startup GenAI tiềm năng, có cơ hội ESOP</li></ul>'
+WHERE slug = 'ky-su-prompt-llm-engineer-61';
+
+-- (62) Kỹ sư Dữ liệu AI
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + review 2 lần/năm</li><li>Làm việc Hybrid</li><li>Hạ tầng data hiện đại</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Xây dựng data pipeline phục vụ training ML models</li><li>Thiết kế data warehouse, data lake</li><li>ETL/ELT dữ liệu từ nhiều nguồn khác nhau</li><li>Đảm bảo chất lượng dữ liệu, data governance</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 2 năm Data Engineering</li><li>Thành thạo Python, SQL, Spark/Airflow</li><li>Kiến thức cơ bản về ML</li><li>Kinh nghiệm cloud (AWS/GCP) là lợi thế</li></ul>',
+  why_join_us = '<ul><li>Data stack hiện đại (dbt, Airflow, Snowflake)</li><li>Review lương 2 lần/năm</li><li>Budget học tập và certification</li></ul>'
+WHERE slug = 'ky-su-du-lieu-ai-data-engineer-62';
+
+-- (63) Chuyên viên Deep Learning
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương hấp dẫn + thưởng dự án</li><li>Làm việc Hybrid</li><li>GPU cluster cao cấp</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế, huấn luyện mô hình Deep Learning (CNN, RNN, Transformer)</li><li>Tối ưu model performance và inference speed</li><li>Nghiên cứu và áp dụng kiến trúc DL mới</li><li>Viết tài liệu kỹ thuật, review code</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 2 năm với Deep Learning</li><li>Thành thạo PyTorch hoặc TensorFlow</li><li>Kiến thức vững về toán (linear algebra, probability)</li><li>Tiếng Anh đọc paper, viết doc tốt</li></ul>',
+  why_join_us = '<ul><li>GPU cluster A100/H100 cho training</li><li>Thưởng dự án thành công</li><li>Cơ hội publish paper</li></ul>'
+WHERE slug = 'chuyen-vien-deep-learning-dl-engineer-63';
+
+-- (64) AI Product Manager
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương senior + ESOP</li><li>Làm việc Hybrid</li><li>Định hình sản phẩm AI</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Định nghĩa roadmap sản phẩm AI</li><li>Phối hợp AI engineers và business team</li><li>Phân tích thị trường, đối thủ trong lĩnh vực AI</li><li>Quản lý backlog, ưu tiên tính năng theo impact</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 3 năm Product Management, ít nhất 1 năm với AI product</li><li>Hiểu biết cơ bản về ML/AI</li><li>Kỹ năng communication, leadership xuất sắc</li><li>Tiếng Anh thành thạo</li></ul>',
+  why_join_us = '<ul><li>Được định hình sản phẩm AI từ zero-to-one</li><li>ESOP cho vị trí senior</li><li>Team kỹ thuật mạnh, văn hóa đổi mới</li></ul>'
+WHERE slug = 'ai-product-manager-64';
+
+-- (65) Thực tập sinh AI
+UPDATE jobs SET
+  job_reason = '<ul><li>Được mentoring bởi AI engineers giàu kinh nghiệm</li><li>Trợ cấp thực tập hấp dẫn</li><li>Cơ hội chuyển chính thức</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Hỗ trợ team trong các dự án ML/AI</li><li>Thu thập, xử lý và đánh nhãn dữ liệu</li><li>Thực hành huấn luyện model dưới sự hướng dẫn</li><li>Viết tài liệu, báo cáo kết quả thử nghiệm</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Sinh viên năm cuối hoặc mới tốt nghiệp ngành CNTT, Toán, AI</li><li>Biết Python, có kiến thức ML cơ bản</li><li>Ham học hỏi, chủ động</li><li>Đọc hiểu tiếng Anh kỹ thuật</li></ul>',
+  why_join_us = '<ul><li>Mentoring 1-1 bởi Senior AI Engineer</li><li>Cơ hội convert full-time sau 3 tháng</li><li>Trợ cấp thực tập 6-10 triệu/tháng</li></ul>'
+WHERE slug = 'thuc-tap-sinh-ai-intern-65';
+
+-- (66) Quản lý Sản xuất May mặc
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cao + thưởng năng suất</li><li>Xe đưa đón KCN</li><li>Bảo hiểm toàn diện</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý toàn bộ quy trình sản xuất may mặc</li><li>Lập kế hoạch sản xuất, kiểm soát tiến độ đơn hàng</li><li>Quản lý đội ngũ 50-100 công nhân</li><li>Đảm bảo chất lượng sản phẩm theo tiêu chuẩn khách hàng</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Công nghệ May hoặc Quản lý sản xuất</li><li>Ít nhất 3 năm kinh nghiệm quản lý xưởng may</li><li>Kỹ năng lãnh đạo, quản lý nhân sự tốt</li><li>Tiếng Anh giao tiếp với khách hàng nước ngoài</li></ul>',
+  why_join_us = '<ul><li>Thưởng năng suất hấp dẫn</li><li>Xe đưa đón KCN miễn phí</li><li>Cơm trưa miễn phí</li></ul>'
+WHERE slug = 'quan-ly-san-xuat-may-mac-garment-production-manager-66';
+
+-- (67) QC Inspector - Garment
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương ổn định + phụ cấp KCN</li><li>Đào tạo nghiệp vụ QC bài bản</li><li>Bảo hiểm đầy đủ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Kiểm tra chất lượng sản phẩm may theo AQL</li><li>Phát hiện lỗi, phân loại và báo cáo tỷ lệ lỗi</li><li>Phối hợp với sản xuất để khắc phục lỗi</li><li>Lập báo cáo QC hàng ngày, hàng tuần</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Cao đẳng ngành May hoặc tương đương</li><li>Kinh nghiệm 1 năm QC may mặc</li><li>Biết tiêu chuẩn AQL, kiểm hàng xuất khẩu</li><li>Tỉ mỉ, cẩn thận, trung thực</li></ul>',
+  why_join_us = '<ul><li>Đào tạo nghiệp vụ QC quốc tế</li><li>Xe đưa đón KCN</li><li>Cơ hội thăng tiến lên QC Supervisor</li></ul>'
+WHERE slug = 'chuyen-vien-kiem-soat-chat-luong-may-qc-inspector-67';
+
+-- (68) Fashion Merchandiser
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + thưởng theo mùa hàng</li><li>Được đi công tác nước ngoài</li><li>Chiết khấu sản phẩm thời trang</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Lên kế hoạch bộ sưu tập theo mùa, trend thị trường</li><li>Phối hợp nhà cung cấp, theo dõi tiến độ sản xuất</li><li>Phân tích doanh số, điều phối phân bổ hàng hóa</li><li>Đàm phán giá, MOQ với nhà cung cấp</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Thiết kế Thời trang hoặc Kinh doanh</li><li>Kinh nghiệm 2 năm merchandising thời trang</li><li>Kỹ năng phân tích, đàm phán tốt</li><li>Tiếng Anh giao tiếp tốt</li></ul>',
+  why_join_us = '<ul><li>Cơ hội đi sourcing tại Trung Quốc, Hàn Quốc</li><li>Chiết khấu nhân viên 40%</li><li>Lộ trình lên Merchandising Manager</li></ul>'
+WHERE slug = 'chuyen-vien-merchandising-thoi-trang-fashion-merchandiser-68';
+
+-- (69) Pattern Maker
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh ngành may</li><li>Được đào tạo phần mềm rập chuyên dụng</li><li>Bảo hiểm đầy đủ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thiết kế rập (pattern) theo mẫu thiết kế thời trang</li><li>Nhảy size, điều chỉnh rập theo yêu cầu sản xuất</li><li>Sử dụng phần mềm rập (Gerber, Optitex, AutoCAD)</li><li>Phối hợp với thiết kế và sản xuất để hoàn thiện mẫu</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp trung cấp/cao đẳng ngành May</li><li>Kinh nghiệm 2 năm làm rập may công nghiệp</li><li>Biết sử dụng phần mềm thiết kế rập</li><li>Tỉ mỉ, chính xác trong đo đạc</li></ul>',
+  why_join_us = '<ul><li>Được đào tạo phần mềm rập hiện đại</li><li>Thưởng sáng kiến cải tiến kỹ thuật</li><li>Cơ hội thăng tiến lên Trưởng phòng Kỹ thuật</li></ul>'
+WHERE slug = 'ky-thuat-vien-rap-mau-pattern-maker-69';
+
+-- (70) Sewing Line Leader
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + phụ cấp chức vụ</li><li>Xe đưa đón KCN</li><li>Thưởng năng suất chuyền</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Quản lý chuyền may 20-30 công nhân</li><li>Phân công công đoạn, đảm bảo tiến độ sản xuất</li><li>Kiểm tra chất lượng sản phẩm tại chuyền</li><li>Đào tạo, hướng dẫn kỹ thuật cho công nhân mới</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 2 năm làm chuyền may</li><li>Biết kỹ thuật may các loại sản phẩm</li><li>Kỹ năng quản lý nhóm, giao tiếp tốt</li><li>Chịu áp lực sản xuất theo đơn hàng</li></ul>',
+  why_join_us = '<ul><li>Thưởng năng suất chuyền hấp dẫn</li><li>Xe đưa đón miễn phí</li><li>Cơ hội thăng tiến lên Quản đốc xưởng</li></ul>'
+WHERE slug = 'truong-nhom-may-sewing-line-leader-70';
+
+-- (71) Fabric Sourcing Specialist
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + thưởng KPI</li><li>Được đi sourcing nước ngoài</li><li>Môi trường quốc tế</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Tìm kiếm, đánh giá nhà cung cấp vải trong và ngoài nước</li><li>Đàm phán giá, MOQ, lead time với nhà cung cấp</li><li>Kiểm tra chất lượng mẫu vải, theo dõi đơn hàng</li><li>Cập nhật xu hướng chất liệu, vải mới</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Kinh nghiệm 2 năm thu mua vải/nguyên phụ liệu may</li><li>Hiểu biết về các loại vải, đặc tính chất liệu</li><li>Kỹ năng đàm phán, negotiation tốt</li><li>Tiếng Anh giao tiếp tốt (làm việc với supplier nước ngoài)</li></ul>',
+  why_join_us = '<ul><li>Đi sourcing tại Trung Quốc, Ấn Độ hàng quý</li><li>Thưởng KPI tiết kiệm chi phí</li><li>Môi trường quốc tế, đa văn hóa</li></ul>'
+WHERE slug = 'chuyen-vien-thu-mua-vai-fabric-sourcing-specialist-71';
+
+-- (72) Technical Fashion Designer
+UPDATE jobs SET
+  job_reason = '<ul><li>Làm việc Hybrid</li><li>Sáng tạo kết hợp kỹ thuật</li><li>Chiết khấu sản phẩm nội bộ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Chuyển đổi bản thiết kế thời trang thành tech pack chi tiết</li><li>Vẽ kỹ thuật (technical drawing) bằng Adobe Illustrator</li><li>Phối hợp với nhà máy để đảm bảo mẫu sản xuất đúng thiết kế</li><li>Nghiên cứu chất liệu, phối màu theo mùa</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Thiết kế Thời trang</li><li>Thành thạo Adobe Illustrator, Photoshop</li><li>Hiểu biết kỹ thuật may, rập</li><li>Kinh nghiệm 2 năm làm tech pack</li></ul>',
+  why_join_us = '<ul><li>Kết hợp sáng tạo và kỹ thuật</li><li>Chiết khấu sản phẩm nội bộ 50%</li><li>Được tham gia các triển lãm thời trang</li></ul>'
+WHERE slug = 'thiet-ke-ky-thuat-may-technical-fashion-designer-72';
+
+-- (73) Visual Merchandiser
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương + thưởng mùa sale</li><li>Chiết khấu nhân viên</li><li>Môi trường thời trang sáng tạo</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Trưng bày sản phẩm tại cửa hàng theo concept</li><li>Thiết kế layout cửa hàng, vitrine window display</li><li>Phối hợp với Marketing triển khai chiến dịch mùa mới</li><li>Phân tích hiệu quả trưng bày qua doanh số</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp ngành Thiết kế, Mỹ thuật hoặc Marketing</li><li>Có mắt thẩm mỹ, hiểu biết xu hướng thời trang</li><li>Biết sử dụng Photoshop cơ bản</li><li>Kinh nghiệm VM ít nhất 1 năm</li></ul>',
+  why_join_us = '<ul><li>Được sáng tạo display theo ý tưởng riêng</li><li>Chiết khấu nhân viên 30-50%</li><li>Cơ hội thăng tiến lên VM Manager</li></ul>'
+WHERE slug = 'chuyen-vien-visual-merchandising-visual-merchandiser-73';
+
+-- (74) Kỹ sư Dệt may
+UPDATE jobs SET
+  job_reason = '<ul><li>Lương cạnh tranh + phụ cấp KCN</li><li>Xe đưa đón miễn phí</li><li>Bảo hiểm toàn diện</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Vận hành, giám sát máy dệt, nhuộm, hoàn tất</li><li>Kiểm tra chất lượng vải theo tiêu chuẩn kỹ thuật</li><li>Nghiên cứu quy trình dệt/nhuộm mới</li><li>Báo cáo năng suất, đề xuất cải tiến quy trình</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Tốt nghiệp Đại học ngành Công nghệ Dệt may</li><li>Kinh nghiệm 2 năm trong nhà máy dệt</li><li>Hiểu biết về quy trình nhuộm, hoàn tất vải</li><li>Đọc hiểu tiếng Anh kỹ thuật</li></ul>',
+  why_join_us = '<ul><li>Xe đưa đón KCN miễn phí</li><li>Thưởng sáng kiến cải tiến</li><li>Lộ trình lên Trưởng phòng Kỹ thuật Dệt</li></ul>'
+WHERE slug = 'ky-su-det-may-textile-engineer-74';
+
+-- (75) Chuyên viên Thêu & Hoàn thiện
+UPDATE jobs SET
+  job_reason = '<ul><li>Phụ cấp tay nghề</li><li>Đào tạo kỹ thuật thêu hiện đại</li><li>Bảo hiểm đầy đủ</li></ul>',
+  job_description = '<p><strong>Mô tả công việc</strong></p><ul><li>Thực hiện thêu máy/thêu tay theo mẫu thiết kế</li><li>Kiểm tra chất lượng thêu, hoàn thiện sản phẩm</li><li>Vận hành, bảo trì máy thêu công nghiệp</li><li>Đề xuất kỹ thuật thêu mới, nâng cao chất lượng</li></ul>',
+  job_requirements = '<p><strong>Yêu cầu</strong></p><ul><li>Có kinh nghiệm thêu máy công nghiệp</li><li>Tỉ mỉ, khéo tay, mắt tốt</li><li>Biết sử dụng phần mềm thiết kế thêu là lợi thế</li><li>Chịu khó, có tinh thần học hỏi</li></ul>',
+  why_join_us = '<ul><li>Phụ cấp tay nghề hấp dẫn</li><li>Được đào tạo kỹ thuật thêu Nhật Bản</li><li>Cơ hội thăng tiến lên Tổ trưởng Thêu</li></ul>'
+WHERE slug = 'chuyen-vien-theu-hoan-thien-embroidery-finishing-75';

@@ -88,6 +88,22 @@ const JobSearch: FC<JobSearchProps> = ({ keywordSegment, citySegment }) => {
     setFilters(defaultFilters);
   }, [keywordSegment, citySegment]);
 
+  // Đọc jobDomainId từ query string khi mount (vd: được điều hướng từ tag job domain trên trang chủ),
+  // sau khi áp dụng vào filter thì xoá khỏi URL để tránh áp dụng lại khi user đổi search params khác.
+  useEffect(() => {
+    const jobDomainIdParam = searchParams.get("jobDomainId");
+    if (!jobDomainIdParam) return;
+    const parsedId = Number(jobDomainIdParam);
+    if (Number.isNaN(parsedId)) return;
+
+    setFilters((prev) => ({ ...prev, jobDomainId: parsedId }));
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("jobDomainId");
+    setSearchParams(nextParams, { replace: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Reset to page 1 when filters or search segments change
   useEffect(() => {
     setCurrentPage(1);

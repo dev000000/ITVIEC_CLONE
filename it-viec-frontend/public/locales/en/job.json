@@ -1,7 +1,7 @@
 {
   "search": {
-    "title": "Search IT Jobs",
-    "subtitle": "{{count}}+ IT jobs waiting for you",
+    "title": "Search Jobs",
+    "subtitle": "{{count}}+ jobs waiting for you",
     "placeholder": "Enter skills, position, company name...",
     "cityPlaceholder": "All cities",
     "button": "Search"
@@ -56,7 +56,7 @@
     "status": "Status"
   },
   "loginToSeeSalary": "Sign in to see salary",
-  "topJobsTitle": "{{count}} IT Jobs for Quality Developers",
+  "topJobsTitle": "{{count}} Quality Jobs for You",
   "viewMore": "View {{count}} more jobs",
   "topEmployers": "Top Employers",
   "jobCount": "{{count}} Jobs",

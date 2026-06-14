@@ -289,7 +289,7 @@
     "emailError": "Vui lòng cung cấp email công ty của bạn!",
     "phonePlaceholder": "Số điện thoại",
     "phoneError": "Vui lòng cung cấp số điện thoại!",
-    "sourcePlaceholder": "Bạn biết đến ITviec từ đâu?",
+    "sourcePlaceholder": "Bạn biết đến NHIEUviec từ đâu?",
     "companyNamePlaceholder": "Tên công ty",
     "companyNameError": "Vui lòng điền tên công ty!",
     "companyAddressPlaceholder": "Địa chỉ công ty",
@@ -319,65 +319,65 @@
   },
   "home": {
     "hero": {
-      "title": "Tuyển dụng Nhân tài IT tại Việt Nam cùng NHIEUviec",
-      "description": "Với hiểu biết sâu sắc về lĩnh vực IT và các kỹ năng chuyên môn, chúng tôi có thể giúp bạn tiếp cận và tuyển dụng những ứng viên IT tốt nhất.",
+      "title": "Tuyển dụng Nhân tài tại Việt Nam cùng NHIEUviec",
+      "description": "Với hiểu biết sâu sắc về thị trường lao động và các kỹ năng chuyên môn, chúng tôi có thể giúp bạn tiếp cận và tuyển dụng những ứng viên tốt nhất.",
       "contactBtn": "Liên hệ ngay",
       "loginText": "Đăng nhập để đăng tin tuyển dụng",
       "loginBtn": "Đăng nhập"
     },
     "different": {
       "title": "Điều gì tạo nên sự khác biệt ở NHIEUviec?",
-      "desc": "NHIEUviec là trang tuyển dụng và cơ sở dữ liệu hàng đầu về các chuyên gia IT tại Việt Nam.",
-      "stat1": "Công ty và Doanh nghiệp IT",
+      "desc": "NHIEUviec là trang tuyển dụng và cơ sở dữ liệu hàng đầu về nhân sự đa ngành tại Việt Nam.",
+      "stat1": "Công ty và Doanh nghiệp",
       "stat2": "Hồ sơ đã gửi đến Nhà tuyển dụng",
       "stat3": "Hồ sơ Ứng viên kinh nghiệm cao"
     },
     "services": {
-      "title": "Dịch vụ chất lượng cao dành cho Nhà tuyển dụng IT",
+      "title": "Dịch vụ chất lượng cao dành cho Nhà tuyển dụng",
       "jobPosting": {
         "title": "Đăng tin tuyển dụng",
-        "desc": "Đăng tuyển vị trí công việc IT, dễ dàng quản lý hồ sơ ứng viên với giao diện trực quan, đội ngũ hỗ trợ, và công cụ mạnh mẽ từ NHIEUviec",
-        "feature1": "Gia tăng cơ hội để tiếp cận ứng viên IT chất lượng từ ITviec",
-        "feature2": "Thu hút ứng viên phù hợp với yêu cầu về kỹ năng IT"
+        "desc": "Đăng tuyển vị trí công việc, dễ dàng quản lý hồ sơ ứng viên với giao diện trực quan, đội ngũ hỗ trợ, và công cụ mạnh mẽ từ NHIEUviec",
+        "feature1": "Gia tăng cơ hội để tiếp cận ứng viên chất lượng từ NHIEUviec",
+        "feature2": "Thu hút ứng viên phù hợp với yêu cầu về kỹ năng chuyên môn"
       },
       "aiMatch": {
         "title": "Gợi ý ứng viên AI Match",
-        "desc": "Kết nối với nguồn hồ sơ ứng viên IT đa dạng, hoạt động tích cực. Dễ dàng tiếp cận ứng viên với thao tác đơn giản. Mở khóa để giúp tìm kiếm ứng viên phù hợp.",
+        "desc": "Kết nối với nguồn hồ sơ ứng viên đa dạng, hoạt động tích cực. Dễ dàng tiếp cận ứng viên với thao tác đơn giản. Mở khóa để giúp tìm kiếm ứng viên phù hợp.",
         "feature1": "Các ứng viên phù hợp nhất được lựa chọn dựa trên kỹ năng, kinh nghiệm, nhu cầu công việc và hơn thế nữa",
-        "feature2": "Chỉ kết nối nhà tuyển dụng với những nhân tài IT đang có ý định chuyển việc",
+        "feature2": "Chỉ kết nối nhà tuyển dụng với những nhân tài đang có ý định chuyển việc",
         "learnMore": "Xem thêm về AI Match"
       },
       "branding": {
         "title": "Thương hiệu tuyển dụng",
-        "desc": "Nâng cao nhận diện thương hiệu của Nhà tuyển dụng, tiếp cận các chuyên gia IT trên NHIEUviec qua các điểm chạm đặc biệt, và kết nối với các ứng viên IT hàng đầu tại Việt Nam",
+        "desc": "Nâng cao nhận diện thương hiệu của Nhà tuyển dụng, tiếp cận các chuyên gia trên NHIEUviec qua các điểm chạm đặc biệt, và kết nối với các ứng viên hàng đầu tại Việt Nam",
         "topEmployer": {
           "title": "Nhà tuyển dụng hàng đầu",
           "desc": "Các ứng viên phù hợp nhất được lựa chọn dựa trên kỹ năng, kinh nghiệm, nhu cầu công việc và hơn thế nữa"
         },
         "featuredEmployer": {
           "title": "Nhà tuyển dụng nổi bật",
-          "desc": "Chỉ kết nối nhà tuyển dụng với những nhân tài IT đang có ý định chuyển việc"
+          "desc": "Chỉ kết nối nhà tuyển dụng với những nhân tài đang có ý định chuyển việc"
         }
       },
-      "ctaText": "Trải nghiệm dịch vụ của ITviec ngay hôm nay",
+      "ctaText": "Trải nghiệm dịch vụ của NHIEUviec ngay hôm nay",
       "ctaBtn": "Liên hệ ngay"
     },
     "topEmployers": {
-      "title": "Top Công ty hàng đầu tại ITviec",
-      "desc": "Nhà tuyển dụng và đối tác của chúng tôi bao gồm các công ty IT hàng đầu, và các công ty khởi nghiệp sáng tạo",
+      "title": "Top Công ty hàng đầu tại NHIEUviec",
+      "desc": "Nhà tuyển dụng và đối tác của chúng tôi bao gồm các công ty hàng đầu đa ngành, và các công ty khởi nghiệp sáng tạo",
       "feedback": "Khách hàng nói gì về chúng tôi?"
     },
     "contact": {
-      "title": "Tìm kiếm Nhân tài IT phù hợp",
-      "desc": "Để lại thông tin liên hệ để nhận tư vấn từ Phòng Chăm sóc Khách hàng của ITviec.",
+      "title": "Tìm kiếm Nhân tài phù hợp",
+      "desc": "Để lại thông tin liên hệ để nhận tư vấn từ Phòng Chăm sóc Khách hàng của NHIEUviec.",
       "hotlineHCM": "Hotline Hồ Chí Minh",
       "hotlineHN": "Hotline Hà Nội",
       "workingHours": "Thời gian làm việc",
       "workingHoursValue": "Thứ 2 - Thứ 6 | 8:30 - 17:00"
     },
     "excite": {
-      "title": "Sẵn sàng Hứng Khởi ngành IT tại Việt Nam với Tuyển Dụng \"Chất\"",
-      "desc": "Khởi đầu từ năm 2013, sứ mệnh của ITviec chính là luôn hướng đến tuyển dụng \"chất\" ngành IT. Chúng tôi giúp nhân sự ngành IT thăng tiến sự nghiệp, giúp doanh nghiệp tìm được những ứng viên tuyệt vời. Hãy cùng chúng tôi hứng khởi ngành IT tại Việt Nam với tuyển dụng \"Chất\"!"
+      "title": "Sẵn sàng Hứng Khởi Tuyển Dụng \"Chất\" tại Việt Nam",
+      "desc": "Khởi đầu từ năm 2013, sứ mệnh của NHIEUviec chính là luôn hướng đến tuyển dụng \"chất\" đa ngành. Chúng tôi giúp người lao động thăng tiến sự nghiệp, giúp doanh nghiệp tìm được những ứng viên tuyệt vời. Hãy cùng chúng tôi hứng khởi thị trường tuyển dụng tại Việt Nam!"
     }
   }
 }

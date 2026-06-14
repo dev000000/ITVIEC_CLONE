@@ -1,7 +1,7 @@
 {
   "search": {
-    "title": "Tìm kiếm việc làm IT",
-    "subtitle": "{{count}}+ việc làm IT đang chờ bạn",
+    "title": "Tìm kiếm việc làm",
+    "subtitle": "{{count}}+ việc làm đang chờ bạn",
     "placeholder": "Nhập kỹ năng, vị trí, tên công ty...",
     "cityPlaceholder": "Tất cả thành phố",
     "button": "Tìm kiếm"
@@ -56,7 +56,7 @@
     "status": "Trạng thái"
   },
   "loginToSeeSalary": "Đăng nhập để xem mức lương",
-  "topJobsTitle": "{{count}} Việc làm IT cho Developer \"Chất\"",
+  "topJobsTitle": "{{count}} Việc làm \"Chất\" cho bạn",
   "viewMore": "Xem thêm {{count}} công việc khác",
   "topEmployers": "Nhà tuyển dụng hàng đầu",
   "jobCount": "{{count}} Việc làm",
